@@ -1,0 +1,98 @@
+---
+const { categories, failed = false } = Astro.props;
+const serviceGroups = [
+    { key: "robux", name: "Robux", detail: "Pilih cara top up", icon: "i-lucide-gem", slugs: ["robux-via-login", "robux-via-username", "robux-5-hari"] },
+    { key: "gift", name: "Gift Card", detail: "Voucher Roblox", icon: "i-lucide-gift", slugs: ["robux-game-card", "robux-gift-card", "rbl-credits-gift-card"] },
+    { key: "account", name: "Akun Roblox", detail: "Akun platform", icon: "i-lucide-user-round", slugs: ["roblox-akun"] },
+];
+const serviceSlugs = new Set(serviceGroups.flatMap((group) => group.slugs));
+const games = categories.filter((item) => !serviceSlugs.has(item.slug)).sort((a, b) => a.name.localeCompare(b.name, "id", { numeric: true }));
+const featuredSlugs = ["blox-fruits", "fish-it", "grow-a-garden", "adopt-me", "steal-a-brainrot", "99-nights-in-the-forest"];
+const featured = featuredSlugs.map((slug) => games.find((item) => item.slug === slug)).filter(Boolean).slice(0, 4);
+const imageUrl = (item) => item.image?.sourceUrl ? `/img-proxy?src=${encodeURIComponent(item.image.sourceUrl)}` : null;
+---
+
+<div id="roblox-hub">
+    <section aria-labelledby="services-title" class="mb-9">
+        <h2 id="services-title" class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Layanan Roblox</h2>
+        <div class="grid grid-cols-3 gap-2 md:gap-4">
+            {serviceGroups.map((group) => <a href={`#service-${group.key}`} class="service-card group bg-gray-900/70 border border-gray-700/70 px-2 py-4 md:p-5 hover:border-cyan-400 transition flex flex-col md:flex-row items-center text-center md:text-left gap-3">
+                <span class="w-10 h-10 rounded-xl bg-cyan-400/10 text-cyan-400 flex items-center justify-center shrink-0"><span class={`${group.icon} text-xl`} /></span>
+                <span><span class="block text-xs md:text-base font-bold text-white">{group.name}</span><span class="hidden md:block text-xs text-gray-400 mt-1">{group.detail}</span></span>
+                <span class="i-lucide-arrow-up-right hidden md:block ml-auto text-gray-500 group-hover:text-cyan-400" />
+            </a>)}
+        </div>
+        {serviceGroups.map((group) => <section id={`service-${group.key}`} class="service-panel mt-3 p-4 md:p-5 border border-cyan-400/30 rounded-xl bg-gray-900" aria-label={group.name}>
+            <div class="flex justify-between gap-3 items-center mb-3"><h3 class="text-sm font-bold text-white">{group.name === "Robux" ? "Pilih cara membeli Robux" : group.name}</h3><a href="#services-title" aria-label="Tutup pilihan layanan" class="p-2 text-gray-400 hover:text-white"><span class="i-lucide-x block text-lg" /></a></div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {categories.filter((item) => group.slugs.includes(item.slug)).map((item) => <a href={`/category/${item.slug}`} class="flex items-center justify-between gap-3 p-3 min-h-12 rounded-lg border border-gray-700 text-sm text-gray-200 hover:border-cyan-400 hover:text-cyan-400">{item.name}<span class="i-lucide-arrow-right shrink-0" /></a>)}
+                {!categories.some((item) => group.slugs.includes(item.slug)) && <p class="text-sm text-gray-400">Layanan ini belum tersedia.</p>}
+            </div>
+            {group.key === "account" && <p class="text-xs text-gray-400 mt-3">Mencari akun dengan progres game tertentu? Pilih gamenya di bawah.</p>}
+        </section>)}
+    </section>
+
+    <section aria-labelledby="directory-title">
+        <div class="flex items-end justify-between gap-3 mb-4"><div><h2 id="directory-title" class="text-lg md:text-2xl font-bold text-white tracking-tight">Belanja berdasarkan game</h2><p class="text-xs md:text-sm text-gray-400 mt-2">Temukan item, akun, dan gamepass untuk gamemu.</p></div><span class="hidden md:block text-xs text-gray-500 whitespace-nowrap">{games.length} game</span></div>
+        <div class="relative mb-6"><span class="i-lucide-search absolute left-4 top-4 text-gray-400 text-lg" /><label for="roblox-game-search" class="sr-only">Cari game di Roblox</label><input id="roblox-game-search" type="search" placeholder="Cari game di Roblox" autocomplete="off" class="w-full h-13 pl-12 pr-4 text-sm text-white bg-gray-900/70 border border-gray-700 rounded-xl focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/10" /></div>
+        {featured.length > 0 && <section id="featured-games" class="mb-8" aria-labelledby="featured-title"><h3 id="featured-title" class="text-xs uppercase tracking-widest text-gray-400 font-bold mb-3">Pilihan game</h3><div class="grid grid-cols-2 md:grid-cols-4 gap-3">{featured.map((item) => <a href={`/category/${item.slug}`} class="featured-card group relative overflow-hidden rounded-xl border border-gray-700/60 bg-gray-900 hover:border-cyan-400 transition">
+            <div class="h-24 md:h-32 bg-cyan-950/30 flex items-center justify-center overflow-hidden">{imageUrl(item) ? <img src={imageUrl(item)} alt="" loading="lazy" class="w-full h-full object-cover transition group-hover:scale-105" /> : <span class="text-4xl font-black italic text-cyan-400/50 tracking-tighter" aria-hidden="true">{item.name.split(/\s+/).map((word) => word[0]).slice(0, 2).join("")}</span>}</div><div class="p-3 flex justify-between gap-2 items-center"><span class="text-sm font-bold text-gray-100">{item.name}</span><span class="i-lucide-arrow-up-right text-cyan-400 shrink-0" /></div>
+        </a>)}</div></section>}
+        <div class="flex justify-between items-center mb-3"><h3 id="all-games-title" class="text-xs uppercase tracking-widest text-gray-400 font-bold">Semua game</h3><span id="game-result-count" role="status" aria-live="polite" class="text-xs text-gray-500">{games.length} game · A–Z</span></div>
+        <div id="all-roblox-games" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3" aria-labelledby="all-games-title">
+            {games.map((item) => <a data-game-name={item.name} href={`/category/${item.slug}`} class="directory-card flex items-center gap-3 p-3 min-h-20 rounded-xl border border-gray-800 bg-gray-900/40 hover:bg-gray-900 hover:border-cyan-400/60 transition">
+                <span class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gray-800/70 shrink-0 flex items-center justify-center overflow-hidden">{imageUrl(item) ? <img src={imageUrl(item)} alt="" loading="lazy" class="w-full h-full object-cover" /> : <span class="text-sm font-bold text-cyan-300/70" aria-hidden="true">{item.name.replace(/[^\p{L}\p{N}]/gu, "").slice(0, 2).toUpperCase()}</span>}</span>
+                <span class="text-xs md:text-sm text-gray-200 font-medium leading-relaxed break-words">{item.name}</span>
+            </a>)}
+        </div>
+        <div id="no-games" hidden class="py-10 px-4 text-center rounded-xl border border-dashed border-gray-700"><p class="text-sm text-gray-200">Game tidak ditemukan.</p><p class="text-xs text-gray-400 mt-2">Coba nama lain atau periksa ejaannya.</p><button id="reset-game-search" type="button" class="mt-4 px-4 py-3 text-sm text-cyan-400">Hapus pencarian</button></div>
+        {failed && <p class="p-5 text-sm text-gray-300">Daftar game belum berhasil dimuat. Muat ulang halaman untuk mencoba lagi.</p>}
+        <div class="text-center mt-5"><button id="load-more-games" hidden type="button" class="min-h-12 px-6 rounded-lg border border-gray-700 text-sm text-gray-200 hover:border-cyan-400 hover:text-cyan-400">Muat lebih banyak</button></div>
+    </section>
+</div>
+
+<style>
+    .service-card { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%); }
+    .service-panel { display: none; scroll-margin-top: 110px; }
+    .service-panel:target { display: block; }
+    #services-title { scroll-margin-top: 110px; }
+    #roblox-hub a:focus-visible, #roblox-hub button:focus-visible { outline: 2px solid #22d3ee; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    @media (prefers-reduced-motion: reduce) { #roblox-hub * { transition: none; } }
+</style>
+
+<script>
+    function initRobloxDirectory() {
+        const input = document.querySelector<HTMLInputElement>("#roblox-game-search");
+        if (!input || input.dataset.ready) return;
+        input.dataset.ready = "true";
+        const cards = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-game-name]"));
+        const more = document.querySelector<HTMLButtonElement>("#load-more-games")!;
+        const count = document.querySelector("#game-result-count")!;
+        const empty = document.querySelector<HTMLElement>("#no-games")!;
+        const featured = document.querySelector<HTMLElement>("#featured-games");
+        const title = document.querySelector("#all-games-title")!;
+        const normalize = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLocaleLowerCase("id").trim();
+        let visible = 24;
+        const key = "yasui_roblox_directory";
+        try { const state = JSON.parse(sessionStorage.getItem(key) || "null"); if (state) { input.value = typeof state.query === "string" ? state.query : ""; visible = Math.max(24, Number(state.visible) || 24); } } catch {}
+        function render() {
+            const query = normalize(input!.value);
+            const matches = cards.filter((card) => normalize(card.dataset.gameName || "").includes(query));
+            cards.forEach((card) => { card.hidden = true; });
+            matches.slice(0, visible).forEach((card) => { card.hidden = false; });
+            more.hidden = matches.length <= visible;
+            empty.hidden = matches.length > 0;
+            if (featured) featured.hidden = !!query;
+            title.textContent = query ? "Hasil pencarian" : "Semua game";
+            count.textContent = `${matches.length} game${query ? "" : " · A–Z"}`;
+            try { sessionStorage.setItem(key, JSON.stringify({ query: input!.value, visible })); } catch {}
+        }
+        input.addEventListener("input", () => { visible = 24; render(); });
+        more.addEventListener("click", () => { const previous = visible; visible += 24; render(); const matches = cards.filter((card) => !card.hidden); matches[previous]?.focus({ preventScroll: true }); });
+        document.querySelector("#reset-game-search")?.addEventListener("click", () => { input.value = ""; visible = 24; render(); input.focus(); });
+        render();
+    }
+    initRobloxDirectory();
+    document.addEventListener("astro:page-load", initRobloxDirectory);
+</script>

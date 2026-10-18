@@ -1,0 +1,1857 @@
+{
+  "genshin-impact": {
+    "playStore": {
+      "packageId": "com.miHoYo.GenshinImpact",
+      "title": "Genshin Impact - Aplikasi di Google Play",
+      "imageUrl": "https://play-lh.googleusercontent.com/PQEqjOxr-3uZaNHmWoQinLVQQ9fbSegMKXmqgFm5nGgagqC2REH-1er3BguYStWbH3YStijj5WH1DDlwPh2ehw=s512",
+      "fetchedAt": "2026-10-14T13:44:58.569Z"
+    }
+  },
+  "mobile-legends": {
+    "playStore": {
+      "packageId": "com.mobile.legends",
+      "title": "Mobile Legends: Bang Bang - Aplikasi di Google Play",
+      "imageUrl": "https://play-lh.googleusercontent.com/MztmLpB1-_eFbHnqNzzvzl5zjiOH2BEb0D71uBxZYf_4BEmW3QEPWODhRtyqY7Qz4wRLwQ--Rg1RAjOFqtHSs-o=s512",
+      "fetchedAt": "2026-10-14T13:44:58.988Z"
+    }
+  },
+  "honor-of-kings": {
+    "appStore": {
+      "bundleId": "com.levelinfinite.sgameGlobal",
+      "title": "Honor of Kings",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/ba/a1/4f/baa14fb9-493b-d323-99f3-82b9f5ac75c0/AppIcon-1x_U007emarketing-0-7-0-85-220-0.png/512x512bb.jpg",
+      "fetchedAt": "2026-10-14T13:44:59.616Z"
+    }
+  },
+  "fish-it": {
+    "roblox": {
+      "universeId": 6701277882,
+      "matchedName": "[🪸UPD] Fish It! 🐟",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-04de559cdc617b844f0c4448e0f79e5c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:05.518Z"
+    }
+  },
+  "grow-a-garden": {
+    "roblox": {
+      "universeId": 7436755782,
+      "matchedName": "[🧚‍♀️] Grow a Garden 🌶️",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-b6ad84a02b4c8522137a069f7810c1b3/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:06.912Z"
+    }
+  },
+  "blox-fruits": {
+    "roblox": {
+      "universeId": 994732206,
+      "matchedName": "Blox Fruits",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-774ec14539b264f85fdb6e8a34dfa344/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:08.281Z"
+    }
+  },
+  "steal-a-brainrot": {
+    "roblox": {
+      "universeId": 7709344486,
+      "matchedName": "[💀] Steal a Brainrot",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-fcdec94c7542627c9b5947a3102a0b6c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:09.887Z"
+    }
+  },
+  "99-nights-in-the-forest": {
+    "roblox": {
+      "universeId": 7326934954,
+      "matchedName": "99 Nights in the Forest 🔦",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-384fc6072a05d56c9885b3a612f8e981/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:11.299Z"
+    }
+  },
+  "plants-vs-brainrots": {
+    "roblox": {
+      "universeId": 8316902627,
+      "matchedName": "[🕊️] Plants & Brainrots 🌻",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-560d730ab6ff2ab4556821bbbd490beb/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:12.661Z"
+    }
+  },
+  "fisch": {
+    "roblox": {
+      "universeId": 5750914919,
+      "matchedName": "Fisch 🐟 [SAVE NATE]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1874915760d886df6bbc35fa96639c7e/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:14.133Z"
+    }
+  },
+  "1-magic-evolution": {
+    "roblox": {
+      "universeId": 10764479526,
+      "matchedName": "[🎃] +1 Mog Evolution",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-788ba584554314c6d346ffed8d1d79d4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:16.050Z"
+    }
+  },
+  "1-mine-per-click": {
+    "roblox": {
+      "universeId": 10178802449,
+      "matchedName": "+1 Mine Per Click ⛏️",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-328fbdc1bdccb68e823a0cae7a438e64/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:17.942Z"
+    }
+  },
+  "100-days-at-sea": {
+    "roblox": {
+      "universeId": 9167377564,
+      "matchedName": "100 Days At Sea",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-39a46132e9e5bdeea6203ef8bc4bc325/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:19.356Z"
+    }
+  },
+  "a-dusty-trip": {
+    "roblox": {
+      "universeId": 5650396773,
+      "matchedName": "a dusty trip [🚲BIKE]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1b3ea575fb0789ad69ff3b26368cd1c5/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:20.897Z"
+    }
+  },
+  "a-universal-time": {
+    "roblox": {
+      "universeId": 1782832995,
+      "matchedName": "[🧙‍♀️🔮] A Universal Time 6.3",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-450410fdc3298e750bd4dec4bd17e64c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:22.426Z"
+    }
+  },
+  "abyss": {
+    "roblox": {
+      "universeId": 8144728961,
+      "matchedName": "Abyss",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-7217a54c026d940a9793d4f4b52414bd/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:24.007Z"
+    }
+  },
+  "abyssal-the-pilgrims-path": {
+    "roblox": {
+      "universeId": 10467100371,
+      "matchedName": "Pilgrim's Path",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-83b73620f3575b0ec6686fb6352e6d83/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:25.940Z"
+    }
+  },
+  "adopt-me": {
+    "roblox": {
+      "universeId": 383310974,
+      "matchedName": "[🎃] Adopt Me!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-fd05afa91e29a7895178342064489a36/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:27.686Z"
+    }
+  },
+  "all-star-tower-defense": {
+    "roblox": {
+      "universeId": 6057699512,
+      "matchedName": "All Star Tower Defense X",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2055fd7ae5af8dda81d0e4773313c45f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:29.196Z"
+    }
+  },
+  "american-plains-mudding": {
+    "roblox": {
+      "universeId": 2783797267,
+      "matchedName": "[🏗️TOWN🏗️] American Plains Mudding",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-a59d1b4b5efc5d7d5851db21ad7236a8/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:30.632Z"
+    }
+  },
+  "animal-hospital": {
+    "roblox": {
+      "universeId": 10148749921,
+      "matchedName": "Animal Hospital (Anomaly) 🧪",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3e496d8fe414b9b4d9fef8a28a42aeb9/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:32.196Z"
+    }
+  },
+  "anime-adventures": {
+    "roblox": {
+      "universeId": 3183403065,
+      "matchedName": "[🤹APRIL FOOL'S🤡] AA",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ceec97df50507c3436e05dfca16cd467/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:33.655Z",
+      "needsReview": true
+    },
+    "itemku": {
+      "imageUrl": "https://d1x91p7vw3vuq8.cloudfront.net/game/20231024/w1dy56awa39mp6n7hfaod.png",
+      "fetchedAt": "2026-10-14T13:52:35.318Z",
+      "note": "og:image resmi halaman game Itemku"
+    }
+  },
+  "anime-battle-arena": {
+    "roblox": {
+      "universeId": 10705974481,
+      "matchedName": "Anime Battle Arena",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-279cd144df51cbfaf89f07d756b0709a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:35.427Z"
+    }
+  },
+  "anime-card-battle": {
+    "roblox": {
+      "universeId": 6682487255,
+      "matchedName": "[ 🪄🎩] Anime Card Clash",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3766d480f5a11a1958799dd9e5eea88c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:36.912Z"
+    }
+  },
+  "anime-champion-simulator": {
+    "roblox": {
+      "universeId": 4986566693,
+      "matchedName": "Anime Champions Simulator",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-9bd9fbdc921121450d9af8b17954ba62/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:38.721Z"
+    }
+  },
+  "anime-crusaders": {
+    "roblox": {
+      "universeId": 10512942223,
+      "matchedName": "[UPD 3] Anime Zero 🗡️🎉",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3586ca44cf39d0932c945e724c1b8222/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:40.339Z"
+    }
+  },
+  "anime-defenders": {
+    "roblox": {
+      "universeId": 5836869368,
+      "matchedName": "Anime Defenders",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2ef69e4e4d0be01a2b12ecb16536d54f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:41.917Z"
+    }
+  },
+  "anime-dimension-simulator": {
+    "roblox": {
+      "universeId": 2655311011,
+      "matchedName": "[⭐2X] Anime Dimensions Simulator",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-52d1796d7a2a0d8a6ee000ce467d126a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:43.710Z"
+    }
+  },
+  "anime-eternal": {
+    "roblox": {
+      "universeId": 7882829745,
+      "matchedName": "[Part 4] Anime Eternal",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-aecd4d4e99798b1214b57031f738b0ce/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:45.127Z"
+    }
+  },
+  "anime-expeditions": {
+    "roblox": {
+      "universeId": 7613921865,
+      "matchedName": "[🧪] Anime Expeditions ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0f226357e694c0ddbde19bc00ed16d18/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:46.752Z"
+    }
+  },
+  "anime-fighting-simulator": {
+    "roblox": {
+      "universeId": 10321202755,
+      "matchedName": "[🎃] Anime Fighting Simulator",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-471111ca280cb5ca52ee448a0315ff80/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:48.280Z"
+    }
+  },
+  "anime-final-quest": {
+    "roblox": {
+      "universeId": 7798947148,
+      "matchedName": "[NOW!] Anime Final Quest",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-cb42b050eab2da299abe7764dde629e6/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:49.842Z"
+    }
+  },
+  "anime-kingdom-simulator": {
+    "roblox": {
+      "universeId": 4012406005,
+      "matchedName": "[🌎️New Map]🔥Ultimate Anime Simulator",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-47829191999f8407f87fc6260557a15b/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:51.693Z"
+    }
+  },
+  "anime-last-stand": {
+    "roblox": {
+      "universeId": 4509896324,
+      "matchedName": "[⬛🍀 UPD + 📊 x4] Anime Last Stand",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-9e233ae020d9b35a75ec67637b42d3b6/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:53.219Z"
+    }
+  },
+  "anime-origins": {
+    "roblox": {
+      "universeId": 8946565814,
+      "matchedName": "[UPDATE 3.0 ⚓] Anime Origins",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-fc7e47d79b184636d8ce479eaeacb252/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:54.691Z"
+    }
+  },
+  "anime-overload": {
+    "roblox": {
+      "universeId": 10399136326,
+      "matchedName": "Anime Ability Arena",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d5c7c812964a7bf5e8d4912681aeb1f3/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:56.377Z"
+    }
+  },
+  "anime-paradox": {
+    "roblox": {
+      "universeId": 7652830984,
+      "matchedName": "[QOL] Anime Paradox X",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0bfbb9827220d90f83a2b6cddab9822d/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:57.970Z"
+    }
+  },
+  "anime-raid": {
+    "roblox": {
+      "universeId": 2655311011,
+      "matchedName": "[⭐2X] Anime Dimensions Simulator",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-52d1796d7a2a0d8a6ee000ce467d126a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:45:59.558Z"
+    }
+  },
+  "anime-realms": {
+    "roblox": {
+      "universeId": 10116272705,
+      "matchedName": "[ 🏆UPD0.5 ] Anime Mysterious ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-97ae7af8622f5bfaf8ca2ed29bf420e4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:01.253Z"
+    }
+  },
+  "anime-squadron": {
+    "roblox": {
+      "universeId": 8356066619,
+      "matchedName": "[☀️UPD 5.0🥁] Anime Squadron",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-b2161a8e7a2c211c200c5089e725e8ce/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:02.627Z"
+    }
+  },
+  "anime-zero": {
+    "roblox": {
+      "universeId": 10512942223,
+      "matchedName": "[UPD 3] Anime Zero 🗡️🎉",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3586ca44cf39d0932c945e724c1b8222/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:03.988Z"
+    }
+  },
+  "arise-crossover": {
+    "roblox": {
+      "universeId": 7074860883,
+      "matchedName": "ARISE 1.0 [🚨STATUS: IN DEV ]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-553cb004edf72178c65fe59edfbf889a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:05.618Z"
+    }
+  },
+  "asylum-life": {
+    "roblox": {
+      "universeId": 8689860751,
+      "matchedName": "Asylum Life",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-6bf98b50a7d83a599eca7192ee9a84ae/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:07.164Z"
+    }
+  },
+  "basketball-zero": {
+    "roblox": {
+      "universeId": 7028566528,
+      "matchedName": "[😈JOHNNY🐎] Basketball: Zero",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-4996eda3e52a07c38b1c3c0787da8c64/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:08.667Z"
+    }
+  },
+  "be-a-brainrot": {
+    "roblox": {
+      "universeId": 9875383684,
+      "matchedName": "Be a Brainrot",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1fb2a33fd287d85badb9c5ffa56f40dc/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:10.045Z"
+    }
+  },
+  "be-a-lucky-block": {
+    "roblox": {
+      "universeId": 9787206684,
+      "matchedName": "Be a Lucky Block",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-84028ff848ff34a34b5425ce37dd0cc2/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:11.490Z"
+    }
+  },
+  "be-the-final-boss": {
+    "roblox": {
+      "universeId": 10421154706,
+      "matchedName": "Be The Final Boss [UPDATE]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-bed52e39262f381316ca5958998d3669/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:12.957Z"
+    }
+  },
+  "beaks": {
+    "roblox": {
+      "universeId": 7095682825,
+      "matchedName": "Beaks 🐦",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ebf26fca528a66a5c72cbb22c714b3c3/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:14.642Z"
+    }
+  },
+  "become-a-deep-sea-explorer": {
+    "roblox": {
+      "universeId": 7503449595,
+      "matchedName": "Become a Deep Sea Explorer",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3086f3aa225ef4b5afe02c52799c9948/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:16.092Z"
+    }
+  },
+  "bizarre-lineage": {
+    "roblox": {
+      "universeId": 2544520106,
+      "matchedName": "World of Stands",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-7621b412d235bed94e078786d5872baf/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:17.666Z",
+      "needsReview": true
+    },
+    "itemku": {
+      "imageUrl": "https://d1x91p7vw3vuq8.cloudfront.net/game/2026312/wdgtikbs1sjr3w05qa38yo.jpg",
+      "fetchedAt": "2026-10-14T13:52:35.318Z",
+      "note": "og:image resmi halaman game Itemku"
+    }
+  },
+  "blockspin": {
+    "roblox": {
+      "universeId": 6765805766,
+      "matchedName": "BlockSpin 🔪 [FISHING UPDATE!]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3fa1cc9c917b841b5630adea21e87134/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:19.218Z"
+    }
+  },
+  "bloxstrike": {
+    "roblox": {
+      "universeId": 7633926880,
+      "matchedName": "[NEW MAP] BloxStrike",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-20e83b60924417e672304e32a1c7e23f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:20.781Z"
+    }
+  },
+  "blue-lock-rivals": {
+    "roblox": {
+      "universeId": 6325068386,
+      "matchedName": "[🌟Sendou] Blue Lock: Rivals",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-5f91386c66ccc0f3647524cf2a0a97d4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:22.182Z"
+    }
+  },
+  "brainrot-evolution": {
+    "roblox": {
+      "universeId": 7332711118,
+      "matchedName": "Brainrot Evolution",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1e5fe26c384fa56a23464a93bb1026e7/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:23.637Z"
+    }
+  },
+  "brainrot-sniper": {
+    "roblox": {
+      "universeId": 10067868611,
+      "matchedName": "Brainrot Sniper [X2 Cash]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d67d6cdca1f1051ed8d42bb34dc7c634/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:25.595Z"
+    }
+  },
+  "break-a-lucky-block": {
+    "roblox": {
+      "universeId": 9344307274,
+      "matchedName": "⛏️ Break a Lucky Block!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1a993d435975b0ffde4b46cd5e672760/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:27.091Z"
+    }
+  },
+  "break-and-steal-an-egg": {
+    "roblox": {
+      "universeId": 10765288803,
+      "matchedName": "Break and Steal an Egg",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d4f7aea44aeb7018aefbd45d11062e63/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:28.630Z"
+    }
+  },
+  "broken-blade": {
+    "roblox": {
+      "universeId": 10093833731,
+      "matchedName": "[2x🍀]Broken Blade[Dragon]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-6d747ac75fd9a4b6b07da82a8d4454ec/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:30.237Z"
+    }
+  },
+  "brookhaven": {
+    "roblox": {
+      "universeId": 1686885941,
+      "matchedName": "Brookhaven 🏡RP",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-01fa54388131d629ec74c042784454c5/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:31.643Z"
+    }
+  },
+  "bubble-gum-simulator-infinity": {
+    "roblox": {
+      "universeId": 6504986360,
+      "matchedName": "[🎃] Bubble Gum Simulator INFINITY",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3a2e6a086ba2e783be31baf7e807500f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:33.126Z"
+    }
+  },
+  "build-a-base-and-steal": {
+    "roblox": {
+      "universeId": 10356701370,
+      "matchedName": "Build a Base and Steal 😈",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-7eae41883c16e7f60bde22e1b1028287/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:34.660Z"
+    }
+  },
+  "build-a-boat-for-treasure": {
+    "roblox": {
+      "universeId": 210851291,
+      "matchedName": "Build A Boat For Treasure",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-88172459d6aec8bf28e99556fc0562a8/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:36.035Z"
+    }
+  },
+  "build-a-ring-farm": {
+    "roblox": {
+      "universeId": 10039338037,
+      "matchedName": "[🌽] Build A Ring Farm",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-a649838c10d14331168f2fdbb8c2607e/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:37.600Z"
+    }
+  },
+  "build-a-zoo": {
+    "roblox": {
+      "universeId": 8066283370,
+      "matchedName": "[🎁]Build a Zoo🥚",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-990f015f43053e164d18c5db93226731/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:38.982Z"
+    }
+  },
+  "build-an-island": {
+    "roblox": {
+      "universeId": 7541395924,
+      "matchedName": "Build An Island! 🏝️",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-90e1c17fed86c675fd8059468b2d8943/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:40.483Z"
+    }
+  },
+  "bus-explorer-indonesia": {
+    "roblox": {
+      "universeId": 8804604861,
+      "matchedName": "Bus Explorer Indonesia",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-4edc8bfb352a7b9c61d13d6665615903/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:42.072Z"
+    }
+  },
+  "cake-off": {
+    "roblox": {
+      "universeId": 6052033819,
+      "matchedName": "[UPD🍓] Cake Off!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c3405a79227bed2867c45aaaa8bca2b4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:43.684Z"
+    }
+  },
+  "capybara-evolution": {
+    "roblox": {
+      "universeId": 6925369391,
+      "matchedName": "Capybara Evolution",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-93542060b16b0fc5c9ff54d7edf76c69/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:45.253Z"
+    }
+  },
+  "capybaras-vs-plants": {
+    "roblox": {
+      "universeId": 8841437826,
+      "matchedName": "[🎃] Capybaras VS Plants",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0fcbef8005f7014556d32c45120730b6/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:46.933Z"
+    }
+  },
+  "catch-a-brainrot": {
+    "roblox": {
+      "universeId": 10204207151,
+      "matchedName": "Catch a Brainrot",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-abf9651e619291c3690cf0ce320a3461/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:48.498Z"
+    }
+  },
+  "catch-a-monster": {
+    "roblox": {
+      "universeId": 9141743926,
+      "matchedName": "[NOW] Catch a Monster",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1f8abbd4c3cdf2bddc1ab2e67015dbb3/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:50.098Z"
+    }
+  },
+  "catch-and-tame": {
+    "roblox": {
+      "universeId": 9091133975,
+      "matchedName": "[🏢] Catch And Tame!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8d6b67d1b3bf622c31b0366e66e4c40a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:51.829Z"
+    }
+  },
+  "catch-bugs": {
+    "roblox": {
+      "universeId": 9663757076,
+      "matchedName": "🐛Catch Bugs!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8cadaba34bb5eb5e85296954eda4b54e/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:53.458Z"
+    }
+  },
+  "chop-your-tree": {
+    "roblox": {
+      "universeId": 9228045253,
+      "matchedName": "🌴 Chop Your Tree",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-583aadc048a6f9dd057f5a4ccd6f4a58/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:55.368Z"
+    }
+  },
+  "climb-and-jump-tower": {
+    "roblox": {
+      "universeId": 7474367816,
+      "matchedName": "Climb and Jump Tower [NEW WORLD]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-9b87d1a1c4729790a926db1a76760518/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:56.859Z"
+    }
+  },
+  "climb-for-brainrots": {
+    "roblox": {
+      "universeId": 9563386957,
+      "matchedName": "[🌀] Climb For Brainrots",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8b295581b143de70fdbb08c39dd47f27/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:58.441Z"
+    }
+  },
+  "clover-origins": {
+    "roblox": {
+      "universeId": 9891331827,
+      "matchedName": "Clover Time [SHADOW GRIMOIRE💥]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ce93d06076097cd5f72dd040fb596b25/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:46:59.883Z"
+    }
+  },
+  "combat-arena": {
+    "roblox": {
+      "universeId": 5421899973,
+      "matchedName": "[🎃] Combat Arena",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-73e597007b23b3a0ca6a13cb0f198130/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:01.507Z"
+    }
+  },
+  "craft-a-world": {
+    "roblox": {
+      "error": "thumbnail state=Blocked",
+      "triedAt": "2026-10-14T13:47:03.285Z",
+      "needsReview": true
+    },
+    "itemku": {
+      "imageUrl": "https://d1x91p7vw3vuq8.cloudfront.net/game/2026225/mszat1xre6suiysh52s6.png",
+      "fetchedAt": "2026-10-14T13:52:35.318Z",
+      "note": "og:image resmi halaman game Itemku"
+    }
+  },
+  "dead-rails": {
+    "roblox": {
+      "universeId": 7018190066,
+      "matchedName": "Dead Rails",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-73310f33b2ecd73ed0e37b9b24407bf4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:04.799Z"
+    }
+  },
+  "defeat-anime-rng": {
+    "roblox": {
+      "universeId": 10552240401,
+      "matchedName": "[UPD 8] Defeat Anime RNG",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c77d58be0b056bd03345234e00949cf9/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:06.221Z"
+    }
+  },
+  "defend-ur-base-with-anime": {
+    "roblox": {
+      "universeId": 10111742174,
+      "matchedName": "[UPD!] Defend ur base with anime",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-cb4454019a36bef14a365cc454f3de00/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:07.652Z"
+    }
+  },
+  "demon-blade": {
+    "roblox": {
+      "universeId": 5170731021,
+      "matchedName": "Demon Blade",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-39996e1fe86b501559e89d5fe33e3a02/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:09.203Z"
+    }
+  },
+  "devils-market": {
+    "roblox": {
+      "universeId": 10371156562,
+      "matchedName": "Forest Market",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-155207e13d46a978b5d1cf21bcb8a08c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:10.957Z"
+    }
+  },
+  "dig-it": {
+    "roblox": {
+      "universeId": 6705549208,
+      "matchedName": "Dig it!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0d65866e56363c72cada9f1725878951/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:12.343Z"
+    }
+  },
+  "dollys-factory": {
+    "roblox": {
+      "universeId": 6763123315,
+      "matchedName": "Dolly's Factory [Alpha]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-e8e13ae9491033c44bbb6e8c4857a350/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:13.907Z"
+    }
+  },
+  "drag-drive-simulator": {
+    "roblox": {
+      "universeId": 7089588429,
+      "matchedName": "(WHEELIE STYLE x BIG UPDATE) Drag Drive Simulator",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-90e8b83977f0f26a0e246241abaceeaa/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:15.373Z"
+    }
+  },
+  "dragon-adventures": {
+    "roblox": {
+      "universeId": 1235188606,
+      "matchedName": "[⭐SZN 10] Dragon Adventures 🐉",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8d4d0d7999aeae912c4f0b080ce13c0e/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:16.720Z"
+    }
+  },
+  "dress-to-impress": {
+    "roblox": {
+      "universeId": 5203828273,
+      "matchedName": "Dress To Impress ⭐",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-622d27cf094210e32f71577a301f1acd/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:18.162Z"
+    }
+  },
+  "duel-warriors": {
+    "roblox": {
+      "universeId": 6736482454,
+      "matchedName": "[🏆New Rank] Duel Warriors",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-df2e13809a96817ab4e17145db6c006a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:19.963Z"
+    }
+  },
+  "dueling-grounds": {
+    "roblox": {
+      "universeId": 9051406594,
+      "matchedName": "Dueling Grounds ⚔️ ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-68e6ba58dc05de2e3f7802b41147bc97/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:21.563Z"
+    }
+  },
+  "dungeon-hunters": {
+    "roblox": {
+      "universeId": 8937254139,
+      "matchedName": "Dungeon Hunters [UPD]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ba783794bd8b5ab430a9751c3ae46870/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:23.036Z"
+    }
+  },
+  "dungeon-lootr": {
+    "roblox": {
+      "universeId": 9656201728,
+      "matchedName": "[🛡️ GUILDS] Dungeon Lootr",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-85f3801d34dc3aa91e1f50c253030f92/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:24.470Z"
+    }
+  },
+  "dungeon-quest": {
+    "roblox": {
+      "universeId": 9931749389,
+      "matchedName": "Dungeon Quest Reborn",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-92f92d4001957d5cf16daabd99a7628a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:25.987Z"
+    }
+  },
+  "ecos-la-brea": {
+    "roblox": {
+      "universeId": 4408288935,
+      "matchedName": "Ecos: La Brea",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2de3b104249c6d71aff90b5f53742480/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:27.494Z"
+    }
+  },
+  "escape-tsunami-for-brainrots": {
+    "roblox": {
+      "universeId": 9363735110,
+      "matchedName": "[🌊] Escape Tsunami For Brainrots!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-5a43294344fd9a79de17f89df27260f2/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:29.090Z"
+    }
+  },
+  "evade-rbl": {
+    "roblox": {
+      "universeId": 3647333358,
+      "matchedName": "Evade ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-bf95a86e5f5e37bf61a5f33401e95deb/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:30.895Z"
+    }
+  },
+  "evomon": {
+    "roblox": {
+      "universeId": 9826885587,
+      "matchedName": "Evomon[S3 TRADE]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-903018c8766ea465401f9f142f2e9f7e/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:32.368Z"
+    }
+  },
+  "fifa-super-soccer": {
+    "roblox": {
+      "universeId": 4293374620,
+      "matchedName": "FIFA Super Soccer",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ab2fd786a6324611c9695abc4630a62b/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:33.972Z"
+    }
+  },
+  "fight-your-zombie": {
+    "roblox": {
+      "universeId": 9599630721,
+      "matchedName": "🗡️ Fight Your Zombie",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-57ab79723d032a526a51cbc3b92df763/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:35.761Z"
+    }
+  },
+  "fish-an-anime-rng": {
+    "roblox": {
+      "universeId": 9582986239,
+      "matchedName": "Fish an Anime RNG 🎲",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-af37e955c174865297e9a0250e5b9f26/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:37.192Z"
+    }
+  },
+  "fish-training": {
+    "roblox": {
+      "universeId": 6897035933,
+      "matchedName": "[NEW] Fish Training ⭐",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c99047553b12f98b5c3b9774fccec416/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:39.047Z"
+    }
+  },
+  "flashpoint-worlds-collide": {
+    "roblox": {
+      "universeId": 4785982047,
+      "matchedName": "FLASHPOINT⚡",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-fdb9679a109c169decf267a200014951/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:40.599Z"
+    }
+  },
+  "gakuran": {
+    "roblox": {
+      "universeId": 10504918958,
+      "matchedName": "(私学) Shigaku",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-73aa740d23247db991de65661d374058/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:42.075Z",
+      "needsReview": true
+    },
+    "itemku": {
+      "imageUrl": "https://d1x91p7vw3vuq8.cloudfront.net/game/202697/442ishuvpu21ekvavk2i03.jpg",
+      "fetchedAt": "2026-10-14T13:52:35.318Z",
+      "note": "og:image resmi halaman game Itemku"
+    }
+  },
+  "garden-horizons": {
+    "roblox": {
+      "universeId": 9509842868,
+      "matchedName": "Garden Horizons",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-5a00197497adfe909055a27a3b48b356/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:43.465Z"
+    }
+  },
+  "garden-tower-defense": {
+    "roblox": {
+      "universeId": 7703614594,
+      "matchedName": "[🧪TRAITS] Garden Tower Defense 🌻",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-318ee831a30b0f003b42221e7b6d14a9/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:44.910Z"
+    }
+  },
+  "go-fishing": {
+    "roblox": {
+      "universeId": 6764180126,
+      "matchedName": "[🎅UPD ] GO FISHING 🐟",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-5a59862b56d17458f0b03625674e9d3a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:46.502Z"
+    }
+  },
+  "grand-blue": {
+    "roblox": {
+      "universeId": 6215986499,
+      "matchedName": "Grand Blue [Early Access]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-e8be56b1ee5a200d9f496088c973de3f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:48.069Z"
+    }
+  },
+  "grand-piece-online": {
+    "roblox": {
+      "universeId": 648454481,
+      "matchedName": "[🍬HALLOWEEN PT 1] Grand Piece Online",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ac5cae9ca606a1a3d2e9a81b3ad29247/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:49.662Z"
+    }
+  },
+  "grow-a-garden-2": {
+    "roblox": {
+      "universeId": 10200395747,
+      "matchedName": "Grow a Garden 2",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-076fa0b396f5eac77ef9bb004dac1842/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:51.373Z"
+    }
+  },
+  "grow-beanstalk-for-brainrots": {
+    "roblox": {
+      "universeId": 9704343971,
+      "matchedName": "Grow Beanstalk For Brainrots!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-997e4c369aa60499edfdfd1772f8b1ce/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:53.015Z"
+    }
+  },
+  "gym-league": {
+    "roblox": {
+      "universeId": 5972059550,
+      "matchedName": "[UPD 5] Gym League ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ffc1888235676806d19f123ad9741aca/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:54.365Z"
+    }
+  },
+  "gym-star-simulator": {
+    "roblox": {
+      "universeId": 6443367640,
+      "matchedName": "Gym Star Simulator 🏋️",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-28e06a60761da59801655ff00a827918/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:55.887Z"
+    }
+  },
+  "haze-seas": {
+    "roblox": {
+      "universeId": 2644656496,
+      "matchedName": "Haze Seas ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-a895963d76c0a0fe907f229e34e44576/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:57.364Z"
+    }
+  },
+  "heroes-battlegrounds": {
+    "roblox": {
+      "universeId": 4568630521,
+      "matchedName": "Heroes Battlegrounds",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3c3fba3ff15d44cddfacd7f743a94fc9/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:47:58.883Z"
+    }
+  },
+  "hitman-card-game": {
+    "roblox": {
+      "universeId": 6612614547,
+      "matchedName": "Hitman Card Game",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-97b5dd29c3e50b652170828490e2455a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:00.607Z"
+    }
+  },
+  "horse-life": {
+    "roblox": {
+      "universeId": 5422546686,
+      "matchedName": "[🎃 NEW 🗺️ ] Horse Life",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-f1c386cf4b674e668a6d9d2b367d4158/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:02.245Z"
+    }
+  },
+  "hunters": {
+    "roblox": {
+      "universeId": 7314989375,
+      "matchedName": "Hunters",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-be33e2662a7122af39cb270fc2911d37/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:03.585Z"
+    }
+  },
+  "hunty-zombie": {
+    "roblox": {
+      "universeId": 7750955984,
+      "matchedName": "[ONI!] Hunty Zombie",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0387c5c8e25565797fb65dd89e8f7501/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:05.153Z"
+    }
+  },
+  "hypershot": {
+    "roblox": {
+      "universeId": 5995470825,
+      "matchedName": "🔥Hypershot",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-576f61852a77e72d271fb5387243c88b/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:06.569Z"
+    }
+  },
+  "indo-hangout": {
+    "roblox": {
+      "universeId": 7141039129,
+      "matchedName": "Indo Camp [Voice Chat]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-7a4511fc05324bbaba4806233e6afa06/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:08.181Z"
+    }
+  },
+  "ink-game": {
+    "roblox": {
+      "universeId": 7008097940,
+      "matchedName": "[⚔️] Ink Game",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2d6121437a2d13e1dfc3f0664078b11f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:09.636Z"
+    }
+  },
+  "iron-soul-dungeon": {
+    "roblox": {
+      "universeId": 9910245722,
+      "matchedName": "Iron Soul: Dungeon",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-9f3937d807b20e7fa39828573229f4f0/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:11.088Z"
+    }
+  },
+  "jailbreak": {
+    "roblox": {
+      "universeId": 245662005,
+      "matchedName": "Jailbreak",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-cd48b73bb66c6d24de0f3f6d7ee0520b/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:12.637Z"
+    }
+  },
+  "kaizen": {
+    "roblox": {
+      "universeId": 6048923315,
+      "matchedName": "[🌀Sky Manipulation] KAIZEN",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8ae6bc9e43a0ba22fab0a201d446530d/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:14.350Z"
+    }
+  },
+  "kayak-and-surf": {
+    "roblox": {
+      "universeId": 8836568224,
+      "matchedName": "[SEASON 3] Kayak and Surf  🌊",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2da8a9465932527f0d9af040948673f5/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:15.950Z"
+    }
+  },
+  "kayak-racing": {
+    "roblox": {
+      "universeId": 7662333120,
+      "matchedName": "🚣‍♂️Kayak Racing [Summer] ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d3bfa91fefebe1f47efda3df4296d719/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:17.685Z"
+    }
+  },
+  "kick-a-lucky-block": {
+    "roblox": {
+      "universeId": 10004244222,
+      "matchedName": "[🍁] Kick a Lucky Block",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-90c27e16263d9d33d2da56f4a162d9d3/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:19.284Z"
+    }
+  },
+  "king-legacy": {
+    "roblox": {
+      "universeId": 1451439645,
+      "matchedName": "King Legacy",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8d0a42cbf6f6c05180a90b8f99a5eb72/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:20.721Z"
+    }
+  },
+  "knockout": {
+    "roblox": {
+      "universeId": 9384605736,
+      "matchedName": "[🎩] Knockout! 🐧",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-161ec7a84116c5675aec656dbda59aa1/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:22.190Z"
+    }
+  },
+  "kopdes-together": {
+    "roblox": {
+      "universeId": 9777594324,
+      "matchedName": "[UPD] Kopdes Together",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-13183dc412a4541816c863eea1e0f175/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:23.997Z"
+    }
+  },
+  "kurokus-basketball-showdown": {
+    "roblox": {
+      "universeId": 5379950946,
+      "matchedName": "🏀 Basketball Stars 3",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-bbd3f3834cbd6cc4649fa5db10be2017/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:25.776Z"
+    }
+  },
+  "lexington-concord": {
+    "roblox": {
+      "universeId": 5269058522,
+      "matchedName": "[UPDATE] Lexington & Concord",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-fe9d993b6cbf8e81fcb181d67166532a/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:27.665Z"
+    }
+  },
+  "lineage-piece": {
+    "roblox": {
+      "universeId": 9382839773,
+      "matchedName": "[🐲Goku & Castorice🟣] Lineage Piece",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8ad173fafc0491642f0ea87e73a5e0f7/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:29.234Z"
+    }
+  },
+  "lootify": {
+    "roblox": {
+      "universeId": 5682590751,
+      "matchedName": "Lootify🎄",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0a27ebe796f09672cf1cfe83cec4d2af/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:30.881Z"
+    }
+  },
+  "lucky-block-rush": {
+    "roblox": {
+      "universeId": 10148434559,
+      "matchedName": "Lucky Block Rush",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-45e9d795ebbd95d6fa098f9c07e2803d/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:32.462Z"
+    }
+  },
+  "lumber-tycoon-2": {
+    "roblox": {
+      "universeId": 2471084,
+      "matchedName": "🌳 Lumber Tycoon 2",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-dd7c00351ab8f76533ce4b4256db8521/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:34.096Z"
+    }
+  },
+  "merge-a-nuke": {
+    "roblox": {
+      "universeId": 10199301628,
+      "matchedName": "[BOSS😈] Merge a Nuke!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-84865ce585e622889eb403dc68a182e4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:35.754Z"
+    }
+  },
+  "military-tycoon": {
+    "roblox": {
+      "universeId": 2788648141,
+      "matchedName": "Military Tycoon ®",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-fa1fbbf7f44437c00a217b5a1cab6686/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:37.278Z"
+    }
+  },
+  "mine-a-mountain": {
+    "roblox": {
+      "universeId": 10187294555,
+      "matchedName": "[⛰️] Mine a Mountain",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-6da5af2dceaa4c699437b605e04d0229/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:38.780Z"
+    }
+  },
+  "mini-war": {
+    "roblox": {
+      "universeId": 9837612476,
+      "matchedName": "[💥] Mini War",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-82722a789dae42549c282654f1428e08/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:40.355Z"
+    }
+  },
+  "mount-rng": {
+    "roblox": {
+      "universeId": 6466404775,
+      "matchedName": "[🎃] MOUNT RNG",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-ebb076c1d8b2d3a5b2891f153f5ad549/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:41.909Z"
+    }
+  },
+  "murder-mystery-2": {
+    "roblox": {
+      "universeId": 66654135,
+      "matchedName": "Murder Mystery 2",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3ac5af325970a745b0156a5358174169/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:43.427Z"
+    }
+  },
+  "murderers-vs-sheriffs-duels": {
+    "roblox": {
+      "universeId": 4348829796,
+      "matchedName": "MVSD | Murderers VS Sheriffs Duels",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2cac25a28b32e71c8c3c94368e6d6b9c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:44.871Z"
+    }
+  },
+  "my-brainrot-egg-farm": {
+    "roblox": {
+      "universeId": 8674765068,
+      "matchedName": "Brainrot Egg Factory",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3daa5530db1955579f3bbde7dfac07c9/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:46.621Z"
+    }
+  },
+  "my-singing-brainrot": {
+    "roblox": {
+      "universeId": 7893515528,
+      "matchedName": "🎤 My Singing Brainrot",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-df33272544c726d16f4828c56a39fc16/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:48.130Z"
+    }
+  },
+  "neo-tennis": {
+    "roblox": {
+      "universeId": 8181391950,
+      "matchedName": "[UPD] Neo Tennis",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-b536e26a75141ea310f2c153744538ab/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:49.670Z"
+    }
+  },
+  "nfl-universe-football": {
+    "roblox": {
+      "universeId": 184199275,
+      "matchedName": "[🔥NIKE] NFL Universe Football",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-e59a537fdbb41a4a451b7c6189213a9e/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:51.225Z"
+    }
+  },
+  "paint-to-hide": {
+    "roblox": {
+      "universeId": 10768026334,
+      "matchedName": "[🎨] Hide In Pixels",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-e8700b791863780b967ddc0ddbfce868/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:53.037Z"
+    }
+  },
+  "pet-mine": {
+    "roblox": {
+      "universeId": 6385639083,
+      "matchedName": "Pet Mine! 💎",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-14a0bfa76ef717433477238e5fedcabd/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:54.662Z"
+    }
+  },
+  "roblox-pet-simulator-99": {
+    "roblox": {
+      "universeId": 3317771874,
+      "matchedName": "🔥 [BLOOD MOON] Pet Simulator 99! 👻",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c2390e2edc33b27919f8e6e71dbe9475/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:56.178Z"
+    }
+  },
+  "pets-universe": {
+    "roblox": {
+      "universeId": 10759638075,
+      "matchedName": "[🛡️ CLANS] Pets Universe!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0438b6d3ab88700813bc607ea8dad1dd/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:57.735Z"
+    }
+  },
+  "pickaxe-simulator": {
+    "roblox": {
+      "universeId": 8832884753,
+      "matchedName": "[🍀X3] Pickaxe Simulator! ⛏️",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-987c48171f52f3c26602f644d3584312/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:48:59.382Z"
+    }
+  },
+  "power-blast-lucky-blocks": {
+    "roblox": {
+      "universeId": 10184247393,
+      "matchedName": "Power Blast Lucky Blocks!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-a64dad03d2f4cc71a7e0bc13de8f3f5c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:01.148Z"
+    }
+  },
+  "prospecting": {
+    "roblox": {
+      "universeId": 7629331599,
+      "matchedName": "Prospecting! 💎",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-b658113a3a9fbd0d0adca59856cb6c6c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:02.823Z"
+    }
+  },
+  "racket-rivals": {
+    "roblox": {
+      "universeId": 7883776681,
+      "matchedName": "[EVENT🎃] Racket Rivals ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-dd31e3cdb20e0c7ad657f1e9c70aa424/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:04.150Z"
+    }
+  },
+  "raise-animals": {
+    "roblox": {
+      "universeId": 8009328211,
+      "matchedName": "Raise Animals",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-01a26a2aa8bf61dbccdb63ecbf40b45c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:05.875Z"
+    }
+  },
+  "re-rangers-x": {
+    "roblox": {
+      "universeId": 9774981774,
+      "matchedName": "[🏖️ PT2 SUMMER] Re:Rangers X",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-f1e2d36ede0b3ba6bddd350df4f832f9/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:07.591Z"
+    }
+  },
+  "rebirth-champions-ultimate": {
+    "roblox": {
+      "universeId": 7178032757,
+      "matchedName": "[✨] Rebirth Champions: Ultimate",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-0eae8e1cdefdb7ab7fda69a4b98c4e0e/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:09.487Z"
+    }
+  },
+  "ride-a-pet": {
+    "roblox": {
+      "universeId": 10035204815,
+      "matchedName": "[🎃EVENT] Ride A Pet",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-193a5a6d05b82f29fbee6a1edb3d5394/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:11.060Z"
+    }
+  },
+  "rise-of-nation": {
+    "roblox": {
+      "universeId": 918677693,
+      "matchedName": "Rise of Nations",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-f4810af4473fef2efcd095d072d31542/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:12.540Z"
+    }
+  },
+  "rng-heroes": {
+    "roblox": {
+      "universeId": 10153098880,
+      "matchedName": "[HALLOWEEN] Heroes RNG 🏹",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-02564e10378328ddd421e8085ec480e0/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:14.483Z"
+    }
+  },
+  "rogue-piece": {
+    "roblox": {
+      "universeId": 8321616508,
+      "matchedName": "Rogue Piece: Rebirth",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-f65927f595d54b0765778b7e0b4771cc/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:15.971Z"
+    }
+  },
+  "roll-a-fisherman": {
+    "roblox": {
+      "universeId": 10636331438,
+      "matchedName": "[UPD] Roll a Fisherman 🎣",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-f182c953283994df87282b22682c9f39/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:17.565Z"
+    }
+  },
+  "roller-for-brainrots": {
+    "roblox": {
+      "universeId": 10004760418,
+      "matchedName": "Roller for Brainrots!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-76eee9d21f6b4975cd9cdf7e16649d59/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:19.004Z"
+    }
+  },
+  "run-a-restaurant": {
+    "roblox": {
+      "universeId": 9970645639,
+      "matchedName": "Run a Restaurant!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-a2dd316722eb295a7a7bfc87e054a795/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:20.666Z"
+    }
+  },
+  "sailor-piece": {
+    "roblox": {
+      "universeId": 9186719164,
+      "matchedName": "[2X LUCK 🍀 + MASTERY ⚔️] Sailor Piece",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2367aea37c23734a3304e4824937a4e2/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:22.173Z"
+    }
+  },
+  "salon-de-fiestas": {
+    "roblox": {
+      "universeId": 10504739696,
+      "matchedName": "Belt Dance [New Playlist🎶] ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-538b2f280a34eee68152f21e33b18541/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:23.489Z",
+      "needsReview": true
+    },
+    "itemku": {
+      "imageUrl": "https://d1x91p7vw3vuq8.cloudfront.net/game/2025630/r2vt9fcuc6pja04yync6bl.png",
+      "fetchedAt": "2026-10-14T13:52:35.318Z",
+      "note": "og:image resmi halaman game Itemku"
+    }
+  },
+  "sawah-indo": {
+    "roblox": {
+      "universeId": 9742311311,
+      "matchedName": "Sawit Indonesia🌴",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-48bf3c88223976759be1a72b984a3549/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:25.153Z"
+    }
+  },
+  "sell-lemons": {
+    "roblox": {
+      "universeId": 7395930870,
+      "matchedName": "Sell Lemons 🍋",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c2c4895c07bf5dc0f7b32d695f078835/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:26.678Z"
+    }
+  },
+  "sesh": {
+    "roblox": {
+      "universeId": 7557272025,
+      "matchedName": "sesh",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-672585a71461c8c1bd35de74d1e64e22/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:28.166Z"
+    }
+  },
+  "shoot-laser-for-brainrots": {
+    "roblox": {
+      "universeId": 9988290343,
+      "matchedName": "Shoot LASERS For Brainrots!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c9f3e51070fbb36b78bfaf1bec4c603b/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:30.006Z"
+    }
+  },
+  "slayers-2": {
+    "roblox": {
+      "universeId": 5595353122,
+      "matchedName": "Slayers 2",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8f6e03e81105f9c8f310b91758896236/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:31.470Z"
+    }
+  },
+  "slime-rng": {
+    "roblox": {
+      "universeId": 9792947201,
+      "matchedName": "Slime RNG",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-2f7978b674aeb4273e19ba6fa25bb846/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:33.029Z"
+    }
+  },
+  "sniper-arena": {
+    "roblox": {
+      "universeId": 9534705677,
+      "matchedName": "[🔥UPD] Sniper Arena",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-b69983e76d9d467921a247e4988ecc09/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:34.640Z"
+    }
+  },
+  "sniper-duels": {
+    "roblox": {
+      "universeId": 7264587281,
+      "matchedName": "[RANKED] SNIPER DUELS",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c38749ab9ee5f20afac307ce4d886df3/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:36.013Z"
+    }
+  },
+  "solo-hunters": {
+    "roblox": {
+      "universeId": 7394964165,
+      "matchedName": "[MONARCH] Solo Hunters",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-5ded344f78e1ec3d1f92b2e5e81d4400/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:37.722Z"
+    }
+  },
+  "southern-mudding": {
+    "roblox": {
+      "universeId": 8719555347,
+      "matchedName": "[🏍️Bikes🏍️] Southern Mudding 🚜 OffRoading",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-70068fea571edc7dab5e8f33c4430b7d/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:39.278Z"
+    }
+  },
+  "spear-fishing": {
+    "roblox": {
+      "universeId": 8741232785,
+      "matchedName": "Spear Fishing[UPD]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-faadb85dab1f1554a80b3dfd50839d72/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:40.640Z"
+    }
+  },
+  "speed-keyboard-escape": {
+    "roblox": {
+      "universeId": 9584852943,
+      "matchedName": "+1 Speed Keyboard Escape | Candy & Chocolate",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-c011a406bde32ae7936ce71b2bcf3a3c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:42.245Z"
+    }
+  },
+  "spin-a-soccer-card": {
+    "roblox": {
+      "universeId": 9272693470,
+      "matchedName": "[💀] Spin a Soccer Card ⚽",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-db686d71920416ec2b16a684162f4ca4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:43.748Z"
+    }
+  },
+  "spongebob-tower-defense": {
+    "roblox": {
+      "universeId": 6594435384,
+      "matchedName": "SpongeBob Tower Defense🍍",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1847855c4a002a3301c6c091ae3c8aa8/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:45.185Z"
+    }
+  },
+  "steal-a-fish": {
+    "roblox": {
+      "universeId": 7907828295,
+      "matchedName": "Steal A Fish",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-55be1e5f53db741b67d48b5e74a9e240/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:46.986Z"
+    }
+  },
+  "steal-a-labubu": {
+    "roblox": {
+      "universeId": 8791358380,
+      "matchedName": "Don’t Steal the Bobo 🐻",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-50b81eff9c70eb076bc5fca296a4a0c1/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:48.461Z"
+    }
+  },
+  "steal-an-egg": {
+    "roblox": {
+      "universeId": 10563114921,
+      "matchedName": "Steal An Egg",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-6e20c32d815e10f133df868ce114a928/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:50.122Z"
+    }
+  },
+  "steal-anime": {
+    "roblox": {
+      "universeId": 7860226425,
+      "matchedName": "🚨 Steal Anime!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8b1d5cf74d9bedb1a31af19df433a014/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:52.049Z"
+    }
+  },
+  "storage-hunters-open-world": {
+    "roblox": {
+      "universeId": 10261267004,
+      "matchedName": "[🍂] Storage Hunters: Open World",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d338c4bff81c89595d54719d3711c03f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:53.551Z"
+    }
+  },
+  "subterra": {
+    "roblox": {
+      "universeId": 5779606636,
+      "matchedName": "Subterra ⛏️ [BETA]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-f5fc7a7ac9cf7c5a548d7eea27a4d689/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:54.882Z"
+    }
+  },
+  "survive-bikini-bottom": {
+    "roblox": {
+      "universeId": 9161811618,
+      "matchedName": "Survive Bikini Bottom",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-24aee72178c1e19debf2ed78aaf930e1/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:56.523Z"
+    }
+  },
+  "survive-lava-for-brainrots": {
+    "roblox": {
+      "universeId": 9649298941,
+      "matchedName": "Survive LAVA for Brainrots!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-971799fb23d74c365e104de9daf1106f/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:58.280Z"
+    }
+  },
+  "survive-the-apocalypse": {
+    "roblox": {
+      "universeId": 9098570654,
+      "matchedName": "[UPD] 🧟 Survive the Apocalypse",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-4a8e34f681001f066fd57b0c5a424e56/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:49:59.806Z"
+    }
+  },
+  "survive-the-killer": {
+    "roblox": {
+      "universeId": 1489026993,
+      "matchedName": "🔪Survive the Killer!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d907a5a8ddb745efab39de367c1218fa/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:01.209Z"
+    }
+  },
+  "survive-zombie-arena": {
+    "roblox": {
+      "universeId": 9348272796,
+      "matchedName": "[UPDATE] Survive Zombie Arena",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d7072a20a9f228cec5d5c76201e1ece5/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:02.768Z"
+    }
+  },
+  "swing-obby-for-brainrots": {
+    "roblox": {
+      "universeId": 9753814298,
+      "matchedName": "Swing Obby for Brainrots!",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-21073a1d82493204351c328099b02f90/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:04.618Z"
+    }
+  },
+  "swordburst-2": {
+    "roblox": {
+      "universeId": 212154879,
+      "matchedName": "[Wave Defense🗡️] Swordburst 2",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-9fecd32eaa62cc780bc4fc621b377dfa/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:06.241Z"
+    }
+  },
+  "swordburst-3": {
+    "roblox": {
+      "universeId": 4093155512,
+      "matchedName": "Swordburst 3",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-b6d0b63282ac3db8e0989b99d321f3bc/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:07.810Z"
+    }
+  },
+  "tap-simulator": {
+    "roblox": {
+      "universeId": 10629695169,
+      "matchedName": "[NEW] Tap Simulator: Reborn",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-3677c15304bb0198db6b15ada8546902/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:09.280Z"
+    }
+  },
+  "the-forge": {
+    "roblox": {
+      "universeId": 7671049560,
+      "matchedName": "The Forge [📜]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-9681bc53007b57802932b6d3916ee5c8/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:10.912Z"
+    }
+  },
+  "throw-a-coin": {
+    "roblox": {
+      "universeId": 10131390815,
+      "matchedName": "[🗿] Throw a Coin",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-8423b7d2953194aa489d575dcd550bb4/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:12.513Z"
+    }
+  },
+  "universal-tower-defense": {
+    "roblox": {
+      "universeId": 7488190691,
+      "matchedName": "[⚽4.25🏆] Universal Tower Defense Z",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-4de0f35419489ec46fb6ad03db465b58/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:14.106Z"
+    }
+  },
+  "vesteria": {
+    "roblox": {
+      "universeId": 833209132,
+      "matchedName": "[NEW] Vesteria",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-f96561864f574ac2a826ad14cc00091d/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:15.780Z"
+    }
+  },
+  "violence-district": {
+    "roblox": {
+      "universeId": 6739698191,
+      "matchedName": "[CURE] Violence District",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-24a7fe15374c20384a33ba2f9d4dc362/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:17.280Z"
+    }
+  },
+  "haikyuu-legends": {
+    "roblox": {
+      "universeId": 6931042565,
+      "matchedName": "[UPD] Volleyball Legends",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-a0fee0b2f5840296115fdd51af1db761/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:18.756Z"
+    }
+  },
+  "vox-seas": {
+    "roblox": {
+      "universeId": 994732206,
+      "matchedName": "Blox Fruits",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-774ec14539b264f85fdb6e8a34dfa344/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:20.175Z",
+      "needsReview": true
+    },
+    "itemku": {
+      "imageUrl": "https://d1x91p7vw3vuq8.cloudfront.net/game/2025818/i25o4e6h43byoj9ovxrbsd.png",
+      "fetchedAt": "2026-10-14T13:52:35.317Z",
+      "note": "og:image resmi halaman game Itemku"
+    }
+  },
+  "weird-gun-game": {
+    "roblox": {
+      "universeId": 7115773109,
+      "matchedName": "Weird Gun Game [UPDATE!]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-d05b0b42f830a45a612c127db792612c/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:21.743Z"
+    }
+  },
+  "wild-trap": {
+    "roblox": {
+      "universeId": 10013682011,
+      "matchedName": "Wild Trap [Closed] ",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-1947ccdb87422fc0803cfa824a98aecf/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:23.248Z"
+    }
+  },
+  "wizard-alchemy": {
+    "roblox": {
+      "universeId": 10006104044,
+      "matchedName": "Wizard Alchemy[🕸Spider Lair UPD]",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-a31b157742f88880c4c1f795fdec48a3/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:24.697Z"
+    }
+  },
+  "world-fighters": {
+    "roblox": {
+      "universeId": 10321202755,
+      "matchedName": "[🎃] Anime Fighting Simulator",
+      "imageUrl": "https://tr.rbxcdn.com/180DAY-471111ca280cb5ca52ee448a0315ff80/512/512/Image/Png/noFilter",
+      "fetchedAt": "2026-10-14T13:50:26.693Z",
+      "needsReview": true
+    },
+    "itemku": {
+      "imageUrl": "https://d1x91p7vw3vuq8.cloudfront.net/game/202658/2aetj8z2yggqdowmm9t08i.jpg",
+      "fetchedAt": "2026-10-14T13:52:35.318Z",
+      "note": "og:image resmi halaman game Itemku"
+    }
+  },
+  "steam": {
+    "playStore": {
+      "packageId": "steam-client",
+      "imageUrl": "https://cdn.fastly.steamstatic.com/store/home/store_home_share.jpg"
+    }
+  },
+  "garena-free-fire": {
+    "playStore": {
+      "packageId": "com.dts.freefireth",
+      "imageUrl": "https://play-lh.googleusercontent.com/cK-U0_B9GrnSy26SNISDuvU_hL4VggyqJ1J5V2oiuyVEfiGo7fzegdBjk0ejXPg3PKK5sPwumdLBbWv8KkBKLQ=s512"
+    }
+  },
+  "honkai-star-rail": {
+    "playStore": {
+      "packageId": "com.HoYoverse.hkrpgoversea",
+      "imageUrl": "https://play-lh.googleusercontent.com/aWrGocSA7hEuk1qAPe7L4T57LvLKrwwH26cK2_LOqxRQMQX7j3uHYojC-EKWgYEV2PdrmE0ahqvvhLhXrAGk6Q=s512"
+    }
+  },
+  "clash-of-clans": {
+    "playStore": {
+      "packageId": "com.supercell.clashofclans",
+      "imageUrl": "https://play-lh.googleusercontent.com/gX_sXesdzLc9C4tancLSiJKZom_gLi7Uc5cMfaC-zaY0gvFbXV_DTRZFNqlVx6USMWkqglYgr-k0NeaUq5zE=s512"
+    }
+  },
+  "hay-day": {
+    "playStore": {
+      "packageId": "com.supercell.hayday",
+      "imageUrl": "https://play-lh.googleusercontent.com/f_ANUktbqGVjj9DNAzZ7ZOAV2JjZfb72BbGhd1ooXdIIki9zeInSwK6RRfaRpX8cdzm9BGfWTMEa1CHJ80XxCw=s512"
+    }
+  },
+  "zenless-zone-zero": {
+    "playStore": {
+      "packageId": "com.HoYoverse.Nap",
+      "imageUrl": "https://play-lh.googleusercontent.com/N8j-t_IXvDvqFzN3U_19OJPIyAHHgljwVa7TMyCYpdRXRykalU3HKq9u9oPnzDXEkUOX1yyuX16yuWNDrUC_Uw=s512"
+    }
+  },
+  "arknights-endfield": {
+    "appStore": {
+      "bundleId": "com.gryphline.endfield.ios",
+      "title": "Arknights: Endfield",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/ec/78/36/ec7836d7-d434-6bdd-415e-5bac80a387a6/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "bleach-soul-resonance": {
+    "appStore": {
+      "bundleId": "com.bladetw.bd",
+      "title": "BLEACH: Soul Resonance",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/14/43/0b/14430b68-b88b-3e90-5cff-a6cbf1bea412/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "blue-archive": {
+    "playStore": {
+      "packageId": "com.YostarJP.BlueArchive",
+      "imageUrl": "https://play-lh.googleusercontent.com/H975s6W1-boCSogzpF5_rIyawbjiXfG842ncgjIRiVGzhXHFTCVut0DkBhlDR4CgN1nn98OOC1fWN-LE7kUHnQ=s512"
+    }
+  },
+  "chaos-zero-nightmare": {
+    "appStore": {
+      "bundleId": "com.smilegate.chaoszero.stove.ios",
+      "title": "Chaos Zero Nightmare",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/a5/34/dc/a534dcf2-1d2c-5bc3-91aa-9303a6ce9275/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "clash-royale": {
+    "playStore": {
+      "packageId": "com.supercell.clashroyale",
+      "imageUrl": "https://play-lh.googleusercontent.com/z0rspJKftanEI7MA4WOdypbaaHfeKy4UjoawRGKf4Ys3v6LrrcleZWOfms7XK-J33Oqyfm3DlFd4Z_eKWafVFg=s512"
+    }
+  },
+  "efootball-mobile": {
+    "playStore": {
+      "packageId": "jp.konami.pesam",
+      "imageUrl": "https://play-lh.googleusercontent.com/jn-jaGEFUPiu0dBP9O6PjiRk-BCwFFLm0RdeOjLH-qLYjhHJlzNBMgl3Sah24htajj67_fdve-DzGsqmMUx1tqQ=s512"
+    }
+  },
+  "magic-chess-go-go": {
+    "appStore": {
+      "bundleId": "com.mobilechess.gp",
+      "title": "Magic Chess: Go Go",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/4b/d6/7f/4bd67f60-7839-781f-324c-488a2ee3cf0d/AppIcon-0-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "nte-neverness-to-everness": {
+    "appStore": {
+      "bundleId": "com.hottagames.nte",
+      "title": "NTE: Neverness to Everness",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/1a/c8/10/1ac810d0-d997-13f8-0f0e-adb3a9d961c8/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "pubg-mobile": {
+    "playStore": {
+      "packageId": "com.tencent.ig",
+      "imageUrl": "https://play-lh.googleusercontent.com/Se7jR6A5R0Mk9ClaIguf46yi2K3k32JsqKb3gAtrktIh3JwnFfxrQRmG9GLvdMpbxbMrReUOxzDkStxGxNo-5Q=s512"
+    }
+  },
+  "seven-knights-rebirth": {
+    "appStore": {
+      "bundleId": "com.netmarble.tskgb",
+      "title": "Seven Knights Re:BIRTH",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/d4/55/2e/d4552e92-65ec-d130-1ca6-f9127723df81/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "the-seven-deadly-sins-origin": {
+    "appStore": {
+      "bundleId": "com.netmarble.nanaori",
+      "title": "The Seven Deadly Sins: Origin",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/71/20/5d/71205d88-bf1c-8ad3-403c-57f1178c10dd/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "one-piece-bounty-rush": {
+    "appStore": {
+      "bundleId": "jp.co.bandainamcoent.BNEI0297",
+      "title": "ONE PIECE Bounty Rush",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/43/b8/be/43b8be86-3b72-66d8-2e4f-95d9a9944783/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "grand-summoners": {
+    "appStore": {
+      "bundleId": "jp.goodsmile.grandsummonersglobal",
+      "title": "Grand Summoners - Anime RPG",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/f8/9a/45/f89a454b-c297-4e38-e5e8-88d0599a094b/AppIcon_EN-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "mobile-legends-adventure": {
+    "appStore": {
+      "bundleId": "com.moonton.mobilehero",
+      "title": "Mobile Legends: Adventure",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/a1/70/45/a1704569-633d-1af8-c847-373e662e65de/AppIcon-0-0-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "runescape-old-school": {
+    "appStore": {
+      "bundleId": "com.jagex.oldschool",
+      "title": "Old School RuneScape",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/d8/c9/f2/d8c9f23e-89bd-324b-c67c-d9390e126e46/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "umamusume-pretty-derby": {
+    "appStore": {
+      "bundleId": "com.cygames.umamusume",
+      "title": "Umamusume: Pretty Derby",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/8f/35/f4/8f35f477-05cb-0058-944a-0b796ee42583/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  },
+  "wuthering-waves": {
+    "appStore": {
+      "bundleId": "com.kurogame.wutheringwaves.global",
+      "title": "Wuthering Waves",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2d/ec/31/2dec3156-fd95-b0cb-f686-4d413151bbc9/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg"
+    }
+  }
+}

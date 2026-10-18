@@ -1,0 +1,1838 @@
+{
+  "generated_at": "2026-10-14T14:02:53.063Z",
+  "folder": "public/assets/games/sw/",
+  "convention": "<slug>-<element>.png",
+  "count": 183,
+  "items": [
+    {
+      "filename": "51lv3r-light.png",
+      "monster_name": "51LV3R",
+      "element": "Light",
+      "unit_master_id": "30014",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/51lv3r-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "actaeon-dark.png",
+      "monster_name": "Actaeon",
+      "element": "Dark",
+      "unit_master_id": "32315",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/actaeon-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "akroma-light.png",
+      "monster_name": "Akroma",
+      "element": "Light",
+      "unit_master_id": "13814",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/akroma-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "alexandra-dark.png",
+      "monster_name": "Alexandra",
+      "element": "Dark",
+      "unit_master_id": "21515",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/alexandra-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "altair-light.png",
+      "monster_name": "Altaïr",
+      "element": "Light",
+      "unit_master_id": "27314",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/altair-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "aragorn-dark.png",
+      "monster_name": "Aragorn",
+      "element": "Dark",
+      "unit_master_id": "34615",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/aragorn-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "arella-light.png",
+      "monster_name": "Arella",
+      "element": "Light",
+      "unit_master_id": "34214",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/arella-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ariana-light.png",
+      "monster_name": "Ariana",
+      "element": "Light",
+      "unit_master_id": "26814",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/ariana-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "artamiel-light.png",
+      "monster_name": "Artamiel",
+      "element": "Light",
+      "unit_master_id": "17014",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/artamiel-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "asima-light.png",
+      "monster_name": "Asima",
+      "element": "Light",
+      "unit_master_id": "17914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/asima-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "audrey-light.png",
+      "monster_name": "Audrey",
+      "element": "Light",
+      "unit_master_id": "26914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/audrey-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "aya-light.png",
+      "monster_name": "Aya",
+      "element": "Light",
+      "unit_master_id": "31214",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/aya-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "azure-dragon-swordsman-light.png",
+      "monster_name": "Azure Dragon Swordsman",
+      "element": "Light",
+      "unit_master_id": "32514",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/azure-dragon-swordsman-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "bayek-dark.png",
+      "monster_name": "Bayek",
+      "element": "Dark",
+      "unit_master_id": "27515",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/bayek-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "beelzebub-dark.png",
+      "monster_name": "Beelzebub",
+      "element": "Dark",
+      "unit_master_id": "23115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/beelzebub-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "bella-dark.png",
+      "monster_name": "Bella",
+      "element": "Dark",
+      "unit_master_id": "22915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/bella-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "benedict-light.png",
+      "monster_name": "Benedict",
+      "element": "Light",
+      "unit_master_id": "25714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/benedict-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "berghild-light.png",
+      "monster_name": "Berghild",
+      "element": "Light",
+      "unit_master_id": "28214",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/berghild-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "birgitta-light.png",
+      "monster_name": "Birgitta",
+      "element": "Light",
+      "unit_master_id": "29714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/birgitta-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "cadiz-dark.png",
+      "monster_name": "Cadiz",
+      "element": "Dark",
+      "unit_master_id": "14715",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/cadiz-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "celestara-dark.png",
+      "monster_name": "Celestara",
+      "element": "Dark",
+      "unit_master_id": "29915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/celestara-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "celia-light.png",
+      "monster_name": "Celia",
+      "element": "Light",
+      "unit_master_id": "21414",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/celia-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "christine-light.png",
+      "monster_name": "Christine",
+      "element": "Light",
+      "unit_master_id": "34014",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/christine-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ciri-light.png",
+      "monster_name": "Ciri",
+      "element": "Light",
+      "unit_master_id": "29314",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/ciri-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "craig-light.png",
+      "monster_name": "Craig",
+      "element": "Light",
+      "unit_master_id": "24714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/craig-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "craka-dark.png",
+      "monster_name": "Craka",
+      "element": "Dark",
+      "unit_master_id": "17915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/craka-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "daniel-light.png",
+      "monster_name": "Daniel",
+      "element": "Light",
+      "unit_master_id": "25314",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/daniel-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "destiny-dark.png",
+      "monster_name": "Destiny",
+      "element": "Dark",
+      "unit_master_id": "26115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/destiny-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "devaraja-dark.png",
+      "monster_name": "Devaraja",
+      "element": "Dark",
+      "unit_master_id": "28315",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/devaraja-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "dorothy-light.png",
+      "monster_name": "Dorothy",
+      "element": "Light",
+      "unit_master_id": "25214",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/dorothy-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "douman-dark.png",
+      "monster_name": "Douman",
+      "element": "Dark",
+      "unit_master_id": "25015",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/douman-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "dr-albert-light.png",
+      "monster_name": "Dr. Albert",
+      "element": "Light",
+      "unit_master_id": "35514",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/dr-albert-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "dr-richard-dark.png",
+      "monster_name": "Dr. Richard",
+      "element": "Dark",
+      "unit_master_id": "35515",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/dr-richard-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "drakar-dark.png",
+      "monster_name": "Drakar",
+      "element": "Dark",
+      "unit_master_id": "30715",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/drakar-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "dyeus-light.png",
+      "monster_name": "Dyeus",
+      "element": "Light",
+      "unit_master_id": "28314",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/dyeus-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "eirgar-dark.png",
+      "monster_name": "Eirgar",
+      "element": "Dark",
+      "unit_master_id": "23015",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/eirgar-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "eivor-light.png",
+      "monster_name": "Eivor",
+      "element": "Light",
+      "unit_master_id": "27714",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/eivor-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "eivor-dark.png",
+      "monster_name": "Eivor",
+      "element": "Dark",
+      "unit_master_id": "27715",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/eivor-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "elder-horn-light.png",
+      "monster_name": "Elder Horn",
+      "element": "Light",
+      "unit_master_id": "35314",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/elder-horn-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "eleanor-light.png",
+      "monster_name": "Eleanor",
+      "element": "Light",
+      "unit_master_id": "21514",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/eleanor-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "elena-dark.png",
+      "monster_name": "Elena",
+      "element": "Dark",
+      "unit_master_id": "26815",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/elena-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "elenoa-light.png",
+      "monster_name": "Elenoa",
+      "element": "Light",
+      "unit_master_id": "18914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/elenoa-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "elise-dark.png",
+      "monster_name": "Elise",
+      "element": "Dark",
+      "unit_master_id": "34015",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/elise-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ella-light.png",
+      "monster_name": "Ella",
+      "element": "Light",
+      "unit_master_id": "25614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/ella-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "elsharion-light.png",
+      "monster_name": "Elsharion",
+      "element": "Light",
+      "unit_master_id": "19214",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/elsharion-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "eludia-light.png",
+      "monster_name": "Eludia",
+      "element": "Light",
+      "unit_master_id": "14514",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/eludia-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "euldong-light.png",
+      "monster_name": "Euldong",
+      "element": "Light",
+      "unit_master_id": "28914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/euldong-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ezio-light.png",
+      "monster_name": "Ezio",
+      "element": "Light",
+      "unit_master_id": "27414",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/ezio-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "fermion-dark.png",
+      "monster_name": "Fermion",
+      "element": "Dark",
+      "unit_master_id": "17015",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/fermion-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "fern-light.png",
+      "monster_name": "Fern",
+      "element": "Light",
+      "unit_master_id": "35814",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/fern-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "frederic-light.png",
+      "monster_name": "Frederic",
+      "element": "Light",
+      "unit_master_id": "27814",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/frederic-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "fridrion-light.png",
+      "monster_name": "Fridrion",
+      "element": "Light",
+      "unit_master_id": "30714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/fridrion-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "frieren-light.png",
+      "monster_name": "Frieren",
+      "element": "Light",
+      "unit_master_id": "35714",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/frieren-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "frieren-dark.png",
+      "monster_name": "Frieren",
+      "element": "Dark",
+      "unit_master_id": "35715",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/frieren-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "gandalf-light.png",
+      "monster_name": "Gandalf",
+      "element": "Light",
+      "unit_master_id": "34414",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/gandalf-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "gandalf-dark.png",
+      "monster_name": "Gandalf",
+      "element": "Dark",
+      "unit_master_id": "34415",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/gandalf-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "gapsoo-dark.png",
+      "monster_name": "Gapsoo",
+      "element": "Dark",
+      "unit_master_id": "28915",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/gapsoo-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "geldnir-light.png",
+      "monster_name": "Geldnir",
+      "element": "Light",
+      "unit_master_id": "22614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/geldnir-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "geralt-light.png",
+      "monster_name": "Geralt",
+      "element": "Light",
+      "unit_master_id": "29214",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/geralt-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "geralt-dark.png",
+      "monster_name": "Geralt",
+      "element": "Dark",
+      "unit_master_id": "29215",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/geralt-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "giana-dark.png",
+      "monster_name": "Giana",
+      "element": "Dark",
+      "unit_master_id": "15715",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/giana-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "giselle-dark.png",
+      "monster_name": "Giselle",
+      "element": "Dark",
+      "unit_master_id": "26915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/giselle-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "groa-light.png",
+      "monster_name": "Groa",
+      "element": "Light",
+      "unit_master_id": "29914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/groa-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "grogen-dark.png",
+      "monster_name": "Grogen",
+      "element": "Dark",
+      "unit_master_id": "14415",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/grogen-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "gurkha-dark.png",
+      "monster_name": "Gurkha",
+      "element": "Dark",
+      "unit_master_id": "24715",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/gurkha-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "han-dark.png",
+      "monster_name": "Han",
+      "element": "Dark",
+      "unit_master_id": "13515",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/han-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "hanwul-light.png",
+      "monster_name": "Hanwul",
+      "element": "Light",
+      "unit_master_id": "23714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/hanwul-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "hayato-dark.png",
+      "monster_name": "Hayato",
+      "element": "Dark",
+      "unit_master_id": "30815",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/hayato-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "herteit-dark.png",
+      "monster_name": "Herteit",
+      "element": "Dark",
+      "unit_master_id": "22615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/herteit-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "hilda-dark.png",
+      "monster_name": "Hilda",
+      "element": "Dark",
+      "unit_master_id": "29815",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/hilda-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "hollyberry-cookie-light.png",
+      "monster_name": "Hollyberry Cookie",
+      "element": "Light",
+      "unit_master_id": "26414",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/hollyberry-cookie-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "hollyberry-cookie-dark.png",
+      "monster_name": "Hollyberry Cookie",
+      "element": "Dark",
+      "unit_master_id": "26415",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/hollyberry-cookie-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "homunculus-support-light.png",
+      "monster_name": "Homunculus(Support)",
+      "element": "Light",
+      "unit_master_id": "1000214",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/homunculus-support-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "homunculus-support-dark.png",
+      "monster_name": "Homunculus(Support)",
+      "element": "Dark",
+      "unit_master_id": "1000215",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/homunculus-support-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "hwoarang-light.png",
+      "monster_name": "Hwoarang",
+      "element": "Light",
+      "unit_master_id": "33214",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/hwoarang-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "hyllus-light.png",
+      "monster_name": "Hyllus",
+      "element": "Light",
+      "unit_master_id": "32314",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/hyllus-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ian-light.png",
+      "monster_name": "Ian",
+      "element": "Light",
+      "unit_master_id": "27914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/ian-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "inosuke-hashibira-light.png",
+      "monster_name": "Inosuke Hashibira",
+      "element": "Light",
+      "unit_master_id": "32114",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/inosuke-hashibira-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "isis-light.png",
+      "monster_name": "Isis",
+      "element": "Light",
+      "unit_master_id": "20514",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/isis-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "jaara-dark.png",
+      "monster_name": "Jaara",
+      "element": "Dark",
+      "unit_master_id": "14515",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/jaara-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "jackson-dark.png",
+      "monster_name": "Jackson",
+      "element": "Dark",
+      "unit_master_id": "25315",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/jackson-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "jaduel-and-aepiah-dark.png",
+      "monster_name": "Jaduel and Aepiah",
+      "element": "Dark",
+      "unit_master_id": "29115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/jaduel-and-aepiah-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "jager-light.png",
+      "monster_name": "Jager",
+      "element": "Light",
+      "unit_master_id": "16614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/jager-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "jeanne-light.png",
+      "monster_name": "Jeanne",
+      "element": "Light",
+      "unit_master_id": "21814",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/jeanne-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "jessica-light.png",
+      "monster_name": "Jessica",
+      "element": "Light",
+      "unit_master_id": "28614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/jessica-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "jin-kazama-dark.png",
+      "monster_name": "Jin Kazama",
+      "element": "Dark",
+      "unit_master_id": "33115",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/jin-kazama-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "julianne-light.png",
+      "monster_name": "Julianne",
+      "element": "Light",
+      "unit_master_id": "14714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/julianne-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "kai-dark.png",
+      "monster_name": "Kai",
+      "element": "Dark",
+      "unit_master_id": "33615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/kai-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "kassandra-dark.png",
+      "monster_name": "Kassandra",
+      "element": "Dark",
+      "unit_master_id": "27615",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/kassandra-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "kiara-dark.png",
+      "monster_name": "Kiara",
+      "element": "Dark",
+      "unit_master_id": "28115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/kiara-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "kiki-dark.png",
+      "monster_name": "Kiki",
+      "element": "Dark",
+      "unit_master_id": "25215",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/kiki-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "kovarci-light.png",
+      "monster_name": "Kovarci",
+      "element": "Light",
+      "unit_master_id": "27214",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/kovarci-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "laima-light.png",
+      "monster_name": "Laima",
+      "element": "Light",
+      "unit_master_id": "15714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/laima-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "lars-light.png",
+      "monster_name": "Lars",
+      "element": "Light",
+      "unit_master_id": "29614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/lars-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "legolas-light.png",
+      "monster_name": "Legolas",
+      "element": "Light",
+      "unit_master_id": "34714",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/legolas-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "leona-dark.png",
+      "monster_name": "Leona",
+      "element": "Dark",
+      "unit_master_id": "21815",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/leona-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "liliana-dark.png",
+      "monster_name": "Liliana",
+      "element": "Dark",
+      "unit_master_id": "28615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/liliana-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "lora-light.png",
+      "monster_name": "Lora",
+      "element": "Light",
+      "unit_master_id": "16114",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/lora-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "lucifer-light.png",
+      "monster_name": "Lucifer",
+      "element": "Light",
+      "unit_master_id": "23114",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/lucifer-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "lydia-dark.png",
+      "monster_name": "Lydia",
+      "element": "Dark",
+      "unit_master_id": "18915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/lydia-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "m-bison-light.png",
+      "monster_name": "M. BISON",
+      "element": "Light",
+      "unit_master_id": "24214",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/m-bison-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "m-bison-dark.png",
+      "monster_name": "M. BISON",
+      "element": "Dark",
+      "unit_master_id": "24215",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/m-bison-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "manannan-dark.png",
+      "monster_name": "Manannan",
+      "element": "Dark",
+      "unit_master_id": "19715",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/manannan-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "maximilian-dark.png",
+      "monster_name": "Maximilian",
+      "element": "Dark",
+      "unit_master_id": "25715",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/maximilian-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "maya-dark.png",
+      "monster_name": "Maya",
+      "element": "Dark",
+      "unit_master_id": "25615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/maya-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "megumi-fushiguro-dark.png",
+      "monster_name": "Megumi Fushiguro",
+      "element": "Dark",
+      "unit_master_id": "30515",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/megumi-fushiguro-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "mi-ying-dark.png",
+      "monster_name": "Mi Ying",
+      "element": "Dark",
+      "unit_master_id": "21215",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/mi-ying-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "miruel-and-graciah-light.png",
+      "monster_name": "Miruel and Graciah",
+      "element": "Light",
+      "unit_master_id": "29114",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/miruel-and-graciah-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "mookwol-dark.png",
+      "monster_name": "Mookwol",
+      "element": "Dark",
+      "unit_master_id": "23715",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/mookwol-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "mortera-light.png",
+      "monster_name": "Mortera",
+      "element": "Light",
+      "unit_master_id": "31314",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/mortera-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "n1x-dark.png",
+      "monster_name": "N1X",
+      "element": "Dark",
+      "unit_master_id": "30015",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/n1x-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "narsha-light.png",
+      "monster_name": "Narsha",
+      "element": "Light",
+      "unit_master_id": "23514",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/narsha-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nephthys-dark.png",
+      "monster_name": "Nephthys",
+      "element": "Dark",
+      "unit_master_id": "20515",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/nephthys-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nezuko-kamado-dark.png",
+      "monster_name": "Nezuko Kamado",
+      "element": "Dark",
+      "unit_master_id": "31915",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/nezuko-kamado-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nicki-dark.png",
+      "monster_name": "Nicki",
+      "element": "Dark",
+      "unit_master_id": "16115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/nicki-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "night-fang-dark.png",
+      "monster_name": "Night Fang",
+      "element": "Dark",
+      "unit_master_id": "35215",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/night-fang-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nigong-light.png",
+      "monster_name": "Nigong",
+      "element": "Light",
+      "unit_master_id": "18614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/nigong-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nina-williams-light.png",
+      "monster_name": "Nina Williams",
+      "element": "Light",
+      "unit_master_id": "33414",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/nina-williams-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nina-williams-dark.png",
+      "monster_name": "Nina Williams",
+      "element": "Dark",
+      "unit_master_id": "33415",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/nina-williams-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nobara-kugisaki-light.png",
+      "monster_name": "Nobara Kugisaki",
+      "element": "Light",
+      "unit_master_id": "30614",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/nobara-kugisaki-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "nyx-dark.png",
+      "monster_name": "Nyx",
+      "element": "Dark",
+      "unit_master_id": "21115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/nyx-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "oberon-light.png",
+      "monster_name": "Oberon",
+      "element": "Light",
+      "unit_master_id": "21114",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/oberon-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "old-wood-light.png",
+      "monster_name": "Old Wood",
+      "element": "Light",
+      "unit_master_id": "35014",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/old-wood-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "old-wood-dark.png",
+      "monster_name": "Old Wood",
+      "element": "Dark",
+      "unit_master_id": "35015",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/old-wood-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ongyouki-dark.png",
+      "monster_name": "Ongyouki",
+      "element": "Dark",
+      "unit_master_id": "25115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/ongyouki-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "pater-dark.png",
+      "monster_name": "Pater",
+      "element": "Dark",
+      "unit_master_id": "22215",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/pater-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "pontos-light.png",
+      "monster_name": "Pontos",
+      "element": "Light",
+      "unit_master_id": "19714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/pontos-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "pure-vanilla-cookie-light.png",
+      "monster_name": "Pure Vanilla Cookie",
+      "element": "Light",
+      "unit_master_id": "26314",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/pure-vanilla-cookie-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "pure-vanilla-cookie-dark.png",
+      "monster_name": "Pure Vanilla Cookie",
+      "element": "Dark",
+      "unit_master_id": "26315",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/pure-vanilla-cookie-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "qilin-slasher-dark.png",
+      "monster_name": "Qilin Slasher",
+      "element": "Dark",
+      "unit_master_id": "32915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/qilin-slasher-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "qitian-dasheng-light.png",
+      "monster_name": "Qitian Dasheng",
+      "element": "Light",
+      "unit_master_id": "16814",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/qitian-dasheng-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ragdoll-dark.png",
+      "monster_name": "Ragdoll",
+      "element": "Dark",
+      "unit_master_id": "16615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/ragdoll-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "rahul-dark.png",
+      "monster_name": "Rahul",
+      "element": "Dark",
+      "unit_master_id": "17415",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/rahul-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "rick-dark.png",
+      "monster_name": "Rick",
+      "element": "Dark",
+      "unit_master_id": "31015",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/rick-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ritsu-dark.png",
+      "monster_name": "Ritsu",
+      "element": "Dark",
+      "unit_master_id": "25915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/ritsu-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ryomen-sukuna-dark.png",
+      "monster_name": "Ryomen Sukuna",
+      "element": "Dark",
+      "unit_master_id": "30215",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/ryomen-sukuna-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ryu-light.png",
+      "monster_name": "RYU",
+      "element": "Light",
+      "unit_master_id": "24014",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/ryu-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "ryu-dark.png",
+      "monster_name": "RYU",
+      "element": "Dark",
+      "unit_master_id": "24015",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/ryu-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "salah-dark.png",
+      "monster_name": "Salah",
+      "element": "Dark",
+      "unit_master_id": "28015",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/salah-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "satoru-gojo-light.png",
+      "monster_name": "Satoru Gojo",
+      "element": "Light",
+      "unit_master_id": "30314",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/satoru-gojo-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "satoru-gojo-dark.png",
+      "monster_name": "Satoru Gojo",
+      "element": "Dark",
+      "unit_master_id": "30315",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/satoru-gojo-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "seimei-light.png",
+      "monster_name": "Seimei",
+      "element": "Light",
+      "unit_master_id": "25014",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/seimei-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "shan-light.png",
+      "monster_name": "Shan",
+      "element": "Light",
+      "unit_master_id": "14614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/shan-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "shasha-light.png",
+      "monster_name": "Shasha",
+      "element": "Light",
+      "unit_master_id": "33914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/shasha-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "shasha-dark.png",
+      "monster_name": "Shasha",
+      "element": "Dark",
+      "unit_master_id": "33915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/shasha-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "shazam-light.png",
+      "monster_name": "Shazam",
+      "element": "Light",
+      "unit_master_id": "17414",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/shazam-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "shun-light.png",
+      "monster_name": "Shun",
+      "element": "Light",
+      "unit_master_id": "25914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/shun-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "sigrid-dark.png",
+      "monster_name": "Sigrid",
+      "element": "Dark",
+      "unit_master_id": "28215",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/sigrid-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "son-zhang-lao-dark.png",
+      "monster_name": "Son Zhang Lao",
+      "element": "Dark",
+      "unit_master_id": "16815",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/son-zhang-lao-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "stark-dark.png",
+      "monster_name": "Stark",
+      "element": "Dark",
+      "unit_master_id": "35915",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/stark-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "sylvia-dark.png",
+      "monster_name": "Sylvia",
+      "element": "Dark",
+      "unit_master_id": "20115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/sylvia-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "taebaek-light.png",
+      "monster_name": "Taebaek",
+      "element": "Light",
+      "unit_master_id": "33714",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/taebaek-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "talisman-light.png",
+      "monster_name": "Talisman",
+      "element": "Light",
+      "unit_master_id": "24514",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/talisman-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "tanjiro-kamado-light.png",
+      "monster_name": "Tanjiro Kamado",
+      "element": "Light",
+      "unit_master_id": "31814",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/tanjiro-kamado-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "tetsuya-dark.png",
+      "monster_name": "Tetsuya",
+      "element": "Dark",
+      "unit_master_id": "31115",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/tetsuya-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "thebae-dark.png",
+      "monster_name": "Thebae",
+      "element": "Dark",
+      "unit_master_id": "20415",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/thebae-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "theonia-dark.png",
+      "monster_name": "Theonia",
+      "element": "Dark",
+      "unit_master_id": "34215",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/theonia-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "tian-lang-light.png",
+      "monster_name": "Tian Lang",
+      "element": "Light",
+      "unit_master_id": "21214",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/tian-lang-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "trinity-dark.png",
+      "monster_name": "Trinity",
+      "element": "Dark",
+      "unit_master_id": "13815",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/trinity-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "triss-light.png",
+      "monster_name": "Triss",
+      "element": "Light",
+      "unit_master_id": "29514",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/triss-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "triss-dark.png",
+      "monster_name": "Triss",
+      "element": "Dark",
+      "unit_master_id": "29515",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/triss-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "valantis-light.png",
+      "monster_name": "Valantis",
+      "element": "Light",
+      "unit_master_id": "22214",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/valantis-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "valdemar-dark.png",
+      "monster_name": "Valdemar",
+      "element": "Dark",
+      "unit_master_id": "29615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/valdemar-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "vancliffe-dark.png",
+      "monster_name": "Vancliffe",
+      "element": "Dark",
+      "unit_master_id": "24515",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/vancliffe-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "velaska-dark.png",
+      "monster_name": "Velaska",
+      "element": "Dark",
+      "unit_master_id": "31315",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/velaska-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "vermilion-bird-dancer-dark.png",
+      "monster_name": "Vermilion Bird Dancer",
+      "element": "Dark",
+      "unit_master_id": "32615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/vermilion-bird-dancer-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "veromos-dark.png",
+      "monster_name": "Veromos",
+      "element": "Dark",
+      "unit_master_id": "19215",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/veromos-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "veronica-light.png",
+      "monster_name": "Veronica",
+      "element": "Light",
+      "unit_master_id": "26114",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/veronica-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "vivachel-dark.png",
+      "monster_name": "Vivachel",
+      "element": "Dark",
+      "unit_master_id": "21415",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/vivachel-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "wedjat-light.png",
+      "monster_name": "Wedjat",
+      "element": "Light",
+      "unit_master_id": "20614",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/wedjat-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "werner-light.png",
+      "monster_name": "Werner",
+      "element": "Light",
+      "unit_master_id": "30914",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/werner-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "werner-dark.png",
+      "monster_name": "Werner",
+      "element": "Dark",
+      "unit_master_id": "30915",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/werner-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "white-tiger-blade-master-light.png",
+      "monster_name": "White Tiger Blade Master",
+      "element": "Light",
+      "unit_master_id": "32814",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/white-tiger-blade-master-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "wolyung-dark.png",
+      "monster_name": "Wolyung",
+      "element": "Dark",
+      "unit_master_id": "18315",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/wolyung-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "woonsa-dark.png",
+      "monster_name": "Woonsa",
+      "element": "Dark",
+      "unit_master_id": "18615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/woonsa-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "xiana-dark.png",
+      "monster_name": "Xiana",
+      "element": "Dark",
+      "unit_master_id": "23515",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/xiana-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "yennefer-dark.png",
+      "monster_name": "Yennefer",
+      "element": "Dark",
+      "unit_master_id": "29415",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/yennefer-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "yeonhong-light.png",
+      "monster_name": "Yeonhong",
+      "element": "Light",
+      "unit_master_id": "18314",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/yeonhong-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "yuji-itadori-dark.png",
+      "monster_name": "Yuji Itadori",
+      "element": "Dark",
+      "unit_master_id": "30415",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/yuji-itadori-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "zenisek-dark.png",
+      "monster_name": "Zenisek",
+      "element": "Dark",
+      "unit_master_id": "27215",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/zenisek-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "zenitsu-agatsuma-dark.png",
+      "monster_name": "Zenitsu Agatsuma",
+      "element": "Dark",
+      "unit_master_id": "32215",
+      "natural_stars": 5,
+      "has_price": false,
+      "target_path": "public/assets/games/sw/zenitsu-agatsuma-dark.png",
+      "status": "pending"
+    },
+    {
+      "filename": "zerath-light.png",
+      "monster_name": "Zerath",
+      "element": "Light",
+      "unit_master_id": "14414",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/zerath-light.png",
+      "status": "pending"
+    },
+    {
+      "filename": "zeratu-dark.png",
+      "monster_name": "Zeratu",
+      "element": "Dark",
+      "unit_master_id": "14615",
+      "natural_stars": 5,
+      "has_price": true,
+      "target_path": "public/assets/games/sw/zeratu-dark.png",
+      "status": "pending"
+    }
+  ]
+}

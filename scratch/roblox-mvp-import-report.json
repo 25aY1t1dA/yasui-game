@@ -1,0 +1,888 @@
+{
+  "startedAt": "2026-10-14T11:02:35.703Z",
+  "dryRun": true,
+  "attributes": [
+    {
+      "game": "fish-it",
+      "attribute": "Passes",
+      "slug": "pa_passes",
+      "terms": 15,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Coins",
+      "slug": "pa_coins",
+      "terms": 6,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Skin Crate",
+      "slug": "pa_skin-crate",
+      "terms": 14,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Spin Wheel",
+      "slug": "pa_spin-wheel",
+      "terms": 5,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Tokens",
+      "slug": "pa_tokens",
+      "terms": 6,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Ability Spin",
+      "slug": "pa_ability-spin",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Pets",
+      "slug": "pa_pets",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Arctic Egg",
+      "slug": "pa_arctic-egg",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Treasure Crate",
+      "slug": "pa_treasure-crate",
+      "terms": 2,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Secret Fish",
+      "slug": "pa_secret-fish",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Mythic Fish",
+      "slug": "pa_mythic-fish",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Coins via Fish",
+      "slug": "pa_coins-via-fish",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Legendary Fish",
+      "slug": "pa_legendary-fish",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Rare Fish",
+      "slug": "pa_rare-fish",
+      "terms": 11,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Epic Fish",
+      "slug": "pa_epic-fish",
+      "terms": 14,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Forgotten Fish",
+      "slug": "pa_forgotten-fish",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Items",
+      "slug": "pa_items",
+      "terms": 19,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Server Luck",
+      "slug": "pa_server-luck",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Rod Skin",
+      "slug": "pa_rod-skin",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Equipment",
+      "slug": "pa_equipment",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Boat",
+      "slug": "pa_boat",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Pet Eggs",
+      "slug": "pa_pet-eggs",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Bait Skins",
+      "slug": "pa_bait-skins",
+      "terms": 21,
+      "dryRun": true
+    },
+    {
+      "game": "fish-it",
+      "attribute": "Emotes",
+      "slug": "pa_emotes",
+      "terms": 29,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Beast",
+      "slug": "pa_beast",
+      "terms": 26,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Natural",
+      "slug": "pa_natural",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Elemental",
+      "slug": "pa_elemental",
+      "terms": 26,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Voucher",
+      "slug": "pa_voucher",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Gamepass",
+      "slug": "pa_gamepass",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Premium Gacha",
+      "slug": "pa_premium-gacha",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Leveling",
+      "slug": "pa_leveling",
+      "terms": 5,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Raid",
+      "slug": "pa_raid",
+      "terms": 1,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Mastery",
+      "slug": "pa_mastery",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Currency",
+      "slug": "pa_currency",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Fighting Style",
+      "slug": "pa_fighting-style",
+      "terms": 7,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Race V2/V3/V4",
+      "slug": "pa_race-v2-v3-v4",
+      "terms": 6,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Sword",
+      "slug": "pa_sword",
+      "terms": 2,
+      "dryRun": true
+    },
+    {
+      "game": "blox-fruits-roblox",
+      "attribute": "Lainnya",
+      "slug": "pa_lainnya",
+      "terms": 7,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Fish",
+      "slug": "pa_fish",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Gamepass",
+      "slug": "pa_gamepass",
+      "terms": 12,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Skin",
+      "slug": "pa_skin",
+      "terms": 7,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Boat",
+      "slug": "pa_boat",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Item",
+      "slug": "pa_item",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Money",
+      "slug": "pa_money",
+      "terms": 14,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Credits",
+      "slug": "pa_credits",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "fisch-roblox",
+      "attribute": "Shady Scrip",
+      "slug": "pa_shady-scrip",
+      "terms": 5,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Sheckles",
+      "slug": "pa_sheckles",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Token",
+      "slug": "pa_token",
+      "terms": 6,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Seeds",
+      "slug": "pa_seeds",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Gears",
+      "slug": "pa_gears",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Props",
+      "slug": "pa_props",
+      "terms": 21,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Common",
+      "slug": "pa_common",
+      "terms": 2,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Uncommon",
+      "slug": "pa_uncommon",
+      "terms": 2,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Rare",
+      "slug": "pa_rare",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Legendary",
+      "slug": "pa_legendary",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Mythic",
+      "slug": "pa_mythic",
+      "terms": 7,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Super",
+      "slug": "pa_super",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Gear",
+      "slug": "pa_gear",
+      "terms": 5,
+      "dryRun": true
+    },
+    {
+      "game": "grow-a-garden-2",
+      "attribute": "Limited Seed Pack",
+      "slug": "pa_limited-seed-pack",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Weapon",
+      "slug": "pa_weapon",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Outfit",
+      "slug": "pa_outfit",
+      "terms": 21,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Fruits",
+      "slug": "pa_fruits",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Accessories",
+      "slug": "pa_accessories",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Peli",
+      "slug": "pa_peli",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Passes",
+      "slug": "pa_passes",
+      "terms": 22,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Boost",
+      "slug": "pa_boost",
+      "terms": 5,
+      "dryRun": true
+    },
+    {
+      "game": "grand-piece-online-roblox",
+      "attribute": "Rerolls",
+      "slug": "pa_rerolls",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Gems",
+      "slug": "pa_gems",
+      "terms": 6,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Emeralds",
+      "slug": "pa_emeralds",
+      "terms": 5,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Rare",
+      "slug": "pa_rare",
+      "terms": 16,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Epic",
+      "slug": "pa_epic",
+      "terms": 15,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Legendary",
+      "slug": "pa_legendary",
+      "terms": 16,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Mythical",
+      "slug": "pa_mythical",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Secret",
+      "slug": "pa_secret",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Exclusive",
+      "slug": "pa_exclusive",
+      "terms": 16,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Story Mode",
+      "slug": "pa_story-mode",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Hall Of Mirrors",
+      "slug": "pa_hall-of-mirrors",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Infinite Mode",
+      "slug": "pa_infinite-mode",
+      "terms": 2,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Challenge Mode",
+      "slug": "pa_challenge-mode",
+      "terms": 1,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Level Up",
+      "slug": "pa_level-up",
+      "terms": 4,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Raid",
+      "slug": "pa_raid",
+      "terms": 2,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Tower of Eternity",
+      "slug": "pa_tower-of-eternity",
+      "terms": 1,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Trait Crystal",
+      "slug": "pa_trait-crystal",
+      "terms": 3,
+      "dryRun": true
+    },
+    {
+      "game": "anime-defenders-roblox",
+      "attribute": "Item",
+      "slug": "pa_item",
+      "terms": 12,
+      "dryRun": true
+    },
+    {
+      "game": "adopt-me",
+      "attribute": "Pet",
+      "slug": "pa_pet",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "king-legacy-roblox",
+      "attribute": "Fruit",
+      "slug": "pa_fruit",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "king-legacy-roblox",
+      "attribute": "Gamepass",
+      "slug": "pa_gamepass",
+      "terms": 9,
+      "dryRun": true
+    },
+    {
+      "game": "king-legacy-roblox",
+      "attribute": "Sword",
+      "slug": "pa_sword",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "king-legacy-roblox",
+      "attribute": "Accessories",
+      "slug": "pa_accessories",
+      "terms": 30,
+      "dryRun": true
+    },
+    {
+      "game": "king-legacy-roblox",
+      "attribute": "Material",
+      "slug": "pa_material",
+      "terms": 30,
+      "dryRun": true
+    }
+  ],
+  "products": [
+    {
+      "sku": "RBX-FISH-IT-FISH-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISH-IT-FISH-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISH-IT-ITEM-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISH-IT-ITEM-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISH-IT-GAMEPASS-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISH-IT-GAMEPASS-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISH-IT-JOKI-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISH-IT-JOKI-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-FRUIT-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-FRUIT-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-JASA-JOKI-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-JASA-JOKI-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-AKUN-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-AKUN-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-JOKI-LAINNYA-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-BLOX-FRUITS-ROBLOX-JOKI-LAINNYA-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-FISH-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-FISH-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-ITEM-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-ITEM-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-JOKI-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-JOKI-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-GAMEPASS-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-FISCH-ROBLOX-GAMEPASS-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-ITEM-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-ITEM-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-PET-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-PET-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-JOKI-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-JOKI-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-AKUN-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GROW-A-GARDEN-2-AKUN-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-ITEM-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-ITEM-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-WEAPON-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-WEAPON-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-OUTFIT-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-OUTFIT-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-GAMEPASS-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-GRAND-PIECE-ONLINE-R-GAMEPASS-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ANIME-DEFENDERS-ROBL-UNIT-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ANIME-DEFENDERS-ROBL-UNIT-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ANIME-DEFENDERS-ROBL-ITEM-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ANIME-DEFENDERS-ROBL-ITEM-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ANIME-DEFENDERS-ROBL-CURRENCY-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ANIME-DEFENDERS-ROBL-CURRENCY-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-PET-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-PET-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-ITEM-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-ITEM-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-OTHERS-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-OTHERS-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-AKUN-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-ADOPT-ME-AKUN-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-MATERIAL-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-MATERIAL-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-FRUIT-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-FRUIT-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-GAMEPASS-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-GAMEPASS-2",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-ACCESSORIES-1",
+      "status": "dry-run"
+    },
+    {
+      "sku": "RBX-KING-LEGACY-ROBLOX-ACCESSORIES-2",
+      "status": "dry-run"
+    }
+  ],
+  "errors": [],
+  "finishedAt": "2026-10-14T11:02:43.623Z"
+}

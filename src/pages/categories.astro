@@ -1,0 +1,96 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getCategories } from "../lib/wc";
+
+const fixImgUrl = (url) => {
+    if (typeof url !== "string" || !url) return null;
+    return `/img-proxy?src=${encodeURIComponent(url)}`;
+};
+
+let categories = [];
+let error = null;
+
+try {
+    const rawCategories = await getCategories({ per_page: 100, hide_empty: false, parent: 0 });
+    categories = (rawCategories || [])
+        .filter(cat => cat.slug !== 'flash-sale' && cat.slug !== 'uncategorized' && cat.slug !== 'arsip-internal')
+        .map(cat => ({
+            id: cat.id,
+            name: cat.name,
+            slug: cat.slug,
+            count: cat.count,
+            image: cat.image?.src ? { sourceUrl: cat.image.src } : null
+        }));
+} catch (e) {
+    console.error("Error fetching categories:", e);
+    error = e.message;
+}
+---
+
+<Layout
+    title="Katalog Game"
+    description="Jelajahi semua kategori game yang tersedia"
+>
+    <main class="max-w-7xl mx-auto px-4 pt-24 pb-32">
+        <div class="text-center mb-12">
+            <h1
+                class="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4"
+                data-i18n="categories.title"
+            >
+                KATALOG GAME
+            </h1>
+            <p
+                class="text-gray-400 text-sm md:text-base font-mono uppercase tracking-widest"
+                data-i18n="categories.subtitle"
+            >
+                Pilih game favoritmu
+            </p>
+        </div>
+
+        {
+            error && (
+                <div class="p-8 text-center border border-dashed border-red-900 bg-red-900/10 rounded-xl mb-8">
+                    <p class="text-red-400 font-bold">
+                        ⚠️ Gagal memuat kategori: {error}
+                    </p>
+                </div>
+            )
+        }
+
+        <div class="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {
+                categories.map((cat) => (
+                    <a
+                        href={`/category/${cat.slug}`}
+                        class="group relative bg-gray-900/40 border border-gray-800 rounded-xl p-4 flex flex-col items-center justify-center gap-3 hover:border-cyan-500/50 hover:bg-gray-900/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] aspect-[4/5] md:aspect-auto"
+                    >
+                        {/* Badge Count */}
+                        <div class="absolute top-2 right-2 bg-gray-800 text-gray-400 text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700 group-hover:border-cyan-500/30 group-hover:text-cyan-400 transition-colors">
+                            {cat.count}
+                        </div>
+
+                        {/* Image/Icon */}
+                        <div class="w-12 h-12 md:w-20 md:h-20 rounded-full bg-black border border-gray-800 p-2 group-hover:border-cyan-500/50 transition-colors relative overflow-hidden">
+                            {cat.image ? (
+                                <img
+                                    src={fixImgUrl(cat.image.sourceUrl)}
+                                    alt={cat.name}
+                                    class="w-full h-full object-cover rounded-full transition-all duration-300"
+                                />
+                            ) : (
+                                <div class="w-full h-full flex items-center justify-center text-gray-700">
+                                    <div class="i-lucide-gamepad-2 text-xl md:text-2xl" />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Title */}
+                        <h3 class="text-xs md:text-base font-bold text-gray-300 uppercase tracking-wider text-center group-hover:text-white transition-colors leading-tight">
+                            {cat.name}
+                        </h3>
+                    </a>
+                ))
+            }
+        </div>
+    </main>
+</Layout>

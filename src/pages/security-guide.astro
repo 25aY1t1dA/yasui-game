@@ -1,0 +1,296 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+    title="Security Center | Yasui Game"
+    description="Panduan keamanan akun game setelah pembelian."
+>
+    <main class="max-w-4xl mx-auto px-4 pt-24 pb-20">
+        <!-- HEADER -->
+        <div
+            class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-12 border-b border-gray-800 pb-8"
+        >
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="i-lucide-shield-check text-cyan-400 text-2xl">
+                    </div>
+                    <span
+                        class="text-xs font-bold text-cyan-400 uppercase tracking-widest border border-cyan-500/30 bg-cyan-900/20 px-2 py-0.5 rounded"
+                    >
+                        Official Guide
+                    </span>
+                </div>
+                <h1
+                    class="text-3xl md:text-4xl font-black text-white tracking-tighter uppercase relative inline-block"
+                >
+                    Security Center
+                    <div
+                        class="absolute -top-1 -right-2 w-2 h-2 bg-red-500 rounded-full animate-pulse"
+                    >
+                    </div>
+                </h1>
+                <p class="text-gray-500 font-mono text-sm mt-2">
+                    Proteksi aset digital Anda dengan standar keamanan
+                    tertinggi.
+                </p>
+            </div>
+
+            <!-- LANGUAGE TOGGLE -->
+            <div class="flex bg-gray-900 border border-gray-800 rounded-lg p-1">
+                <button
+                    id="btn-id"
+                    onclick="switchLang('id')"
+                    class="px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+                >
+                    INDONESIA
+                </button>
+                <button
+                    id="btn-en"
+                    onclick="switchLang('en')"
+                    class="px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300"
+                >
+                    ENGLISH
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENT CONTAINER -->
+        <div class="relative min-h-[400px]">
+            <!-- ORNAMENT -->
+            <div
+                class="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -z-10"
+            >
+            </div>
+
+            <!-- CONTENT: INDONESIA -->
+            <article
+                id="content-id"
+                class="prose prose-invert prose-cyan max-w-none animate-[fadeIn_0.5s_ease-out]"
+            >
+                <div
+                    class="bg-gray-900/30 border border-gray-800 p-6 rounded-xl mb-8"
+                >
+                    <p
+                        class="lead text-gray-300 font-mono text-sm border-l-4 border-yellow-500 pl-4 italic"
+                    >
+                        "Akun yang baru dibeli adalah aset berharga. Kelalaian
+                        dalam mengamankan akun dapat menyebabkan kehilangan
+                        akses permanen."
+                    </p>
+                </div>
+
+                <h3>1. Ganti Password Segera</h3>
+                <p>
+                    Langkah pertama setelah menerima data akun adalah mengganti <strong
+                        >Password Email</strong
+                    > dan <strong>Password Game</strong>. Jangan gunakan
+                    password yang sama dengan akun sosial media Anda yang lain.
+                    Gunakan kombinasi:
+                </p>
+                <ul>
+                    <li>Huruf Besar & Kecil (A-z)</li>
+                    <li>Angka (0-9)</li>
+                    <li>Simbol Unik (!@#$)</li>
+                </ul>
+
+                <h3>2. Aktifkan 2FA (Two-Factor Authentication)</h3>
+                <p>
+                    Wajib mengaktifkan verifikasi 2 langkah pada email yang
+                    terkait dengan akun game. Gunakan aplikasi seperti <strong
+                        >Google Authenticator</strong
+                    > atau <strong>Authy</strong> daripada SMS (karena SMS rentan
+                    terhadap SIM Swap).
+                </p>
+
+                <h3>3. JANGAN Bagikan OTP</h3>
+                <div
+                    class="bg-red-900/10 border border-red-500/30 p-4 rounded-lg not-prose mb-6"
+                >
+                    <div class="flex items-start gap-3">
+                        <div
+                            class="i-lucide-alert-triangle text-red-500 mt-1 shrink-0"
+                        >
+                        </div>
+                        <div>
+                            <h4
+                                class="text-red-400 font-bold uppercase text-sm mb-1"
+                            >
+                                Peringatan Keras
+                            </h4>
+                            <p class="text-gray-400 text-xs">
+                                Admin Yasui Game <strong>TIDAK PERNAH</strong> meminta
+                                kode OTP Anda untuk alasan apapun. Jika ada yang meminta
+                                OTP mengatasnamakan kami, itu adalah PENIPUAN.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>4. Force Logout Device Lain</h3>
+                <p>
+                    Cek bagian "Device Management" atau "Kelola Perangkat" di
+                    pengaturan akun game dan email. Pastikan untuk melakukan <strong
+                        >Log Out All Devices</strong
+                    > untuk menendang akses dari perangkat penjual sebelumnya.
+                </p>
+            </article>
+
+            <!-- CONTENT: ENGLISH -->
+            <article
+                id="content-en"
+                class="hidden prose prose-invert prose-cyan max-w-none animate-[fadeIn_0.5s_ease-out]"
+            >
+                <div
+                    class="bg-gray-900/30 border border-gray-800 p-6 rounded-xl mb-8"
+                >
+                    <p
+                        class="lead text-gray-300 font-mono text-sm border-l-4 border-yellow-500 pl-4 italic"
+                    >
+                        "Your newly purchased account is a valuable asset.
+                        Failure to secure it immediately may result in permanent
+                        loss of access."
+                    </p>
+                </div>
+
+                <h3>1. Change Passwords Immediately</h3>
+                <p>
+                    The very first step after receiving account credentials is
+                    to change both the <strong>Email Password</strong> and the <strong
+                        >Game Account Password</strong
+                    >. Do not reuse passwords from your social media. Use a
+                    strong combination of:
+                </p>
+                <ul>
+                    <li>Uppercase & Lowercase Letters (A-z)</li>
+                    <li>Numbers (0-9)</li>
+                    <li>Unique Symbols (!@#$)</li>
+                </ul>
+
+                <h3>2. Enable 2FA (Two-Factor Authentication)</h3>
+                <p>
+                    It is mandatory to enable 2-step verification on the email
+                    linked to the game account. We recommend using apps like <strong
+                        >Google Authenticator</strong
+                    > or <strong>Authy</strong> instead of SMS (as SMS is vulnerable
+                    to SIM Swap attacks).
+                </p>
+
+                <h3>3. NEVER Share OTP</h3>
+                <div
+                    class="bg-red-900/10 border border-red-500/30 p-4 rounded-lg not-prose mb-6"
+                >
+                    <div class="flex items-start gap-3">
+                        <div
+                            class="i-lucide-alert-triangle text-red-500 mt-1 shrink-0"
+                        >
+                        </div>
+                        <div>
+                            <h4
+                                class="text-red-400 font-bold uppercase text-sm mb-1"
+                            >
+                                Critical Warning
+                            </h4>
+                            <p class="text-gray-400 text-xs">
+                                Yasui Game Admins will <strong>NEVER</strong> ask
+                                for your OTP code for any reason. If anyone asks for
+                                OTP claiming to be us, it is a SCAM.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>4. Force Logout Other Devices</h3>
+                <p>
+                    Check the "Device Management" section in the game and email
+                    settings. Ensure you perform a <strong
+                        >Log Out All Devices</strong
+                    > to remove access from the previous owner's devices.
+                </p>
+            </article>
+        </div>
+
+        <!-- HELP CTA -->
+        <div class="mt-16 border-t border-gray-800 pt-8">
+            <div
+                class="bg-gradient-to-r from-gray-900 to-black border border-gray-800 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group"
+            >
+                <div
+                    class="absolute inset-0 bg-cyan-500/5 opacity-0 group-hover:opacity-100 transition duration-500"
+                >
+                </div>
+
+                <div class="relative z-10">
+                    <h3
+                        class="text-xl font-bold text-white mb-2"
+                        id="cta-title"
+                    >
+                        Masih Bingung?
+                    </h3>
+                    <p class="text-gray-400 text-sm max-w-md" id="cta-desc">
+                        Hubungi Admin via WhatsApp untuk panduan keamanan
+                        spesifik per game (Mobile Legends, Genshin Impact, dll).
+                    </p>
+                </div>
+
+                <a
+                    href="https://wa.me/6281234567890"
+                    target="_blank"
+                    class="relative z-10 flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-full transition shadow-[0_0_15px_rgba(34,197,94,0.4)]"
+                >
+                    <div class="i-lucide-message-circle"></div>
+                    <span id="cta-btn">WhatsApp Admin</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script is:inline>
+        // Simple Vanilla styling state
+        const btnId = document.getElementById("btn-id");
+        const btnEn = document.getElementById("btn-en");
+        const contentId = document.getElementById("content-id");
+        const contentEn = document.getElementById("content-en");
+
+        // Optional: Dynamic CTA
+        const ctaTitle = document.getElementById("cta-title");
+        const ctaDesc = document.getElementById("cta-desc");
+        const ctaBtn = document.getElementById("cta-btn");
+
+        function switchLang(lang) {
+            if (lang === "id") {
+                // Style Buttons
+                btnId.className =
+                    "px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                btnEn.className =
+                    "px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300";
+
+                // Show Content
+                contentId.classList.remove("hidden");
+                contentEn.classList.add("hidden");
+
+                // Update CTA
+                ctaTitle.innerText = "Masih Bingung?";
+                ctaDesc.innerText =
+                    "Hubungi Admin via WhatsApp untuk panduan keamanan spesifik per game (Mobile Legends, Genshin Impact, dll).";
+                ctaBtn.innerText = "WhatsApp Admin";
+            } else {
+                // Style Buttons
+                btnEn.className =
+                    "px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                btnId.className =
+                    "px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300";
+
+                // Show Content
+                contentEn.classList.remove("hidden");
+                contentId.classList.add("hidden");
+
+                // Update CTA
+                ctaTitle.innerText = "Need Help?";
+                ctaDesc.innerText =
+                    "Contact Admin via WhatsApp for game-specific security guides (Mobile Legends, Genshin Impact, etc).";
+                ctaBtn.innerText = "Contact Support";
+            }
+        }
+    </script>
+</Layout>

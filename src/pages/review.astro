@@ -1,0 +1,408 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getProductBySlug, getProductById, normalizeProduct } from "../lib/wc";
+
+const slug = Astro.url.searchParams.get("slug");
+const productId = Astro.url.searchParams.get("id");
+
+let product = null;
+let error = null;
+
+if (slug) {
+    try {
+        const rawProduct = await getProductBySlug(slug);
+        if (rawProduct) {
+            product = normalizeProduct(rawProduct);
+        } else {
+            error = "Produk tidak ditemukan.";
+        }
+    } catch (err) {
+        console.error("Review Page Error:", err);
+        error = "Gagal memuat data produk.";
+    }
+} else if (productId) {
+    try {
+        const rawProduct = await getProductById(productId);
+        if (rawProduct) {
+            product = normalizeProduct(rawProduct);
+        } else {
+            error = "Produk tidak ditemukan.";
+        }
+    } catch (err) {
+        console.error("Review Page Error:", err);
+        error = "Gagal memuat data produk.";
+    }
+} else {
+    error = "Link tidak valid (Produk tidak ditentukan).";
+}
+
+// Image Proxy Helper
+const fixImgUrl = (url) => {
+    if (!url) return null;
+    return `/img-proxy?src=${encodeURIComponent(url)}`;
+};
+---
+
+<Layout
+    title={product ? `Review ${product.name} | Yasui Game` : "Review | Yasui Game"}
+    description="Berikan ulasan Anda."
+>
+    <!-- GLOBAL TRANSLATION DATA FOR JS -->
+    <script is:inline>
+        window.i18nData = {
+            id: {
+                placeholderName: "Nama Samaran / Asli",
+                placeholderEmail: "contoh@email.com",
+                placeholderContent: "Ceritakan pengalaman Anda membeli akun ini...",
+                submitBtn: "Kirim Ulasan",
+                submitLoading: "MENGIRIM...",
+                ratingError: "Rating wajib diisi!",
+                errorConnection: "Terjadi kesalahan koneksi.",
+                errorUnknown: "Gagal mengirim ulasan: "
+            },
+            en: {
+                placeholderName: "Nickname / Real Name",
+                placeholderEmail: "example@email.com",
+                placeholderContent: "Share your experience buying this account...",
+                submitBtn: "Submit Review",
+                submitLoading: "SENDING...",
+                ratingError: "Star rating is required!",
+                errorConnection: "Connection error occurred.",
+                errorUnknown: "Failed to submit review: "
+            }
+        };
+    </script>
+
+    <main class="max-w-2xl mx-auto px-4 pt-24 pb-20">
+        <!-- LANG TOGGLE (ALWAYS VISIBLE) -->
+        <div class="flex justify-end mb-6">
+             <div class="flex bg-gray-900 border border-gray-800 rounded-lg p-1">
+                <button
+                    id="btn-id"
+                    onclick="switchLang('id')"
+                    class="px-3 py-1 rounded text-[10px] font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+                >
+                    ID
+                </button>
+                <button
+                    id="btn-en"
+                    onclick="switchLang('en')"
+                    class="px-3 py-1 rounded text-[10px] font-bold text-gray-400 hover:text-white transition-all duration-300"
+                >
+                    EN
+                </button>
+            </div>
+        </div>
+
+        <!-- HEADER / ERROR STATE -->
+        {
+            !product ? (
+                <div class="text-center py-20 border border-gray-800 bg-gray-900/50 rounded-xl">
+                    <div class="i-lucide-alert-circle text-4xl text-red-500 mx-auto mb-4" />
+                    <h1 class="text-xl font-bold text-white mb-2">
+                        <span class="lang-id">Produk Tidak Ditemukan</span>
+                        <span class="lang-en hidden">Product Not Found</span>
+                    </h1>
+                    <p class="text-gray-400 text-sm mb-6">
+                        <span class="lang-id">{error || "Silakan hubungi Admin untuk mendapatkan link yang benar."}</span>
+                        <span class="lang-en hidden">{error === "Link tidak valid (Slug tidak ditemukan)." ? "Invalid Link (Slug not found)." : "Please contact Admin to get the correct link."}</span>
+                    </p>
+                    <a
+                        href="/"
+                        class="text-cyan-400 font-bold uppercase text-xs hover:underline"
+                    >
+                        <span class="lang-id">Kembali ke Beranda</span>
+                        <span class="lang-en hidden">Back to Home</span>
+                    </a>
+                </div>
+            ) : (
+                <div class="animate-[fadeIn_0.5s_ease-out]">
+                    <!-- PRODUCT SUMMARY -->
+                    <div class="flex items-center gap-4 mb-8 bg-gray-900/30 border border-gray-800 p-4 rounded-xl">
+                        <div class="w-16 h-16 bg-black border border-gray-800 rounded-lg overflow-hidden shrink-0">
+                            {product.image ? (
+                                <img
+                                    src={fixImgUrl(product.image.sourceUrl)}
+                                    alt={product.name}
+                                    class="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div class="w-full h-full flex items-center justify-center text-gray-700 text-[10px]">
+                                    NO IMG
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <h2 class="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">
+                                <span class="lang-id">Berikan Ulasan Untuk</span>
+                                <span class="lang-en hidden">Write Review For</span>
+                            </h2>
+                            <h1 class="text-lg font-bold text-white leading-tight">
+                                {product.name}
+                            </h1>
+                        </div>
+                    </div>
+
+                    <!-- FORM -->
+                    <form id="review-form" class="space-y-6">
+                        <input
+                            type="hidden"
+                            name="product_id"
+                            value={product.databaseId}
+                        />
+                        
+                        <!-- RATING STAR -->
+                        <div class="space-y-2 text-center">
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                                <span class="lang-id">Beri Rating Bintang</span>
+                                <span class="lang-en hidden">Give Star Rating</span>
+                            </label>
+                            <div class="flex justify-center gap-2" id="star-container">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <button
+                                        type="button"
+                                        class="star-btn text-gray-700 hover:text-amber-400 transition-all duration-200 transform hover:scale-110 p-1 cursor-pointer"
+                                        data-value={star}
+                                    >
+                                        <div class="i-lucide-star w-8 h-8 fill-current"></div>
+                                    </button>
+                                ))}
+                            </div>
+                            <input
+                                type="hidden"
+                                name="rating"
+                                id="rating-input"
+                                required
+                            />
+                            <div id="rating-error" class="text-red-500 text-xs hidden">Rating wajib diisi!</div>
+                        </div>
+
+                        <!-- INPUTS -->
+                        <div class="bg-gray-900/20 border border-gray-800 p-6 rounded-xl space-y-4">
+                             <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase">
+                                    <span class="lang-id">Nama Anda (Opsional)</span>
+                                    <span class="lang-en hidden">Your Name (Optional)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="author"
+                                    id="input-author"
+                                    class="w-full bg-black border border-gray-700 text-white p-3 rounded focus:border-cyan-400 focus:outline-none text-sm"
+                                    placeholder="Nama Samaran / Asli"
+                                />
+                            </div>
+
+                             <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase">
+                                    <span class="lang-id">Email (Wajib - Tidak Dipublikasikan)</span>
+                                    <span class="lang-en hidden">Email (Required - Not Published)</span>
+                                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    id="input-email"
+                                    required
+                                    class="w-full bg-black border border-gray-700 text-white p-3 rounded focus:border-cyan-400 focus:outline-none text-sm"
+                                    placeholder="contoh@email.com"
+                                />
+                            </div>
+
+                             <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-gray-500 uppercase">
+                                    <span class="lang-id">Ulasan Anda</span>
+                                    <span class="lang-en hidden">Your Review</span>
+                                </label>
+                                <textarea
+                                    name="content"
+                                    id="input-content"
+                                    rows="4"
+                                    required
+                                    class="w-full bg-black border border-gray-700 text-white p-3 rounded focus:border-cyan-400 focus:outline-none text-sm"
+                                    placeholder="Ceritakan pengalaman Anda membeli akun ini..."
+                                ></textarea>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            id="submit-btn"
+                            class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-cyan-500/20 transition transform active:scale-95 uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <span class="lang-id">Kirim Ulasan</span>
+                            <span class="lang-en hidden">Submit Review</span>
+                        </button>
+                    </form>
+
+                     <!-- SUCCESS MESSAGE (Hidden by default) -->
+                    <div id="success-message" class="hidden text-center py-20 bg-gray-900/50 border border-green-500/30 rounded-xl">
+                        <div class="i-lucide-check-circle text-5xl text-green-500 mx-auto mb-4 animate-bounce"></div>
+                        <h2 class="text-2xl font-bold text-white mb-2 uppercase tracking-wider">
+                            <span class="lang-id">Terima Kasih!</span>
+                            <span class="lang-en hidden">Thank You!</span>
+                        </h2>
+                        <p class="text-gray-400 text-sm">
+                            <span class="lang-id">Ulasan Anda telah kami terima dan akan segera tampil setelah dimoderasi.</span>
+                            <span class="lang-en hidden">Your review has been received and will appear after moderation.</span>
+                        </p>
+                         <a href="/" class="mt-6 inline-block text-cyan-400 text-xs font-bold uppercase border border-cyan-500/30 px-6 py-2 rounded-full hover:bg-cyan-900/20 transition">
+                            <span class="lang-id">Kembali ke Beranda</span>
+                            <span class="lang-en hidden">Back to Home</span>
+                        </a>
+                    </div>
+                </div>
+            )
+        }
+    </main>
+
+    <script is:inline>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 1. LANGUAGE SWITCHING LOGIC ---
+            let currentLang = 'id';
+            const btnId = document.getElementById('btn-id');
+            const btnEn = document.getElementById('btn-en');
+            const inputAuthor = document.getElementById('input-author');
+            const inputEmail = document.getElementById('input-email');
+            const inputContent = document.getElementById('input-content');
+            const errorMsg = document.getElementById("rating-error");
+
+            window.switchLang = (lang) => {
+                currentLang = lang;
+                const data = window.i18nData[lang];
+
+                // 1. Toggle UI Classes
+                if (lang === 'id') {
+                    document.querySelectorAll('.lang-id').forEach(el => el.classList.remove('hidden'));
+                    document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+                    
+                    // Button Style
+                    if(btnId) {
+                        btnId.className = "px-3 py-1 rounded text-[10px] font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                        btnEn.className = "px-3 py-1 rounded text-[10px] font-bold text-gray-400 hover:text-white transition-all duration-300";
+                    }
+                } else {
+                    document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+                    document.querySelectorAll('.lang-id').forEach(el => el.classList.add('hidden'));
+
+                    // Button Style
+                     if(btnEn) {
+                        btnEn.className = "px-3 py-1 rounded text-[10px] font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                        btnId.className = "px-3 py-1 rounded text-[10px] font-bold text-gray-400 hover:text-white transition-all duration-300";
+                     }
+                }
+
+                // 2. Update Placeholders
+                if(inputAuthor) inputAuthor.placeholder = data.placeholderName;
+                if(inputEmail) inputEmail.placeholder = data.placeholderEmail;
+                if(inputContent) inputContent.placeholder = data.placeholderContent;
+                
+                // 3. Update Error Message if visible
+                if(errorMsg && !errorMsg.classList.contains('hidden')) {
+                    errorMsg.innerText = data.ratingError;
+                }
+            };
+
+            // --- 2. FORM LOGIC ---
+            const form = document.getElementById("review-form");
+            if (form) {
+                const starContainer = document.getElementById("star-container");
+                const ratingInput = document.getElementById("rating-input");
+                const submitBtn = document.getElementById("submit-btn");
+                const successMsg = document.getElementById("success-message");
+
+                // Star Logic
+                const stars = starContainer.querySelectorAll(".star-btn");
+                stars.forEach((btn) => {
+                    btn.addEventListener("click", () => {
+                        const val = btn.getAttribute("data-value");
+                        ratingInput.value = val;
+                        if(errorMsg) errorMsg.classList.add('hidden'); // hide error
+
+                        // Visual Update
+                        stars.forEach((s) => {
+                            const sVal = s.getAttribute("data-value");
+                            if (sVal <= val) {
+                                s.classList.remove("text-gray-700");
+                                s.classList.add("text-yellow-400");
+                            } else {
+                                s.classList.add("text-gray-700");
+                                s.classList.remove("text-yellow-400");
+                            }
+                        });
+                    });
+                });
+
+                // Submit Logic
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const i18n = window.i18nData[currentLang];
+
+                    if (!ratingInput.value) {
+                        if(errorMsg) {
+                            errorMsg.innerText = i18n.ratingError;
+                            errorMsg.classList.remove('hidden');
+                        }
+                        // Shake animation
+                        starContainer.classList.add('animate-[shake_0.5s]');
+                        setTimeout(() => starContainer.classList.remove('animate-[shake_0.5s]'), 500);
+                        return;
+                    }
+
+                    // Loading State
+                    const originalText = submitBtn.innerText;
+                    submitBtn.innerText = i18n.submitLoading;
+                    submitBtn.disabled = true;
+
+                    const formData = new FormData(form);
+                    const payload = {
+                        review: {
+                            commentOn: formData.get("product_id"),
+                            rating: formData.get("rating"),
+                            author: formData.get("author") || "Guest",
+                            email: formData.get("email"),
+                            content: formData.get("content"),
+                        },
+                    };
+
+                    try {
+                        const res = await fetch("/api/submit-review", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload),
+                        });
+                        
+                        const json = await res.json();
+
+                        if (json.success) {
+                            form.classList.add("hidden");
+                            successMsg.classList.remove("hidden");
+                            successMsg.classList.add("animate-[fadeIn_0.5s]");
+                            // Check if current lang is EN to show thank you in EN
+                            if(currentLang === 'en') {
+                                // Re-trigger layout update (hacky but safer)
+                                switchLang('en');
+                            }
+                        } else {
+                            alert(i18n.errorUnknown + (json.error || "Unknown Error"));
+                            submitBtn.innerText = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert(i18n.errorConnection);
+                        submitBtn.innerText = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+        });
+    </script>
+
+    <style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</Layout>

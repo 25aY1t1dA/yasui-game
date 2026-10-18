@@ -1,0 +1,140 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Privacy Policy - Yasui Game">
+    <main class="max-w-3xl mx-auto px-4 pt-24 pb-16">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1
+                class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4"
+                data-i18n="privacy.title"
+            >
+                PRIVACY <span class="text-cyan-400">POLICY</span>
+            </h1>
+            <p
+                class="text-gray-400 font-mono text-xs md:text-sm max-w-lg mx-auto"
+                data-i18n="privacy.subtitle"
+            >
+                Kebijakan privasi dan perlindungan data pengguna Yasui Game.
+            </p>
+        </div>
+
+        <!-- Main Container -->
+        <div class="relative">
+            <!-- Glow Effect -->
+            <div
+                class="absolute -inset-1 bg-cyan-500/20 blur-xl opacity-50 rounded-2xl -z-10"
+            >
+            </div>
+
+            <div
+                class="bg-gray-900/40 border border-gray-800 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
+            >
+                <div
+                    class="prose prose-invert prose-sm md:prose-base max-w-none font-mono text-gray-300"
+                >
+                    <p class="leading-relaxed" data-i18n="privacy.intro">
+                        Privasi Anda adalah prioritas utama kami. Dokumen ini
+                        menjelaskan bagaimana Yasui Game mengumpulkan,
+                        menggunakan, dan melindungi data pribadi Anda sesuai
+                        dengan standar keamanan siber dan regulasi yang berlaku.
+                    </p>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="privacy.sec1_title"
+                    >
+                        1. Data yang Kami Kumpulkan
+                    </h3>
+                    <p class="mb-2" data-i18n="privacy.sec1_desc">
+                        Kami menerapkan prinsip <em>Data Minimization</em>. Kami
+                        hanya mengumpulkan data yang benar-benar esensial untuk
+                        memproses pesanan Anda:
+                    </p>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
+                        <li data-i18n="privacy.sec1_li1">
+                            <strong class="text-white">Alamat Email:</strong> Digunakan
+                            untuk mengirimkan detail akun (Username/Password) dan
+                            bukti transaksi (Invoice).
+                        </li>
+                        <li data-i18n="privacy.sec1_li2">
+                            <strong class="text-white">Nomor WhatsApp:</strong> Digunakan
+                            sebagai sarana pengiriman cadangan (backup) dan notifikasi
+                            status pesanan realtime.
+                        </li>
+                    </ul>
+                    <p
+                        class="mt-4 text-sm text-gray-500 italic border-l-2 border-cyan-500 pl-3"
+                        data-i18n="privacy.sec1_note"
+                    >
+                        Kami TIDAK menyimpan informasi kartu kredit, password
+                        email pribadi, atau data sensitif lainnya.
+                    </p>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="privacy.sec2_title"
+                    >
+                        2. Penggunaan Data
+                    </h3>
+                    <p data-i18n="privacy.sec2_desc">
+                        Data yang Anda berikan hanya digunakan untuk:
+                    </p>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
+                        <li data-i18n="privacy.sec2_li1">
+                            Memproses dan mengirimkan pesanan produk digital.
+                        </li>
+                        <li data-i18n="privacy.sec2_li2">
+                            Menghubungi Anda jika terjadi masalah pada stok atau
+                            transaksi.
+                        </li>
+                        <li data-i18n="privacy.sec2_li3">
+                            Verifikasi keamanan untuk mencegah penipuan.
+                        </li>
+                    </ul>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="privacy.sec3_title"
+                    >
+                        3. Keamanan & Pihak Ketiga
+                    </h3>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
+                        <li data-i18n="privacy.sec3_li1">
+                            Kami tidak akan pernah menjual, menyewakan, atau
+                            membagikan Email dan Nomor WhatsApp Anda kepada
+                            pihak ketiga manapun untuk tujuan pemasaran.
+                        </li>
+                        <li data-i18n="privacy.sec3_li2">
+                            Website kami menggunakan enkripsi SSL/TLS standar
+                            industri untuk memastikan data terkirim dengan aman.
+                        </li>
+                    </ul>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="privacy.sec4_title"
+                    >
+                        4. Cookies
+                    </h3>
+                    <p data-i18n="privacy.sec4_desc">
+                        Website ini menggunakan cookies sederhana hanya untuk
+                        menyimpan preferensi pengguna (seperti pilihan mata uang
+                        atau bahasa) dan isi keranjang belanja sementara.
+                    </p>
+                </div>
+
+                <!-- Footer Note -->
+                <div class="mt-10 pt-6 border-t border-gray-800 text-center">
+                    <p
+                        class="text-[10px] text-gray-500"
+                        data-i18n="terms.last_updated"
+                    >
+                        Terakhir diperbarui: 10 Januari 2026
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>

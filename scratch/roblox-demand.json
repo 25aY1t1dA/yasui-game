@@ -1,0 +1,2107 @@
+{
+  "generatedAt": "2026-10-14T10:59:48.380Z",
+  "source": "itemku",
+  "note": "counts >=1012 berarti ter-capped pagination (1012+)",
+  "games": [
+    {
+      "sourceGame": "1-magic-evolution",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "1-mine-per-click",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "item",
+          "name": "Item"
+        }
+      ],
+      "counts": {
+        "item": 0
+      },
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "100-days-at-sea",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "99-nights-in-the-forest",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gift-gems",
+          "name": "Gift Gems"
+        },
+        {
+          "slug": "joki",
+          "name": "Joki"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        },
+        {
+          "slug": "gaming-buddy",
+          "name": "Gaming Buddy"
+        }
+      ],
+      "counts": {
+        "gift-gems": 95,
+        "joki": 29,
+        "akun": 10,
+        "gaming-buddy": 0
+      },
+      "totalListing": 134,
+      "maxListing": 95
+    },
+    {
+      "sourceGame": "a-dusty-trip",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "item",
+          "name": "Item"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        }
+      ],
+      "counts": {
+        "item": 18,
+        "akun": 0
+      },
+      "totalListing": 18,
+      "maxListing": 18
+    },
+    {
+      "sourceGame": "a-universal-time-roblox",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        },
+        {
+          "slug": "items",
+          "name": "Items"
+        },
+        {
+          "slug": "stand-spec",
+          "name": "Stand & Spec"
+        },
+        {
+          "slug": "traits",
+          "name": "Traits"
+        },
+        {
+          "slug": "skin",
+          "name": "Skin"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        },
+        {
+          "slug": "mount",
+          "name": "Mount"
+        },
+        {
+          "slug": "joki",
+          "name": "Joki"
+        }
+      ],
+      "counts": {
+        "gamepass": 19,
+        "items": 41,
+        "stand-spec": 46,
+        "traits": 388,
+        "skin": 310,
+        "akun": 0,
+        "mount": 6,
+        "joki": 0
+      },
+      "totalListing": 810,
+      "maxListing": 388
+    },
+    {
+      "sourceGame": "abyss",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        },
+        {
+          "slug": "joki",
+          "name": "Joki"
+        }
+      ],
+      "counts": {
+        "gamepass": 68,
+        "akun": 5,
+        "joki": 7
+      },
+      "totalListing": 80,
+      "maxListing": 68
+    },
+    {
+      "sourceGame": "abyssal-the-pilgrims-path",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        }
+      ],
+      "counts": {
+        "gamepass": 0,
+        "akun": 0
+      },
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "adopt-me",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "pet",
+          "name": "Pet"
+        },
+        {
+          "slug": "item",
+          "name": "Item"
+        },
+        {
+          "slug": "others",
+          "name": "Others"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        },
+        {
+          "slug": "joki",
+          "name": "Joki"
+        }
+      ],
+      "counts": {
+        "pet": 1012,
+        "item": 1012,
+        "others": 859,
+        "akun": 21,
+        "joki": 0
+      },
+      "totalListing": 2904,
+      "maxListing": 1012
+    },
+    {
+      "sourceGame": "all-star-tower-defense-roblox",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        },
+        {
+          "slug": "other",
+          "name": "Other"
+        },
+        {
+          "slug": "unit",
+          "name": "Unit"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        },
+        {
+          "slug": "joki",
+          "name": "Joki"
+        }
+      ],
+      "counts": {
+        "gamepass": 15,
+        "other": 51,
+        "unit": 137,
+        "akun": 12,
+        "joki": 5
+      },
+      "totalListing": 220,
+      "maxListing": 137
+    },
+    {
+      "sourceGame": "american-plains-mudding",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        }
+      ],
+      "counts": {
+        "gamepass": 7
+      },
+      "totalListing": 7,
+      "maxListing": 7
+    },
+    {
+      "sourceGame": "animal-hospital",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        },
+        {
+          "slug": "joki",
+          "name": "Joki"
+        }
+      ],
+      "counts": {
+        "gamepass": 4,
+        "akun": 5,
+        "joki": 15
+      },
+      "totalListing": 24,
+      "maxListing": 15
+    },
+    {
+      "sourceGame": "anime-adventures",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        },
+        {
+          "slug": "unit",
+          "name": "Unit"
+        },
+        {
+          "slug": "skin",
+          "name": "Skin"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        },
+        {
+          "slug": "joki",
+          "name": "Joki"
+        }
+      ],
+      "counts": {
+        "gamepass": 36,
+        "unit": 156,
+        "skin": 6,
+        "akun": 3,
+        "joki": 0
+      },
+      "totalListing": 201,
+      "maxListing": 156
+    },
+    {
+      "sourceGame": "anime-battle-arena-roblox",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gold",
+          "name": "Gold"
+        },
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        }
+      ],
+      "counts": {
+        "gold": 9,
+        "gamepass": 22
+      },
+      "totalListing": 31,
+      "maxListing": 22
+    },
+    {
+      "sourceGame": "anime-card-battle-roblox",
+      "status": "ok",
+      "types": [
+        {
+          "slug": "gamepass",
+          "name": "Gamepass"
+        },
+        {
+          "slug": "battle-pass",
+          "name": "Battle Pass"
+        },
+        {
+          "slug": "akun",
+          "name": "Akun"
+        }
+      ],
+      "counts": {
+        "gamepass": 45,
+        "battle-pass": 0,
+        "akun": 0
+      },
+      "totalListing": 45,
+      "maxListing": 45
+    },
+    {
+      "sourceGame": "anime-champion-simulator",
+      "status": "ok",
+      "counts": {
+        "gamepass": 3,
+        "akun": 0,
+        "diamonds": 0,
+        "joki": 0
+      },
+      "totalListing": 3,
+      "maxListing": 3
+    },
+    {
+      "sourceGame": "anime-crusaders",
+      "status": "ok",
+      "counts": {
+        "gamepass": 116,
+        "akun": 4,
+        "joki": 0,
+        "unit": 0
+      },
+      "totalListing": 120,
+      "maxListing": 116
+    },
+    {
+      "sourceGame": "anime-defenders-roblox",
+      "status": "ok",
+      "counts": {
+        "item": 42,
+        "currency": 2,
+        "unit": 115,
+        "jasa-joki-lainnya": 0,
+        "joki": 0,
+        "akun": 0
+      },
+      "totalListing": 159,
+      "maxListing": 115
+    },
+    {
+      "sourceGame": "anime-dimension-simulator-roblox",
+      "status": "ok",
+      "counts": {
+        "gamepass": 3,
+        "raid-token": 10,
+        "joki": 0
+      },
+      "totalListing": 13,
+      "maxListing": 10
+    },
+    {
+      "sourceGame": "anime-eternal",
+      "status": "ok",
+      "counts": {
+        "gamepass": 136,
+        "akun": 0,
+        "joki": 0
+      },
+      "totalListing": 136,
+      "maxListing": 136
+    },
+    {
+      "sourceGame": "anime-extreme",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-fighters-simulator",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-force-simulator",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-heroes-roblox",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-last-stand-roblox",
+      "status": "ok",
+      "counts": {
+        "item": 246,
+        "gamepass": 57,
+        "unit": 49,
+        "akun": 10,
+        "joki": 10
+      },
+      "totalListing": 372,
+      "maxListing": 246
+    },
+    {
+      "sourceGame": "anime-legends-simulator",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-managers",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-punch-simulator",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-rarities-roblox",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-realms",
+      "status": "ok",
+      "counts": {
+        "gamepass": 0
+      },
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-renaissance",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-ronald-casual-game",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-shadow-roblox",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-simulators-2",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-swarm-simulator",
+      "status": "no_item_type",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-vanguards",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "anime-vanguards-2",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "aniquilador-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "ants-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "apocalypse-tycoon",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "aqua-flame-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "arcane-odyssey",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "arcade-empire",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "arch-land",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "arena-tower-defense-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "arm-wrestle-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "arsenal",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "ashfall",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "assassin",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "astro-renaissance",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "asura-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "atm-city-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "aot-dawn-of-humanity",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "attack-on-titan-revolution",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "aunt-s-cake-shop",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "azur-lane-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "baby-gorilla-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "baddies",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bakery-simulator",
+      "status": "ok",
+      "counts": {
+        "key": 0,
+        "gift": 0,
+        "sharing-account": 1
+      },
+      "totalListing": 1,
+      "maxListing": 1
+    },
+    {
+      "sourceGame": "balance-or-squid-game",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bald-basic-rock-paper-silly-ladyba-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "ballistic-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "basketball-legends",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "basketball-zero",
+      "status": "ok",
+      "counts": {
+        "item": 103,
+        "gamepass": 4,
+        "akun": 241
+      },
+      "totalListing": 348,
+      "maxListing": 241
+    },
+    {
+      "sourceGame": "batting-cage-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "battle-grounds-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "beak-a-boo",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bear-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bee-swarm-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "beneath-the-oaks",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "berry-avenue",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bgs-plaza",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bicycle-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bike-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bio-experiment-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "blox-fruits-roblox",
+      "status": "ok",
+      "counts": {
+        "akun": 550,
+        "fruit": 1012,
+        "gamepass": 17,
+        "gaming-buddy": 33,
+        "jasa-joki": 621,
+        "joki-lainnya": 306
+      },
+      "totalListing": 2539,
+      "maxListing": 1012
+    },
+    {
+      "sourceGame": "blox-fruits-2",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "blox-land",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "blue-lock-rivals",
+      "status": "ok",
+      "counts": {
+        "gamepass": 207,
+        "cash": 21,
+        "item": 87,
+        "joki": 3,
+        "akun": 52
+      },
+      "totalListing": 370,
+      "maxListing": 207
+    },
+    {
+      "sourceGame": "bluette-melodies",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "boardwalk-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bob-world-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "boku-no-roblox-remastered",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "boltbite",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bomber-arena",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "booga-boo",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "borrow-time",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bowl-legends",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "boxys-coding-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "brainrot-evolution",
+      "status": "ok",
+      "counts": {
+        "gamepass": 75
+      },
+      "totalListing": 75,
+      "maxListing": 75
+    },
+    {
+      "sourceGame": "brainrot-god-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "brainrot-jam-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "brainrot-rift",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "brainrot-td-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "brick-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bridge-brawl",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "brighter-shores",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "brookhaven-rp",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bubble-gum-simulator-infinity",
+      "status": "ok",
+      "counts": {
+        "gamepass": 97,
+        "pets": 31,
+        "akun": 0,
+        "item": 5
+      },
+      "totalListing": 133,
+      "maxListing": 97
+    },
+    {
+      "sourceGame": "bubble-gum-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "build-a-battle-ship-and-fight-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "build-a-boat-for-treasure",
+      "status": "ok",
+      "counts": {
+        "gold": 14,
+        "item": 20,
+        "joki": 25,
+        "akun": 10
+      },
+      "totalListing": 69,
+      "maxListing": 25
+    },
+    {
+      "sourceGame": "build-an-island",
+      "status": "ok",
+      "counts": {
+        "gamepass": 8,
+        "item": 2,
+        "joki": 0,
+        "akun": 0
+      },
+      "totalListing": 10,
+      "maxListing": 8
+    },
+    {
+      "sourceGame": "build-bridges-to-escape",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "build-tower-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "builder-s-awnings",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bullet-odyssey",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bumble-beanie",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bunny-tycoon-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "bunny-vs-monkeys",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "burger-empire-tycoon-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "buss-id-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "but-s-every-second-you-grow",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "buy-food-to-grow-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cabin-crew-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "candy-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "capulett",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "car-dealership-tycoon",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "casino-renovation-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "catalog-avatar-creator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cats-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cement-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "chained-together",
+      "status": "ok",
+      "counts": {
+        "key": 0,
+        "gift": 0,
+        "sharing-account": 1
+      },
+      "totalListing": 1,
+      "maxListing": 1
+    },
+    {
+      "sourceGame": "chess-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "chess-mania-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "clash-of-clans-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cleaner-s-life",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "climbing-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "clip-it-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "clothing-store-tycoon",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "coal-mining-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "code-luck-per-second",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "coffee-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "collect-all-pets",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "color-or-die-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "combat-warriors",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "conquerors-3",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cooking-debate-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cook-burger-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "coral-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cottage-vibes",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "crazy-cavern",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "create-a-cart-ride",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "create-your-own-tower",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "crop-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cut-grass-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "cut-water-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dance-for-u-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dark-dungeon",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dawn-of-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "daycare-story-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dead-rails",
+      "status": "ok",
+      "counts": {
+        "akun": 10,
+        "item": 53,
+        "joki": 16
+      },
+      "totalListing": 79,
+      "maxListing": 53
+    },
+    {
+      "sourceGame": "deal-or-no-deal",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "deep-sea-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "depression-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "delete-walls-to-escape",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "denjis-devils-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "descendants-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dig-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dig-to-the-center-of-the-earth",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "digger-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "digging-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dino-hunter-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dinosaur-evolution",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dinosaur-world-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "divorce-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "do-or-die-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "do-a-barrel-roll-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "doodle-world-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "doors-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "doodle-obby",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dragon-adventures-roblox",
+      "status": "ok",
+      "counts": {
+        "coins": 11,
+        "item": 125,
+        "dragon": 400,
+        "gamepass": 50
+      },
+      "totalListing": 586,
+      "maxListing": 400
+    },
+    {
+      "sourceGame": "dragon-ball-rage-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dragon-ball-sparking-zero",
+      "status": "ok",
+      "counts": {
+        "key": 0,
+        "gift": 0,
+        "sharing-account": 1
+      },
+      "totalListing": 1,
+      "maxListing": 1
+    },
+    {
+      "sourceGame": "dragon-legends-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "dress-to-impress-roblox",
+      "status": "ok",
+      "counts": {
+        "gamepass": 11
+      },
+      "totalListing": 11,
+      "maxListing": 11
+    },
+    {
+      "sourceGame": "dungeon-quest-roblox",
+      "status": "ok",
+      "counts": {
+        "gold": 11,
+        "item": 25,
+        "gaming-buddy": 9,
+        "akun": 0
+      },
+      "totalListing": 45,
+      "maxListing": 25
+    },
+    {
+      "sourceGame": "dungeon-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "eat-burgers-to-gain-power-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "eat-spheres-and-gain-power",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "eat-blocks-and-gain-ufd",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "egg-farm-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "emergency-friday-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "emma-s-restaurant-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "empire-clash-survive",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "endless-warfare-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "escape-room-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "escape-the-warehouse-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "evade",
+      "status": "ok",
+      "counts": {
+        "sharing-account": 0
+      },
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "every-second-you-get-1-jump-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "every-second-you-sink-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "every-second-you-grow-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "evolution-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "exit-path-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "faily-breakout",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "fisch-roblox",
+      "status": "ok",
+      "counts": {
+        "money": 10,
+        "fish": 1012,
+        "gamepass": 411,
+        "joki": 799,
+        "akun": 76,
+        "item": 1012
+      },
+      "totalListing": 3320,
+      "maxListing": 1012
+    },
+    {
+      "sourceGame": "fish-it",
+      "status": "ok",
+      "counts": {
+        "gamepass": 662,
+        "fish": 1012,
+        "akun": 75,
+        "item": 687,
+        "joki": 166
+      },
+      "totalListing": 2602,
+      "maxListing": 1012
+    },
+    {
+      "sourceGame": "fish-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "fishing-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "fit-royale-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "flappy-trex-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "flee-the-facility-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "flight-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "flower-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "food-group-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "football-legend-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "football-fusion-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "forsaken-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "fortnite",
+      "status": "ok",
+      "counts": {
+        "top-up-login": 9,
+        "gift-item": 58,
+        "v-bucks-card": 6,
+        "akun": 11,
+        "dlc": 30,
+        "gift-card": 3,
+        "joki": 0
+      },
+      "totalListing": 117,
+      "maxListing": 58
+    },
+    {
+      "sourceGame": "fortnite-game",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "forward-assault-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "fountain-of-youth-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "friday-night-bloxxin",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "fruit-battle-ground-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "fruit-of-legends",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "furniture-tycoon",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "garage-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "gas-station-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "get-a-snack-at-4am",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "gimm-50-cash-every-click",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "giant-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "go-kart-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "goat-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "goal-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "gorilla-tag-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "goth-girl-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "grand-piece-online-roblox",
+      "status": "ok",
+      "counts": {
+        "gamepass": 97,
+        "weapon": 204,
+        "outfit": 199,
+        "item": 541,
+        "peli": 3,
+        "akun": 1,
+        "joki": 3
+      },
+      "totalListing": 1048,
+      "maxListing": 541
+    },
+    {
+      "sourceGame": "grand-pirates-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "grow-a-garden",
+      "status": "ok",
+      "counts": {
+        "coins": 15,
+        "item": 450,
+        "pets": 1012,
+        "joki": 66,
+        "akun": 56
+      },
+      "totalListing": 1599,
+      "maxListing": 1012
+    },
+    {
+      "sourceGame": "grow-a-garden-2",
+      "status": "ok",
+      "counts": {
+        "gamepass": 5,
+        "currency": 11,
+        "item": 710,
+        "pet": 426,
+        "joki": 17,
+        "akun": 15
+      },
+      "totalListing": 1184,
+      "maxListing": 710
+    },
+    {
+      "sourceGame": "grow-beanstalk-for-brainrots",
+      "status": "ok",
+      "counts": {
+        "akun": 0,
+        "brainrot": 0,
+        "joki": 0
+      },
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "gym-league-roblox",
+      "status": "ok",
+      "counts": {
+        "gamepass": 67,
+        "akun": 0
+      },
+      "totalListing": 67,
+      "maxListing": 67
+    },
+    {
+      "sourceGame": "gym-star-simulator-roblox",
+      "status": "ok",
+      "counts": {
+        "gamepass": 17,
+        "pets": 58,
+        "item": 0,
+        "joki": 1
+      },
+      "totalListing": 76,
+      "maxListing": 58
+    },
+    {
+      "sourceGame": "haze-seas",
+      "status": "ok",
+      "counts": {
+        "gamepass": 9
+      },
+      "totalListing": 9,
+      "maxListing": 9
+    },
+    {
+      "sourceGame": "heroes-battlegrounds-roblox",
+      "status": "ok",
+      "counts": {
+        "gamepass": 31
+      },
+      "totalListing": 31,
+      "maxListing": 31
+    },
+    {
+      "sourceGame": "hitman-card-game",
+      "status": "ok",
+      "counts": {
+        "gamepass": 2
+      },
+      "totalListing": 2,
+      "maxListing": 2
+    },
+    {
+      "sourceGame": "horse-life-roblox",
+      "status": "ok",
+      "counts": {
+        "horse": 8,
+        "coins": 4
+      },
+      "totalListing": 12,
+      "maxListing": 8
+    },
+    {
+      "sourceGame": "hunters",
+      "status": "ok",
+      "counts": {
+        "akun": 0,
+        "gamepass": 6,
+        "item": 34,
+        "joki": 0
+      },
+      "totalListing": 40,
+      "maxListing": 34
+    },
+    {
+      "sourceGame": "hunty-zombie",
+      "status": "ok",
+      "counts": {
+        "coins": 9,
+        "traits": 16,
+        "item": 213,
+        "pets": 5,
+        "weapon": 20,
+        "akun": 19,
+        "joki": 31
+      },
+      "totalListing": 313,
+      "maxListing": 213
+    },
+    {
+      "sourceGame": "hypershot",
+      "status": "ok",
+      "counts": {
+        "gamepass": 179,
+        "skin": 3,
+        "diamonds": 12,
+        "chest": 20,
+        "weapon": 871,
+        "charms": 0,
+        "kill-vfx": 0
+      },
+      "totalListing": 1085,
+      "maxListing": 871
+    },
+    {
+      "sourceGame": "indo-hangout",
+      "status": "ok",
+      "counts": {
+        "gamepass": 6
+      },
+      "totalListing": 6,
+      "maxListing": 6
+    },
+    {
+      "sourceGame": "ink-game",
+      "status": "ok",
+      "counts": {
+        "gamepass": 76,
+        "coin": 38,
+        "item": 77,
+        "joki": 3
+      },
+      "totalListing": 194,
+      "maxListing": 77
+    },
+    {
+      "sourceGame": "iron-soul-dungeon",
+      "status": "ok",
+      "counts": {
+        "gamepass": 11,
+        "gold": 6,
+        "akun": 21,
+        "item": 47,
+        "joki": 13
+      },
+      "totalListing": 98,
+      "maxListing": 47
+    },
+    {
+      "sourceGame": "jailbreak-roblox",
+      "status": "ok",
+      "counts": {
+        "item": 345,
+        "money": 2,
+        "akun": 2,
+        "joki": 1
+      },
+      "totalListing": 350,
+      "maxListing": 345
+    },
+    {
+      "sourceGame": "jailed-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "japanese-anime-tycoon",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jasi-supermarket-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jenna-s-story-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jerk-off-simulator",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jigoku-sangokushi-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jim-s-diner",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jjs-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "joi-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "judo-simulator-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jujutsu-infinite-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "jump-per-second",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "kaiju-paradise-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "kaisen-universe-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "king-legacy-roblox",
+      "status": "ok",
+      "counts": {
+        "material": 360,
+        "fruit": 330,
+        "akun": 15,
+        "gamepass": 180,
+        "sword": 117,
+        "accessories": 124,
+        "joki": 18
+      },
+      "totalListing": 1144,
+      "maxListing": 360
+    },
+    {
+      "sourceGame": "king-legacy-2",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "king-legacy-3",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "king-legacy-4",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    },
+    {
+      "sourceGame": "king-tower-roblox",
+      "status": "gone",
+      "totalListing": 0,
+      "maxListing": 0
+    }
+  ]
+}

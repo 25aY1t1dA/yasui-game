@@ -1,0 +1,1002 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { parsePrice } from "../lib/price";
+import { getProducts, getCategories, normalizeProduct } from "../lib/wc";
+
+// Helper untuk fix image URL
+const fixImgUrl = (url: any) => {
+    if (!url) return null;
+    return `/img-proxy?src=${encodeURIComponent(url)}`;
+};
+
+let products: any[] = [];
+let allCategories: any[] = [];
+let serverOptions: any[] = [];
+let tierOptions: any[] = [];
+let connectionSuccess = false;
+
+try {
+    const rawProducts = await getProducts({ per_page: 100 });
+    const rawCategories = await getCategories({ per_page: 50, hide_empty: false });
+
+    // Normalize data agar lebih mudah diproses di Client Side
+    products = (rawProducts || []).map((raw: any) => {
+        const p = normalizeProduct(raw);
+        const cats = p.categories?.map((c: any) => c.name) || [];
+        const attrs = p.attributes?.nodes || [];
+        
+        // Smart Type Detection
+        let type = "other";
+        if (cats.some((c: string) => c.toLowerCase().includes("akun"))) {
+            type = "account";
+        } else if (
+            cats.some((c: string) => /item|voucher|top\s*up|jasa/i.test(c))
+        ) {
+            type = "item";
+        }
+
+        // Flatten attributes for filtering
+        const flatAttrs: any = {};
+        attrs.forEach((a: any) => {
+            const name = a.name.toLowerCase();
+            if (name.includes('server')) flatAttrs.server = a.options;
+            if (name.includes('tier') || name.includes('rank')) flatAttrs.tier = a.options;
+        });
+
+        return {
+            name: p.name,
+            slug: p.slug,
+            image: p.image?.sourceUrl ? fixImgUrl(p.image.sourceUrl) : null,
+            priceRaw: parsePrice(p.price),
+            priceFmt: p.price || "Rp 0",
+            categories: cats,
+            stock: p.stockStatus,
+            type: type,
+            attrs: flatAttrs
+        };
+    });
+
+    // --- EXTRACT SMART FILTERS (Server & Tier) ---
+    const serverCounts: Record<string, number> = {};
+    const tierCounts: Record<string, number> = {};
+
+    products.forEach((p) => {
+        if (p.attrs.server) {
+            p.attrs.server.forEach((val: string) => {
+                serverCounts[val] = (serverCounts[val] || 0) + 1;
+            });
+        }
+        if (p.attrs.tier) {
+            p.attrs.tier.forEach((val: string) => {
+                tierCounts[val] = (tierCounts[val] || 0) + 1;
+            });
+        }
+    });
+
+    serverOptions = Object.entries(serverCounts).map(([k, v]) => ({ value: k, count: v }));
+    tierOptions = Object.entries(tierCounts).map(([k, v]) => ({ value: k, count: v }));
+
+    allCategories = (rawCategories || []).map((c: any) => ({
+        name: c.name,
+        slug: c.slug,
+        count: c.count
+    }));
+
+    connectionSuccess = true;
+} catch (error: any) {
+    console.error("❌ SEARCH PAGE FETCH ERROR:", error.message);
+}
+
+// Default search query param
+const initialQuery = Astro.url.searchParams.get("q") || "";
+---
+
+<Layout title="Search - Yasui Game">
+    <div class="pt-24 pb-32 min-h-screen container mx-auto px-4">
+        <!-- HEADER SEARCH -->
+        <div class="mb-8">
+            <h1
+                class="text-2xl md:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-6"
+            >
+                SEARCH <span class="text-white">CATALOG</span>
+            </h1>
+            <div class="relative group">
+                <input
+                    type="text"
+                    id="main-search"
+                    class="w-full bg-black/50 border-2 border-gray-800 text-white p-4 pl-12 text-lg font-mono focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(34,211,238,0.3)] outline-none transition-all clip-path-search"
+                    placeholder="Type game or item name..."
+                    data-i18n="search.placeholder"
+                    value={initialQuery}
+                    autocomplete="off"
+                />
+                <div
+                    class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-cyan-400 transition"
+                >
+                    <div class="i-lucide-search text-xl"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 relative">
+            <!-- SIDEBAR FILTER (DESKTOP) -->
+            <aside class="hidden lg:block w-1/4 h-fit sticky top-24 space-y-6">
+                <!-- Header Sidebar -->
+                <div class="flex items-center justify-between">
+                    <h2
+                        class="text-xl font-black italic text-white flex items-center gap-2"
+                    >
+                        <div class="i-lucide-sliders-horizontal"></div>
+                        <span data-i18n="search.filter">FILTER</span>
+                    </h2>
+                    <button
+                        id="reset-all-desktop"
+                        class="text-xs font-bold text-red-500 hover:text-red-400 hover:underline cursor-pointer"
+                        data-i18n="search.reset_all"
+                    >
+                        RESET ALL
+                    </button>
+                </div>
+
+                <!-- Product Type Filter (NEW) -->
+                <div
+                    class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
+                >
+                    <h3
+                        class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider"
+                    >
+                        PRODUCT TYPE
+                    </h3>
+                    <div class="flex flex-col gap-2">
+                        <label
+                            class="flex items-center gap-2 cursor-pointer group"
+                        >
+                            <input
+                                type="radio"
+                                name="filter-type"
+                                value="all"
+                                checked
+                                class="peer text-cyan-400 focus:ring-cyan-500 appearance-none bg-gray-800 border border-gray-700 rounded-full w-3 h-3 checked:bg-cyan-400 checked:border-cyan-400 transition"
+                            />
+                            <span
+                                class="text-sm text-gray-400 group-hover:text-white peer-checked:text-cyan-400 transition font-mono"
+                                >ALL TYPES</span
+                            >
+                        </label>
+                        <label
+                            class="flex items-center gap-2 cursor-pointer group"
+                        >
+                            <input
+                                type="radio"
+                                name="filter-type"
+                                value="account"
+                                class="peer text-cyan-400 focus:ring-cyan-500 appearance-none bg-gray-800 border border-gray-700 rounded-full w-3 h-3 checked:bg-cyan-400 checked:border-cyan-400 transition"
+                            />
+                            <span
+                                class="text-sm text-gray-400 group-hover:text-white peer-checked:text-cyan-400 transition font-mono"
+                                >ACCOUNTS ONLY</span
+                            >
+                        </label>
+                        <label
+                            class="flex items-center gap-2 cursor-pointer group"
+                        >
+                            <input
+                                type="radio"
+                                name="filter-type"
+                                value="item"
+                                class="peer text-cyan-400 focus:ring-cyan-500 appearance-none bg-gray-800 border border-gray-700 rounded-full w-3 h-3 checked:bg-cyan-400 checked:border-cyan-400 transition"
+                            />
+                            <span
+                                class="text-sm text-gray-400 group-hover:text-white peer-checked:text-cyan-400 transition font-mono"
+                                >ITEMS / TOPUP</span
+                            >
+                        </label>
+                    </div>
+                </div>
+
+                <!-- SERVER FILTER (Dynamic) -->
+                {serverOptions.length > 0 && (
+                    <div class="cyber-card p-5 bg-gray-900/50 border border-gray-800">
+                        <h3 class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider">
+                            SERVER
+                        </h3>
+                        <div class="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                            {serverOptions.map((opt) => (
+                                <label class="flex items-center gap-3 cursor-pointer group p-1 rounded hover:bg-white/5 transition">
+                                    <input
+                                        type="checkbox"
+                                        value={opt.value}
+                                        class="filter-server peer w-3 h-3 accent-cyan-400 bg-gray-800 border-gray-600 rounded"
+                                    />
+                                    <span class="text-sm text-gray-400 group-hover:text-white transition peer-checked:text-cyan-400 font-mono">
+                                        {opt.value}
+                                    </span>
+                                    <span class="ml-auto text-[10px] text-gray-600">
+                                        {opt.count}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <!-- TIER FILTER (Dynamic) -->
+                {tierOptions.length > 0 && (
+                    <div class="cyber-card p-5 bg-gray-900/50 border border-gray-800">
+                        <h3 class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider">
+                            TIER / RANK
+                        </h3>
+                        <div class="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                             {tierOptions.map((opt) => (
+                                <label class="flex items-center gap-3 cursor-pointer group p-1 rounded hover:bg-white/5 transition">
+                                    <input
+                                        type="checkbox"
+                                        value={opt.value}
+                                        class="filter-tier peer w-3 h-3 accent-cyan-400 bg-gray-800 border-gray-600 rounded"
+                                    />
+                                    <span class="text-sm text-gray-400 group-hover:text-white transition peer-checked:text-cyan-400 font-mono">
+                                        {opt.value}
+                                    </span>
+                                    <span class="ml-auto text-[10px] text-gray-600">
+                                        {opt.count}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <!-- Category Filter -->
+                <div
+                    class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
+                >
+                    <h3
+                        class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider"
+                        data-i18n="search.category"
+                    >
+                        CATEGORY
+                    </h3>
+
+                    <!-- Category Search Input -->
+                    <div class="relative mb-3">
+                        <input
+                            type="text"
+                            id="cat-search"
+                            placeholder="Search category..."
+                            data-i18n="search.category_placeholder"
+                            class="w-full bg-black border border-gray-700 rounded p-2 pl-8 text-xs text-white focus:border-cyan-400 outline-none"
+                        />
+                        <div
+                            class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500"
+                        >
+                            <div class="i-lucide-search text-xs"></div>
+                        </div>
+                    </div>
+
+                    <div
+                        id="cat-list-desktop"
+                        class="space-y-1 max-h-60 overflow-y-auto pr-2 custom-scrollbar"
+                    >
+                        {
+                            allCategories.map((cat: any) => (
+                                <label class="flex items-center gap-3 cursor-pointer group hover:bg-white/5 p-2 rounded transition cat-item">
+                                    <input
+                                        type="checkbox"
+                                        value={cat.name}
+                                        class="filter-category peer w-4 h-4 accent-cyan-400 bg-gray-800 border-gray-600 rounded focus:ring-cyan-400 focus:ring-2"
+                                    />
+                                    <span class="text-sm text-gray-400 group-hover:text-white transition peer-checked:text-cyan-400 font-mono cat-name">
+                                        {cat.name}
+                                    </span>
+                                    <span class="ml-auto text-[10px] text-gray-600">
+                                        {cat.count}
+                                    </span>
+                                </label>
+                            ))
+                        }
+                    </div>
+                </div>
+
+                <!-- Price Filter -->
+                <div
+                    class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
+                >
+                    <h3
+                        class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider"
+                        data-i18n="search.price_range"
+                    >
+                        PRICE RANGE
+                    </h3>
+                    <div class="flex flex-col gap-3">
+                        <div class="relative">
+                            <span
+                                class="absolute left-3 top-2.5 text-gray-500 text-xs"
+                                >Rp</span
+                            >
+                            <input
+                                type="number"
+                                id="filter-min"
+                                placeholder="Min"
+                                class="w-full bg-black border border-gray-700 p-2 pl-8 text-sm text-white focus:border-cyan-400 outline-none"
+                            />
+                        </div>
+                        <div class="relative">
+                            <span
+                                class="absolute left-3 top-2.5 text-gray-500 text-xs"
+                                >Rp</span
+                            >
+                            <input
+                                type="number"
+                                id="filter-max"
+                                placeholder="Max"
+                                class="w-full bg-black border border-gray-700 p-2 pl-8 text-sm text-white focus:border-cyan-400 outline-none"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- PRODUCT GRID -->
+            <div class="flex-1">
+                <!-- Toolbar -->
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-800 gap-4"
+                >
+                    <p class="text-gray-400 text-sm font-mono">
+                        <span data-i18n="search.showing_text">Showing</span>
+                        <span id="result-count" class="text-white font-bold"
+                            >{products.length}</span
+                        >
+                        <span data-i18n="search.product_text">products</span>
+                    </p>
+                    <select
+                        id="sort-select"
+                        class="hidden sm:block bg-black border border-gray-800 text-white text-sm p-2 outline-none focus:border-cyan-400 cursor-pointer min-w-[150px]"
+                    >
+                        <option value="newest" data-i18n="search.sort.newest"
+                            >Newest</option
+                        >
+                        <option
+                            value="cheapest"
+                            data-i18n="search.sort.cheapest"
+                            >Lowest Price</option
+                        >
+                        <option
+                            value="expensive"
+                            data-i18n="search.sort.expensive"
+                            >Highest Price</option
+                        >
+                    </select>
+                </div>
+
+                <!-- Grid Container -->
+                <div
+                    id="product-grid"
+                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                >
+                    <!-- Products will be injected here via JS -->
+                </div>
+
+                <!-- Empty State -->
+                <div
+                    id="empty-state"
+                    class="hidden flex-col items-center justify-center py-20 text-center opacity-70"
+                >
+                    <div class="w-24 h-24 mb-4 text-gray-800 relative">
+                        <div
+                            class="i-lucide-ghost text-6xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-bounce"
+                        >
+                        </div>
+                    </div>
+                    <h3
+                        class="text-xl font-bold text-gray-500"
+                        data-i18n="search.empty.title"
+                    >
+                        DATA NOT FOUND
+                    </h3>
+                    <p
+                        class="text-gray-600 text-sm mt-2"
+                        data-i18n="search.empty.desc"
+                    >
+                        Try another keyword or reset filter.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE FLOATING FILTER BUTTON (Redesigned) -->
+    <div
+        class="lg:hidden fixed bottom-24 left-0 right-0 z-40 flex justify-center pointer-events-none"
+    >
+        <button
+            id="mobile-filter-btn"
+            class="pointer-events-auto bg-black/80 backdrop-blur-md border border-cyan-500/50 text-cyan-400 font-bold px-6 py-3 rounded-full shadow-[0_0_20px_rgba(34,211,238,0.2)] flex items-center gap-3 hover:scale-105 active:scale-95 transition group"
+        >
+            <div
+                class="i-lucide-sliders-horizontal group-hover:rotate-180 transition duration-500"
+            >
+            </div>
+            <span
+                class="tracking-widest text-xs"
+                data-i18n="search.mobile.filter_sort">FILTER & SORT</span
+            >
+        </button>
+    </div>
+
+    <!-- MOBILE OFF-CANVAS FILTER (Elegant) -->
+    <div id="mobile-filter-modal" class="fixed inset-0 z-[60] hidden">
+        <div
+            class="absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity duration-300 opacity-0"
+            id="mobile-filter-overlay"
+        >
+        </div>
+        <div
+            class="absolute bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-cyan-500/30 rounded-t-3xl flex flex-col max-h-[85vh] transform transition-transform duration-300 translate-y-full shadow-[0_-10px_40px_rgba(0,0,0,0.8)]"
+            id="mobile-filter-content"
+        >
+            <!-- Handle Bar -->
+            <div class="w-full flex justify-center pt-3 pb-1">
+                <div class="w-12 h-1.5 bg-gray-800 rounded-full"></div>
+            </div>
+
+            <!-- Header Mobile -->
+            <div
+                class="px-6 py-4 border-b border-gray-800/50 flex justify-between items-center"
+            >
+                <div>
+                    <h3
+                        class="text-lg font-black text-white italic tracking-tighter"
+                        data-i18n="search.mobile.filter_catalog"
+                    >
+                        FILTER <span class="text-cyan-400">CATALOG</span>
+                    </h3>
+                    <p
+                        class="text-[10px] text-gray-500 font-mono"
+                        data-i18n="search.mobile.customize"
+                    >
+                        Customize your search result
+                    </p>
+                </div>
+                <button
+                    id="close-filter-mobile"
+                    class="w-8 h-8 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:border-cyan-400 transition"
+                >
+                    <div class="i-lucide-x text-lg"></div>
+                </button>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="overflow-y-auto p-6 space-y-8 pb-32">
+                <!-- Mobile Sort -->
+                <div class="space-y-3">
+                    <h4
+                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
+                    >
+                        <div class="i-lucide-arrow-up-down text-cyan-400"></div>
+                        <span data-i18n="search.sort">SORT</span>
+                    </h4>
+                    <div class="relative">
+                        <select
+                            id="mobile-sort-select"
+                            class="w-full appearance-none bg-black border border-gray-800 text-white p-4 rounded-xl outline-none focus:border-cyan-500 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] transition text-sm font-mono"
+                        >
+                            <option
+                                value="newest"
+                                data-i18n="search.sort.newest">Newest</option
+                            >
+                            <option
+                                value="cheapest"
+                                data-i18n="search.sort.cheapest"
+                                >Lowest Price</option
+                            >
+                            <option
+                                value="expensive"
+                                data-i18n="search.sort.expensive"
+                                >Highest Price</option
+                            >
+                        </select>
+                        <div
+                            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
+                        >
+                            <div class="i-lucide-chevron-down"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Type Filter (MOBILE) -->
+                <div class="space-y-3">
+                    <h4
+                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
+                    >
+                        <div class="i-lucide-layers text-cyan-400"></div>
+                        <span>PRODUCT TYPE</span>
+                    </h4>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="cursor-pointer">
+                            <input
+                                type="radio"
+                                name="mobile-filter-type"
+                                value="all"
+                                checked
+                                class="peer sr-only"
+                            />
+                            <div
+                                class="text-center p-2 rounded-lg border border-gray-800 bg-gray-900/30 text-xs text-gray-400 peer-checked:bg-cyan-400/10 peer-checked:text-cyan-400 peer-checked:border-cyan-400 transition font-mono"
+                            >
+                                ALL
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input
+                                type="radio"
+                                name="mobile-filter-type"
+                                value="account"
+                                class="peer sr-only"
+                            />
+                            <div
+                                class="text-center p-2 rounded-lg border border-gray-800 bg-gray-900/30 text-xs text-gray-400 peer-checked:bg-cyan-400/10 peer-checked:text-cyan-400 peer-checked:border-cyan-400 transition font-mono"
+                            >
+                                ACCOUNTS
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input
+                                type="radio"
+                                name="mobile-filter-type"
+                                value="item"
+                                class="peer sr-only"
+                            />
+                            <div
+                                class="text-center p-2 rounded-lg border border-gray-800 bg-gray-900/30 text-xs text-gray-400 peer-checked:bg-cyan-400/10 peer-checked:text-cyan-400 peer-checked:border-cyan-400 transition font-mono"
+                            >
+                                ITEMS
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Mobile Categories -->
+                <div class="space-y-3">
+                    <h4
+                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
+                    >
+                        <div class="i-lucide-grid text-cyan-400"></div>
+                        <span data-i18n="search.category">CATEGORY</span>
+                    </h4>
+                    <div class="relative group">
+                        <input
+                            type="text"
+                            id="mobile-cat-search"
+                            placeholder="Search game..."
+                            data-i18n="search.category_placeholder"
+                            class="w-full bg-black border border-gray-800 rounded-xl p-3 pl-10 text-sm text-white focus:border-cyan-500 outline-none transition"
+                        />
+                        <div
+                            class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-cyan-400 transition"
+                        >
+                            <div class="i-lucide-search"></div>
+                        </div>
+                    </div>
+                    <div
+                        id="mobile-cat-list"
+                        class="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto custom-scrollbar pr-1"
+                    >
+                        {
+                            allCategories.map((cat: any) => (
+                                <label class="flex items-center gap-3 p-3 border border-gray-800/50 rounded-xl bg-gray-900/30 hover:bg-gray-800 transition cursor-pointer cat-item-mobile group">
+                                    <div class="relative flex items-center justify-center">
+                                        <input
+                                            type="checkbox"
+                                            value={cat.name}
+                                            class="filter-category-mobile peer appearance-none w-4 h-4 border border-gray-600 rounded bg-black checked:bg-cyan-400 checked:border-cyan-400 transition"
+                                        />
+                                        <div class="i-lucide-check text-black text-[10px] absolute opacity-0 peer-checked:opacity-100 transition" />
+                                    </div>
+                                    <span class="text-xs text-gray-400 group-hover:text-white transition cat-name-mobile line-clamp-1 font-mono">
+                                        {cat.name}
+                                    </span>
+                                </label>
+                            ))
+                        }
+                    </div>
+                </div>
+
+                <!-- Mobile Price -->
+                <div class="space-y-3">
+                    <h4
+                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
+                    >
+                        <div class="i-lucide-coins text-cyan-400"></div>
+                        <span data-i18n="search.price_range">PRICE</span>
+                    </h4>
+                    <div class="flex gap-3">
+                        <div class="relative flex-1 group">
+                            <span
+                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-xs group-focus-within:text-cyan-400 transition"
+                                >Min</span
+                            >
+                            <input
+                                type="number"
+                                id="mobile-min"
+                                class="w-full bg-black border border-gray-800 p-3 pl-10 text-white rounded-xl focus:border-cyan-500 outline-none font-mono text-sm"
+                            />
+                        </div>
+                        <div class="relative flex-1 group">
+                            <span
+                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-xs group-focus-within:text-cyan-400 transition"
+                                >Max</span
+                            >
+                            <input
+                                type="number"
+                                id="mobile-max"
+                                class="w-full bg-black border border-gray-800 p-3 pl-10 text-white rounded-xl focus:border-cyan-500 outline-none font-mono text-sm"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div
+                class="absolute bottom-0 left-0 right-0 p-6 bg-[#0a0a0a]/95 backdrop-blur border-t border-gray-800 flex gap-4 z-10 pb-8"
+            >
+                <button
+                    id="reset-filter-mobile"
+                    class="flex-1 py-4 border border-gray-700 text-gray-400 font-bold rounded-xl hover:bg-white/5 hover:text-white hover:border-white transition tracking-widest text-xs"
+                    data-i18n="search.reset">RESET</button
+                >
+                <button
+                    id="apply-filter-mobile"
+                    class="flex-[2] py-4 bg-cyan-400 text-black font-black rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:scale-[1.02] active:scale-[0.98] transition tracking-widest text-xs flex items-center justify-center gap-2"
+                >
+                    <span data-i18n="search.apply">APPLY FILTER</span>
+                    <div class="i-lucide-arrow-right"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<script is:inline define:vars={{ initialProducts: products }}>
+    // --- STATE MANAGEMENT ---
+    let products = initialProducts;
+    let filteredProducts = [...products];
+    const USD_RATE = 16000;
+
+    // DOM Elements
+    const grid = document.getElementById("product-grid");
+    const emptyState = document.getElementById("empty-state");
+    const searchInput = document.getElementById("main-search");
+    const countEl = document.getElementById("result-count");
+    const sortSelect = document.getElementById("sort-select");
+
+    // Desktop Filter Elements
+    const catCheckboxes = document.querySelectorAll(".filter-category");
+    const serverCheckboxes = document.querySelectorAll(".filter-server");
+    const tierCheckboxes = document.querySelectorAll(".filter-tier");
+    const minInput = document.getElementById("filter-min");
+    const maxInput = document.getElementById("filter-max");
+    const catSearchInput = document.getElementById("cat-search");
+    const catListItems = document.querySelectorAll(".cat-item");
+    const typeRadios = document.querySelectorAll('input[name="filter-type"]');
+    
+    // Add Event Listeners for new filters
+    serverCheckboxes.forEach(cb => cb.addEventListener("change", applyFilter));
+    tierCheckboxes.forEach(cb => cb.addEventListener("change", applyFilter));
+
+    // Mobile Elements
+    const mobileCatCheckboxes = document.querySelectorAll(
+        ".filter-category-mobile",
+    );
+    const mobileMin = document.getElementById("mobile-min");
+    const mobileMax = document.getElementById("mobile-max");
+    const mobileSort = document.getElementById("mobile-sort-select");
+    const mobileCatSearch = document.getElementById("mobile-cat-search");
+    const mobileCatItems = document.querySelectorAll(".cat-item-mobile");
+    const mobileTypeRadios = document.querySelectorAll(
+        'input[name="mobile-filter-type"]',
+    );
+    const mobileModal = document.getElementById("mobile-filter-modal");
+    const mobileContent = document.getElementById("mobile-filter-content");
+    const mobileOverlay = document.getElementById("mobile-filter-overlay");
+
+    // --- CURRENCY HELPER ---
+    function getCurrency() {
+        return localStorage.getItem("yasui_currency") || "IDR";
+    }
+
+    function formatPrice(priceIdr) {
+        const curr = getCurrency();
+        if (curr === "USD") {
+            return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+            }).format(priceIdr / USD_RATE);
+        }
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+        }).format(priceIdr);
+    }
+
+    // --- RENDER LOGIC ---
+    function render() {
+        if (filteredProducts.length === 0) {
+            // Force hidden grid and show empty state using Display property to avoid class conflicts
+            grid.style.display = "none";
+            emptyState.style.display = "flex";
+            emptyState.classList.remove("hidden"); // Ensure CSS hidden class is removed
+            countEl.innerText = "0";
+            return;
+        }
+
+        // Show grid
+        grid.style.display = "grid";
+        grid.innerHTML = ""; // Clear first to prevent duplicates
+        emptyState.style.display = "none"; // Force hide empty state
+        countEl.innerText = filteredProducts.length;
+
+        // Render Cards
+        const html = filteredProducts
+            .map(
+                (p) => `
+            <a href="/product/${p.slug}" class="cyber-card bg-gray-900/50 border border-gray-800 hover:border-cyan-400 transition-all duration-300 group block relative shadow-lg">
+                <div class="aspect-video bg-black relative overflow-hidden border-b border-gray-800">
+                    ${
+                        p.image
+                            ? `<img src="${p.image}" alt="${p.name}" loading="lazy" class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100" />`
+                            : `<div class="flex items-center justify-center h-full text-gray-700 text-xs">NO IMAGE</div>`
+                    }
+                    <div class="absolute top-0 left-0 bg-black/80 backdrop-blur px-2 py-1 border-r border-b border-gray-800">
+                        <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider">${p.categories[0] || "GAME"}</span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h4 class="text-xs md:text-sm font-bold text-gray-200 leading-snug mb-3 line-clamp-2 h-[2.5em] group-hover:text-cyan-400 transition">
+                        ${p.name}
+                    </h4>
+                    <div class="flex items-center justify-between border-t border-gray-800 pt-3">
+                        <span class="price-tag text-cyan-400 font-mono text-sm md:text-base font-bold" data-price-idr="${p.priceRaw}">
+                            ${formatPrice(p.priceRaw)}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        `,
+            )
+            .join("");
+
+        grid.innerHTML = html;
+    }
+
+    // --- FILTER LOGIC ---
+    function applyFilter() {
+        const keyword = searchInput.value.toLowerCase();
+
+        // Get Categories (Checked checkboxes)
+        const checkedCats = new Set([
+            ...Array.from(catCheckboxes)
+                .filter((c) => c.checked)
+                .map((c) => c.value),
+            ...Array.from(mobileCatCheckboxes)
+                .filter((c) => c.checked)
+                .map((c) => c.value),
+        ]);
+
+        // Smart Filters (Server & Tier)
+        const checkedServers = new Set(
+            Array.from(serverCheckboxes).filter(c => c.checked).map(c => c.value)
+        );
+        const checkedTiers = new Set(
+            Array.from(tierCheckboxes).filter(c => c.checked).map(c => c.value)
+        );
+
+        // Get Type
+        let selectedType = "all";
+        const deskType = document.querySelector(
+            'input[name="filter-type"]:checked',
+        );
+        const mobType = document.querySelector(
+            'input[name="mobile-filter-type"]:checked',
+        );
+
+        // Use whichever is not default if possible
+        if (deskType && deskType.value !== "all") selectedType = deskType.value;
+        if (mobType && mobType.value !== "all") selectedType = mobType.value;
+
+        // Get Price
+        const min = parseInt(minInput.value) || parseInt(mobileMin.value) || 0;
+        const max =
+            parseInt(maxInput.value) || parseInt(mobileMax.value) || Infinity;
+
+        filteredProducts = products.filter((p) => {
+            if (keyword && !p.name.toLowerCase().includes(keyword))
+                return false;
+
+            // Type Filter
+            if (selectedType !== "all") {
+                if (selectedType === "account" && p.type !== "account")
+                    return false;
+                if (selectedType === "item" && p.type !== "item") return false;
+            }
+
+            if (
+                checkedCats.size > 0 &&
+                !p.categories.some((c) => checkedCats.has(c))
+            )
+                return false;
+
+            // Attribute Filtering (AND between types, OR within type)
+            if (checkedServers.size > 0) {
+                // If product has no server info, but user selected server filter -> hide
+                if (!p.attrs.server) return false;
+                // Check if product matches ANY selected server
+                if (!p.attrs.server.some(s => checkedServers.has(s))) return false;
+            }
+
+            if (checkedTiers.size > 0) {
+                if (!p.attrs.tier) return false;
+                if (!p.attrs.tier.some(t => checkedTiers.has(t))) return false;
+            }
+
+            if (p.priceRaw < min || p.priceRaw > max) return false;
+            return true;
+        });
+
+        // Sync Sort Selects
+        const sortVal = sortSelect.value || mobileSort.value;
+
+        if (sortVal === "cheapest") {
+            filteredProducts.sort((a, b) => a.priceRaw - b.priceRaw);
+        } else if (sortVal === "expensive") {
+            filteredProducts.sort((a, b) => b.priceRaw - a.priceRaw);
+        }
+
+        render();
+    }
+
+    // --- CATEGORY SEARCH LOGIC ---
+    function filterCategories(inputEl, items) {
+        const query = inputEl.value.toLowerCase();
+        items.forEach((item) => {
+            const name = item
+                .querySelector(
+                    inputEl.id === "cat-search"
+                        ? ".cat-name"
+                        : ".cat-name-mobile",
+                )
+                .innerText.toLowerCase();
+            if (name.includes(query)) {
+                item.style.display = "flex";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+
+    // --- RESET LOGIC ---
+    function resetAll() {
+        searchInput.value = "";
+        minInput.value = "";
+        maxInput.value = "";
+        catCheckboxes.forEach((c) => (c.checked = false));
+        typeRadios.forEach((r) =>
+            r.value === "all" ? (r.checked = true) : (r.checked = false),
+        );
+
+        // Reset Mobile Inputs too
+        mobileMin.value = "";
+        mobileMax.value = "";
+        mobileCatCheckboxes.forEach((c) => (c.checked = false));
+        mobileTypeRadios.forEach((r) =>
+            r.value === "all" ? (r.checked = true) : (r.checked = false),
+        );
+
+        // Reset Category Search
+        catSearchInput.value = "";
+        mobileCatSearch.value = "";
+        filterCategories(catSearchInput, catListItems);
+        filterCategories(mobileCatSearch, mobileCatItems);
+
+        applyFilter();
+    }
+
+    // --- LISTENERS ---
+    searchInput.addEventListener("input", applyFilter);
+    sortSelect.addEventListener("change", (e) => {
+        mobileSort.value = e.target.value; // sync
+        applyFilter();
+    });
+
+    // Desktop Listeners
+    catCheckboxes.forEach((c) => c.addEventListener("change", applyFilter));
+    typeRadios.forEach((r) => r.addEventListener("change", applyFilter));
+    minInput.addEventListener("input", applyFilter);
+    maxInput.addEventListener("input", applyFilter);
+    document
+        .getElementById("reset-all-desktop")
+        .addEventListener("click", resetAll);
+
+    // Category Search Listener
+    catSearchInput.addEventListener("input", () =>
+        filterCategories(catSearchInput, catListItems),
+    );
+
+    // Mobile Listeners
+    mobileSort.addEventListener("change", (e) => {
+        sortSelect.value = e.target.value; // sync
+        applyFilter();
+    });
+    mobileCatSearch.addEventListener("input", () =>
+        filterCategories(mobileCatSearch, mobileCatItems),
+    );
+    mobileTypeRadios.forEach((r) => r.addEventListener("change", applyFilter));
+
+    // Mobile Modal Logic
+    document
+        .getElementById("mobile-filter-btn")
+        .addEventListener("click", () => {
+            mobileModal.classList.remove("hidden");
+            // Animate In
+            setTimeout(() => {
+                mobileContent.classList.remove("translate-y-full");
+                mobileOverlay.classList.remove("opacity-0");
+            }, 10);
+        });
+
+    const closeMobile = () => {
+        mobileContent.classList.add("translate-y-full");
+        mobileOverlay.classList.add("opacity-0");
+        setTimeout(() => mobileModal.classList.add("hidden"), 300);
+    };
+
+    document
+        .getElementById("close-filter-mobile")
+        .addEventListener("click", closeMobile);
+    mobileOverlay.addEventListener("click", closeMobile);
+
+    document
+        .getElementById("apply-filter-mobile")
+        .addEventListener("click", () => {
+            applyFilter();
+            closeMobile();
+        });
+
+    document
+        .getElementById("reset-filter-mobile")
+        .addEventListener("click", resetAll);
+
+    document.addEventListener("yasui-currency-change", render);
+
+    // Initial Trigger
+    applyFilter();
+</script>
+
+<style>
+    /* Custom Scrollbar for sidebar */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #111;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #333;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #22d3ee;
+    }
+
+    /* Cyberpunk Search Input Clip Path */
+    .clip-path-search {
+        clip-path: polygon(
+            0 0,
+            100% 0,
+            100% calc(100% - 10px),
+            calc(100% - 10px) 100%,
+            0 100%
+        );
+    }
+</style>

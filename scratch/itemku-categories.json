@@ -1,0 +1,233 @@
+[
+  {
+    "gameName": "Mobile Legends",
+    "gameSlug": "mobile-legends",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Gift Charisma", "slug": "gift-charisma" },
+      { "name": "Gift Item (7 Hari)", "slug": "gift-item-7-hari" }
+    ]
+  },
+  {
+    "gameName": "Growtopia",
+    "gameSlug": "growtopia",
+    "subCategories": [
+      { "name": "Lock", "slug": "lock" },
+      { "name": "Item", "slug": "item" },
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" },
+      { "name": "World", "slug": "world" },
+      { "name": "Gems", "slug": "gems" }
+    ]
+  },
+  {
+    "gameName": "Garena Free Fire",
+    "gameSlug": "garena-free-fire",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Item", "slug": "item" }
+    ]
+  },
+  {
+    "gameName": "Roblox",
+    "gameSlug": "roblox",
+    "subCategories": [
+      { "name": "Robux Via Login", "slug": "robux-via-login" },
+      { "name": "Robux Via Username", "slug": "robux-via-username" },
+      { "name": "Robux Gift Card", "slug": "robux-game-card" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Genshin Impact",
+    "gameSlug": "genshin-impact",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Honkai Star Rail",
+    "gameSlug": "honkai-star-rail",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "One Piece Bounty Rush",
+    "gameSlug": "one-piece-bounty-rush",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Clash of Clans",
+    "gameSlug": "clash-of-clans",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Joki", "slug": "joki" }
+    ]
+  },
+  {
+    "gameName": "Hay Day",
+    "gameSlug": "hay-day",
+    "subCategories": [
+      { "name": "Coin", "slug": "coin" },
+      { "name": "Paket Upgrade", "slug": "paket-upgrade" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Zenless Zone Zero",
+    "gameSlug": "zenless-zone-zero",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Top Up", "slug": "top-up" }
+    ]
+  },
+  {
+    "gameName": "Arknight: Endfield",
+    "gameSlug": "arknights-endfield",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Bleach: Soul Resonance",
+    "gameSlug": "bleach-soul-resonance",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Blue Archive",
+    "gameSlug": "blue-archive",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Chaos Zero Nightmare",
+    "gameSlug": "chaos-zero-nightmare",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Clash Royale",
+    "gameSlug": "clash-royale",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Joki", "slug": "joki" }
+    ]
+  },
+  {
+    "gameName": "eFootball Mobile",
+    "gameSlug": "efootball-mobile",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Summoners War",
+    "gameSlug": "summoners-war",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Grand Summoners",
+    "gameSlug": "grand-summoners",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Magic Chess: Go Go",
+    "gameSlug": "magic-chess-go-go",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Joki Rank", "slug": "joki-rank" },
+      { "name": "Top Up", "slug": "top-up" }
+    ]
+  },
+  {
+    "gameName": "Mobile Legends Adventure",
+    "gameSlug": "mobile-legends-adventure",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Top Up", "slug": "top-up" }
+    ]
+  },
+  {
+    "gameName": "NTE: Neverness to Everness",
+    "gameSlug": "nte-neverness-to-everness",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Old School Runescape",
+    "gameSlug": "runescape-old-school",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Gold", "slug": "gold" },
+      { "name": "Items", "slug": "items" },
+      { "name": "Joki", "slug": "joki" }
+    ]
+  },
+  {
+    "gameName": "PUBG Mobile",
+    "gameSlug": "pubg-mobile",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Redeem Code", "slug": "redeem-code" },
+      { "name": "Popularity", "slug": "popularity" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Steam",
+    "gameSlug": "steam",
+    "subCategories": [
+      { "name": "Steam Wallet", "slug": "steam-wallet" }
+    ]
+  },
+  {
+    "gameName": "Seven Knight Re:BIRTH",
+    "gameSlug": "seven-knights-rebirth",
+    "subCategories": [
+      { "name": "Top Up", "slug": "top-up" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "The Seven Deadly Sins: Origin",
+    "gameSlug": "the-seven-deadly-sins-origin",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Umamusume: Pretty Derby",
+    "gameSlug": "umamusume-pretty-derby",
+    "subCategories": [
+      { "name": "Top Up Via Link Razer", "slug": "top-up-via-link-razer" },
+      { "name": "Akun", "slug": "akun" }
+    ]
+  },
+  {
+    "gameName": "Wuthering Waves",
+    "gameSlug": "wuthering-waves",
+    "subCategories": [
+      { "name": "Akun", "slug": "akun" },
+      { "name": "Top Up", "slug": "top-up" }
+    ]
+  }
+]

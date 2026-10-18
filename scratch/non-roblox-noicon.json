@@ -1,0 +1,117 @@
+[
+  {
+    "id": 20,
+    "slug": "steam",
+    "name": "Steam"
+  },
+  {
+    "id": 23,
+    "slug": "one-piece-bounty-rush",
+    "name": "One Piece Bounty Rush"
+  },
+  {
+    "id": 59,
+    "slug": "garena-free-fire",
+    "name": "Garena Free Fire"
+  },
+  {
+    "id": 60,
+    "slug": "honkai-star-rail",
+    "name": "Honkai Star Rail"
+  },
+  {
+    "id": 61,
+    "slug": "clash-of-clans",
+    "name": "Clash of Clans"
+  },
+  {
+    "id": 62,
+    "slug": "hay-day",
+    "name": "Hay Day"
+  },
+  {
+    "id": 63,
+    "slug": "zenless-zone-zero",
+    "name": "Zenless Zone Zero"
+  },
+  {
+    "id": 64,
+    "slug": "arknights-endfield",
+    "name": "Arknight: Endfield"
+  },
+  {
+    "id": 65,
+    "slug": "bleach-soul-resonance",
+    "name": "Bleach: Soul Resonance"
+  },
+  {
+    "id": 66,
+    "slug": "blue-archive",
+    "name": "Blue Archive"
+  },
+  {
+    "id": 67,
+    "slug": "chaos-zero-nightmare",
+    "name": "Chaos Zero Nightmare"
+  },
+  {
+    "id": 68,
+    "slug": "clash-royale",
+    "name": "Clash Royale"
+  },
+  {
+    "id": 69,
+    "slug": "efootball-mobile",
+    "name": "eFootball Mobile"
+  },
+  {
+    "id": 71,
+    "slug": "grand-summoners",
+    "name": "Grand Summoners"
+  },
+  {
+    "id": 72,
+    "slug": "magic-chess-go-go",
+    "name": "Magic Chess: Go Go"
+  },
+  {
+    "id": 73,
+    "slug": "mobile-legends-adventure",
+    "name": "Mobile Legends Adventure"
+  },
+  {
+    "id": 74,
+    "slug": "nte-neverness-to-everness",
+    "name": "NTE: Neverness to Everness"
+  },
+  {
+    "id": 75,
+    "slug": "runescape-old-school",
+    "name": "Old School Runescape"
+  },
+  {
+    "id": 76,
+    "slug": "pubg-mobile",
+    "name": "PUBG Mobile"
+  },
+  {
+    "id": 77,
+    "slug": "seven-knights-rebirth",
+    "name": "Seven Knight Re:BIRTH"
+  },
+  {
+    "id": 78,
+    "slug": "the-seven-deadly-sins-origin",
+    "name": "The Seven Deadly Sins: Origin"
+  },
+  {
+    "id": 79,
+    "slug": "umamusume-pretty-derby",
+    "name": "Umamusume: Pretty Derby"
+  },
+  {
+    "id": 80,
+    "slug": "wuthering-waves",
+    "name": "Wuthering Waves"
+  }
+]

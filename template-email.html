@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Reset CSS agar tampil konsisten di semua client */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .header {
+            background-color: #0f172a;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #06b6d4;
+        }
+
+        .logo {
+            color: #06b6d4;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .content {
+            padding: 30px;
+            color: #e2e8f0;
+        }
+
+        .box-account {
+            background-color: #0f172a;
+            border: 1px dashed #475569;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .value {
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            color: #22d3ee;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #06b6d4;
+            color: #000000;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #22d3ee;
+        }
+
+        .warning {
+            background-color: #451a03;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #fcd34d;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #64748b;
+            background-color: #0f172a;
+        }
+
+        .link {
+            color: #06b6d4;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <a href="https://yasuigame.com" class="logo">YASUI GAME ⚡</a>
+        </div>
+
+        <div class="content">
+            <h2 style="margin-top: 0; color: #f8fafc;">Order Selesai! 🚀</h2>
+            <p>Halo <strong>{NAMA_PEMBELI}</strong>,</p>
+            <p>Terima kasih sudah berbelanja. Berikut adalah detail akun pesanan Anda untuk game
+                <strong>{NAMA_GAME}</strong>:
+            </p>
+
+            <div class="box-account">
+                <div class="label">LOGIN DETAILS</div>
+
+                <span class="label">Username / Email:</span>
+                <span class="value">{USERNAME_AKUN}</span>
+
+                <span class="label">Password:</span>
+                <span class="value">{PASSWORD_AKUN}</span>
+
+                <span class="label">Login Via:</span>
+                <span class="value">{LOGIN_METHOD}</span>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ PENTING: PANDUAN KEAMANAN</strong><br>
+                Demi keamanan, Anda WAJIB mengubah password dan mengaktifkan 2FA segera setelah login. Garansi hangus
+                jika tidak mengikuti panduan.
+                <br><br>
+                <a href="https://yasuigame.com/security-guide" class="link">Baca Panduan Pengamanan →</a>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="margin-bottom: 10px;">Puas dengan pelayanan kami?</p>
+                <a href="https://yasuigame.com/review?slug={SLUG_PRODUK}" class="btn">BERI BINTANG 5 ⭐</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Yasui Game. All rights reserved.<br>
+            Butuh bantuan? <a href="https://wa.me/62812345678" class="link">Hubungi WhatsApp Admin</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

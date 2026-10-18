@@ -1,0 +1,473 @@
+{
+  "capturedAt": "2026-10-14T10:31:49.687Z",
+  "plannedTabs": 883,
+  "matchedGames": 263,
+  "successfulTabs": 791,
+  "tabsWithOptions": 358,
+  "options": 27085,
+  "unresolved": [
+    {
+      "sourceGame": "1-magic-evolution",
+      "sourceTab": "akun",
+      "yasuiGame": "1-magic-evolution"
+    },
+    {
+      "sourceGame": "1-mine-per-click",
+      "sourceTab": "akun",
+      "yasuiGame": "1-mine-per-click"
+    },
+    {
+      "sourceGame": "100-days-at-sea",
+      "sourceTab": "akun",
+      "yasuiGame": "100-days-at-sea"
+    },
+    {
+      "sourceGame": "american-plains-mudding",
+      "sourceTab": "akun",
+      "yasuiGame": "american-plains-mudding"
+    },
+    {
+      "sourceGame": "anime-battle-arena-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-battle-arena"
+    },
+    {
+      "sourceGame": "anime-dimension-simulator-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-dimension-simulator"
+    },
+    {
+      "sourceGame": "anime-fighters-simulator-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-fighters-simulator"
+    },
+    {
+      "sourceGame": "anime-fighting-simulator",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-fighting-simulator"
+    },
+    {
+      "sourceGame": "anime-kingdom-simulator",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-kingdom-simulator"
+    },
+    {
+      "sourceGame": "anime-paradox",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-paradox"
+    },
+    {
+      "sourceGame": "anime-raid",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-raid"
+    },
+    {
+      "sourceGame": "anime-realms",
+      "sourceTab": "akun",
+      "yasuiGame": "anime-realms"
+    },
+    {
+      "sourceGame": "arm-wrestle-simulator-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "arm-wrestle-simulator"
+    },
+    {
+      "sourceGame": "asylum-life",
+      "sourceTab": "akun",
+      "yasuiGame": "asylum-life"
+    },
+    {
+      "sourceGame": "baddies-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "baddies"
+    },
+    {
+      "sourceGame": "be-a-brainrot",
+      "sourceTab": "akun",
+      "yasuiGame": "be-a-brainrot"
+    },
+    {
+      "sourceGame": "be-the-final-boss",
+      "sourceTab": "akun",
+      "yasuiGame": "be-the-final-boss"
+    },
+    {
+      "sourceGame": "bedwars-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "bedwars"
+    },
+    {
+      "sourceGame": "bid-battles-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "bid-battles"
+    },
+    {
+      "sourceGame": "bloxstrike",
+      "sourceTab": "akun",
+      "yasuiGame": "bloxstrike"
+    },
+    {
+      "sourceGame": "brainrot-evolution",
+      "sourceTab": "akun",
+      "yasuiGame": "brainrot-evolution"
+    },
+    {
+      "sourceGame": "build-a-base-and-steal",
+      "sourceTab": "akun",
+      "yasuiGame": "build-a-base-and-steal"
+    },
+    {
+      "sourceGame": "capybara-evolution",
+      "sourceTab": "akun",
+      "yasuiGame": "capybara-evolution"
+    },
+    {
+      "sourceGame": "capybaras-vs-plants",
+      "sourceTab": "akun",
+      "yasuiGame": "capybaras-vs-plants"
+    },
+    {
+      "sourceGame": "catch-a-brainrot",
+      "sourceTab": "akun",
+      "yasuiGame": "catch-a-brainrot"
+    },
+    {
+      "sourceGame": "catch-and-tame",
+      "sourceTab": "akun",
+      "yasuiGame": "catch-and-tame"
+    },
+    {
+      "sourceGame": "chop-your-tree",
+      "sourceTab": "akun",
+      "yasuiGame": "chop-your-tree"
+    },
+    {
+      "sourceGame": "climb-for-brainrots",
+      "sourceTab": "akun",
+      "yasuiGame": "climb-for-brainrots"
+    },
+    {
+      "sourceGame": "combat-arena",
+      "sourceTab": "akun",
+      "yasuiGame": "combat-arena"
+    },
+    {
+      "sourceGame": "creatures-of-sonaria-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "creatures-of-sonaria"
+    },
+    {
+      "sourceGame": "criminality-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "criminality"
+    },
+    {
+      "sourceGame": "death-ball-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "death-ball"
+    },
+    {
+      "sourceGame": "devils-market",
+      "sourceTab": "akun",
+      "yasuiGame": "devils-market"
+    },
+    {
+      "sourceGame": "dragon-adventures-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "dragon-adventures"
+    },
+    {
+      "sourceGame": "dragon-soul-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "dragon-soul"
+    },
+    {
+      "sourceGame": "dress-to-impress-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "dress-to-impress"
+    },
+    {
+      "sourceGame": "dungeon-rng-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "dungeon-rng"
+    },
+    {
+      "sourceGame": "elemental-dungeons-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "elemental-dungeons"
+    },
+    {
+      "sourceGame": "expedition-antarctica-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "expedition-antarctica"
+    },
+    {
+      "sourceGame": "fifa-super-soccer",
+      "sourceTab": "akun",
+      "yasuiGame": "fifa-super-soccer"
+    },
+    {
+      "sourceGame": "fight-your-zombie",
+      "sourceTab": "akun",
+      "yasuiGame": "fight-your-zombie"
+    },
+    {
+      "sourceGame": "fish-an-anime-rng",
+      "sourceTab": "akun",
+      "yasuiGame": "fish-an-anime-rng"
+    },
+    {
+      "sourceGame": "five-night-tower-defense-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "five-night-tower-defense"
+    },
+    {
+      "sourceGame": "flashpoint-worlds-collide",
+      "sourceTab": "akun",
+      "yasuiGame": "flashpoint-worlds-collide"
+    },
+    {
+      "sourceGame": "gakuran",
+      "sourceTab": "akun",
+      "yasuiGame": "gakuran"
+    },
+    {
+      "sourceGame": "gym-star-simulator-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "gym-star-simulator"
+    },
+    {
+      "sourceGame": "haze-seas",
+      "sourceTab": "akun",
+      "yasuiGame": "haze-seas"
+    },
+    {
+      "sourceGame": "heroes-battlegrounds-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "heroes-battlegrounds"
+    },
+    {
+      "sourceGame": "hitman-card-game",
+      "sourceTab": "akun",
+      "yasuiGame": "hitman-card-game"
+    },
+    {
+      "sourceGame": "horse-life-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "horse-life"
+    },
+    {
+      "sourceGame": "hypershot",
+      "sourceTab": "akun",
+      "yasuiGame": "hypershot"
+    },
+    {
+      "sourceGame": "indo-hangout",
+      "sourceTab": "akun",
+      "yasuiGame": "indo-hangout"
+    },
+    {
+      "sourceGame": "ink-game",
+      "sourceTab": "akun",
+      "yasuiGame": "ink-game"
+    },
+    {
+      "sourceGame": "jujutsu-shenanigans-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "jujutsu-shenanigans"
+    },
+    {
+      "sourceGame": "kaizen",
+      "sourceTab": "akun",
+      "yasuiGame": "kaizen"
+    },
+    {
+      "sourceGame": "knockout",
+      "sourceTab": "akun",
+      "yasuiGame": "knockout"
+    },
+    {
+      "sourceGame": "kurokus-basketball-showdown",
+      "sourceTab": "akun",
+      "yasuiGame": "kurokus-basketball-showdown"
+    },
+    {
+      "sourceGame": "legends-battlegrounds-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "legends-battlegrounds"
+    },
+    {
+      "sourceGame": "mount-rng",
+      "sourceTab": "akun",
+      "yasuiGame": "mount-rng"
+    },
+    {
+      "sourceGame": "murderers-vs-sheriffs-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "murderers-vs-sheriffs"
+    },
+    {
+      "sourceGame": "murderers-vs-sheriffs-duels",
+      "sourceTab": "akun",
+      "yasuiGame": "murderers-vs-sheriffs-duels"
+    },
+    {
+      "sourceGame": "nfl-universe-football",
+      "sourceTab": "akun",
+      "yasuiGame": "nfl-universe-football"
+    },
+    {
+      "sourceGame": "one-fruit-simulator-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "one-fruit-simulator"
+    },
+    {
+      "sourceGame": "paint-to-hide",
+      "sourceTab": "akun",
+      "yasuiGame": "paint-to-hide"
+    },
+    {
+      "sourceGame": "pet-simulator-x-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "pet-simulator-x"
+    },
+    {
+      "sourceGame": "pickaxe-simulator",
+      "sourceTab": "akun",
+      "yasuiGame": "pickaxe-simulator"
+    },
+    {
+      "sourceGame": "power-blast-lucky-blocks",
+      "sourceTab": "akun",
+      "yasuiGame": "power-blast-lucky-blocks"
+    },
+    {
+      "sourceGame": "race-clicker-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "race-clicker"
+    },
+    {
+      "sourceGame": "racket-rivals",
+      "sourceTab": "akun",
+      "yasuiGame": "racket-rivals"
+    },
+    {
+      "sourceGame": "reborn-as-swordsman-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "reborn-as-swordsman"
+    },
+    {
+      "sourceGame": "rng-heroes",
+      "sourceTab": "akun",
+      "yasuiGame": "rng-heroes"
+    },
+    {
+      "sourceGame": "roll-a-fisherman",
+      "sourceTab": "akun",
+      "yasuiGame": "roll-a-fisherman"
+    },
+    {
+      "sourceGame": "salon-de-fiestas",
+      "sourceTab": "akun",
+      "yasuiGame": "salon-de-fiestas"
+    },
+    {
+      "sourceGame": "sawah-indo",
+      "sourceTab": "akun",
+      "yasuiGame": "sawah-indo"
+    },
+    {
+      "sourceGame": "shindo-life-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "shindo-life"
+    },
+    {
+      "sourceGame": "shells",
+      "sourceTab": "akun",
+      "yasuiGame": "shells"
+    },
+    {
+      "sourceGame": "skibidi-tower-defens-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "skibidi-tower-defens"
+    },
+    {
+      "sourceGame": "sniper-arena",
+      "sourceTab": "akun",
+      "yasuiGame": "sniper-arena"
+    },
+    {
+      "sourceGame": "sniper-duels",
+      "sourceTab": "akun",
+      "yasuiGame": "sniper-duels"
+    },
+    {
+      "sourceGame": "southern-mudding",
+      "sourceTab": "akun",
+      "yasuiGame": "southern-mudding"
+    },
+    {
+      "sourceGame": "spear-fishing",
+      "sourceTab": "akun",
+      "yasuiGame": "spear-fishing"
+    },
+    {
+      "sourceGame": "spin-a-soccer-card",
+      "sourceTab": "akun",
+      "yasuiGame": "spin-a-soccer-card"
+    },
+    {
+      "sourceGame": "storage-hunters-open-world",
+      "sourceTab": "akun",
+      "yasuiGame": "storage-hunters-open-world"
+    },
+    {
+      "sourceGame": "survive-bikini-bottom",
+      "sourceTab": "akun",
+      "yasuiGame": "survive-bikini-bottom"
+    },
+    {
+      "sourceGame": "survive-lava-for-brainrots",
+      "sourceTab": "akun",
+      "yasuiGame": "survive-lava-for-brainrots"
+    },
+    {
+      "sourceGame": "swing-obby-for-brainrots",
+      "sourceTab": "akun",
+      "yasuiGame": "swing-obby-for-brainrots"
+    },
+    {
+      "sourceGame": "swordburst-2",
+      "sourceTab": "akun",
+      "yasuiGame": "swordburst-2"
+    },
+    {
+      "sourceGame": "throw-a-coin",
+      "sourceTab": "akun",
+      "yasuiGame": "throw-a-coin"
+    },
+    {
+      "sourceGame": "toilet-tower-defense-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "toilet-tower-defense"
+    },
+    {
+      "sourceGame": "vesteria",
+      "sourceTab": "akun",
+      "yasuiGame": "vesteria"
+    },
+    {
+      "sourceGame": "wild-trap",
+      "sourceTab": "akun",
+      "yasuiGame": "wild-trap"
+    },
+    {
+      "sourceGame": "your-bizarre-adventure-roblox",
+      "sourceTab": "akun",
+      "yasuiGame": "your-bizarre-adventure"
+    }
+  ],
+  "unmatchedSourceGames": [
+    "roblox"
+  ]
+}

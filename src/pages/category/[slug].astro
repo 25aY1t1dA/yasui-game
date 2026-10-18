@@ -1,0 +1,719 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { parsePrice } from "../../lib/price";
+import { getCategoryBySlug, getCategoryById, getCategories, getProducts, normalizeProduct } from "../../lib/wc";
+import RobloxHub from "../../components/RobloxHub.astro";
+import CatalogSort from "../../components/CatalogSort.astro";
+import { searchScore } from "../../lib/search";
+
+export const prerender = false;
+
+// --- HELPER IMAGE PROXY ---
+const fixImgUrl = (url) => {
+    if (!url) return null;
+    return `/img-proxy?src=${encodeURIComponent(url)}`;
+};
+
+const { slug } = Astro.params;
+if (slug === "summoners-war") return Astro.redirect("/category/summoners-war-sky-arena", 301);
+let category = null;
+let subCategories = [];
+let products = [];
+let ancestors = [];
+let catalogTypes = [];
+let catalogRoot = null;
+let loadFailed = false;
+let hasNextPage = false;
+const query = Astro.url.searchParams.get("q")?.trim() || "";
+const sort = Astro.url.searchParams.get("sort") || "newest";
+const page = Math.max(1, Math.min(1000, Number.parseInt(Astro.url.searchParams.get("page") || "1") || 1));
+const sortOptions = { newest: { orderby: "date", order: "desc" }, cheapest: { orderby: "price", order: "asc" }, expensive: { orderby: "price", order: "desc" }, popular: { orderby: "popularity", order: "desc" } };
+
+try {
+    const rawCategory = await getCategoryBySlug(slug);
+    if (rawCategory) {
+        // Resolve parent category: fetch full parent data (name + slug) if parent ID exists
+        let parentData = null;
+        if (rawCategory.parent) {
+            try {
+                let parentId = rawCategory.parent;
+                const seen = new Set([rawCategory.id]);
+                while (parentId && !seen.has(parentId)) {
+                    seen.add(parentId);
+                    const found = await getCategoryById(parentId);
+                    if (!parentData) parentData = { node: found };
+                    ancestors.unshift(found);
+                    parentId = found.parent;
+                }
+            } catch (e) {
+                console.error("⚠️ Gagal fetch parent category:", e);
+            }
+        }
+
+        category = {
+            id: rawCategory.id,
+            name: slug === "blox-fruits-fruit" ? "Fruit" : rawCategory.name,
+            description: rawCategory.description || "",
+            parent: parentData
+        };
+
+        // Fetch ALL subcategories with pagination (Roblox has 270+ children)
+        let rawSubs = [];
+        let subPage = 1;
+        while (true) {
+            const batch = await getCategories({ parent: rawCategory.id, hide_empty: false, per_page: 100, page: subPage });
+            if (!batch || batch.length === 0) break;
+            rawSubs = rawSubs.concat(batch);
+            if (batch.length < 100) break;
+            subPage++;
+        }
+        subCategories = (rawSubs || []).map((sub) => ({
+            id: sub.id,
+            name: sub.name,
+            slug: sub.slug,
+            count: sub.count,
+            image: sub.image?.src ? { sourceUrl: sub.image.src } : null,
+        }));
+
+        // Fetch products in this category
+        const robloxIndex = ancestors.findIndex((item) => item.slug === "roblox");
+        if (robloxIndex >= 0) {
+            catalogRoot = ancestors[robloxIndex + 1] || rawCategory;
+            catalogTypes = catalogRoot.id === rawCategory.id ? rawSubs : await getCategories({ parent: catalogRoot.id, hide_empty: false, per_page: 100 });
+            catalogTypes = catalogTypes.map((type) => ({ ...type, name: type.slug === "blox-fruits-fruit" ? "Fruit" : type.name }));
+        } else if (slug !== "roblox") {
+            // A game is a catalog even when it has no products yet.
+            // Resolve siblings for a selected product type so navigation stays consistent.
+            catalogRoot = parentData?.node || rawCategory;
+            if (catalogRoot.id === rawCategory.id) {
+                catalogTypes = rawSubs;
+            } else {
+                for (let typePage = 1; ; typePage++) {
+                    const batch = await getCategories({ parent: catalogRoot.id, hide_empty: false, per_page: 100, page: typePage });
+                    catalogTypes.push(...batch);
+                    if (batch.length < 100) break;
+                }
+            }
+        }
+        let rawProds = [];
+        if (slug !== "roblox" && query) {
+            // Fetch within the current category, never the global product catalog.
+            // Matching before pagination keeps typo matches on later pages discoverable.
+            const candidates = [];
+            for (let productPage = 1; ; productPage++) {
+                const batch = await getProducts({ category: rawCategory.id, status: "publish", per_page: 100, page: productPage, ...(sortOptions[sort] || sortOptions.newest) });
+                candidates.push(...batch);
+                if (batch.length < 100) break;
+            }
+            const matched = candidates.filter((item) => searchScore(item.name, query) > 0);
+            hasNextPage = matched.length > page * 24;
+            rawProds = matched.slice((page - 1) * 24, page * 24);
+        } else if (slug !== "roblox") {
+            rawProds = await getProducts({ category: rawCategory.id, status: "publish", per_page: 24, page, ...(sortOptions[sort] || sortOptions.newest) });
+            hasNextPage = rawProds.length === 24;
+        }
+        products = (rawProds || []).map(normalizeProduct);
+    }
+} catch (error) {
+    loadFailed = true;
+    console.error("❌ ERROR KATEGORI REST:", error);
+}
+
+if (!category) return Astro.redirect("/404");
+
+// Logic untuk mengecek apakah ini Parent Category tanpa produk langsung
+const isRobloxDescendant = ancestors.some((item) => item.slug === "roblox");
+const isParentCategory = slug === "roblox";
+const pageLink = (nextPage) => { const url = new URL(Astro.url); url.searchParams.set("page", String(nextPage)); return url.pathname + url.search; };
+
+// --- SUMMONERS WAR FILTER FLAG ---
+const isSummonersWar = ancestors.some((item) => item.slug === "summoners-war-sky-arena") || slug === "summoners-war-sky-arena";
+
+// --- ROBLOX TAB LOGIC ---
+const ROBUX_SLUGS = new Set([    "robux-via-login",
+    "robux-via-username",
+    "robux-game-card",
+    "roblox-akun",
+    "rbl-credits-gift-card",
+    "robux-5-hari",
+]);
+
+const isRobloxCategory = slug === "roblox";
+
+const gameSubCats = isRobloxCategory
+    ? subCategories.filter((sub) => !ROBUX_SLUGS.has(sub.slug))
+    : [];
+const robuxSubCats = isRobloxCategory
+    ? subCategories.filter((sub) => ROBUX_SLUGS.has(sub.slug))
+    : [];
+const showRobloxTabs =
+    isRobloxCategory && gameSubCats.length > 0 && robuxSubCats.length > 0;
+
+// --- HELPER: GET BADGES ---
+const getBadges = (product) => {
+    const attrs = product.attributes?.nodes || [];
+    const badges = [];
+
+    // 1. SERVER
+    const server = attrs.find((a) => a.name.toLowerCase().includes("server"));
+    if (server && server.options && server.options.length > 0) {
+        let val = server.options[0];
+        // Shorten if needed? User asked to cut "Global" -> "GLOBAL". Actually "Global" is short.
+        // Let's just uppercase it.
+        badges.push({
+            label: val.toUpperCase(),
+            class: "border-cyan-500 text-cyan-400 bg-cyan-900/20",
+        });
+    }
+
+    // 2. TIER / RANK
+    const tier = attrs.find(
+        (a) =>
+            a.name.toLowerCase().includes("tier") ||
+            a.name.toLowerCase().includes("rank") ||
+            a.name.toLowerCase().includes("account"),
+    );
+    if (tier && tier.options && tier.options.length > 0) {
+        const val = tier.options[0];
+        const lowerVal = val.toLowerCase();
+
+        let colorClass = "border-gray-500 text-gray-400 bg-gray-900/20"; // Default
+
+        if (lowerVal.includes("fresh") || lowerVal.includes("new")) {
+            colorClass = "border-green-500 text-green-400 bg-green-900/20";
+        } else if (lowerVal.includes("mid")) {
+            colorClass = "border-blue-500 text-blue-400 bg-blue-900/20";
+        } else if (lowerVal.includes("end") || lowerVal.includes("high")) {
+            colorClass = "border-purple-500 text-purple-400 bg-purple-900/20";
+        }
+
+        badges.push({
+            label: val.toUpperCase(),
+            class: colorClass,
+        });
+    }
+
+    return badges;
+};
+---
+
+<Layout title={category.name} description={category.description}>
+    <main class="max-w-7xl mx-auto px-3 md:px-4 pt-20 md:pt-24 pb-8">
+        <nav
+            class="flex py-4 text-gray-500 text-[10px] font-mono uppercase tracking-tighter overflow-x-auto"
+            aria-label="Breadcrumb"
+        >
+            <ol class="flex items-center space-x-2 whitespace-nowrap">
+                <li>
+                    <a href="/" class="hover:text-cyan-400" data-i18n="nav.home"
+                        >HOME</a
+                    >
+                </li>
+                {
+                    ancestors.map((ancestor) => (
+                        <>
+                            <li>
+                                <span class="text-gray-700">/</span>
+                            </li>
+                            <li>
+                                <a
+                                    href={`/category/${ancestor.slug}`}
+                                    class="hover:text-cyan-400 font-bold"
+                                >
+                                    {ancestor.name}
+                                </a>
+                            </li>
+                        </>
+                    ))
+                }
+                <li><span class="text-gray-700">/</span></li>
+                <li class="text-white font-bold truncate max-w-[150px]">
+                    {category.name}
+                </li>
+            </ol>
+        </nav>
+        <div
+            class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8 border-b border-gray-800 pb-6"
+        >
+            <div
+                class="w-12 h-12 md:w-16 md:h-16 bg-gray-900 border border-gray-800 rounded-none flex items-center justify-center skew-x-[-10deg]"
+            >
+                <div
+                    class="i-lucide-gamepad-2 text-2xl md:text-3xl text-cyan-400 skew-x-[10deg]"
+                >
+                </div>
+            </div>
+            <div>
+                <h1
+                    class="text-xl md:text-3xl font-black text-white italic tracking-tighter"
+                >
+                    {category.name.toUpperCase()}
+                </h1>
+                <p class="text-[10px] md:text-xs text-gray-500 font-mono mt-1">
+                    {isRobloxCategory ? "Robux, akun, dan kebutuhan game Roblox" : isRobloxDescendant ? `Belanja ${category.name} di Yasui Game` : `Marketplace ${category.name}`}
+                </p>
+            </div>
+        </div>
+
+        {/* --- SCENARIO A: PARENT CATEGORY UI (Priority) --- */}
+        {
+            isParentCategory && !isRobloxCategory && (
+                <div class="mb-12 animate-fade-in-up">
+                    <div class="p-6 bg-purple-900/10 border border-purple-500/30 rounded-lg text-center mb-8">
+                        <div class="i-lucide-arrow-down-circle text-4xl text-purple-400 mb-3 mx-auto animate-bounce" />
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-2">
+                            PILIH KATEGORI
+                        </h3>
+                        <p class="text-gray-400 text-sm">
+                            Pilih kategori di bawah ini
+                            untuk melihat produk.
+                        </p>
+                    </div>
+                </div>
+            )
+        }
+
+        {isRobloxCategory && <RobloxHub categories={subCategories} failed={loadFailed} />}
+
+        {!isRobloxCategory && catalogRoot && (
+            <section class="mb-6" aria-label="Filter katalog">
+                <nav class="flex gap-2 overflow-x-auto px-2 pt-2 pb-4 mb-3 border-b border-gray-800/80" aria-label="Tipe produk">
+                    {[{ ...catalogRoot, name: "Semua" }, ...catalogTypes].map((type) => (
+                        <a href={`/category/${type.slug}`} aria-current={type.slug === slug ? "page" : undefined} class:list={["shrink-0 min-h-11 px-4 py-3 skew-x-[-10deg] border text-xs font-bold uppercase tracking-wide whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-cyan-400 focus-visible:outline-offset-2", type.slug === slug ? "bg-cyan-400 text-black border-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.18)]" : "bg-gray-900/60 text-gray-400 border-gray-800 hover:text-cyan-300 hover:border-cyan-400/60"]}><span class="block skew-x-[10deg]">{type.name}</span></a>
+                    ))}
+                </nav>
+                <form class="flex flex-col md:flex-row gap-3" method="get">
+                    <label class="flex-1 min-w-0 flex items-center gap-3 px-4 bg-gray-900/50 border border-gray-800 border-l-2 border-l-cyan-400/60 focus-within:border-cyan-400 focus-within:bg-cyan-950/10 transition-colors"><span class="i-lucide-search text-cyan-400 shrink-0" aria-hidden="true" /><span class="sr-only">Cari produk {catalogRoot.name}</span><input type="search" name="q" value={query} placeholder={`Cari produk ${catalogRoot.name}`} class="w-full min-w-0 h-12 bg-transparent text-xs md:text-sm font-mono text-white placeholder-gray-500 focus:outline-none" /></label>
+                    <div class="flex gap-2 md:w-80 shrink-0">
+                        <CatalogSort value={sort} />
+                        <button class="catalog-apply flex items-center justify-center gap-2 px-5 h-12 bg-cyan-400 text-black font-black text-xs uppercase tracking-wide hover:bg-cyan-300 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2 transition-colors"><span>Terapkan</span><span class="i-lucide-arrow-up-right text-base" aria-hidden="true" /></button>
+                    </div>
+                </form>
+            </section>
+        )}
+
+        {
+            !catalogRoot && !isRobloxCategory && subCategories.length > 0 && (
+                <div class="mb-10">
+                    <div class="flex items-center gap-2 mb-3 border-l-4 border-purple-500 pl-3">
+                        <h3
+                            class="text-sm md:text-lg font-bold text-white uppercase tracking-wide"
+                            data-i18n="category.choose_game"
+                        >
+                            Pilih Kategori
+                        </h3>
+                    </div>
+
+                    {/* --- ROBLOX TABS --- */}
+                    {showRobloxTabs && (
+                        <div class="flex gap-2 mb-6">
+                            <button
+                                id="tab-games"
+                                class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm uppercase tracking-wider border transition-all duration-300 cursor-pointer bg-cyan-400 text-black font-bold border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.3)]"
+                                onclick="switchRobloxTab('games')"
+                            >
+                                🎮 PILIH GAME
+                            </button>
+                            <button
+                                id="tab-robux"
+                                class="tab-btn px-4 py-2.5 rounded-xl text-xs md:text-sm uppercase tracking-wider border transition-all duration-300 cursor-pointer bg-gray-900 text-gray-400 border-gray-800 hover:text-white hover:border-cyan-500/50"
+                                onclick="switchRobloxTab('robux')"
+                            >
+                                💎 ROBUX & AKUN
+                            </button>
+                        </div>
+                    )}
+
+                    {/* --- GAMES GRID (Roblox tab 1) --- */}
+                    {showRobloxTabs ? (
+                        <>
+                            <div
+                                id="roblox-games-grid"
+                                class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3 transition-opacity duration-300"
+                            >
+                                {gameSubCats.map((sub) => (
+                                    <a
+                                        href={`/category/${sub.slug}`}
+                                        class="cyber-card group relative aspect-square bg-gray-900/40 border border-gray-800 hover:border-purple-500 hover:bg-black transition-all duration-300 flex flex-col items-center justify-center p-2 overflow-hidden"
+                                    >
+                                        <div class="absolute inset-0 bg-gradient-to-t from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+                                        <div class="relative w-14 h-14 md:w-16 md:h-16 mb-2 transition-transform duration-300 group-hover:scale-110 drop-shadow-lg">
+                                            {sub.image ? (
+                                                <img
+                                                    src={fixImgUrl(sub.image.sourceUrl)}
+                                                    alt={sub.name}
+                                                    class="w-full h-full object-contain"
+                                                />
+                                            ) : (
+                                                <div class="flex items-center justify-center w-full h-full bg-gray-800 rounded-full">
+                                                    <div class="i-lucide-box text-2xl text-gray-600" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <span class="relative text-[9px] md:text-[10px] font-bold text-gray-400 group-hover:text-white uppercase text-center leading-tight tracking-wider line-clamp-2">
+                                            {sub.name}
+                                        </span>
+                                        {sub.count !== null && (
+                                            <span class="relative text-[8px] text-gray-600 mt-1 font-mono group-hover:text-gray-400 transition">
+                                                {sub.count} Items
+                                            </span>
+                                        )}
+                                    </a>
+                                ))}
+                            </div>
+
+                            {/* --- ROBUX & AKUN TABS (Roblox tab 2, hidden by default) --- */}
+                            <div
+                                id="roblox-robux-grid"
+                                class="hidden transition-opacity duration-300"
+                            >
+                                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                                    {robuxSubCats.map((sub) => (
+                                        <a
+                                            href={`/category/${sub.slug}`}
+                                            class="px-4 py-2 bg-gray-900 text-gray-400 text-xs font-bold uppercase tracking-wider skew-x-[-10deg] border border-gray-800 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_10px_rgba(34,211,238,0.2)] transition whitespace-nowrap flex-shrink-0"
+                                        >
+                                            <span class="skew-x-[10deg] block">
+                                                {sub.name}
+                                            </span>
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        /* --- DEFAULT: Single grid for non-Roblox categories --- */
+                        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-3">
+                            {subCategories.map((sub) => (
+                                <a
+                                    href={`/category/${sub.slug}`}
+                                    class="cyber-card group relative aspect-square bg-gray-900/40 border border-gray-800 hover:border-purple-500 hover:bg-black transition-all duration-300 flex flex-col items-center justify-center p-2 overflow-hidden"
+                                >
+                                    <div class="absolute inset-0 bg-gradient-to-t from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+
+                                    <div class="relative w-14 h-14 md:w-16 md:h-16 mb-2 transition-transform duration-300 group-hover:scale-110 drop-shadow-lg">
+                                        {sub.image ? (
+                                            <img
+                                                src={fixImgUrl(sub.image.sourceUrl)}
+                                                alt={sub.name}
+                                                class="w-full h-full object-contain"
+                                            />
+                                        ) : (
+                                            <div class="flex items-center justify-center w-full h-full bg-gray-800 rounded-full">
+                                                <div class="i-lucide-box text-2xl text-gray-600" />
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <span class="relative text-[9px] md:text-[10px] font-bold text-gray-400 group-hover:text-white uppercase text-center leading-tight tracking-wider line-clamp-2">
+                                        {sub.name}
+                                    </span>
+                                    {sub.count !== null && (
+                                        <span class="relative text-[8px] text-gray-600 mt-1 font-mono group-hover:text-gray-400 transition">
+                                            {sub.count} Items
+                                        </span>
+                                    )}
+                                </a>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )
+        }
+
+        {
+            /* SCENARIO A: NAV PILLS (If has subcategories but NOT parent view exclusively) */
+        }
+        {
+            !catalogRoot && !isRobloxCategory && subCategories.length > 0 && !isParentCategory && (
+                <div id="nav-pills-section" class="mb-8">
+                    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        <button class="px-4 py-1.5 bg-cyan-400 text-black text-xs font-bold uppercase tracking-wider skew-x-[-10deg] border border-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)]">
+                            <span class="skew-x-[10deg]">SEMUA</span>
+                        </button>
+                        {subCategories.map((sub) => (
+                            <a
+                                href={`/category/${sub.slug}`}
+                                class="px-4 py-1.5 bg-gray-900 text-gray-400 text-xs font-bold uppercase tracking-wider skew-x-[-10deg] border border-gray-800 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_10px_rgba(34,211,238,0.2)] transition whitespace-nowrap"
+                            >
+                                <span class="skew-x-[10deg] block">
+                                    {sub.name}
+                                </span>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+
+        {/* SCENARIO B: Child Category - Show Back Button */}
+        {
+            category.parent?.node && (
+                <div class="mb-4">
+                    <a
+                        href={`/category/${category.parent.node.slug}`}
+                        class="inline-flex items-center gap-1 text-[10px] md:text-xs text-cyan-400 hover:text-cyan-300 font-bold uppercase tracking-wider transition group"
+                    >
+                        <div class="i-lucide-arrow-left group-hover:-translate-x-1 transition" />
+                        KEMBALI KE {category.parent.node.name}
+                    </a>
+                </div>
+            )
+        }
+
+        {
+            !isRobloxCategory && !isParentCategory && (
+                <div id="katalog-header" class="flex items-center gap-2 mb-4 border-l-4 border-cyan-400 pl-3">
+                    <h3 class="text-sm md:text-lg font-bold text-white uppercase tracking-wide">
+                        <span data-i18n="category.catalog">Katalog</span>
+                        {category.name}
+                    </h3>
+                </div>
+            )
+        }
+
+        {
+            /* FILTER BAR — khusus Summoners War (akun): Server + Age Band */
+            isSummonersWar && products.length > 0 && (
+                <div id="sw-filter-bar" class="mb-6 flex flex-wrap items-center gap-4">
+                    <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter server">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mr-1"><span class="i-lucide-globe inline-block align-[-2px] mr-1" />Server</span>
+                        <button data-sw-filter="server" data-sw-value="" class="sw-filter-btn px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-lg border transition border-cyan-400 bg-cyan-950/60 text-cyan-400">Semua</button>
+                        {["Asia", "Europe", "Global"].map((s) => (
+                            <button data-sw-filter="server" data-sw-value={s} class="sw-filter-btn px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-lg border transition border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-cyan-500/50">{s}</button>
+                        ))}
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap" role="group" aria-label="Filter umur akun">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mr-1"><span class="i-lucide-clock inline-block align-[-2px] mr-1" />Umur</span>
+                        <button data-sw-filter="age" data-sw-value="" class="sw-filter-btn px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-lg border transition border-cyan-400 bg-cyan-950/60 text-cyan-400">Semua</button>
+                        {["Fresh (1-3 Days)", "Fresh (4-7 Days)", "Fresh (8-30 Days)", "Old"].map((a) => (
+                            <button data-sw-filter="age" data-sw-value={a} class="sw-filter-btn px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-lg border transition border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-cyan-500/50">{a}</button>
+                        ))}
+                    </div>
+                    <button id="sw-filter-reset" class="ml-auto text-[11px] text-gray-500 hover:text-cyan-400 underline underline-offset-4 hidden">Reset filter</button>
+                </div>
+            )
+        }
+
+        {
+            products.length === 0 ? (
+                // Only show empty state if NOT a parent category.
+                // Parent categories show the grid above, so they don't need "Empty Products" error.
+                !isRobloxCategory && !isParentCategory && (
+                    <div class="p-8 text-center border border-dashed border-gray-800 rounded bg-gray-900/50">
+                        <p
+                            class="text-xs text-gray-500"
+                        >
+                            {loadFailed ? "Katalog belum berhasil dimuat. Silakan coba lagi." : query ? `Tidak ada produk yang cocok dengan “${query}”.` : `Belum ada produk ${category.name}.`}
+                        </p>
+                        {isRobloxDescendant && <a href={query ? `/category/${slug}` : "/category/roblox"} class="inline-block mt-4 text-sm text-cyan-400 underline underline-offset-4">{query ? "Hapus pencarian" : "Lihat game Roblox lainnya"}</a>}
+                    </div>
+                )
+            ) : (
+                <div id="katalog-products" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-4">
+                    {products.map((item) => {
+                        const swAttrs = isSummonersWar ? (item.attributes?.nodes || []) : [];
+                        const swServer = swAttrs.find((a) => a.name.toLowerCase() === "server")?.options?.join("|") || "";
+                        const swAge = swAttrs.find((a) => /age|umur|fresh|band/i.test(a.name))?.options?.join("|") || "";
+                        return (
+                        <a
+                            href={`/product/${item.slug}`}
+                            data-sw-server={swServer}
+                            data-sw-age={swAge}
+                            class="cyber-card bg-gray-900/50 border border-gray-800 hover:border-cyan-400 transition-all duration-300 group hover:-translate-y-1 relative shadow-lg"
+                        >
+                            <div class="aspect-video bg-black relative overflow-hidden border-b border-gray-800">
+                                {item.image ? (
+                                    <img
+                                        src={fixImgUrl(item.image.sourceUrl)}
+                                        alt={item.name}
+                                        class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100"
+                                    />
+                                ) : (
+                                    <div class="flex items-center justify-center h-full text-gray-700 text-xs">
+                                        NO IMAGE
+                                    </div>
+                                )}
+
+                                {/* Badge Kategori - Ukuran Mobile Optimized */}
+                                <div class="absolute top-0 left-0 bg-black/80 backdrop-blur px-1.5 py-0.5 border-r border-b border-gray-800">
+                                    <span class="text-[8px] text-cyan-400 font-bold uppercase tracking-wider">
+                                        {item.productCategories?.nodes[0]?.name}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="p-3">
+                                {/* ATTRIBUTE BADGES */}
+                                <div class="flex flex-wrap gap-1 mb-2">
+                                    {getBadges(item).map((badge) => (
+                                        <span
+                                            class={`text-[8px] font-bold px-1.5 py-0.5 rounded border border-opacity-50 uppercase tracking-wider ${badge.class}`}
+                                        >
+                                            {badge.label}
+                                        </span>
+                                    ))}
+                                    {isSummonersWar && (item.stockStatus === "OUT_OF_STOCK" || item.stockStatus === "outofstock") && (
+                                        <span class="text-[8px] font-bold px-1.5 py-0.5 rounded border border-red-800/60 bg-red-950/30 text-red-400 uppercase tracking-wider">Stok Habis</span>
+                                    )}
+                                </div>
+                                <h4 class="text-[10px] md:text-sm font-bold text-gray-200 leading-snug mb-2 line-clamp-2 h-[2.8em] group-hover:text-cyan-400 transition">
+                                    {item.name}
+                                </h4>
+
+                                <div class="flex items-center justify-between border-t border-gray-800 pt-2">
+                                    <span
+                                        class="price-tag text-cyan-400 font-mono text-xs md:text-base font-bold"
+                                        data-price-idr={
+                                            parsePrice(item.price) || 0
+                                        }
+                                    >
+                                        {item.price || "Rp 0"}
+                                    </span>
+                                    <div class="w-5 h-5 md:w-6 md:h-6 bg-gray-800 text-gray-400 flex items-center justify-center hover:bg-cyan-400 hover:text-black transition skew-x-[-10deg]">
+                                        <div class="i-lucide-plus text-[10px] md:text-xs skew-x-[10deg]" />
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        );
+                    })}
+                </div>
+            )
+        }
+        {!isRobloxCategory && (page > 1 || hasNextPage) && <nav aria-label="Halaman produk" class="flex justify-center items-center gap-5 mt-8 text-sm text-cyan-400">{page > 1 && <a href={pageLink(page - 1)} class="p-3 border border-gray-700 rounded-lg">Sebelumnya</a>}<span class="text-gray-400">Halaman {page}</span>{hasNextPage && <a href={pageLink(page + 1)} class="p-3 border border-gray-700 rounded-lg">Berikutnya</a>}</nav>}
+    </main>
+</Layout>
+
+<style>
+    .catalog-apply { clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px)); }
+    .catalog-apply:focus-visible { clip-path: none; }
+    .sw-hidden { display: none !important; }
+</style>
+
+<script is:inline>
+    const ACTIVE_CLASSES = [
+        "bg-cyan-400",
+        "text-black",
+        "font-bold",
+        "border-cyan-400",
+        "shadow-[0_0_15px_rgba(34,211,238,0.3)]",
+    ];
+    const INACTIVE_CLASSES = [
+        "bg-gray-900",
+        "text-gray-400",
+        "border-gray-800",
+    ];
+    const INACTIVE_HOVER = ["hover:text-white", "hover:border-cyan-500/50"];
+
+    // Initialize: hide katalog & nav pills on page load (games tab is default active)
+    (function() {
+        const katalogHeader = document.getElementById("katalog-header");
+        const navPills = document.getElementById("nav-pills-section");
+        const gamesGrid = document.getElementById("roblox-games-grid");
+        // Only if Roblox tabs exist and games grid is visible (default state)
+        if (gamesGrid && !gamesGrid.classList.contains("hidden")) {
+            if (katalogHeader) katalogHeader.classList.add("hidden");
+            if (navPills) navPills.classList.add("hidden");
+        }
+    })();
+
+    // ====== SUMMONERS WAR FILTER (Server + Age Band) ======
+    (function() {
+        const bar = document.getElementById("sw-filter-bar");
+        if (!bar) return;
+        const ACTIVE = ["border-cyan-400", "bg-cyan-950/60", "text-cyan-400"];
+        const INACTIVE = ["border-gray-800", "bg-gray-900/60", "text-gray-400"];
+        const state = { server: "", age: "" };
+
+        // baca atribut produk dari data di grid (di-inject server-side ke tiap kartu)
+        const cards = Array.from(document.querySelectorAll("#katalog-products > a[data-sw-server], #katalog-products > a[data-sw-age]"));
+        const emptyNote = document.createElement("p");
+        emptyNote.className = "sw-hidden col-span-full text-center text-xs text-gray-500 py-6";
+        emptyNote.textContent = "Tidak ada akun yang cocok dengan filter ini.";
+
+        function apply() {
+            let visible = 0;
+            cards.forEach((card) => {
+                const okServer = !state.server || (card.dataset.swServer || "").split("|").includes(state.server);
+                const okAge = !state.age || (card.dataset.swAge || "").split("|").includes(state.age);
+                const show = okServer && okAge;
+                card.classList.toggle("sw-hidden", !show);
+                if (show) visible++;
+            });
+            // tampilkan empty-note di dalam grid bila 0
+            const grid = document.getElementById("katalog-products");
+            if (grid) {
+                emptyNote.classList.toggle("sw-hidden", !(visible === 0 && cards.length > 0));
+                if (emptyNote.parentElement !== grid && cards.length > 0) grid.appendChild(emptyNote);
+            }
+            document.getElementById("sw-filter-reset")?.classList.toggle("hidden", !state.server && !state.age);
+        }
+
+        bar.querySelectorAll(".sw-filter-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const group = btn.dataset.swFilter;
+                state[group] = btn.dataset.swValue || "";
+                // update styling tombol dalam group ini
+                bar.querySelectorAll(`[data-sw-filter="${group}"]`).forEach((b) => {
+                    const on = (b.dataset.swValue || "") === state[group];
+                    b.classList.remove(...ACTIVE, ...INACTIVE);
+                    b.classList.add(...(on ? ACTIVE : INACTIVE));
+                });
+                apply();
+            });
+        });
+        document.getElementById("sw-filter-reset")?.addEventListener("click", () => {
+            state.server = ""; state.age = "";
+            bar.querySelectorAll(".sw-filter-btn").forEach((b) => {
+                const on = !(b.dataset.swValue || "");
+                b.classList.remove(...ACTIVE, ...INACTIVE);
+                b.classList.add(...(on ? ACTIVE : INACTIVE));
+            });
+            apply();
+        });
+    })();
+
+    window.switchRobloxTab = function (tab) {
+        const gamesGrid = document.getElementById("roblox-games-grid");
+        const robuxGrid = document.getElementById("roblox-robux-grid");
+        const tabGames = document.getElementById("tab-games");
+        const tabRobux = document.getElementById("tab-robux");
+        const katalogHeader = document.getElementById("katalog-header");
+        const navPills = document.getElementById("nav-pills-section");
+
+        if (!gamesGrid || !robuxGrid || !tabGames || !tabRobux) return;
+
+        if (tab === "games") {
+            gamesGrid.classList.remove("hidden");
+            robuxGrid.classList.add("hidden");
+
+            // Hide katalog & nav pills when showing games grid
+            if (katalogHeader) katalogHeader.classList.add("hidden");
+            if (navPills) navPills.classList.add("hidden");
+
+            // Activate games tab
+            tabGames.classList.remove(...INACTIVE_CLASSES, ...INACTIVE_HOVER);
+            tabGames.classList.add(...ACTIVE_CLASSES);
+
+            // Deactivate robux tab
+            tabRobux.classList.remove(...ACTIVE_CLASSES);
+            tabRobux.classList.add(...INACTIVE_CLASSES, ...INACTIVE_HOVER);
+        } else {
+            gamesGrid.classList.add("hidden");
+            robuxGrid.classList.remove("hidden");
+
+            // Show katalog products, but hide game nav pills (replaced by robux tab pills)
+            if (katalogHeader) katalogHeader.classList.remove("hidden");
+            if (navPills) navPills.classList.add("hidden");
+
+            // Activate robux tab
+            tabRobux.classList.remove(...INACTIVE_CLASSES, ...INACTIVE_HOVER);
+            tabRobux.classList.add(...ACTIVE_CLASSES);
+
+            // Deactivate games tab
+            tabGames.classList.remove(...ACTIVE_CLASSES);
+            tabGames.classList.add(...INACTIVE_CLASSES, ...INACTIVE_HOVER);
+        }
+    };
+</script>

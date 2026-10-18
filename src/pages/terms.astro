@@ -1,0 +1,143 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Terms of Service - Yasui Game">
+    <main class="max-w-3xl mx-auto px-4 pt-24 pb-16">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1
+                class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4"
+                data-i18n="terms.title"
+            >
+                TERMS OF <span class="text-cyan-400">SERVICE</span>
+            </h1>
+            <p
+                class="text-gray-400 font-mono text-xs md:text-sm max-w-lg mx-auto"
+                data-i18n="terms.subtitle"
+            >
+                Syarat dan ketentuan pembelian produk di Yasui Game.
+            </p>
+        </div>
+
+        <!-- Main Container -->
+        <div class="relative">
+            <!-- Glow Effect Backup -->
+            <div
+                class="absolute -inset-1 bg-cyan-500/20 blur-xl opacity-50 rounded-2xl -z-10"
+            >
+            </div>
+
+            <div
+                class="bg-gray-900/40 border border-gray-800 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
+            >
+                <div
+                    class="prose prose-invert prose-sm md:prose-base max-w-none font-mono text-gray-300"
+                >
+                    <p class="leading-relaxed" data-i18n="terms.intro">
+                        Selamat datang di Yasui Game. Dengan membeli produk
+                        kami, Anda menyetujui syarat dan ketentuan berikut ini.
+                        Harap baca dengan seksama sebelum melakukan transaksi.
+                    </p>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="terms.sec1_title"
+                    >
+                        1. Produk & Garansi
+                    </h3>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
+                        <li data-i18n="terms.sec1_li1">
+                            <strong class="text-white">Garansi 7 Hari:</strong> Semua
+                            akun (Produk Digital) yang dibeli di Yasui Game memiliki
+                            masa garansi 7 hari sejak tanggal pembelian.
+                        </li>
+                        <li data-i18n="terms.sec1_li2">
+                            Garansi mencakup: Akun tidak bisa diakses (invalid
+                            credentials), terbanned sebelum digunakan, atau
+                            tidak sesuai deskripsi.
+                        </li>
+                        <li data-i18n="terms.sec1_li3">
+                            Garansi <strong class="text-red-400">HANGUS</strong> jika:
+                            Pembeli mengubah email/password bawaan sebelum masa garansi
+                            habis (kecuali diinstruksikan), atau melanggar poin penggunaan
+                            (lihat poin 2).
+                        </li>
+                    </ul>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="terms.sec2_title"
+                    >
+                        2. Penggunaan Akun
+                    </h3>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
+                        <li data-i18n="terms.sec2_li1">
+                            <strong class="text-red-400 warning"
+                                >PENTING:</strong
+                            > Dilarang keras menggunakan program ilegal, cheat, bot,
+                            script, atau makro pada akun yang dibeli dari Yasui Game.
+                        </li>
+                        <li data-i18n="terms.sec2_li2">
+                            Segala bentuk banned/penangguhan akun akibat
+                            penggunaan software pihak ketiga oleh pembeli <strong
+                                >bukan</strong
+                            > merupakan tanggung jawab Yasui Game dan tidak akan diganti.
+                        </li>
+                        <li data-i18n="terms.sec2_li3">
+                            Akun yang dijual adalah akun fresh atau akun rawatan
+                            sesuai deskripsi. Pembeli bertanggung jawab penuh
+                            atas keamanan akun setelah serah terima selesai.
+                        </li>
+                    </ul>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="terms.sec3_title"
+                    >
+                        3. Kebijakan Pengembalian Dana (Refund)
+                    </h3>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
+                        <li data-i18n="terms.sec3_li1">
+                            Tidak ada fitur Refund (Uang Kembali) jika kesalahan
+                            berasal dari pembeli (salah membeli item, berubah
+                            pikiran, atau tidak membaca deskripsi).
+                        </li>
+                        <li data-i18n="terms.sec3_li2">
+                            Refund hanya diberikan jika: Stok habis setelah
+                            pembayaran terkonfirmasi, atau akun pengganti tidak
+                            tersedia saat klaim garansi yang valid.
+                        </li>
+                    </ul>
+
+                    <h3
+                        class="text-white font-bold mt-8 mb-4 text-lg"
+                        data-i18n="terms.sec4_title"
+                    >
+                        4. Pengiriman & Keamanan
+                    </h3>
+                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
+                        <li data-i18n="terms.sec4_li1">
+                            Pengiriman dilakukan secara instan/otomatis ke Email
+                            dan WhatsApp yang didaftarkan.
+                        </li>
+                        <li data-i18n="terms.sec4_li2">
+                            Yasui Game tidak pernah meminta password akun Anda
+                            setelah transaksi selesai untuk alasan apapun.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Footer Note -->
+                <div class="mt-10 pt-6 border-t border-gray-800 text-center">
+                    <p
+                        class="text-[10px] text-gray-500"
+                        data-i18n="terms.last_updated"
+                    >
+                        Terakhir diperbarui: 10 Januari 2026
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>

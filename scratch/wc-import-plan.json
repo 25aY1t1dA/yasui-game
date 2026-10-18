@@ -1,0 +1,3660 @@
+{
+  "_meta": {
+    "generatedAt": "2026-10-13T16:39:10.923Z",
+    "description": "WooCommerce category import plan for Yasui Game marketplace",
+    "source": [
+      "itemku-categories.json",
+      "roblox-games.json"
+    ],
+    "slugRules": {
+      "parentCategories": "Keep original slug as-is (e.g., mobile-legends, growtopia)",
+      "subCategories": "Prefix with game short code (e.g., mlbb-top-up, ff-akun)",
+      "robuxTypes": "Special slugs: robux-via-login, robux-via-username, robux-game-card, roblox-akun",
+      "robloxGames": "Remove -roblox suffix where safe, keep short slug (e.g., blox-fruits, fish-it)",
+      "robloxGameChildren": "Game slug + sub-category slug (e.g., blox-fruits-akun)"
+    }
+  },
+  "parentCategories": [
+    {
+      "name": "Mobile Legends",
+      "slug": "mobile-legends",
+      "description": "Marketplace Mobile Legends - Top Up, Akun, Gift Charisma, Gift Item (7 Hari)",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "mlbb-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "mlbb-akun"
+        },
+        {
+          "name": "Gift Charisma",
+          "slug": "mlbb-gift-charisma"
+        },
+        {
+          "name": "Gift Item (7 Hari)",
+          "slug": "mlbb-gift-item-7-hari"
+        }
+      ]
+    },
+    {
+      "name": "Growtopia",
+      "slug": "growtopia",
+      "description": "Marketplace Growtopia - Lock, Item, Top Up, Akun, World, Gems",
+      "children": [
+        {
+          "name": "Lock",
+          "slug": "growtopia-lock"
+        },
+        {
+          "name": "Item",
+          "slug": "growtopia-item"
+        },
+        {
+          "name": "Top Up",
+          "slug": "growtopia-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "growtopia-akun"
+        },
+        {
+          "name": "World",
+          "slug": "growtopia-world"
+        },
+        {
+          "name": "Gems",
+          "slug": "growtopia-gems"
+        }
+      ]
+    },
+    {
+      "name": "Garena Free Fire",
+      "slug": "garena-free-fire",
+      "description": "Marketplace Garena Free Fire - Top Up, Akun, Item",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "ff-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "ff-akun"
+        },
+        {
+          "name": "Item",
+          "slug": "ff-item"
+        }
+      ]
+    },
+    {
+      "name": "Genshin Impact",
+      "slug": "genshin-impact",
+      "description": "Marketplace Genshin Impact - Top Up, Akun",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "gi-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "gi-akun"
+        }
+      ]
+    },
+    {
+      "name": "Honkai Star Rail",
+      "slug": "honkai-star-rail",
+      "description": "Marketplace Honkai Star Rail - Top Up, Akun",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "hsr-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "hsr-akun"
+        }
+      ]
+    },
+    {
+      "name": "One Piece Bounty Rush",
+      "slug": "one-piece-bounty-rush",
+      "description": "Marketplace One Piece Bounty Rush - Akun",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "opbr-akun"
+        }
+      ]
+    },
+    {
+      "name": "Clash of Clans",
+      "slug": "clash-of-clans",
+      "description": "Marketplace Clash of Clans - Akun, Joki",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "coc-akun"
+        },
+        {
+          "name": "Joki",
+          "slug": "coc-joki"
+        }
+      ]
+    },
+    {
+      "name": "Hay Day",
+      "slug": "hay-day",
+      "description": "Marketplace Hay Day - Coin, Paket Upgrade, Akun",
+      "children": [
+        {
+          "name": "Coin",
+          "slug": "hayday-coin"
+        },
+        {
+          "name": "Paket Upgrade",
+          "slug": "hayday-paket-upgrade"
+        },
+        {
+          "name": "Akun",
+          "slug": "hayday-akun"
+        }
+      ]
+    },
+    {
+      "name": "Zenless Zone Zero",
+      "slug": "zenless-zone-zero",
+      "description": "Marketplace Zenless Zone Zero - Akun, Top Up",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "zzz-akun"
+        },
+        {
+          "name": "Top Up",
+          "slug": "zzz-top-up"
+        }
+      ]
+    },
+    {
+      "name": "Arknight: Endfield",
+      "slug": "arknights-endfield",
+      "description": "Marketplace Arknight: Endfield - Top Up, Akun",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "arknights-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "arknights-akun"
+        }
+      ]
+    },
+    {
+      "name": "Bleach: Soul Resonance",
+      "slug": "bleach-soul-resonance",
+      "description": "Marketplace Bleach: Soul Resonance - Top Up, Akun",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "bleach-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "bleach-akun"
+        }
+      ]
+    },
+    {
+      "name": "Blue Archive",
+      "slug": "blue-archive",
+      "description": "Marketplace Blue Archive - Akun",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "ba-akun"
+        }
+      ]
+    },
+    {
+      "name": "Chaos Zero Nightmare",
+      "slug": "chaos-zero-nightmare",
+      "description": "Marketplace Chaos Zero Nightmare - Akun",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "czn-akun"
+        }
+      ]
+    },
+    {
+      "name": "Clash Royale",
+      "slug": "clash-royale",
+      "description": "Marketplace Clash Royale - Akun, Joki",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "cr-akun"
+        },
+        {
+          "name": "Joki",
+          "slug": "cr-joki"
+        }
+      ]
+    },
+    {
+      "name": "eFootball Mobile",
+      "slug": "efootball-mobile",
+      "description": "Marketplace eFootball Mobile - Akun",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "efootball-akun"
+        }
+      ]
+    },
+    {
+      "name": "Summoners War",
+      "slug": "summoners-war",
+      "description": "Marketplace Summoners War - Akun",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "sw-akun"
+        }
+      ]
+    },
+    {
+      "name": "Grand Summoners",
+      "slug": "grand-summoners",
+      "description": "Marketplace Grand Summoners - Akun",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "gs-akun"
+        }
+      ]
+    },
+    {
+      "name": "Magic Chess: Go Go",
+      "slug": "magic-chess-go-go",
+      "description": "Marketplace Magic Chess: Go Go - Akun, Joki Rank, Top Up",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "mcgg-akun"
+        },
+        {
+          "name": "Joki Rank",
+          "slug": "mcgg-joki-rank"
+        },
+        {
+          "name": "Top Up",
+          "slug": "mcgg-top-up"
+        }
+      ]
+    },
+    {
+      "name": "Mobile Legends Adventure",
+      "slug": "mobile-legends-adventure",
+      "description": "Marketplace Mobile Legends Adventure - Akun, Top Up",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "mla-akun"
+        },
+        {
+          "name": "Top Up",
+          "slug": "mla-top-up"
+        }
+      ]
+    },
+    {
+      "name": "NTE: Neverness to Everness",
+      "slug": "nte-neverness-to-everness",
+      "description": "Marketplace NTE: Neverness to Everness - Top Up, Akun",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "nte-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "nte-akun"
+        }
+      ]
+    },
+    {
+      "name": "Old School Runescape",
+      "slug": "runescape-old-school",
+      "description": "Marketplace Old School Runescape - Akun, Gold, Items, Joki",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "osrs-akun"
+        },
+        {
+          "name": "Gold",
+          "slug": "osrs-gold"
+        },
+        {
+          "name": "Items",
+          "slug": "osrs-items"
+        },
+        {
+          "name": "Joki",
+          "slug": "osrs-joki"
+        }
+      ]
+    },
+    {
+      "name": "PUBG Mobile",
+      "slug": "pubg-mobile",
+      "description": "Marketplace PUBG Mobile - Top Up, Redeem Code, Popularity, Akun",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "pubgm-top-up"
+        },
+        {
+          "name": "Redeem Code",
+          "slug": "pubgm-redeem-code"
+        },
+        {
+          "name": "Popularity",
+          "slug": "pubgm-popularity"
+        },
+        {
+          "name": "Akun",
+          "slug": "pubgm-akun"
+        }
+      ]
+    },
+    {
+      "name": "Steam",
+      "slug": "steam",
+      "description": "Marketplace Steam - Steam Wallet",
+      "children": [
+        {
+          "name": "Steam Wallet",
+          "slug": "steam-steam-wallet"
+        }
+      ]
+    },
+    {
+      "name": "Seven Knight Re:BIRTH",
+      "slug": "seven-knights-rebirth",
+      "description": "Marketplace Seven Knight Re:BIRTH - Top Up, Akun",
+      "children": [
+        {
+          "name": "Top Up",
+          "slug": "skr-top-up"
+        },
+        {
+          "name": "Akun",
+          "slug": "skr-akun"
+        }
+      ]
+    },
+    {
+      "name": "The Seven Deadly Sins: Origin",
+      "slug": "the-seven-deadly-sins-origin",
+      "description": "Marketplace The Seven Deadly Sins: Origin - Akun",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "7ds-akun"
+        }
+      ]
+    },
+    {
+      "name": "Umamusume: Pretty Derby",
+      "slug": "umamusume-pretty-derby",
+      "description": "Marketplace Umamusume: Pretty Derby - Top Up Via Link Razer, Akun",
+      "children": [
+        {
+          "name": "Top Up Via Link Razer",
+          "slug": "uma-top-up-via-link-razer"
+        },
+        {
+          "name": "Akun",
+          "slug": "uma-akun"
+        }
+      ]
+    },
+    {
+      "name": "Wuthering Waves",
+      "slug": "wuthering-waves",
+      "description": "Marketplace Wuthering Waves - Akun, Top Up",
+      "children": [
+        {
+          "name": "Akun",
+          "slug": "wuwa-akun"
+        },
+        {
+          "name": "Top Up",
+          "slug": "wuwa-top-up"
+        }
+      ]
+    }
+  ],
+  "robloxStructure": {
+    "parent": {
+      "name": "Roblox",
+      "slug": "roblox",
+      "description": "Marketplace Roblox - Robux, Akun, dan Game Items"
+    },
+    "robuxTypes": [
+      {
+        "name": "Robux Via Login",
+        "slug": "robux-via-login"
+      },
+      {
+        "name": "Robux Via Username",
+        "slug": "robux-via-username"
+      },
+      {
+        "name": "Robux Gift Card",
+        "slug": "robux-game-card"
+      },
+      {
+        "name": "Akun",
+        "slug": "roblox-akun"
+      }
+    ],
+    "games": [
+      {
+        "name": "(+1) Magic Evolution",
+        "slug": "1-magic-evolution",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "1-magic-evolution-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "(+1) Mine Per Click",
+        "slug": "1-mine-per-click",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "1-mine-per-click-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "100 Days At Sea",
+        "slug": "100-days-at-sea",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "100-days-at-sea-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "99 Nights in the Forest",
+        "slug": "99-nights-in-the-forest",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "99-nights-in-the-forest-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "A Dusty Trip",
+        "slug": "a-dusty-trip",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "a-dusty-trip-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "A Universal Time",
+        "slug": "a-universal-time",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "a-universal-time-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Abyss",
+        "slug": "abyss",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "abyss-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Abyssal: The Pilgrim's Path",
+        "slug": "abyssal-the-pilgrims-path",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "abyssal-the-pilgrims-path-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Adopt Me Trading Hub",
+        "slug": "adopt-me",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "adopt-me-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "All Star Tower Defense X",
+        "slug": "all-star-tower-defense",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "all-star-tower-defense-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "American Plains Mudding",
+        "slug": "american-plains-mudding",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "american-plains-mudding-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Animal Hospital",
+        "slug": "animal-hospital",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "animal-hospital-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Adventures",
+        "slug": "anime-adventures",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-adventures-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Battle Arena",
+        "slug": "anime-battle-arena",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-battle-arena-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Card Battle",
+        "slug": "anime-card-battle",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-card-battle-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Champion Simulator",
+        "slug": "anime-champion-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-champion-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Crusaders",
+        "slug": "anime-crusaders",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-crusaders-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Defenders",
+        "slug": "anime-defenders",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-defenders-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Dimension Simulator",
+        "slug": "anime-dimension-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-dimension-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Eternal",
+        "slug": "anime-eternal",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-eternal-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Expeditions",
+        "slug": "anime-expeditions",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-expeditions-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Fighters Simulator",
+        "slug": "anime-fighters-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-fighters-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Fighting Simulator",
+        "slug": "anime-fighting-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-fighting-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Final Quest",
+        "slug": "anime-final-quest",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-final-quest-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Kingdom Simulator",
+        "slug": "anime-kingdom-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-kingdom-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Last Stand",
+        "slug": "anime-last-stand",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-last-stand-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Origins",
+        "slug": "anime-origins",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-origins-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Overload!",
+        "slug": "anime-overload",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-overload-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Paradox",
+        "slug": "anime-paradox",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-paradox-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Raid",
+        "slug": "anime-raid",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-raid-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Realms",
+        "slug": "anime-realms",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-realms-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Reborn",
+        "slug": "anime-reborn",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-reborn-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Squadron",
+        "slug": "anime-squadron",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-squadron-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Vanguards",
+        "slug": "anime-vanguard",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-vanguard-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Anime Zero",
+        "slug": "anime-zero",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "anime-zero-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Arise Crossover",
+        "slug": "arise-crossover",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "arise-crossover-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Arm Wrestle Simulator",
+        "slug": "arm-wrestle-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "arm-wrestle-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Asylum Life",
+        "slug": "asylum-life",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "asylum-life-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Attack on Titan Revolution",
+        "slug": "attack-on-titan-revolution",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "attack-on-titan-revolution-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Baddies",
+        "slug": "baddies",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "baddies-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Basketball: Zero",
+        "slug": "basketball-zero",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "basketball-zero-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Be a Brainrot",
+        "slug": "be-a-brainrot",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "be-a-brainrot-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Be a Lucky Block",
+        "slug": "be-a-lucky-block",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "be-a-lucky-block-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Be The Final Boss",
+        "slug": "be-the-final-boss",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "be-the-final-boss-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Beaks",
+        "slug": "beaks",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "beaks-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Become a Deep Sea Explorer",
+        "slug": "become-a-deep-sea-explorer",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "become-a-deep-sea-explorer-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Bedwars",
+        "slug": "bedwars",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bedwars-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Bee Swarm Simulator",
+        "slug": "bee-swarm-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bee-swarm-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Bid Battles!",
+        "slug": "bid-battles",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bid-battles-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Bizarre Lineage",
+        "slug": "bizarre-lineage",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bizarre-lineage-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Blade Ball",
+        "slug": "blade-ball",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "blade-ball-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Blockspin",
+        "slug": "blockspin",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "blockspin-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Blox Fruits",
+        "slug": "blox-fruits",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "blox-fruits-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Bloxburg",
+        "slug": "bloxburg",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bloxburg-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "BloxStrike",
+        "slug": "bloxstrike",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bloxstrike-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Blue Lock Rivals",
+        "slug": "blue-lock-rivals",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "blue-lock-rivals-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Brainrot Evolution",
+        "slug": "brainrot-evolution",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "brainrot-evolution-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Brainrot Sniper",
+        "slug": "brainrot-sniper",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "brainrot-sniper-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Break a Lucky Block!",
+        "slug": "break-a-lucky-block",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "break-a-lucky-block-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Break and Steal an Egg",
+        "slug": "break-and-steal-an-egg",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "break-and-steal-an-egg-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Broken Blade",
+        "slug": "broken-blade",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "broken-blade-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Brookhaven",
+        "slug": "brookhaven",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "brookhaven-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Bubble Gum Simulator Infinity",
+        "slug": "bubble-gum-simulator-infinity",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bubble-gum-simulator-infinity-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Build a Base and Steal",
+        "slug": "build-a-base-and-steal",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "build-a-base-and-steal-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Build A Boat For Treasure",
+        "slug": "build-a-boat-for-treasure",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "build-a-boat-for-treasure-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Build A Ring Farm",
+        "slug": "build-a-ring-farm",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "build-a-ring-farm-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Build A Zoo",
+        "slug": "build-a-zoo",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "build-a-zoo-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Build An Island",
+        "slug": "build-an-island",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "build-an-island-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Bus Explorer Indonesia",
+        "slug": "bus-explorer-indonesia",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "bus-explorer-indonesia-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Cake Off!",
+        "slug": "cake-off",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "cake-off-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Capybara Evolution",
+        "slug": "capybara-evolution",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "capybara-evolution-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Capybaras VS Plants",
+        "slug": "capybaras-vs-plants",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "capybaras-vs-plants-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Car Driving Indonesia",
+        "slug": "car-driving-indonesia",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "car-driving-indonesia-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Catch a Brainrot",
+        "slug": "catch-a-brainrot",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "catch-a-brainrot-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Catch a Monster",
+        "slug": "catch-a-monster",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "catch-a-monster-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Catch And Tame!",
+        "slug": "catch-and-tame",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "catch-and-tame-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Catch Bugs!",
+        "slug": "catch-bugs",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "catch-bugs-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Chop Your Tree",
+        "slug": "chop-your-tree",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "chop-your-tree-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Climb and Jump Tower",
+        "slug": "climb-and-jump-tower",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "climb-and-jump-tower-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Climb For Brainrots",
+        "slug": "climb-for-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "climb-for-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Clover Origins",
+        "slug": "clover-origins",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "clover-origins-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Combat Arena",
+        "slug": "combat-arena",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "combat-arena-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Combat Warriors",
+        "slug": "combat-warriors",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "combat-warriors-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Craft a World",
+        "slug": "craft-a-world",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "craft-a-world-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Creatures of Sonaria",
+        "slug": "creatures-of-sonaria",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "creatures-of-sonaria-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Criminality",
+        "slug": "criminality",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "criminality-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Da Hood",
+        "slug": "da-hood",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "da-hood-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dead Rails",
+        "slug": "dead-rails",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dead-rails-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Death Ball",
+        "slug": "death-ball",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "death-ball-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Deepwoken",
+        "slug": "deepwoken",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "deepwoken-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Defeat Anime RNG",
+        "slug": "defeat-anime-rng",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "defeat-anime-rng-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Defend ur base with anime",
+        "slug": "defend-ur-base-with-anime",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "defend-ur-base-with-anime-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Demon Blade",
+        "slug": "demon-blade",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "demon-blade-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Devas Of Creation",
+        "slug": "devas-of-creation",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "devas-of-creation-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Devil's Market",
+        "slug": "devils-market",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "devils-market-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "DIG",
+        "slug": "dig",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dig-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dig It",
+        "slug": "dig-it",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dig-it-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dolly's Factory",
+        "slug": "dollys-factory",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dollys-factory-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Drag Drive Simulator",
+        "slug": "drag-drive-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "drag-drive-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dragon Adventures",
+        "slug": "dragon-adventures",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dragon-adventures-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dragon Soul",
+        "slug": "dragon-soul",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dragon-soul-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dress To Impress",
+        "slug": "dress-to-impress",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dress-to-impress-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Driving Empire",
+        "slug": "driving-empire",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "driving-empire-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Duel Warriors",
+        "slug": "duel-warriors",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "duel-warriors-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dueling Grounds",
+        "slug": "dueling-grounds",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dueling-grounds-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dungeon Hunters",
+        "slug": "dungeon-hunters",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dungeon-hunters-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dungeon Lootr",
+        "slug": "dungeon-lootr",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dungeon-lootr-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dungeon Quest",
+        "slug": "dungeon-quest",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dungeon-quest-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Dungeon RNG",
+        "slug": "dungeon-rng",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "dungeon-rng-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Ecos: La Brea",
+        "slug": "ecos-la-brea",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "ecos-la-brea-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Elemental Dungeons",
+        "slug": "elemental-dungeons",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "elemental-dungeons-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Escape Tsunami For Brainrots",
+        "slug": "escape-tsunami-for-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "escape-tsunami-for-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Evade RBL",
+        "slug": "evade-rbl",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "evade-rbl-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Evomon",
+        "slug": "evomon",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "evomon-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Expedition Antarctica",
+        "slug": "expedition-antarctica",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "expedition-antarctica-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "FIFA Super Soccer",
+        "slug": "fifa-super-soccer",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "fifa-super-soccer-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Fight Your Zombie",
+        "slug": "fight-your-zombie",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "fight-your-zombie-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Fisch",
+        "slug": "fisch",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "fisch-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Fish an Anime RNG",
+        "slug": "fish-an-anime-rng",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "fish-an-anime-rng-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Fish It!",
+        "slug": "fish-it",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "fish-it-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Fish Training",
+        "slug": "fish-training",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "fish-training-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Five Night Tower Defense",
+        "slug": "five-night-tower-defense",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "five-night-tower-defense-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "FLASHPOINT: Worlds Collide",
+        "slug": "flashpoint-worlds-collide",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "flashpoint-worlds-collide-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Forsaken",
+        "slug": "forsaken",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "forsaken-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Fruit Battlegrounds",
+        "slug": "fruit-battlegrounds",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "fruit-battlegrounds-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Gakuran",
+        "slug": "gakuran",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "gakuran-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Garden Horizons",
+        "slug": "garden-horizons",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "garden-horizons-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Garden Tower Defense",
+        "slug": "garden-tower-defense",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "garden-tower-defense-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Go Fishing",
+        "slug": "go-fishing",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "go-fishing-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Grand Blue",
+        "slug": "grand-blue",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "grand-blue-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Grand Piece Online",
+        "slug": "grand-piece-online",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "grand-piece-online-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Grow A Garden",
+        "slug": "grow-a-garden",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "grow-a-garden-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Grow A Garden 2",
+        "slug": "grow-a-garden-2",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "grow-a-garden-2-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Grow Beanstalk For Brainrots!",
+        "slug": "grow-beanstalk-for-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "grow-beanstalk-for-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Gym League",
+        "slug": "gym-league",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "gym-league-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Gym Star Simulator",
+        "slug": "gym-star-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "gym-star-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Haze Seas",
+        "slug": "haze-seas",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "haze-seas-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Heroes Battlegrounds",
+        "slug": "heroes-battlegrounds",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "heroes-battlegrounds-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Hitman Card Game",
+        "slug": "hitman-card-game",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "hitman-card-game-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Horse Life",
+        "slug": "horse-life",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "horse-life-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Hunters",
+        "slug": "hunters",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "hunters-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Hunty Zombie",
+        "slug": "hunty-zombie",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "hunty-zombie-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Hypershot",
+        "slug": "hypershot",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "hypershot-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Indo Hangout",
+        "slug": "indo-hangout",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "indo-hangout-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Ink Game",
+        "slug": "ink-game",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "ink-game-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Iron Soul: Dungeon",
+        "slug": "iron-soul-dungeon",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "iron-soul-dungeon-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Jailbreak",
+        "slug": "jailbreak",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "jailbreak-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Jujutsu Infinite",
+        "slug": "jujutsu-infinite",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "jujutsu-infinite-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Jujutsu Shenanigans",
+        "slug": "jujutsu-shenanigans",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "jujutsu-shenanigans-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "KAIZEN",
+        "slug": "kaizen",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "kaizen-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Kayak and Surf",
+        "slug": "kayak-and-surf",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "kayak-and-surf-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Kayak Racing",
+        "slug": "kayak-racing",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "kayak-racing-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Kick a Lucky Block",
+        "slug": "kick-a-lucky-block",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "kick-a-lucky-block-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "King Legacy",
+        "slug": "king-legacy",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "king-legacy-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Knockout",
+        "slug": "knockout",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "knockout-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Kopdes Together",
+        "slug": "kopdes-together",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "kopdes-together-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Kuroku's Basketball Showdown",
+        "slug": "kurokus-basketball-showdown",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "kurokus-basketball-showdown-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Legends Battlegrounds",
+        "slug": "legends-battlegrounds",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "legends-battlegrounds-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Legends Of Speed",
+        "slug": "legends-of-speed",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "legends-of-speed-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Lexington & Concord",
+        "slug": "lexington-concord",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "lexington-concord-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Lineage Piece",
+        "slug": "lineage-piece",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "lineage-piece-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Lootify",
+        "slug": "lootify",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "lootify-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Lucky Block Rush",
+        "slug": "lucky-block-rush",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "lucky-block-rush-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Lumber Tycoon 2",
+        "slug": "lumber-tycoon-2",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "lumber-tycoon-2-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Meme Sea",
+        "slug": "meme-sea",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "meme-sea-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Merge a Nuke!",
+        "slug": "merge-a-nuke",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "merge-a-nuke-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Military Tycoon",
+        "slug": "military-tycoon",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "military-tycoon-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Mine a Mountain",
+        "slug": "mine-a-mountain",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "mine-a-mountain-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Mini War",
+        "slug": "mini-war",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "mini-war-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Mount RNG",
+        "slug": "mount-rng",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "mount-rng-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Murder Mystery 2",
+        "slug": "murder-mystery-2",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "murder-mystery-2-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Murderers VS Sheriffs",
+        "slug": "murderers-vs-sheriffs",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "murderers-vs-sheriffs-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Murderers VS Sheriffs DUELS",
+        "slug": "murderers-vs-sheriffs-duels",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "murderers-vs-sheriffs-duels-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Muscle Legend",
+        "slug": "muscle-legend",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "muscle-legend-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "My Brainrot Egg Farm",
+        "slug": "my-brainrot-egg-farm",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "my-brainrot-egg-farm-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "My Restaurant!",
+        "slug": "my-restaurant",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "my-restaurant-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "My Singing Brainrot",
+        "slug": "my-singing-brainrot",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "my-singing-brainrot-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Neo Tennis",
+        "slug": "neo-tennis",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "neo-tennis-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "NFL Universe Football",
+        "slug": "nfl-universe-football",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "nfl-universe-football-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Ninja Legends",
+        "slug": "ninja-legends",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "ninja-legends-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "One Fruit Simulator",
+        "slug": "one-fruit-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "one-fruit-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Paint To Hide!",
+        "slug": "paint-to-hide",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "paint-to-hide-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Pet Mine",
+        "slug": "pet-mine",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "pet-mine-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Pet Simulator 99!",
+        "slug": "roblox-pet-simulator-99",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "roblox-pet-simulator-99-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Pet Simulator X",
+        "slug": "pet-simulator-x",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "pet-simulator-x-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "PETS GO!",
+        "slug": "pets-go",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "pets-go-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Pets Universe!",
+        "slug": "pets-universe",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "pets-universe-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Pickaxe Simulator",
+        "slug": "pickaxe-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "pickaxe-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Plants Vs Brainrots",
+        "slug": "plants-vs-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "plants-vs-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Power Blast Lucky Blocks!",
+        "slug": "power-blast-lucky-blocks",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "power-blast-lucky-blocks-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Prospecting!",
+        "slug": "prospecting",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "prospecting-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Race Clicker",
+        "slug": "race-clicker",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "race-clicker-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Racket Rivals",
+        "slug": "racket-rivals",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "racket-rivals-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Raise Animals",
+        "slug": "raise-animals",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "raise-animals-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Re:Rangers X",
+        "slug": "re-rangers-x",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "re-rangers-x-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Rebirth Champions: Ultimate",
+        "slug": "rebirth-champions-ultimate",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "rebirth-champions-ultimate-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Reborn As Swordsman",
+        "slug": "reborn-as-swordsman",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "reborn-as-swordsman-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Ride A Pet",
+        "slug": "ride-a-pet",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "ride-a-pet-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Rise of Nation",
+        "slug": "rise-of-nation",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "rise-of-nation-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Rivals",
+        "slug": "rivals",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "rivals-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "RNG Heroes",
+        "slug": "rng-heroes",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "rng-heroes-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Rogue Piece",
+        "slug": "rogue-piece",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "rogue-piece-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Roll a Fisherman",
+        "slug": "roll-a-fisherman",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "roll-a-fisherman-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Roller for Brainrots!",
+        "slug": "roller-for-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "roller-for-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Royale High",
+        "slug": "royale-high",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "royale-high-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Run a Restaurant",
+        "slug": "run-a-restaurant",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "run-a-restaurant-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Sailor Piece",
+        "slug": "sailor-piece",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sailor-piece-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Sakura Stand",
+        "slug": "sakura-stand",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sakura-stand-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Salon de Fiestas",
+        "slug": "salon-de-fiestas",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "salon-de-fiestas-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "SAWAH Indo",
+        "slug": "sawah-indo",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sawah-indo-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Sell Lemons",
+        "slug": "sell-lemons",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sell-lemons-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "sesh.",
+        "slug": "sesh",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sesh-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Shells",
+        "slug": "shells",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "shells-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Shindo Life",
+        "slug": "shindo-life",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "shindo-life-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Shoot LASER For Brainrots!",
+        "slug": "shoot-laser-for-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "shoot-laser-for-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Skibidi Tower Defense",
+        "slug": "skibidi-tower-defens",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "skibidi-tower-defens-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Slayers 2",
+        "slug": "slayers-2",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "slayers-2-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Slime RNG",
+        "slug": "slime-rng",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "slime-rng-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Sniper Arena",
+        "slug": "sniper-arena",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sniper-arena-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Sniper Duels",
+        "slug": "sniper-duels",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sniper-duels-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Sol's RNG",
+        "slug": "sols-rng",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sols-rng-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Solo Hunters",
+        "slug": "solo-hunters",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "solo-hunters-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Southern Mudding",
+        "slug": "southern-mudding",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "southern-mudding-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Spear Fishing",
+        "slug": "spear-fishing",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "spear-fishing-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Speed Keyboard Escape",
+        "slug": "speed-keyboard-escape",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "speed-keyboard-escape-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Spin a Soccer Card",
+        "slug": "spin-a-soccer-card",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "spin-a-soccer-card-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "SpongeBob Tower Defense",
+        "slug": "spongebob-tower-defense",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "spongebob-tower-defense-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Steal A Brainrot",
+        "slug": "steal-a-brainrot",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "steal-a-brainrot-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Steal A Fish!",
+        "slug": "steal-a-fish",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "steal-a-fish-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Steal a Labubu",
+        "slug": "steal-a-labubu",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "steal-a-labubu-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Steal An Egg",
+        "slug": "steal-an-egg",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "steal-an-egg-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Steal Anime!",
+        "slug": "steal-anime",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "steal-anime-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Storage Hunters: Open World",
+        "slug": "storage-hunters-open-world",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "storage-hunters-open-world-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Subterra",
+        "slug": "subterra",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "subterra-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Survive Bikini Bottom",
+        "slug": "survive-bikini-bottom",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "survive-bikini-bottom-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Survive Lava for Brainrots!",
+        "slug": "survive-lava-for-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "survive-lava-for-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Survive the Apocalypse",
+        "slug": "survive-the-apocalypse",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "survive-the-apocalypse-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Survive The Killer",
+        "slug": "survive-the-killer",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "survive-the-killer-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Survive Zombie Arena",
+        "slug": "survive-zombie-arena",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "survive-zombie-arena-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Swing Obby for Brainrots!",
+        "slug": "swing-obby-for-brainrots",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "swing-obby-for-brainrots-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Sword Warrior",
+        "slug": "sword-warrior",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "sword-warrior-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Swordburst 2",
+        "slug": "swordburst-2",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "swordburst-2-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Swordburst 3",
+        "slug": "swordburst-3",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "swordburst-3-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Tap Simulator",
+        "slug": "tap-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "tap-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "The Forge",
+        "slug": "the-forge",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "the-forge-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "The Strongest Battlegrounds",
+        "slug": "the-strongest-battlegrounds",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "the-strongest-battlegrounds-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Throw a Coin",
+        "slug": "throw-a-coin",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "throw-a-coin-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Toilet Tower Defense",
+        "slug": "toilet-tower-defense",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "toilet-tower-defense-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Tower Defense Simulator",
+        "slug": "tower-defense-simulator",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "tower-defense-simulator-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Type Soul",
+        "slug": "type-soul",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "type-soul-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Universal Tower Defense",
+        "slug": "universal-tower-defense",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "universal-tower-defense-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Untitled Boxing Game",
+        "slug": "untitled-boxing-game",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "untitled-boxing-game-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Vesteria",
+        "slug": "vesteria",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "vesteria-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Violence District",
+        "slug": "violence-district",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "violence-district-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Volleyball Legends",
+        "slug": "haikyuu-legends",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "haikyuu-legends-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Vox Seas",
+        "slug": "vox-seas",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "vox-seas-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "War Tycoon",
+        "slug": "war-tycoon",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "war-tycoon-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Weird Gun Game",
+        "slug": "weird-gun-game",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "weird-gun-game-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Wild Trap",
+        "slug": "wild-trap",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "wild-trap-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Wizard Alchemy",
+        "slug": "wizard-alchemy",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "wizard-alchemy-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "World Fighters",
+        "slug": "world-fighters",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "world-fighters-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "World Zero",
+        "slug": "world-zero",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "world-zero-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      },
+      {
+        "name": "Your Bizarre Adventure",
+        "slug": "your-bizarre-adventure",
+        "children": [
+          {
+            "name": "Akun",
+            "slug": "your-bizarre-adventure-akun",
+            "status": "placeholder",
+            "note": "Will be updated when sub-category scraping completes"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "nonRoblox": {
+      "parentCategories": 27,
+      "childCategories": 59,
+      "subtotal": 86
+    },
+    "roblox": {
+      "parentCategory": 1,
+      "robuxTypes": 4,
+      "games": 263,
+      "gameChildren": 263,
+      "subtotal": 531
+    },
+    "totalCategories": 617,
+    "totalParentCategories": 28,
+    "totalChildCategories": 589,
+    "estimatedApiCalls": {
+      "singleRequests": 617,
+      "batchRequests": 7,
+      "note": "Using WooCommerce REST API batch endpoint (POST /wp-json/wc/v3/products/categories/batch), 617 categories can be created in 7 API calls (max 100 per batch). Without batching: 617 calls.",
+      "recommendedApproach": "Create parents first (batch 1), then children referencing parent IDs (batch 2+)"
+    },
+    "slugConflicts": [],
+    "importOrder": [
+      "Step 1: Create non-Roblox parent categories (27 items, 1 batch call)",
+      "Step 2: Create non-Roblox child categories (map parent slugs to IDs first)",
+      "Step 3: Create Roblox parent category (1 item)",
+      "Step 4: Create Robux types under Roblox parent (4 items)",
+      "Step 5: Create Roblox game categories under Roblox parent (263 items, batched)",
+      "Step 6: Create Roblox game child categories (currently placeholder 'Akun' for each, updated after scraping)"
+    ]
+  },
+  "slugConflicts": []
+}

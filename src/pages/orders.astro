@@ -1,0 +1,841 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+    title="Pesanan Saya & Dashboard Akun - Yasui Game"
+    description="Lacak riwayat transaksi, status pembayaran, dan detail akun game yang telah Anda beli di Yasui Game."
+>
+    <main class="max-w-5xl mx-auto px-4 pt-24 pb-32">
+        <!-- HEADER DASHBOARD -->
+        <div class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-cyan-950/50 border border-cyan-800/50 text-cyan-400 text-xs font-mono mb-2">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                        TERMINAL PENGGUNA
+                    </div>
+                    <h1 class="text-2xl md:text-4xl font-black text-white tracking-tight uppercase">
+                        PESANAN & AKUN SAYA
+                    </h1>
+                    <p class="text-gray-400 text-xs md:text-sm mt-1">
+                        Akses seluruh akun game, status invoice, dan riwayat pesanan Anda secara aman.
+                    </p>
+                </div>
+
+                <!-- USER BADGE / LOGOUT (HIDDEN JIKA BELUM LOGIN) -->
+                <div id="user-profile-badge" class="hidden items-center gap-3 bg-gray-900/60 border border-gray-800 p-3 rounded-xl">
+                    <div class="w-10 h-10 rounded-full bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-sm" id="user-avatar">
+                        U
+                    </div>
+                    <div class="text-left">
+                        <div class="text-xs font-bold text-white truncate max-w-[180px]" id="user-display-email">user@email.com</div>
+                        <div class="text-[10px] text-gray-500 font-mono" id="user-orders-count">0 Pesanan</div>
+                    </div>
+                    <button
+                        onclick="logoutUser()"
+                        title="Ganti Email / Keluar"
+                        class="p-2 text-gray-500 hover:text-red-400 hover:bg-gray-800/80 rounded-lg transition"
+                    >
+                        <div class="i-lucide-log-out text-base"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTH GUARD: JIKA BELUM LOGIN (LOGIN WAJIB KATA SANDI) -->
+        <div id="auth-box" class="bg-gradient-to-b from-gray-900/80 to-black border border-gray-800 rounded-2xl p-6 md:p-8 mb-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="max-w-md mx-auto text-center py-2">
+                <div class="w-12 h-12 bg-cyan-950/60 border border-cyan-500/40 rounded-2xl flex items-center justify-center text-cyan-400 text-xl mx-auto mb-3 shadow-[0_0_25px_rgba(34,211,238,0.25)]">
+                    <div class="i-lucide-lock"></div>
+                </div>
+                <h2 class="text-lg md:text-xl font-black text-white uppercase tracking-wider mb-2">
+                    Masuk ke Akun Anda
+                </h2>
+                <p class="text-xs text-gray-400 mb-6 leading-relaxed">
+                    Untuk melindungi data akun game dan kredensial pesanan Anda, silakan masuk menggunakan email dan kata sandi Anda.
+                </p>
+
+                <!-- Alert Error Login -->
+                <div id="orders-auth-alert" class="hidden mb-4 p-3 rounded-xl text-xs font-mono border text-left"></div>
+
+                <!-- FORM LOGIN LANGSUNG DI HALAMAN ORDERS -->
+                <form onsubmit="handleOrdersPageLogin(event)" class="space-y-4 mb-5 text-left">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                            Email Pembelian <span class="text-red-400">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            id="orders-login-email"
+                            required
+                            placeholder="nama@email.com"
+                            class="w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 font-mono transition outline-none"
+                        />
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="text-[11px] font-bold text-gray-300 uppercase tracking-wider">
+                                Kata Sandi <span class="text-red-400">*</span>
+                            </label>
+                            <button
+                                type="button"
+                                onclick="window.openSetPasswordModal ? window.openSetPasswordModal() : null"
+                                class="text-[10px] text-cyan-400 hover:underline font-mono"
+                            >
+                                Lupa / Buat Sandi?
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <input
+                                type="password"
+                                id="orders-login-password"
+                                required
+                                placeholder="••••••••"
+                                class="w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 font-mono transition outline-none pr-10"
+                            />
+                            <button
+                                type="button"
+                                onclick="toggleOrdersPasswordVisibility('orders-login-password', this)"
+                                class="absolute right-3 top-3 text-gray-500 hover:text-white"
+                            >
+                                <div class="i-lucide-eye text-sm"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        id="btn-orders-submit-login"
+                        class="w-full bg-cyan-400 hover:bg-white text-black font-black uppercase py-3.5 rounded-xl text-xs transition shadow-[0_0_20px_rgba(34,211,238,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                        <span>MASUK SEKARANG</span>
+                        <div class="i-lucide-arrow-right text-xs"></div>
+                    </button>
+                </form>
+
+                <p class="text-[11px] text-gray-500 flex items-center justify-center gap-1.5 font-mono">
+                    <span class="i-lucide-shield-check text-cyan-400"></span> Riwayat transaksi aman & kredensial akun terenkripsi
+                </p>
+            </div>
+        </div>
+
+        <!-- DASHBOARD CONTENT (HIDDEN UNTIL LOADED) -->
+        <div id="dashboard-content" class="hidden">
+            <!-- STATUS FILTER TABS -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-gray-800/80">
+                <button onclick="filterStatus('all')" id="tab-all" class="filter-tab active-filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1.5 whitespace-nowrap">
+                    <span>Semua Pesanan</span>
+                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-all">0</span>
+                </button>
+                <button onclick="filterStatus('pending')" id="tab-pending" class="filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase text-gray-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                    <span>Menunggu Bayar</span>
+                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-pending">0</span>
+                </button>
+                <button onclick="filterStatus('processing')" id="tab-processing" class="filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase text-gray-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span>Diproses</span>
+                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-processing">0</span>
+                </button>
+                <button onclick="filterStatus('completed')" id="tab-completed" class="filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase text-gray-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
+                    <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                    <span>Selesai</span>
+                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-completed">0</span>
+                </button>
+            </div>
+
+            <!-- ORDERS LIST CONTAINER -->
+            <div id="orders-list" class="space-y-4"></div>
+
+            <!-- EMPTY FILTER STATE -->
+            <div id="orders-empty-state" class="hidden text-center py-16 bg-gray-900/20 border border-dashed border-gray-800 rounded-2xl">
+                <div class="i-lucide-inbox text-5xl text-gray-700 mx-auto mb-3"></div>
+                <h3 class="text-base font-bold text-gray-400 uppercase">Tidak Ada Pesanan</h3>
+                <p class="text-xs text-gray-600 mt-1 max-w-sm mx-auto">
+                    Tidak ada pesanan yang sesuai dengan filter ini.
+                </p>
+            </div>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div id="loading-state" class="hidden text-center py-16">
+            <div class="inline-block w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-sm font-mono text-gray-400">Memuat data pesanan Anda dari server...</p>
+        </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 right-6 z-[100] bg-gray-900 border border-cyan-500/50 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="i-lucide-check-circle text-cyan-400 text-base"></div>
+        <span id="toast-msg">Kredensial berhasil disalin!</span>
+    </div>
+
+    <style>
+        .active-filter-tab {
+            background-color: rgba(34, 211, 238, 0.1);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.4);
+        }
+    </style>
+
+    <script is:inline>
+        let allOrdersData = [];
+        window.allOrdersData = allOrdersData; // expose utk SW polling
+        let currentFilter = "all";
+
+        function showToast(text) {
+            const toast = document.getElementById("toast");
+            const msg = document.getElementById("toast-msg");
+            msg.innerText = text;
+            toast.classList.remove("translate-y-20", "opacity-0");
+            toast.classList.add("translate-y-0", "opacity-100");
+            setTimeout(() => {
+                toast.classList.remove("translate-y-0", "opacity-100");
+                toast.classList.add("translate-y-20", "opacity-0");
+            }, 2500);
+        }
+
+        window.copyText = (text, label) => {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`${label || 'Teks'} berhasil disalin!`);
+            });
+        };
+
+        function formatIDR(num) {
+            return "Rp " + Number(num || 0).toLocaleString("id-ID");
+        }
+
+        /* ====== SUMMONERS WAR: SET ACCOUNT HELPERS ====== */
+        function swFulfillMeta(order) {
+            const m = (order.metaData || []).find(x => x.key === "_sw_set_account");
+            return m?.value || null;
+        }
+        function hasSwItems(order) {
+            return (order.items || []).some(i => (i.sku || "").startsWith("sw-"));
+        }
+        function swButtonLabel(status) {
+            switch (status) {
+                case "processing": return "Set Akun: Memproses…";
+                case "completed": return "Akun Ter-set ✓";
+                case "failed": return "Set Akun Gagal — Hubungi CS";
+                default: return "Set Account Hive ID";
+            }
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return "-";
+            const d = new Date(dateStr);
+            return d.toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+        }
+
+        function getStatusBadge(status, isExpired = false) {
+            if (isExpired || status === "cancelled") {
+                return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/40 text-red-400 border border-red-800/60 text-[10px] font-bold uppercase tracking-wider">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> KADALUARSA
+                </span>`;
+            }
+            switch(status) {
+                case "completed":
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-950/60 text-green-400 border border-green-800 text-[10px] font-bold uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> SELESAI
+                    </span>`;
+                case "processing":
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-950/60 text-blue-400 border border-blue-800 text-[10px] font-bold uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> DIPROSES
+                    </span>`;
+                case "pending":
+                case "on-hold":
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-950/60 text-yellow-400 border border-yellow-800 text-[10px] font-bold uppercase tracking-wider animate-pulse">
+                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> MENUNGGU BAYAR
+                    </span>`;
+                case "failed":
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/60 text-red-400 border border-red-800 text-[10px] font-bold uppercase tracking-wider">
+                        GAGAL
+                    </span>`;
+                default:
+                    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-800 text-gray-400 text-[10px] font-bold uppercase">
+                        ${status}
+                    </span>`;
+            }
+        }
+
+        async function fetchUserOrders(email, token) {
+            const authBox = document.getElementById("auth-box");
+            const loadingState = document.getElementById("loading-state");
+            const dashboardContent = document.getElementById("dashboard-content");
+            const profileBadge = document.getElementById("user-profile-badge");
+
+            loadingState.classList.remove("hidden");
+            dashboardContent.classList.add("hidden");
+
+            try {
+                let session = null;
+                try {
+                    session = typeof window.getSession === "function" ? window.getSession() : JSON.parse(localStorage.getItem("yasui_session") || "null");
+                } catch (e) {}
+
+                const authToken = token || session?.token || "";
+
+                const res = await fetch("/api/user/orders", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {})
+                    },
+                    body: JSON.stringify({ email: email, token: authToken })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    if (res.status === 401) {
+                        localStorage.removeItem("yasui_session");
+                        throw new Error(data.error || "Sesi telah berakhir. Silakan masuk kembali dengan kata sandi.");
+                    }
+                    throw new Error(data.error || "Gagal memuat pesanan");
+                }
+
+                allOrdersData = data.orders || [];
+
+                // Simpan email di localStorage
+                localStorage.setItem("yasui_buyer_email", email);
+                document.dispatchEvent(new Event("yasui-auth-changed"));
+
+                // Update UI Profil
+                profileBadge.classList.remove("hidden");
+                profileBadge.classList.add("flex");
+                document.getElementById("user-display-email").innerText = email;
+                document.getElementById("user-orders-count").innerText = `${allOrdersData.length} Pesanan Tercatat`;
+                document.getElementById("user-avatar").innerText = email.charAt(0).toUpperCase();
+
+                // Sembunyikan form login jika sudah berhasil login
+                authBox.classList.add("hidden");
+
+                // Update counter
+                updateCounters();
+
+                // Render pesanan
+                renderOrders();
+
+                dashboardContent.classList.remove("hidden");
+
+            } catch (err) {
+                alert("Peringatan: " + err.message);
+                authBox.classList.remove("hidden");
+                document.getElementById("dashboard-content").classList.add("hidden");
+                document.getElementById("user-profile-badge").classList.add("hidden");
+                document.getElementById("user-profile-badge").classList.remove("flex");
+            } finally {
+                loadingState.classList.add("hidden");
+            }
+        }
+
+        function updateCounters() {
+            const countAll = allOrdersData.length;
+            const countPending = allOrdersData.filter(o => o.status === "pending" || o.status === "on-hold").length;
+            const countProcessing = allOrdersData.filter(o => o.status === "processing").length;
+            const countCompleted = allOrdersData.filter(o => o.status === "completed").length;
+
+            document.getElementById("count-all").innerText = countAll;
+            document.getElementById("count-pending").innerText = countPending;
+            document.getElementById("count-processing").innerText = countProcessing;
+            document.getElementById("count-completed").innerText = countCompleted;
+        }
+
+        window.filterStatus = (status) => {
+            currentFilter = status;
+            document.querySelectorAll(".filter-tab").forEach(btn => {
+                btn.classList.remove("active-filter-tab");
+                btn.classList.add("text-gray-400");
+            });
+
+            const activeBtn = document.getElementById(`tab-${status}`);
+            if (activeBtn) {
+                activeBtn.classList.add("active-filter-tab");
+                activeBtn.classList.remove("text-gray-400");
+            }
+
+            renderOrders();
+        };
+
+        function renderOrders() {
+            const container = document.getElementById("orders-list");
+            const emptyState = document.getElementById("orders-empty-state");
+
+            let filtered = allOrdersData;
+            if (currentFilter === "pending") {
+                filtered = allOrdersData.filter(o => o.status === "pending" || o.status === "on-hold");
+            } else if (currentFilter === "processing") {
+                filtered = allOrdersData.filter(o => o.status === "processing");
+            } else if (currentFilter === "completed") {
+                filtered = allOrdersData.filter(o => o.status === "completed");
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            container.innerHTML = filtered.map(order => {
+                const isPending = order.status === "pending" || order.status === "on-hold";
+                const isCompleted = order.status === "completed";
+                const isProcessing = order.status === "processing";
+                const swFulfill = swFulfillMeta(order);
+                order.swFulfillStatus = swFulfill?.status || "awaiting_form";
+
+                // Format link bantuan WhatsApp dengan template pesan resmi
+                const waSupportUrl = `https://wa.me/6285972775966?text=${encodeURIComponent(`Halo Admin Yasui Game, saya butuh bantuan/garansi untuk Pesanan #${order.number} (${order.items?.[0]?.name || 'Akun Game'}).`)}`;
+
+                const itemsHtml = (order.items || []).map(item => `
+                    <div class="flex items-center gap-3 py-2 border-b border-gray-800/40 last:border-none">
+                        <div class="w-12 h-12 bg-black rounded-lg border border-gray-800 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover">` : `<div class="i-lucide-gamepad-2 text-xl text-gray-700"></div>`}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
+                            <div class="text-[11px] text-gray-400 font-mono">Qty: ${item.quantity} × ${formatIDR(item.price)}</div>
+                        </div>
+                        <div class="text-xs font-mono font-bold text-gray-300">
+                            ${formatIDR(item.total)}
+                        </div>
+                    </div>
+                `).join("");
+
+                return `
+                    <div class="bg-gray-900/40 border border-gray-800 hover:border-gray-700 rounded-2xl p-4 md:p-6 transition-all duration-300">
+                        <!-- HEADER ORDER -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-800/80 pb-4 mb-4">
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm md:text-base font-black text-cyan-400 font-mono tracking-tight">#${order.number}</span>
+                                <span class="text-xs text-gray-500 font-mono">● ${formatDate(order.dateCreated)}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                ${getStatusBadge(order.status, order.isExpired)}
+                            </div>
+                        </div>
+
+                        <!-- DAFTAR ITEM -->
+                        <div class="space-y-1 mb-4">
+                            ${itemsHtml}
+                        </div>
+
+                        <!-- TOTAL & METODE -->
+                        <div class="flex items-center justify-between bg-black/40 border border-gray-800/60 rounded-xl p-3 mb-4 text-xs font-mono">
+                            <span class="text-gray-400">Total Tagihan (${order.paymentMethodTitle})</span>
+                            <span class="text-sm font-bold text-cyan-400">${formatIDR(order.total)}</span>
+                        </div>
+
+                        <!-- KREDENSIAL / CATATAN AKUN (BILA STATUS COMPLETED/PROCESSING) -->
+                        ${(isCompleted || isProcessing) && order.customerNote ? `
+                            <div class="bg-cyan-950/20 border border-cyan-800/40 rounded-xl p-3.5 mb-4 font-mono text-xs">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-cyan-400 font-bold text-[11px] uppercase flex items-center gap-1.5">
+                                        <div class="i-lucide-key text-xs"></div> INFORMASI PENGIRIMAN / CATATAN
+                                    </span>
+                                    <button onclick="copyText('${order.customerNote.replace(/'/g, "\\'")}', 'Informasi Akun')" class="text-[10px] text-gray-400 hover:text-cyan-400 underline">Salin</button>
+                                </div>
+                                <div class="text-gray-300 break-words whitespace-pre-wrap bg-black/60 p-2.5 rounded border border-gray-800">${order.customerNote}</div>
+                            </div>
+                        ` : ''}
+
+                        <!-- TOMBOL AKSI -->
+                        <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-gray-800/40">
+                            ${isPending && !order.isExpired ? `
+                                <a href="${order.paymentUrl}" class="bg-cyan-400 hover:bg-white text-black font-black uppercase text-xs px-4 py-2.5 rounded-lg transition shadow-[0_0_15px_rgba(34,211,238,0.3)] flex items-center gap-1.5">
+                                    <div class="i-lucide-credit-card text-xs"></div>
+                                    <span>BAYAR SEKARANG</span>
+                                    ${order.remainingSeconds > 0 ? `<span class="text-[10px] bg-black/20 text-black px-1.5 py-0.5 rounded font-mono font-bold">Sisa ${Math.ceil(order.remainingSeconds / 60)}m</span>` : ''}
+                                </a>
+                            ` : ''}
+
+                            ${(order.isExpired || order.status === "cancelled" || order.status === "failed") && order.items && order.items.length > 0 ? `
+                                <button onclick="reorderItems(${JSON.stringify(order.items).replace(/"/g, '&quot;')})" class="bg-red-500/10 hover:bg-red-500 hover:text-black text-red-400 border border-red-500/40 font-bold uppercase text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-[0_0_10px_rgba(239,68,68,0.1)]">
+                                    <div class="i-lucide-refresh-cw text-xs"></div>
+                                    <span>PESAN ULANG</span>
+                                </button>
+                            ` : ''}
+
+                            ${isCompleted && order.items?.[0]?.productId ? `
+                                <a href="/review?id=${order.items[0].productId}" class="bg-amber-400/10 hover:bg-amber-400/20 text-amber-400 border border-amber-400/30 font-bold text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-[0_0_10px_rgba(251,191,36,0.1)]">
+                                    <div class="i-lucide-star text-xs fill-current"></div>
+                                    <span>Tulis Ulasan</span>
+                                </a>
+                            ` : ''}
+
+                            ${(isCompleted || isProcessing) && hasSwItems(order) ? `
+                                <button onclick="openSwSetAccount(${order.id}, '${(order.swFulfillStatus || 'awaiting_form')}')" class="sw-set-btn bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-400/30 font-bold text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.1)]" ${order.swFulfillStatus === 'processing' || order.swFulfillStatus === 'completed' ? 'disabled' : ''}>
+                                    <div class="i-lucide-user-cog text-xs"></div>
+                                    <span>${swButtonLabel(order.swFulfillStatus)}</span>
+                                </button>
+                            ` : ''}
+
+                            <a href="${waSupportUrl}" target="_blank" rel="noopener noreferrer" class="bg-gray-800 hover:bg-green-600 text-white font-bold text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5">
+                                <div class="i-lucide-message-circle text-xs text-green-400"></div>
+                                <span>Bantuan / Garansi WA</span>
+                            </a>
+
+                            <button onclick="copyText('#${order.number}', 'Nomor Order')" class="border border-gray-800 hover:border-gray-600 text-gray-400 hover:text-white text-xs px-3 py-2.5 rounded-lg transition flex items-center gap-1">
+                                <div class="i-lucide-copy text-xs"></div>
+                                <span>Salin No. Order</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        window.reorderItems = function(items) {
+            if (!items || !items.length) return;
+            try {
+                const currentCart = JSON.parse(localStorage.getItem("yasui_cart") || "[]");
+                items.forEach(item => {
+                    const targetId = String(item.productId || item.id);
+                    const existingIdx = currentCart.findIndex(c => String(c.id) === targetId);
+                    if (existingIdx >= 0) {
+                        currentCart[existingIdx].quantity = (currentCart[existingIdx].quantity || 1) + (item.quantity || 1);
+                        currentCart[existingIdx].selected = true;
+                    } else {
+                        currentCart.push({
+                            id: targetId,
+                            name: item.name,
+                            price: item.price,
+                            rawPrice: item.price,
+                            quantity: item.quantity || 1,
+                            selected: true,
+                            image: item.image ? { sourceUrl: item.image } : null
+                        });
+                    }
+                });
+                localStorage.setItem("yasui_cart", JSON.stringify(currentCart));
+                window.location.href = "/checkout";
+            } catch (e) {
+                console.error("Reorder failed:", e);
+                window.location.href = "/cart";
+            }
+        };
+
+        window.fetchUserOrders = fetchUserOrders;
+
+        window.toggleOrdersPasswordVisibility = (inputId, btn) => {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const isPwd = input.type === "password";
+            input.type = isPwd ? "text" : "password";
+            btn.innerHTML = isPwd
+                ? '<div class="i-lucide-eye-off text-sm"></div>'
+                : '<div class="i-lucide-eye text-sm"></div>';
+        };
+
+        window.handleOrdersPageLogin = async function(e) {
+            e.preventDefault();
+            const email = document.getElementById("orders-login-email")?.value.trim();
+            const password = document.getElementById("orders-login-password")?.value;
+            const btn = document.getElementById("btn-orders-submit-login");
+            const alert = document.getElementById("orders-auth-alert");
+
+            if (!email || !password) return;
+
+            btn.disabled = true;
+            btn.innerText = "MEMERIKSA KREDENSIAL...";
+            alert.classList.add("hidden");
+
+            try {
+                const res = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || "Email atau kata sandi tidak cocok.");
+                }
+
+                localStorage.setItem("yasui_session", JSON.stringify({
+                    ...(data.user || {}),
+                    email: email,
+                    token: data.session?.token,
+                    expiresAt: data.session?.expiresAt || (Date.now() + 30 * 24 * 60 * 60 * 1000)
+                }));
+                localStorage.setItem("yasui_buyer_email", email);
+
+                if (typeof window.updateNavAuthUI === "function") window.updateNavAuthUI();
+                document.dispatchEvent(new Event("yasui-auth-changed"));
+
+                fetchUserOrders(email, data.session?.token);
+
+            } catch (err) {
+                alert.className = "mb-4 p-3 rounded-xl text-xs font-mono bg-red-950/60 border border-red-500/50 text-red-400 block text-left";
+                alert.innerText = err.message || "Gagal masuk. Silakan periksa kembali email & sandi Anda.";
+                btn.disabled = false;
+                btn.innerHTML = '<span>MASUK SEKARANG</span><div class="i-lucide-arrow-right text-xs"></div>';
+            }
+        };
+
+        window.logoutUser = () => {
+            if (confirm("Ingin keluar dari akun ini?")) {
+                localStorage.removeItem("yasui_buyer_email");
+                localStorage.removeItem("yasui_session");
+                if (typeof window.updateNavAuthUI === "function") window.updateNavAuthUI();
+                document.dispatchEvent(new Event("yasui-auth-changed"));
+                allOrdersData = [];
+                document.getElementById("dashboard-content").classList.add("hidden");
+                document.getElementById("user-profile-badge").classList.add("hidden");
+                document.getElementById("user-profile-badge").classList.remove("flex");
+                document.getElementById("auth-box").classList.remove("hidden");
+            }
+        };
+
+        function checkAndLoadAuth() {
+            let session = null;
+            try {
+                if (typeof window.getSession === "function") {
+                    session = window.getSession();
+                } else {
+                    session = JSON.parse(localStorage.getItem("yasui_session") || "null");
+                }
+            } catch(e) {}
+
+            // Hanya otomatis muat data jika terdapat sesi token yang valid dan belum kedaluwarsa
+            if (session && session.email && session.token && (!session.expiresAt || session.expiresAt > Date.now())) {
+                fetchUserOrders(session.email, session.token);
+            } else {
+                const savedEmail = localStorage.getItem("yasui_buyer_email") || (session?.email || "");
+                const emailInput = document.getElementById("orders-login-email");
+                if (emailInput && savedEmail && !emailInput.value) {
+                    emailInput.value = savedEmail;
+                }
+
+                document.getElementById("dashboard-content").classList.add("hidden");
+                document.getElementById("user-profile-badge").classList.add("hidden");
+                document.getElementById("user-profile-badge").classList.remove("flex");
+                document.getElementById("auth-box").classList.remove("hidden");
+            }
+        }
+
+        // AUTO-DETECT SAAT HALAMAN DIBUKA & SAAT STATUS LOGIN BERUBAH
+        document.addEventListener("DOMContentLoaded", checkAndLoadAuth);
+        document.addEventListener("yasui-auth-changed", checkAndLoadAuth);
+    </script>
+
+    <!-- ==================== MODAL: SET ACCOUNT HIVE ID ==================== -->
+    <div id="sw-modal-overlay" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="min-h-full flex items-center justify-center py-10">
+            <div id="sw-modal" class="relative w-full max-w-md bg-gradient-to-b from-gray-900 to-black border border-cyan-500/40 rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.2)] overflow-hidden">
+                <!-- header -->
+                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800 bg-black/40">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                            <div class="i-lucide-user-cog text-sm"></div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-black text-white uppercase tracking-wider">Set Account Hive ID</h3>
+                            <p class="text-[10px] text-gray-500 font-mono">Order <span id="sw-order-number">#-</span> · Summoners War</p>
+                        </div>
+                    </div>
+                    <button onclick="closeSwModal()" class="p-1.5 text-gray-500 hover:text-white hover:bg-gray-800 rounded-lg transition" aria-label="Tutup">
+                        <div class="i-lucide-x text-base"></div>
+                    </button>
+                </div>
+
+                <form id="sw-set-form" class="p-5 space-y-4" novalidate>
+                    <div id="sw-alert" class="hidden p-3 rounded-xl text-xs font-mono border"></div>
+
+                    <p class="text-[11px] text-gray-400 leading-relaxed bg-cyan-950/20 border border-cyan-800/40 rounded-xl p-3">
+                        <span class="i-lucide-info inline-block align-[-2px] mr-1 text-cyan-400"></span>
+                        Masukkan <b class="text-gray-200">3 opsi username</b> Hive (Opsi 1 wajib; opsi berikutnya dicoba otomatis jika ditolak) dan 1 password. Akun Anda <b class="text-cyan-400">sudah diamankan</b> — tidak perlu terburu-buru.
+                    </p>
+
+                    <!-- username opsi 1 (wajib) -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                            Username Hive — Opsi 1 <span class="text-red-400">*</span>
+                        </label>
+                        <input type="text" id="sw-u1" required autocomplete="off" placeholder="mis. yasuiplayer01"
+                            class="sw-u-input w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
+                        <p class="sw-hint text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                    </div>
+
+                    <!-- username opsi 2 & 3 (cadangan) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Opsi 2 (cadangan)</label>
+                            <input type="text" id="sw-u2" autocomplete="off" placeholder="opsional"
+                                class="sw-u-input w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
+                            <p class="sw-hint text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Opsi 3 (cadangan)</label>
+                            <input type="text" id="sw-u3" autocomplete="off" placeholder="opsional"
+                                class="sw-u-input w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
+                            <p class="sw-hint text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                        </div>
+                    </div>
+
+                    <!-- password -->
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                            Password Hive <span class="text-red-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="sw-pass" required autocomplete="new-password" placeholder="min 9 karakter, ada angka & simbol"
+                                class="w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 pr-10 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
+                            <button type="button" id="sw-pass-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-400 transition" aria-label="Tampilkan password">
+                                <div class="i-lucide-eye text-sm"></div>
+                            </button>
+                        </div>
+                        <p id="sw-pass-hint" class="text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                    </div>
+
+                    <div class="text-[10px] text-gray-500 leading-relaxed border-t border-gray-800 pt-3">
+                        <b class="text-gray-400">Cek ketersediaan username:</b> gunakan fitur <i>Forgot Password</i> di dalam game — jika muncul "ID tidak ditemukan", berarti username bisa dipakai.
+                    </div>
+
+                    <button type="submit" id="sw-submit" disabled
+                        class="w-full bg-cyan-400 disabled:bg-gray-800 disabled:text-gray-600 hover:bg-white text-black font-black uppercase text-xs py-3 rounded-xl transition shadow-[0_0_15px_rgba(34,211,238,0.3)] flex items-center justify-center gap-2">
+                        <div class="i-lucide-send text-xs"></div> Kirim & Mulai Set Akun
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ====== SW SET ACCOUNT: modal, validasi real-time, submit & polling ====== */
+        const SW_U_RE = /^[A-Za-z0-9\-_.]{6,12}$/;
+        const SW_P_RE = /^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{9,}$/;
+        let swOrderId = null;
+
+        function openSwModal(orderId, status) {
+            if (status === "processing" || status === "completed") return;
+            swOrderId = orderId;
+            document.getElementById("sw-order-number").textContent = "#" + orderId;
+            document.getElementById("sw-modal-overlay").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+        function closeSwModal() {
+            document.getElementById("sw-modal-overlay").classList.add("hidden");
+            document.body.style.overflow = "";
+        }
+        document.getElementById("sw-modal-overlay")?.addEventListener("click", (e) => {
+            if (e.target.id === "sw-modal-overlay") closeSwModal();
+        });
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSwModal(); });
+
+        // show/hide password
+        document.getElementById("sw-pass-toggle")?.addEventListener("click", function () {
+            const input = document.getElementById("sw-pass");
+            const show = input.type === "password";
+            input.type = show ? "text" : "password";
+            this.innerHTML = `<div class="i-lucide-${show ? "eye-off" : "eye"} text-sm"></div>`;
+        });
+
+        function swValidateUsername(el) {
+            const v = el.value.trim();
+            const hint = el.parentElement.querySelector(".sw-hint");
+            let ok = true, msg = "";
+            if (v) {
+                ok = SW_U_RE.test(v);
+                msg = ok ? "✓ format valid" : "✗ 6–12 karakter; huruf/angka serta - _ .";
+            } else if (el.id === "sw-u1") {
+                ok = false; msg = "";
+            }
+            el.classList.toggle("border-red-500", v && !ok);
+            el.classList.toggle("border-green-500", ok && !!v);
+            if (hint) { hint.textContent = msg; hint.classList.toggle("hidden", !msg); }
+            hint && hint.classList.toggle("text-green-500", ok && !!v);
+            hint && hint.classList.toggle("text-red-500", v && !ok);
+            swUpdateSubmit();
+        }
+        function swValidatePassword(el) {
+            const v = el.value;
+            const hint = document.getElementById("sw-pass-hint");
+            const ok = SW_P_RE.test(v);
+            el.classList.toggle("border-red-500", v && !ok);
+            el.classList.toggle("border-green-500", ok);
+            if (hint) {
+                hint.textContent = v ? (ok ? "✓ password valid" : "✗ min 9 karakter, wajib ada angka & simbol") : "";
+                hint.classList.toggle("hidden", !v);
+                hint.classList.toggle("text-green-500", ok);
+                hint.classList.toggle("text-red-500", v && !ok);
+            }
+            swUpdateSubmit();
+        }
+        function swUpdateSubmit() {
+            const u1 = document.getElementById("sw-u1").value.trim();
+            const pass = document.getElementById("sw-pass").value;
+            document.getElementById("sw-submit").disabled = !(SW_U_RE.test(u1) && SW_P_RE.test(pass));
+        }
+        document.querySelectorAll(".sw-u-input").forEach((el) => el.addEventListener("input", () => swValidateUsername(el)));
+        document.getElementById("sw-pass")?.addEventListener("input", (e) => swValidatePassword(e.target));
+
+        // submit
+        document.getElementById("sw-set-form")?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const alertBox = document.getElementById("sw-alert");
+            const btn = document.getElementById("sw-submit");
+            const session = JSON.parse(localStorage.getItem("yasui_session") || "null");
+            if (!session?.token || !session?.email) {
+                swAlert("Sesi tidak ditemukan. Muat ulang & login ulang.", "error"); return;
+            }
+            const usernames = ["sw-u1", "sw-u2", "sw-u3"].map(id => document.getElementById(id).value.trim()).filter(Boolean);
+            const password = document.getElementById("sw-pass").value;
+            btn.disabled = true;
+            btn.innerHTML = `<div class="i-lucide-loader-2 text-xs animate-spin"></div> Memulai…`;
+            try {
+                const res = await fetch("/api/sw/set-account", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${session.token}` },
+                    body: JSON.stringify({ orderId: swOrderId, email: session.email, usernames, password })
+                });
+                const j = await res.json();
+                if (!j.success) throw new Error(j.error || "Gagal memulai set akun.");
+                swAlert(j.message || "Set akun dimulai. Status akan diperbarui di kartu pesanan.", "ok");
+                setTimeout(() => { closeSwModal(); location.reload(); }, 1800);
+            } catch (err) {
+                swAlert(err.message, "error");
+                btn.disabled = false;
+                btn.innerHTML = `<div class="i-lucide-send text-xs"></div> Kirim & Mulai Set Akun`;
+            }
+        });
+        function swAlert(msg, type) {
+            const b = document.getElementById("sw-alert");
+            b.textContent = msg;
+            b.className = `p-3 rounded-xl text-xs font-mono border ${type === "error" ? "bg-red-950/30 border-red-800/60 text-red-400" : "bg-green-950/30 border-green-800/60 text-green-400"}`;
+        }
+
+        // polling status fulfillment utk kartu order aktif (jika ada yang processing)
+        (function swPollStatus() {
+            const session = JSON.parse(localStorage.getItem("yasui_session") || "null");
+            if (!session?.token || !session?.email) return;
+            const processing = (window.allOrdersData || []).filter(o => o.swFulfillStatus === "processing");
+            if (!processing.length) return;
+            const tick = async () => {
+                let anyProcessing = false;
+                for (const o of processing) {
+                    try {
+                        const res = await fetch(`/api/sw/set-account/status?orderId=${o.id}&email=${encodeURIComponent(session.email)}`, { headers: { "Authorization": `Bearer ${session.token}` } });
+                        const j = await res.json();
+                        if (j.success && j.fulfillment?.status === "completed") { location.reload(); return; }
+                        if (j.success && j.fulfillment?.status === "processing") anyProcessing = true;
+                    } catch {}
+                }
+                if (anyProcessing) setTimeout(tick, 15000);
+            };
+            setTimeout(tick, 15000);
+        })();
+    </script>
+</Layout>
