@@ -1,11 +1,11 @@
 ---
+// src/pages/terms.astro
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Terms of Service - Yasui Game">
     <main class="max-w-3xl mx-auto px-4 pt-24 pb-16">
-        <!-- Header -->
-        <div class="text-center mb-12">
+        <header class="text-center mb-12">
             <h1
                 class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4"
                 data-i18n="terms.title"
@@ -18,16 +18,9 @@ import Layout from "../layouts/Layout.astro";
             >
                 Syarat dan ketentuan pembelian produk di Yasui Game.
             </p>
-        </div>
+        </header>
 
-        <!-- Main Container -->
-        <div class="relative">
-            <!-- Glow Effect Backup -->
-            <div
-                class="absolute -inset-1 bg-cyan-500/20 blur-xl opacity-50 rounded-2xl -z-10"
-            >
-            </div>
-
+        <section class="relative yg-glow-ambient">
             <div
                 class="bg-gray-900/40 border border-gray-800 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
             >
@@ -40,12 +33,12 @@ import Layout from "../layouts/Layout.astro";
                         Harap baca dengan seksama sebelum melakukan transaksi.
                     </p>
 
-                    <h3
+                    <h2
                         class="text-white font-bold mt-8 mb-4 text-lg"
                         data-i18n="terms.sec1_title"
                     >
                         1. Produk & Garansi
-                    </h3>
+                    </h2>
                     <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
                         <li data-i18n="terms.sec1_li1">
                             <strong class="text-white">Garansi 7 Hari:</strong> Semua
@@ -65,24 +58,20 @@ import Layout from "../layouts/Layout.astro";
                         </li>
                     </ul>
 
-                    <h3
+                    <h2
                         class="text-white font-bold mt-8 mb-4 text-lg"
                         data-i18n="terms.sec2_title"
                     >
                         2. Penggunaan Akun
-                    </h3>
+                    </h2>
                     <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
                         <li data-i18n="terms.sec2_li1">
-                            <strong class="text-red-400 warning"
-                                >PENTING:</strong
-                            > Dilarang keras menggunakan program ilegal, cheat, bot,
+                            <strong class="text-red-400 warning">PENTING:</strong> Dilarang keras menggunakan program ilegal, cheat, bot,
                             script, atau makro pada akun yang dibeli dari Yasui Game.
                         </li>
                         <li data-i18n="terms.sec2_li2">
                             Segala bentuk banned/penangguhan akun akibat
-                            penggunaan software pihak ketiga oleh pembeli <strong
-                                >bukan</strong
-                            > merupakan tanggung jawab Yasui Game dan tidak akan diganti.
+                            penggunaan software pihak ketiga oleh pembeli <strong>bukan</strong> merupakan tanggung jawab Yasui Game dan tidak akan diganti.
                         </li>
                         <li data-i18n="terms.sec2_li3">
                             Akun yang dijual adalah akun fresh atau akun rawatan
@@ -91,12 +80,12 @@ import Layout from "../layouts/Layout.astro";
                         </li>
                     </ul>
 
-                    <h3
+                    <h2
                         class="text-white font-bold mt-8 mb-4 text-lg"
                         data-i18n="terms.sec3_title"
                     >
                         3. Kebijakan Pengembalian Dana (Refund)
-                    </h3>
+                    </h2>
                     <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
                         <li data-i18n="terms.sec3_li1">
                             Tidak ada fitur Refund (Uang Kembali) jika kesalahan
@@ -110,12 +99,12 @@ import Layout from "../layouts/Layout.astro";
                         </li>
                     </ul>
 
-                    <h3
+                    <h2
                         class="text-white font-bold mt-8 mb-4 text-lg"
                         data-i18n="terms.sec4_title"
                     >
                         4. Pengiriman & Keamanan
-                    </h3>
+                    </h2>
                     <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
                         <li data-i18n="terms.sec4_li1">
                             Pengiriman dilakukan secara instan/otomatis ke Email
@@ -128,7 +117,6 @@ import Layout from "../layouts/Layout.astro";
                     </ul>
                 </div>
 
-                <!-- Footer Note -->
                 <div class="mt-10 pt-6 border-t border-gray-800 text-center">
                     <p
                         class="text-[10px] text-gray-500"
@@ -138,6 +126,6 @@ import Layout from "../layouts/Layout.astro";
                     </p>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 </Layout>

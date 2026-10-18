@@ -1,73 +1,58 @@
 ---
-import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
 import FlashSaleTimer from "../components/FlashSaleTimer.astro";
 import { parsePrice } from "../lib/price";
 import { getProducts, getCategories, getCategoryBySlug, getBanners, normalizeProduct } from "../lib/wc";
 
-// --- HELPER IMAGE PROXY ---
-const fixImgUrl = (url) => {
+const fixImgUrl = (url: string | null) => {
     if (!url) return null;
     return `/img-proxy?src=${encodeURIComponent(url)}`;
 };
 
-// --- HELPER UNTUK ASTRO IMAGE (OPTIMIZED) ---
-const getOptimizedImgUrl = (url) => {
-    return url || "";
-};
-
-let products = [];
-let categories = [];
-let flashSaleProducts = [];
-let banners = [];
+let products: any[] = [];
+let categories: any[] = [];
+let flashSaleProducts: any[] = [];
+let banners: any[] = [];
 let connectionSuccess = false;
 
 try {
-    // 1. Fetch raw products & normalize
     const rawProducts = await getProducts({ per_page: 30 });
     products = (rawProducts || []).map(normalizeProduct);
 
-    // 2. Fetch banners
     banners = await getBanners();
 
-    // 3. Fetch categories
     const allCats = await getCategories({ per_page: 30, parent: 0, hide_empty: false });
     categories = (allCats || [])
-        .filter((c) => c.slug !== "flash-sale" && c.slug !== "uncategorized" && c.slug !== "arsip-internal")
-        .sort((a, b) => (b.count || 0) - (a.count || 0))
+        .filter((c: any) => c.slug !== "flash-sale" && c.slug !== "uncategorized" && c.slug !== "arsip-internal")
+        .sort((a: any, b: any) => (b.count || 0) - (a.count || 0))
         .slice(0, 6)
-        .map((c) => ({
+        .map((c: any) => ({
             name: c.name,
             slug: c.slug,
             count: c.count,
             image: c.image?.src ? { sourceUrl: c.image.src } : null,
         }));
 
-    // 4. Fetch Flash Sale category products if any
     try {
         const flashSaleCat = await getCategoryBySlug("flash-sale");
         if (flashSaleCat) {
             const rawFlash = await getProducts({ category: flashSaleCat.id, per_page: 8 });
             flashSaleProducts = (rawFlash || []).map(normalizeProduct);
         }
-    } catch (e) {
-        // Flash sale optional
+    } catch {
+        // Flash sale is optional
     }
 
     connectionSuccess = true;
-} catch (error) {
+} catch (error: any) {
     console.error("❌ ERROR HOMEPAGE REST:", error.message);
 }
 
-if (categories.length === 0) {
-    categories = [];
-}
-
-const getBadges = (product) => {
+const getBadges = (product: any) => {
     const attrs = product.attributes?.nodes || [];
     const badges = [];
 
-    const server = attrs.find((a) => a.name.toLowerCase().includes("server"));
+    const server = attrs.find((a: any) => a.name.toLowerCase().includes("server"));
     if (server && server.options && server.options.length > 0) {
         let val = server.options[0];
         badges.push({
@@ -77,7 +62,7 @@ const getBadges = (product) => {
     }
 
     const tier = attrs.find(
-        (a) =>
+        (a: any) =>
             a.name.toLowerCase().includes("tier") ||
             a.name.toLowerCase().includes("rank") ||
             a.name.toLowerCase().includes("account"),
@@ -107,13 +92,12 @@ const getBadges = (product) => {
 ---
 
 <Layout title="Yasui Game - Premium Game Accounts">
-    <main class="max-w-7xl mx-auto px-4 pt-24 pb-8">
-        <!-- 1. GAME POPULER (ITEMKU STYLE TOP QUICK NAVIGATION) -->
-        <div class="mb-6 md:mb-8">
+    <main class="yg-shell pt-24 pb-8">
+        <section aria-labelledby="featured-games-title" class="mb-6 md:mb-8">
             <div class="flex items-center justify-between mb-3 md:mb-4">
                 <div class="flex items-center gap-2">
                     <div class="w-1.5 h-4 md:h-5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-                    <h2 class="text-xs md:text-sm font-black text-white uppercase tracking-wider">GAME POPULER</h2>
+                    <h2 id="featured-games-title" class="text-xs md:text-sm font-black text-white uppercase tracking-wider">GAME POPULER</h2>
                 </div>
                 <a
                     href="/categories"
@@ -128,7 +112,7 @@ const getBadges = (product) => {
                     categories.map((cat) => (
                         <a
                             href={`/category/${cat.slug}`}
-                            class="group relative bg-gray-900/60 hover:bg-gray-850/80 border border-gray-800/80 hover:border-cyan-400/50 rounded-xl p-2 sm:p-3 flex flex-col items-center justify-center transition-all duration-200 hover:-translate-y-0.5 shadow-sm text-center"
+                            class="group relative yg-card p-2 sm:p-3 flex flex-col items-center justify-center transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-400/50 shadow-sm text-center"
                         >
                             {cat.count > 0 && (
                                 <span class="absolute top-1.5 right-1.5 text-[8px] sm:text-[9px] font-mono font-bold px-1 py-0.2 rounded bg-black/70 border border-gray-800 text-gray-400 group-hover:text-cyan-400 group-hover:border-cyan-500/40 transition-colors">
@@ -153,517 +137,424 @@ const getBadges = (product) => {
                     ))
                 }
             </div>
-        </div>
+        </section>
 
-        <!-- 2. PROMO BANNER CAROUSEL (ITEMKU STYLE: COMPACT & BOUNDED HEIGHT) -->
-        <div class="mb-10">
-            {
-                banners.length > 0 ? (
-                    <div class="relative w-full">
-                        {/* COMPACT CAROUSEL FRAME (NO OVERPOWERING VIEWPORT HEIGHT) */}
-                        <div class="relative w-full h-[120px] sm:h-[160px] md:h-[200px] lg:h-[220px] rounded-xl md:rounded-2xl overflow-hidden border border-gray-800/80 hover:border-cyan-500/40 bg-gray-950 shadow-md group transition-colors">
-                            {/* SLIDES CONTAINER */}
-                            <div
-                                id="hero-carousel-track"
-                                class="flex w-full h-full transition-transform duration-700 ease-out"
-                                style="transform: translateX(0%);"
-                            >
-                                {banners.map((banner, index) => (
-                                    <div class="w-full h-full flex-shrink-0 relative">
-                                        {banner.featuredImage?.node?.sourceUrl ? (
-                                            <img
-                                                src={fixImgUrl(banner.featuredImage.node.sourceUrl)}
-                                                alt={banner.featuredImage.node.altText || banner.title || "Promo Banner"}
-                                                class="w-full h-full object-cover object-center select-none"
-                                                loading={index === 0 ? "eager" : "lazy"}
-                                            />
-                                        ) : (
-                                            <div class="w-full h-full bg-gray-900 flex items-center justify-center text-gray-600 font-mono text-xs">
-                                                NO SIGNAL
-                                            </div>
-                                        )}
-
-                                        {/* Subtle Vignette Gradient */}
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* PREV & NEXT BUTTONS (DESKTOP HOVER) */}
-                            <button
-                                id="hero-prev-btn"
-                                aria-label="Previous Slide"
-                                class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-cyan-400 hover:text-black border border-white/10 text-white items-center justify-center transition backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-md z-20"
-                            >
-                                <div class="i-lucide-chevron-left text-lg"></div>
-                            </button>
-                            <button
-                                id="hero-next-btn"
-                                aria-label="Next Slide"
-                                class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-cyan-400 hover:text-black border border-white/10 text-white items-center justify-center transition backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-md z-20"
-                            >
-                                <div class="i-lucide-chevron-right text-lg"></div>
-                            </button>
-
-                            {/* PROGRESS PILL INDICATORS */}
-                            <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
-                                {banners.map((_, i) => (
-                                    <button
-                                        class={`hero-indicator h-1 rounded-full transition-all duration-300 ${i === 0 ? "w-6 bg-cyan-400" : "w-1.5 bg-gray-600 hover:bg-gray-400"}`}
-                                        data-index={i}
-                                        aria-label={`Slide ${i + 1}`}
-                                    ></button>
-                                ))}
-                            </div>
+        {banners.length > 0 && (
+            <section aria-label="Promo Banners" class="mb-10">
+                <div class="relative w-full">
+                    <div class="relative w-full h-[120px] sm:h-[160px] md:h-[200px] lg:h-[220px] rounded-xl md:rounded-2xl overflow-hidden border border-gray-800/80 hover:border-cyan-500/40 bg-gray-950 shadow-md group transition-colors">
+                        <div
+                            id="hero-carousel-track"
+                            class="flex w-full h-full transition-transform duration-700 ease-out"
+                            style="transform: translateX(0%);"
+                        >
+                            {banners.map((banner, index) => (
+                                <div class="w-full h-full shrink-0 relative">
+                                    {banner.featuredImage?.node?.sourceUrl ? (
+                                        <img
+                                            src={fixImgUrl(banner.featuredImage.node.sourceUrl)}
+                                            alt={banner.featuredImage.node.altText || banner.title || "Promo Banner"}
+                                            class="w-full h-full object-cover object-center select-none"
+                                            loading={index === 0 ? "eager" : "lazy"}
+                                        />
+                                    ) : (
+                                        <div class="w-full h-full bg-gray-900 flex items-center justify-center text-gray-600 font-mono text-xs">
+                                            NO SIGNAL
+                                        </div>
+                                    )}
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                                </div>
+                            ))}
                         </div>
 
-                        {/* CLIENT JAVASCRIPT: UNIFIED CAROUSEL ENGINE */}
-                        <script is:inline>
-                            (function() {
-                                function initHeroCarousel() {
-                                    const track = document.getElementById("hero-carousel-track");
-                                    if (!track) return;
+                        <button
+                            id="hero-prev-btn"
+                            aria-label="Previous Slide"
+                            class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-cyan-400 hover:text-black border border-white/10 text-white items-center justify-center transition backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-md z-20 cursor-pointer"
+                        >
+                            <div class="i-lucide-chevron-left text-lg"></div>
+                        </button>
+                        <button
+                            id="hero-next-btn"
+                            aria-label="Next Slide"
+                            class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-cyan-400 hover:text-black border border-white/10 text-white items-center justify-center transition backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-md z-20 cursor-pointer"
+                        >
+                            <div class="i-lucide-chevron-right text-lg"></div>
+                        </button>
 
-                                    const prevBtn = document.getElementById("hero-prev-btn");
-                                    const nextBtn = document.getElementById("hero-next-btn");
-                                    const indicators = document.querySelectorAll(".hero-indicator");
-                                    const total = indicators.length;
-                                    if (total <= 1) return;
-
-                                    let current = 0;
-                                    let timer = null;
-                                    let isHovered = false;
-
-                                    function goToSlide(index) {
-                                        current = (index + total) % total;
-                                        track.style.transform = `translateX(-${current * 100}%)`;
-
-                                        indicators.forEach((ind, i) => {
-                                            if (i === current) {
-                                                ind.className = "hero-indicator h-1 rounded-full transition-all duration-300 w-6 bg-cyan-400";
-                                            } else {
-                                                ind.className = "hero-indicator h-1 rounded-full transition-all duration-300 w-1.5 bg-gray-600 hover:bg-gray-400";
-                                            }
-                                        });
-                                    }
-
-                                    function startAutoPlay() {
-                                        stopAutoPlay();
-                                        timer = setInterval(() => {
-                                            if (!isHovered) {
-                                                goToSlide(current + 1);
-                                            }
-                                        }, 5000);
-                                    }
-
-                                    function stopAutoPlay() {
-                                        if (timer) clearInterval(timer);
-                                    }
-
-                                    prevBtn?.addEventListener("click", () => {
-                                        goToSlide(current - 1);
-                                        startAutoPlay();
-                                    });
-
-                                    nextBtn?.addEventListener("click", () => {
-                                        goToSlide(current + 1);
-                                        startAutoPlay();
-                                    });
-
-                                    indicators.forEach((ind, i) => {
-                                        ind.addEventListener("click", () => {
-                                            goToSlide(i);
-                                            startAutoPlay();
-                                        });
-                                    });
-
-                                    const container = track.parentElement;
-                                    if (container) {
-                                        container.addEventListener("mouseenter", () => { isHovered = true; });
-                                        container.addEventListener("mouseleave", () => { isHovered = false; });
-
-                                        // Touch Swipe Gesture for Mobile
-                                        let touchStartX = 0;
-                                        let touchEndX = 0;
-
-                                        container.addEventListener("touchstart", (e) => {
-                                            touchStartX = e.changedTouches[0].screenX;
-                                            isHovered = true;
-                                        }, { passive: true });
-
-                                        container.addEventListener("touchend", (e) => {
-                                            touchEndX = e.changedTouches[0].screenX;
-                                            isHovered = false;
-                                            const diff = touchStartX - touchEndX;
-                                            if (Math.abs(diff) > 40) {
-                                                if (diff > 0) {
-                                                    goToSlide(current + 1);
-                                                } else {
-                                                    goToSlide(current - 1);
-                                                }
-                                                startAutoPlay();
-                                            }
-                                        }, { passive: true });
-                                    }
-
-                                    startAutoPlay();
-                                }
-
-                                if (document.readyState === "loading") {
-                                    document.addEventListener("DOMContentLoaded", initHeroCarousel);
-                                } else {
-                                    initHeroCarousel();
-                                }
-                            })();
-                        </script>
-                    </div>
-                ) : null
-            }
-        </div>
-
-        {
-            flashSaleProducts.length > 0 && (
-                <div class="mb-12 border border-red-900/50 bg-red-950/10 p-4 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-[url('/assets/noise.png')] opacity-10 pointer-events-none" />
-                    <FlashSaleTimer />
-
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                        {flashSaleProducts.map((item) => {
-                            const priceVal = parsePrice(item.price);
-                            const regularVal = parsePrice(item.regularPrice);
-                            const hasDiscount = regularVal > priceVal;
-                            const discount = hasDiscount
-                                ? Math.round(
-                                      ((regularVal - priceVal) / regularVal) *
-                                          100,
-                                  )
-                                : 0;
-
-                            return (
-                                <a
-                                    href={`/product/${item.slug}`}
-                                    class="cyber-card bg-black border border-red-500/50 hover:border-red-500 transition-all duration-300 group hover:-translate-y-1 block relative shadow-[0_0_15px_rgba(220,38,38,0.15)]"
-                                >
-                                    {/* BADGE HOT DEAL */}
-                                    <div class="absolute -top-1 -left-1 z-10 bg-red-600 text-white px-2 py-0.5 text-[10px] font-black italic shadow-lg border border-red-400 rotate-[-5deg]">
-                                        HOT DEAL 🔥
-                                    </div>
-
-                                    <div class="aspect-video bg-gray-900 relative overflow-hidden border-b border-red-900/30">
-                                        {item.image ? (
-                                            <img
-                                                src={fixImgUrl(
-                                                    item.image.sourceUrl,
-                                                )}
-                                                alt={item.name}
-                                                class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100"
-                                            />
-                                        ) : (
-                                            <div class="flex items-center justify-center h-full text-gray-700 text-xs">
-                                                NO IMAGE
-                                            </div>
-                                        )}
-
-                                        {/* DISCOUNT BADGE */}
-                                        {hasDiscount && (
-                                            <div class="absolute top-2 right-0 bg-yellow-500 text-black px-2 py-0.5 text-[10px] font-black italic skew-x-[-10deg]">
-                                                -{discount}%
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div class="p-4">
-                                        {/* ATTRIBUTE BADGES */}
-                                        <div class="flex flex-wrap gap-1 mb-2">
-                                            {getBadges(item).map((badge) => (
-                                                <span
-                                                    class={`text-[9px] font-bold px-1.5 py-0.5 rounded border border-opacity-50 uppercase tracking-wider ${badge.class}`}
-                                                >
-                                                    {badge.label}
-                                                </span>
-                                            ))}
-                                        </div>
-                                        <h4 class="text-xs md:text-sm font-bold text-gray-200 leading-snug mb-3 line-clamp-2 h-[2.5em] group-hover:text-red-400 transition">
-                                            {item.name}
-                                        </h4>
-                                        <div class="flex items-center justify-between border-t border-gray-800 pt-3">
-                                            <div class="flex flex-col">
-                                                {hasDiscount && (
-                                                    <span
-                                                        class="price-tag text-[10px] text-gray-500 line-through decoration-red-500 decoration-2 font-mono leading-none mb-0.5"
-                                                        data-price-idr={
-                                                            regularVal
-                                                        }
-                                                    >
-                                                        {item.regularPrice}
-                                                    </span>
-                                                )}
-                                                <span
-                                                    class="price-tag text-red-400 font-mono text-sm md:text-base font-bold text-shadow-red"
-                                                    data-price-idr={priceVal}
-                                                >
-                                                    {item.price || "Rp 0"}
-                                                </span>
-                                            </div>
-                                            <div class="w-6 h-6 bg-red-900/30 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition skew-x-[-10deg]">
-                                                <div class="i-lucide-flame text-xs skew-x-[10deg]" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            );
-                        })}
+                        <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
+                            {banners.map((_, i) => (
+                                <button
+                                    class={`hero-indicator h-1 rounded-full transition-all duration-300 cursor-pointer ${i === 0 ? "w-6 bg-cyan-400" : "w-1.5 bg-gray-600 hover:bg-gray-400"}`}
+                                    data-index={i}
+                                    aria-label={`Slide ${i + 1}`}
+                                ></button>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            )
-        }
+            </section>
+        )}
 
-        <div class="flex items-center justify-between mb-3 md:mb-4">
-            <div class="flex items-center gap-2">
-                <div class="w-1.5 h-4 md:h-5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-                <h2
-                    class="text-xs md:text-sm font-black text-white uppercase tracking-wider"
-                    data-i18n="home.admin_rec"
-                >
-                    REKOMENDASI ADMIN
-                </h2>
-            </div>
-            <span class="text-[11px] md:text-xs font-mono text-gray-500">
-                Pilihan Akun Terbaik
-            </span>
-        </div>
+        {flashSaleProducts.length > 0 && (
+            <section aria-labelledby="flash-sale-title" class="mb-12 border border-red-900/50 bg-red-950/10 p-4 relative overflow-hidden">
+                <FlashSaleTimer />
 
-        {
-            !connectionSuccess && (
-                <div class="p-8 text-center border border-dashed border-red-900 bg-red-900/10 rounded-none mb-8">
-                    <p
-                        class="text-red-400 font-bold"
-                        data-i18n="home.waiting_conn"
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    {flashSaleProducts.map((item) => {
+                        const priceVal = parsePrice(item.price);
+                        const regularVal = parsePrice(item.regularPrice);
+                        const hasDiscount = regularVal > priceVal;
+                        const discount = hasDiscount
+                            ? Math.round(((regularVal - priceVal) / regularVal) * 100)
+                            : 0;
+
+                        return (
+                            <a
+                                href={`/product/${item.slug}`}
+                                class="cyber-card bg-black border border-red-500/50 hover:border-red-500 transition-all duration-300 group hover:-translate-y-1 block relative shadow-[0_0_15px_rgba(220,38,38,0.15)]"
+                            >
+                                <div class="absolute -top-1 -left-1 z-10 bg-red-600 text-white px-2 py-0.5 text-[10px] font-black italic shadow-lg border border-red-400 rotate-[-5deg]">
+                                    HOT DEAL 🔥
+                                </div>
+
+                                <div class="aspect-video bg-gray-900 relative overflow-hidden border-b border-red-900/30">
+                                    {item.image ? (
+                                        <img
+                                            src={fixImgUrl(item.image.sourceUrl)}
+                                            alt={item.name}
+                                            class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100"
+                                        />
+                                    ) : (
+                                        <div class="flex items-center justify-center h-full text-gray-700 text-xs">
+                                            NO IMAGE
+                                        </div>
+                                    )}
+
+                                    {hasDiscount && (
+                                        <div class="absolute top-2 right-0 bg-yellow-500 text-black px-2 py-0.5 text-[10px] font-black italic skew-x-[-10deg]">
+                                            -{discount}%
+                                        </div>
+                                    )}
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex flex-wrap gap-1 mb-2">
+                                        {getBadges(item).map((badge) => (
+                                            <span class={`text-[9px] font-bold px-1.5 py-0.5 rounded border border-opacity-50 uppercase tracking-wider ${badge.class}`}>
+                                                {badge.label}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <h3 class="text-xs md:text-sm font-bold text-gray-200 leading-snug mb-3 line-clamp-2 h-[2.5em] group-hover:text-red-400 transition">
+                                        {item.name}
+                                    </h3>
+                                    <div class="flex items-center justify-between border-t border-gray-800 pt-3">
+                                        <div class="flex flex-col">
+                                            {hasDiscount && (
+                                                <span
+                                                    class="price-tag text-[10px] text-gray-500 line-through decoration-red-500 decoration-2 font-mono leading-none mb-0.5"
+                                                    data-price-idr={regularVal}
+                                                >
+                                                    {item.regularPrice}
+                                                </span>
+                                            )}
+                                            <span
+                                                class="price-tag text-red-400 font-mono text-sm md:text-base font-bold text-shadow-red"
+                                                data-price-idr={priceVal}
+                                            >
+                                                {item.price || "Rp 0"}
+                                            </span>
+                                        </div>
+                                        <div class="w-6 h-6 bg-red-900/30 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition skew-x-[-10deg]">
+                                            <div class="i-lucide-flame text-xs skew-x-[10deg]" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        );
+                    })}
+                </div>
+            </section>
+        )}
+
+        <section aria-labelledby="catalog-recommendation-title">
+            <div class="flex items-center justify-between mb-3 md:mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-4 md:h-5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+                    <h2
+                        id="catalog-recommendation-title"
+                        class="text-xs md:text-sm font-black text-white uppercase tracking-wider"
+                        data-i18n="home.admin_rec"
                     >
+                        REKOMENDASI ADMIN
+                    </h2>
+                </div>
+                <span class="text-[11px] md:text-xs font-mono text-gray-500">
+                    Pilihan Akun Terbaik
+                </span>
+            </div>
+
+            {!connectionSuccess && (
+                <div class="p-8 text-center border border-dashed border-red-900 bg-red-900/10 rounded-xl mb-8">
+                    <p class="text-red-400 font-bold" data-i18n="home.waiting_conn">
                         ⚠️ Menunggu koneksi ke WordPress...
                     </p>
                 </div>
-            )
-        }
+            )}
 
-        <!-- QUICK CATEGORY FILTER TABS (ITEMKU & STEAM STYLE) -->
-        <div class="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-2.5 mb-5 scrollbar-none text-xs font-bold uppercase tracking-wider">
-            <button
-                type="button"
-                class="admin-rec-filter active-filter-tab px-3 py-1.5 rounded-lg border border-cyan-400 bg-cyan-950/60 text-cyan-400 text-[11px] md:text-xs transition cursor-pointer flex-shrink-0"
-                data-category="all"
-            >
-                SEMUA
-            </button>
-            {
-                categories.map((cat) => (
-                    <button
-                        type="button"
-                        class="admin-rec-filter px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-gray-700 text-[11px] md:text-xs transition cursor-pointer flex-shrink-0"
-                        data-category={cat.slug}
-                    >
-                        {cat.name}
-                    </button>
-                ))
-            }
-        </div>
-
-        <!-- CURATED PRODUCTS GRID (INITIAL 10 PRODUCTS) -->
-        <div id="admin-rec-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-            {
-                products.map((item, index) => {
-                    const priceVal = parsePrice(item.price);
-                    const regularVal = parsePrice(item.regularPrice);
-                    const hasDiscount = regularVal > priceVal;
-                    const discount = hasDiscount
-                        ? Math.round(
-                              ((regularVal - priceVal) / regularVal) * 100,
-                          )
-                        : 0;
-
-                    const itemCatSlugs = (item.categories || []).map((c) => c.slug).join(",");
-
-                    return (
-                        <a
-                            href={`/product/${item.slug}`}
-                            class={`admin-rec-card cyber-card bg-gray-900/60 border border-gray-800 hover:border-cyan-400 transition-all duration-300 group hover:-translate-y-1 block relative shadow-md rounded-xl overflow-hidden ${index >= 10 ? "hidden" : ""}`}
-                            data-category={itemCatSlugs}
+            <div class="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-2.5 mb-5 scrollbar-none text-xs font-bold uppercase tracking-wider">
+                <button
+                    type="button"
+                    class="admin-rec-filter active-filter-tab px-3 py-1.5 rounded-lg border border-cyan-400 bg-cyan-950/60 text-cyan-400 text-[11px] md:text-xs transition cursor-pointer shrink-0"
+                    data-category="all"
+                >
+                    SEMUA
+                </button>
+                {
+                    categories.map((cat) => (
+                        <button
+                            type="button"
+                            class="admin-rec-filter px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-gray-700 text-[11px] md:text-xs transition cursor-pointer shrink-0"
+                            data-category={cat.slug}
                         >
-                            <div class="aspect-video bg-black relative overflow-hidden border-b border-gray-800 flex items-center justify-center">
-                                {item.image ? (
-                                    <img
-                                        src={fixImgUrl(item.image.sourceUrl)}
-                                        alt={item.name}
-                                        class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100"
-                                        loading={index < 4 ? "eager" : "lazy"}
-                                    />
-                                ) : (
-                                    <div
-                                        class="flex items-center justify-center h-full text-gray-700 text-xs"
-                                        data-i18n="home.no_image"
-                                    >
-                                        NO IMAGE
-                                    </div>
-                                )}
-                                <div class="absolute top-1.5 left-1.5 bg-black/80 backdrop-blur px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] text-cyan-400 font-bold uppercase tracking-wider border border-gray-800">
-                                    {item.productCategories?.nodes[0]?.name || "GAME"}
-                                </div>
+                            {cat.name}
+                        </button>
+                    ))
+                }
+            </div>
 
-                                {/* DISCOUNT BADGE */}
-                                {hasDiscount && (
-                                    <div class="absolute top-1.5 right-0 bg-red-600 text-white px-2 py-0.5 text-[9px] sm:text-[10px] font-black italic shadow-md border-l border-red-400">
-                                        <span data-i18n="product.save">HEMAT</span> {discount}%
-                                    </div>
-                                )}
-                            </div>
+            <div id="admin-rec-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {
+                    products.map((item, index) => {
+                        const priceVal = parsePrice(item.price);
+                        const regularVal = parsePrice(item.regularPrice);
+                        const hasDiscount = regularVal > priceVal;
+                        const discount = hasDiscount
+                            ? Math.round(((regularVal - priceVal) / regularVal) * 100)
+                            : 0;
 
-                            <div class="p-2.5 sm:p-3.5">
-                                {/* ATTRIBUTE BADGES */}
-                                <div class="flex flex-wrap gap-1 mb-1.5">
-                                    {getBadges(item).map((badge) => (
-                                        <span
-                                            class={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded border border-opacity-50 uppercase tracking-wider ${badge.class}`}
+                        const itemCatSlugs = (item.categories || []).map((c: any) => c.slug).join(",");
+
+                        return (
+                            <a
+                                href={`/product/${item.slug}`}
+                                class={`admin-rec-card yg-product-card ${index >= 10 ? "hidden" : ""}`}
+                                data-category={itemCatSlugs}
+                            >
+                                <div class="aspect-video bg-black relative overflow-hidden border-b border-gray-800 flex items-center justify-center">
+                                    {item.image ? (
+                                        <img
+                                            src={fixImgUrl(item.image.sourceUrl)}
+                                            alt={item.name}
+                                            class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100"
+                                            loading={index < 4 ? "eager" : "lazy"}
+                                        />
+                                    ) : (
+                                        <div
+                                            class="flex items-center justify-center h-full text-gray-700 text-xs"
+                                            data-i18n="home.no_image"
                                         >
-                                            {badge.label}
-                                        </span>
-                                    ))}
+                                            NO IMAGE
+                                        </div>
+                                    )}
+                                    <div class="absolute top-1.5 left-1.5 bg-black/80 backdrop-blur px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] text-cyan-400 font-bold uppercase tracking-wider border border-gray-800">
+                                        {item.productCategories?.nodes[0]?.name || "GAME"}
+                                    </div>
+
+                                    {hasDiscount && (
+                                        <div class="absolute top-1.5 right-0 bg-red-600 text-white px-2 py-0.5 text-[9px] sm:text-[10px] font-black italic shadow-md border-l border-red-400">
+                                            <span data-i18n="product.save">HEMAT</span> {discount}%
+                                        </div>
+                                    )}
                                 </div>
-                                <h4 class="text-[11px] sm:text-xs md:text-sm font-bold text-gray-200 leading-snug mb-2 sm:mb-3 line-clamp-2 h-[2.6em] group-hover:text-cyan-400 transition">
-                                    {item.name}
-                                </h4>
-                                <div class="flex items-center justify-between border-t border-gray-800/80 pt-2.5">
-                                    <div class="flex flex-col">
-                                        {hasDiscount && (
-                                            <span
-                                                class="price-tag text-[9px] sm:text-[10px] text-gray-500 line-through decoration-red-500 decoration-1 font-mono leading-none mb-0.5"
-                                                data-price-idr={regularVal}
-                                            >
-                                                {item.regularPrice}
+
+                                <div class="p-2.5 sm:p-3.5">
+                                    <div class="flex flex-wrap gap-1 mb-1.5">
+                                        {getBadges(item).map((badge) => (
+                                            <span class={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded border border-opacity-50 uppercase tracking-wider ${badge.class}`}>
+                                                {badge.label}
                                             </span>
-                                        )}
-                                        <span
-                                            class="price-tag text-cyan-400 font-mono text-xs sm:text-sm md:text-base font-bold"
-                                            data-price-idr={priceVal}
-                                        >
-                                            {item.price || "Rp 0"}
-                                        </span>
+                                        ))}
                                     </div>
-                                    <div class="w-6 h-6 rounded bg-gray-800 text-gray-400 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black transition">
-                                        <div class="i-lucide-plus text-xs" />
+                                    <h3 class="text-[11px] sm:text-xs md:text-sm font-bold text-gray-200 leading-snug mb-2 sm:mb-3 line-clamp-2 h-[2.6em] group-hover:text-cyan-400 transition">
+                                        {item.name}
+                                    </h3>
+                                    <div class="flex items-center justify-between border-t border-gray-800/80 pt-2.5">
+                                        <div class="flex flex-col">
+                                            {hasDiscount && (
+                                                <span
+                                                    class="price-tag text-[9px] sm:text-[10px] text-gray-500 line-through decoration-red-500 decoration-1 font-mono leading-none mb-0.5"
+                                                    data-price-idr={regularVal}
+                                                >
+                                                    {item.regularPrice}
+                                                </span>
+                                            )}
+                                            <span
+                                                class="price-tag text-cyan-400 font-mono text-xs sm:text-sm md:text-base font-bold"
+                                                data-price-idr={priceVal}
+                                            >
+                                                {item.price || "Rp 0"}
+                                            </span>
+                                        </div>
+                                        <div class="w-6 h-6 rounded bg-gray-800 text-gray-400 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black transition">
+                                            <div class="i-lucide-plus text-xs" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
-                    );
-                })
-            }
-        </div>
+                            </a>
+                        );
+                    })
+                }
+            </div>
 
-        {/* EMPTY STATE JIKA FILTER KATEGORI TIDAK ADA PRODUK */}
-        <div id="admin-rec-empty" class="hidden py-12 text-center border border-dashed border-gray-800 rounded-xl my-6">
-            <div class="i-lucide-package-open text-3xl text-gray-600 mx-auto mb-2"></div>
-            <p class="text-xs text-gray-400 font-mono">Belum ada akun di kategori ini.</p>
-        </div>
+            <div id="admin-rec-empty" class="hidden py-12 text-center border border-dashed border-gray-800 rounded-xl my-6">
+                <div class="i-lucide-package-open text-3xl text-gray-600 mx-auto mb-2"></div>
+                <p class="text-xs text-gray-400 font-mono">Belum ada akun di kategori ini.</p>
+            </div>
 
-        <!-- LOAD MORE & JELAJAHI SEMUA PRODUK -->
-        <div class="mt-8 mb-12 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-                id="btn-load-more"
-                type="button"
-                class="w-full sm:w-auto px-6 py-3 rounded-xl border border-cyan-500/40 bg-cyan-950/40 hover:bg-cyan-400 hover:text-black text-cyan-400 text-xs font-black uppercase tracking-wider transition-all duration-300 shadow-[0_0_15px_rgba(34,211,238,0.15)] flex items-center justify-center gap-2 cursor-pointer"
-            >
-                <div class="i-lucide-chevron-down text-base"></div>
-                <span>MUAT LEBIH BANYAK</span>
-                <span id="load-more-counter" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/50 text-cyan-300 font-bold"></span>
-            </button>
+            <div class="mt-8 mb-12 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button
+                    id="btn-load-more"
+                    type="button"
+                    class="w-full sm:w-auto yg-btn-primary px-6 py-3"
+                >
+                    <div class="i-lucide-chevron-down text-base"></div>
+                    <span>MUAT LEBIH BANYAK</span>
+                    <span id="load-more-counter" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/50 text-cyan-300 font-bold"></span>
+                </button>
 
-            <a
-                href="/search"
-                class="w-full sm:w-auto px-6 py-3 rounded-xl border border-gray-800 hover:border-gray-700 bg-gray-900/60 hover:bg-gray-800 text-gray-400 hover:text-white text-xs font-bold uppercase tracking-wider transition flex items-center justify-center gap-2"
-            >
-                <span>Jelajahi Semua Produk</span>
-                <div class="i-lucide-arrow-right text-sm"></div>
-            </a>
-        </div>
+                <a
+                    href="/search"
+                    class="w-full sm:w-auto yg-btn-secondary px-6 py-3"
+                >
+                    <span>Jelajahi Semua Produk</span>
+                    <div class="i-lucide-arrow-right text-sm"></div>
+                </a>
+            </div>
+        </section>
 
-        <!-- CLIENT SCRIPT UNTUK LOAD MORE & FILTER TABS -->
-        <script is:inline>
-            (function() {
-                function initAdminRecCatalog() {
-                    const cards = Array.from(document.querySelectorAll(".admin-rec-card"));
-                    const loadMoreBtn = document.getElementById("btn-load-more");
-                    const counterSpan = document.getElementById("load-more-counter");
-                    const filterButtons = document.querySelectorAll(".admin-rec-filter");
-                    const emptyState = document.getElementById("admin-rec-empty");
+        <script>
+            function initIndexFeatures() {
+                // Carousel
+                const track = document.getElementById("hero-carousel-track");
+                const prevBtn = document.getElementById("hero-prev-btn");
+                const nextBtn = document.getElementById("hero-next-btn");
+                const indicators = document.querySelectorAll(".hero-indicator");
+                const total = indicators.length;
 
-                    if (!cards.length) return;
+                if (track && total > 1) {
+                    let current = 0;
+                    let timer: any = null;
+                    let isHovered = false;
 
-                    const BATCH_SIZE = 10;
-                    let currentCategory = "all";
-                    let visibleCount = BATCH_SIZE;
-
-                    function updateDisplay() {
-                        const matchingCards = cards.filter(card => {
-                            if (currentCategory === "all") return true;
-                            const cats = card.getAttribute("data-category") || "";
-                            return cats.split(",").includes(currentCategory);
-                        });
-
-                        cards.forEach(card => card.classList.add("hidden"));
-
-                        matchingCards.forEach((card, index) => {
-                            if (index < visibleCount) {
-                                card.classList.remove("hidden");
+                    const goToSlide = (index: number) => {
+                        current = (index + total) % total;
+                        track.style.transform = `translateX(-${current * 100}%)`;
+                        indicators.forEach((ind, i) => {
+                            if (i === current) {
+                                ind.className = "hero-indicator h-1 rounded-full transition-all duration-300 w-6 bg-cyan-400";
                             } else {
-                                card.classList.add("hidden");
+                                ind.className = "hero-indicator h-1 rounded-full transition-all duration-300 w-1.5 bg-gray-600 hover:bg-gray-400";
                             }
                         });
+                    };
 
-                        if (matchingCards.length === 0) {
-                            if (emptyState) emptyState.classList.remove("hidden");
-                        } else {
-                            if (emptyState) emptyState.classList.add("hidden");
-                        }
+                    const startAutoPlay = () => {
+                        stopAutoPlay();
+                        timer = setInterval(() => {
+                            if (!isHovered) goToSlide(current + 1);
+                        }, 5000);
+                    };
 
-                        const remaining = Math.max(0, matchingCards.length - visibleCount);
-                        if (loadMoreBtn) {
-                            if (remaining > 0) {
-                                loadMoreBtn.classList.remove("hidden");
-                                if (counterSpan) counterSpan.innerText = `+${Math.min(remaining, BATCH_SIZE)}`;
-                            } else {
-                                loadMoreBtn.classList.add("hidden");
-                            }
-                        }
-                    }
+                    const stopAutoPlay = () => {
+                        if (timer) clearInterval(timer);
+                    };
 
-                    if (loadMoreBtn) {
-                        loadMoreBtn.addEventListener("click", () => {
-                            visibleCount += BATCH_SIZE;
-                            updateDisplay();
-                        });
-                    }
-
-                    filterButtons.forEach(btn => {
-                        btn.addEventListener("click", () => {
-                            filterButtons.forEach(b => {
-                                b.className = "admin-rec-filter px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-gray-700 text-[11px] md:text-xs transition cursor-pointer flex-shrink-0";
-                            });
-                            btn.className = "admin-rec-filter active-filter-tab px-3 py-1.5 rounded-lg border border-cyan-400 bg-cyan-950/60 text-cyan-400 text-[11px] md:text-xs transition cursor-pointer flex-shrink-0";
-
-                            currentCategory = btn.getAttribute("data-category") || "all";
-                            visibleCount = BATCH_SIZE;
-                            updateDisplay();
-                        });
+                    prevBtn?.addEventListener("click", () => { goToSlide(current - 1); startAutoPlay(); });
+                    nextBtn?.addEventListener("click", () => { goToSlide(current + 1); startAutoPlay(); });
+                    indicators.forEach((ind, i) => {
+                        ind.addEventListener("click", () => { goToSlide(i); startAutoPlay(); });
                     });
 
-                    updateDisplay();
+                    const container = track.parentElement;
+                    if (container) {
+                        container.addEventListener("mouseenter", () => { isHovered = true; });
+                        container.addEventListener("mouseleave", () => { isHovered = false; });
+                    }
+                    startAutoPlay();
                 }
 
-                if (document.readyState === "loading") {
-                    document.addEventListener("DOMContentLoaded", initAdminRecCatalog);
-                } else {
-                    initAdminRecCatalog();
+                // Catalog filter & load more
+                const cards = Array.from(document.querySelectorAll<HTMLElement>(".admin-rec-card"));
+                const loadMoreBtn = document.getElementById("btn-load-more");
+                const counterSpan = document.getElementById("load-more-counter");
+                const filterButtons = document.querySelectorAll<HTMLButtonElement>(".admin-rec-filter");
+                const emptyState = document.getElementById("admin-rec-empty");
+
+                if (!cards.length) return;
+
+                const BATCH_SIZE = 10;
+                let currentCategory = "all";
+                let visibleCount = BATCH_SIZE;
+
+                function updateDisplay() {
+                    const matchingCards = cards.filter(card => {
+                        if (currentCategory === "all") return true;
+                        const cats = card.getAttribute("data-category") || "";
+                        return cats.split(",").includes(currentCategory);
+                    });
+
+                    cards.forEach(card => card.classList.add("hidden"));
+                    matchingCards.forEach((card, index) => {
+                        if (index < visibleCount) {
+                            card.classList.remove("hidden");
+                        } else {
+                            card.classList.add("hidden");
+                        }
+                    });
+
+                    if (emptyState) {
+                        emptyState.classList.toggle("hidden", matchingCards.length > 0);
+                    }
+
+                    const remaining = Math.max(0, matchingCards.length - visibleCount);
+                    if (loadMoreBtn) {
+                        if (remaining > 0) {
+                            loadMoreBtn.classList.remove("hidden");
+                            if (counterSpan) counterSpan.innerText = `+${Math.min(remaining, BATCH_SIZE)}`;
+                        } else {
+                            loadMoreBtn.classList.add("hidden");
+                        }
+                    }
                 }
-            })();
+
+                loadMoreBtn?.addEventListener("click", () => {
+                    visibleCount += BATCH_SIZE;
+                    updateDisplay();
+                });
+
+                filterButtons.forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        filterButtons.forEach(b => {
+                            b.className = "admin-rec-filter px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-gray-700 text-[11px] md:text-xs transition cursor-pointer shrink-0";
+                        });
+                        btn.className = "admin-rec-filter active-filter-tab px-3 py-1.5 rounded-lg border border-cyan-400 bg-cyan-950/60 text-cyan-400 text-[11px] md:text-xs transition cursor-pointer shrink-0";
+
+                        currentCategory = btn.getAttribute("data-category") || "all";
+                        visibleCount = BATCH_SIZE;
+                        updateDisplay();
+                    });
+                });
+
+                updateDisplay();
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", initIndexFeatures);
+            } else {
+                initIndexFeatures();
+            }
+            document.addEventListener("astro:page-load", initIndexFeatures);
         </script>
     </main>
 </Layout>

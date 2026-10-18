@@ -100,7 +100,9 @@ export const POST = async ({ request }) => {
             const remainingSeconds = isPending ? Math.max(0, Math.floor((expiryTimeMs - Date.now()) / 1000)) : 0;
             const effectiveStatus = isExpired ? "cancelled" : order.status;
 
-            const paymentUrl = `/order-pay?id=${order.id}`;
+            const paymentUrl = order.order_key
+                ? `/order-pay?id=${order.id}&key=${encodeURIComponent(order.order_key)}`
+                : `/order-pay?id=${order.id}`;
 
             return {
                 id: order.id,

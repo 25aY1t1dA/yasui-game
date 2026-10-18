@@ -1,14 +1,13 @@
 ---
+// src/pages/contact.astro
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Contact Us - Yasui Game">
     <main class="pt-24 pb-20 px-4 min-h-screen">
         <div class="max-w-4xl mx-auto">
-            {/* Header */}
-            <div class="text-center mb-16 space-y-4">
-                <div class="inline-block relative">
-                    <div class="absolute -inset-1 bg-cyan-500/20 blur-xl"></div>
+            <header class="text-center mb-16 space-y-4">
+                <div class="inline-block relative yg-glow-ambient">
                     <h1
                         class="relative text-4xl md:text-6xl font-black text-white italic tracking-tighter"
                         data-i18n="contact.title"
@@ -23,28 +22,23 @@ import Layout from "../layouts/Layout.astro";
                     Punya pertanyaan atau butuh bantuan? Tim support kami siap
                     membantu 24/7.
                 </p>
-            </div>
+            </header>
 
-            {/* Contact Grid */}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Email Card */}
-                <div
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <article
                     class="cyber-card bg-gray-900/50 border border-gray-800 p-8 hover:border-cyan-400/50 transition duration-300 group"
                 >
                     <div
                         class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-cyan-900/30 group-hover:text-cyan-400 transition"
                     >
-                        <div
-                            class="i-lucide-mail text-2xl text-gray-400 group-hover:text-cyan-400"
-                        >
-                        </div>
+                        <div class="i-lucide-mail text-2xl text-gray-400 group-hover:text-cyan-400"></div>
                     </div>
-                    <h3
+                    <h2
                         class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"
                         data-i18n="contact.email_label"
                     >
                         EMAIL SUPPORT
-                    </h3>
+                    </h2>
                     <a
                         href="mailto:support@yasuigame.com"
                         class="text-xl md:text-2xl font-mono font-bold text-white hover:text-cyan-400 transition break-all"
@@ -52,65 +46,53 @@ import Layout from "../layouts/Layout.astro";
                     >
                         support@yasuigame.com
                     </a>
-                </div>
+                </article>
 
-                {/* WhatsApp Card */}
-                <div
+                <article
                     class="cyber-card bg-gray-900/50 border border-gray-800 p-8 hover:border-green-400/50 transition duration-300 group"
                 >
                     <div
                         class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-green-900/30 group-hover:text-green-400 transition"
                     >
-                        <div
-                            class="i-lucide-message-circle text-2xl text-gray-400 group-hover:text-green-400"
-                        >
-                        </div>
+                        <div class="i-lucide-message-circle text-2xl text-gray-400 group-hover:text-green-400"></div>
                     </div>
-                    <h3
+                    <h2
                         class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"
                         data-i18n="contact.wa_label"
                     >
                         WHATSAPP OFFICIAL
-                    </h3>
+                    </h2>
                     <a
                         href="https://wa.me/6281991400395"
                         target="_blank"
+                        rel="noopener noreferrer"
                         class="text-xl md:text-2xl font-mono font-bold text-white hover:text-green-400 transition"
                         data-i18n="contact.wa_value"
                     >
                         +62 819-9140-0395
                     </a>
-                </div>
+                </article>
 
-                {/* Address Card (Full Width) */}
-                <div
+                <article
                     class="md:col-span-2 cyber-card bg-gray-900/50 border border-gray-800 p-8 hover:border-purple-400/50 transition duration-300 group relative overflow-hidden"
                 >
-                    <div
-                        class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition"
-                    >
-                        <div class="i-lucide-map-pin text-9xl text-purple-500">
-                        </div>
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition pointer-events-none">
+                        <div class="i-lucide-map-pin text-9xl text-purple-500"></div>
                     </div>
 
-                    <div
-                        class="relative z-10 flex flex-col md:flex-row gap-8 items-start"
-                    >
+                    <div class="relative z-10 flex flex-col md:flex-row gap-8 items-start">
                         <div class="flex-1">
                             <div
                                 class="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center mb-6 group-hover:bg-purple-900/30 group-hover:text-purple-400 transition"
                             >
-                                <div
-                                    class="i-lucide-map-pin text-2xl text-gray-400 group-hover:text-purple-400"
-                                >
-                                </div>
+                                <div class="i-lucide-map-pin text-2xl text-gray-400 group-hover:text-purple-400"></div>
                             </div>
-                            <h3
+                            <h2
                                 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"
                                 data-i18n="contact.address_label"
                             >
                                 ALAMAT BISNIS
-                            </h3>
+                            </h2>
                             <p
                                 class="text-lg md:text-xl font-mono font-bold text-white leading-relaxed max-w-md"
                                 data-i18n="contact.address_value"
@@ -119,12 +101,12 @@ import Layout from "../layouts/Layout.astro";
                             </p>
 
                             <div class="mt-6 pt-6 border-t border-gray-800">
-                                <h4
+                                <h3
                                     class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2"
                                     data-i18n="contact.hours_label"
                                 >
                                     JAM OPERASIONAL
-                                </h4>
+                                </h3>
                                 <p
                                     class="text-sm text-cyan-400 font-mono"
                                     data-i18n="contact.hours_value"
@@ -138,6 +120,7 @@ import Layout from "../layouts/Layout.astro";
                             <a
                                 href="https://www.google.com/maps/search/?api=1&query=CQ97+4RM+Mayang,+Sukoharjo+Regency,+Central+Java"
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 class="flex items-center justify-center gap-2 bg-white text-black font-bold uppercase text-xs px-6 py-4 rounded hover:bg-purple-400 transition shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_20px_rgba(192,132,252,0.6)]"
                                 data-i18n="contact.view_map"
                             >
@@ -145,8 +128,8 @@ import Layout from "../layouts/Layout.astro";
                             </a>
                         </div>
                     </div>
-                </div>
-            </div>
+                </article>
+            </section>
         </div>
     </main>
 </Layout>

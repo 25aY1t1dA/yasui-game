@@ -57,10 +57,10 @@ try {
             parent: parentData
         };
 
-        // Fetch ALL subcategories with pagination (Roblox has 270+ children)
+        // Fetch ALL subcategories with pagination (Roblox has 270+ children, batasi max 5 halaman)
         let rawSubs = [];
         let subPage = 1;
-        while (true) {
+        while (subPage <= 5) {
             const batch = await getCategories({ parent: rawCategory.id, hide_empty: false, per_page: 100, page: subPage });
             if (!batch || batch.length === 0) break;
             rawSubs = rawSubs.concat(batch);
@@ -88,7 +88,7 @@ try {
             if (catalogRoot.id === rawCategory.id) {
                 catalogTypes = rawSubs;
             } else {
-                for (let typePage = 1; ; typePage++) {
+                for (let typePage = 1; typePage <= 5; typePage++) {
                     const batch = await getCategories({ parent: catalogRoot.id, hide_empty: false, per_page: 100, page: typePage });
                     catalogTypes.push(...batch);
                     if (batch.length < 100) break;

@@ -1,19 +1,10 @@
 ---
-
 ---
 
-<div
-    class="w-full bg-gradient-to-r from-red-900 via-black to-red-900 border-y border-red-600/50 py-3 px-4 mb-6 relative overflow-hidden group"
->
-    <!-- Animated Glow Background -->
-    <div class="absolute inset-0 bg-red-500/10 blur-xl animate-pulse"></div>
-
-    <div
-        class="relative max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left z-10"
-    >
+<div class="yg-glow-ambient-red w-full bg-gradient-to-r from-red-900 via-black to-red-900 border-y border-red-600/50 py-3 px-4 mb-6 relative overflow-hidden group">
+    <div class="relative max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left z-10">
         <div class="flex items-center gap-2">
-            <div class="i-lucide-zap text-yellow-400 text-xl animate-bounce">
-            </div>
+            <div class="i-lucide-zap text-yellow-400 text-xl animate-bounce"></div>
             <h3
                 class="text-white font-black italic tracking-widest text-lg md:text-xl uppercase drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]"
                 data-i18n="home.flash_sale_text"
@@ -22,25 +13,16 @@
             </h3>
         </div>
 
-        <div
-            class="flex items-center gap-2 font-mono text-2xl md:text-3xl font-bold text-red-500"
-            id="fs-timer"
-        >
-            <div
-                class="bg-black/50 border border-red-900/50 rounded px-2 py-1 min-w-[50px] text-center shadow-[0_0_15px_rgba(220,38,38,0.2)]"
-            >
+        <div class="flex items-center gap-2 font-mono text-2xl md:text-3xl font-bold text-red-500" id="fs-timer">
+            <div class="bg-black/50 border border-red-900/50 rounded px-2 py-1 min-w-[50px] text-center shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                 <span id="fs-hours">00</span>
             </div>
             <span class="animate-pulse">:</span>
-            <div
-                class="bg-black/50 border border-red-900/50 rounded px-2 py-1 min-w-[50px] text-center shadow-[0_0_15px_rgba(220,38,38,0.2)]"
-            >
+            <div class="bg-black/50 border border-red-900/50 rounded px-2 py-1 min-w-[50px] text-center shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                 <span id="fs-minutes">00</span>
             </div>
             <span class="animate-pulse">:</span>
-            <div
-                class="bg-black/50 border border-red-900/50 rounded px-2 py-1 min-w-[50px] text-center shadow-[0_0_15px_rgba(220,38,38,0.2)]"
-            >
+            <div class="bg-black/50 border border-red-900/50 rounded px-2 py-1 min-w-[50px] text-center shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                 <span id="fs-seconds">00</span>
             </div>
         </div>
@@ -54,11 +36,8 @@
         tomorrow.setDate(tomorrow.getDate() + 1);
         tomorrow.setHours(0, 0, 0, 0);
 
-        const diff = tomorrow.getTime() - now.getTime();
-
-        const hours = Math.floor(
-            (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-        );
+        const diff = Math.max(0, tomorrow.getTime() - now.getTime());
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
@@ -74,5 +53,5 @@
     }
 
     setInterval(updateTimer, 1000);
-    updateTimer(); // Initial call
+    updateTimer();
 </script>

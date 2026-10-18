@@ -4,8 +4,7 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Privacy Policy - Yasui Game">
     <main class="max-w-3xl mx-auto px-4 pt-24 pb-16">
-        <!-- Header -->
-        <div class="text-center mb-12">
+        <header class="text-center mb-12">
             <h1
                 class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4"
                 data-i18n="privacy.title"
@@ -18,16 +17,9 @@ import Layout from "../layouts/Layout.astro";
             >
                 Kebijakan privasi dan perlindungan data pengguna Yasui Game.
             </p>
-        </div>
+        </header>
 
-        <!-- Main Container -->
-        <div class="relative">
-            <!-- Glow Effect -->
-            <div
-                class="absolute -inset-1 bg-cyan-500/20 blur-xl opacity-50 rounded-2xl -z-10"
-            >
-            </div>
-
+        <section class="relative yg-glow-ambient">
             <div
                 class="bg-gray-900/40 border border-gray-800 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
             >
@@ -125,7 +117,6 @@ import Layout from "../layouts/Layout.astro";
                     </p>
                 </div>
 
-                <!-- Footer Note -->
                 <div class="mt-10 pt-6 border-t border-gray-800 text-center">
                     <p
                         class="text-[10px] text-gray-500"
@@ -135,6 +126,6 @@ import Layout from "../layouts/Layout.astro";
                     </p>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 </Layout>

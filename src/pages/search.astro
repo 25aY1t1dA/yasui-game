@@ -92,9 +92,8 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
 ---
 
 <Layout title="Search - Yasui Game">
-    <div class="pt-24 pb-32 min-h-screen container mx-auto px-4">
-        <!-- HEADER SEARCH -->
-        <div class="mb-8">
+    <main class="pt-24 pb-32 min-h-screen container mx-auto px-4">
+        <header class="mb-8">
             <h1
                 class="text-2xl md:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-6"
             >
@@ -116,12 +115,10 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     <div class="i-lucide-search text-xl"></div>
                 </div>
             </div>
-        </div>
+        </header>
 
         <div class="flex flex-col lg:flex-row gap-8 relative">
-            <!-- SIDEBAR FILTER (DESKTOP) -->
             <aside class="hidden lg:block w-1/4 h-fit sticky top-24 space-y-6">
-                <!-- Header Sidebar -->
                 <div class="flex items-center justify-between">
                     <h2
                         class="text-xl font-black italic text-white flex items-center gap-2"
@@ -138,7 +135,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </button>
                 </div>
 
-                <!-- Product Type Filter (NEW) -->
                 <div
                     class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
                 >
@@ -194,7 +190,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 </div>
 
-                <!-- SERVER FILTER (Dynamic) -->
                 {serverOptions.length > 0 && (
                     <div class="cyber-card p-5 bg-gray-900/50 border border-gray-800">
                         <h3 class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider">
@@ -220,7 +215,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 )}
 
-                <!-- TIER FILTER (Dynamic) -->
                 {tierOptions.length > 0 && (
                     <div class="cyber-card p-5 bg-gray-900/50 border border-gray-800">
                         <h3 class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider">
@@ -246,7 +240,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 )}
 
-                <!-- Category Filter -->
                 <div
                     class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
                 >
@@ -257,7 +250,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                         CATEGORY
                     </h3>
 
-                    <!-- Category Search Input -->
                     <div class="relative mb-3">
                         <input
                             type="text"
@@ -297,7 +289,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 </div>
 
-                <!-- Price Filter -->
                 <div
                     class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
                 >
@@ -336,9 +327,7 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                 </div>
             </aside>
 
-            <!-- PRODUCT GRID -->
             <div class="flex-1">
-                <!-- Toolbar -->
                 <div
                     class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-800 gap-4"
                 >
@@ -369,15 +358,12 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </select>
                 </div>
 
-                <!-- Grid Container -->
                 <div
                     id="product-grid"
                     class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                 >
-                    <!-- Products will be injected here via JS -->
                 </div>
 
-                <!-- Empty State -->
                 <div
                     id="empty-state"
                     class="hidden flex-col items-center justify-center py-20 text-center opacity-70"
@@ -403,9 +389,8 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- MOBILE FLOATING FILTER BUTTON (Redesigned) -->
     <div
         class="lg:hidden fixed bottom-24 left-0 right-0 z-40 flex justify-center pointer-events-none"
     >
@@ -424,7 +409,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
         </button>
     </div>
 
-    <!-- MOBILE OFF-CANVAS FILTER (Elegant) -->
     <div id="mobile-filter-modal" class="fixed inset-0 z-[60] hidden">
         <div
             class="absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity duration-300 opacity-0"
@@ -435,12 +419,10 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
             class="absolute bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-cyan-500/30 rounded-t-3xl flex flex-col max-h-[85vh] transform transition-transform duration-300 translate-y-full shadow-[0_-10px_40px_rgba(0,0,0,0.8)]"
             id="mobile-filter-content"
         >
-            <!-- Handle Bar -->
             <div class="w-full flex justify-center pt-3 pb-1">
                 <div class="w-12 h-1.5 bg-gray-800 rounded-full"></div>
             </div>
 
-            <!-- Header Mobile -->
             <div
                 class="px-6 py-4 border-b border-gray-800/50 flex justify-between items-center"
             >
@@ -466,9 +448,7 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                 </button>
             </div>
 
-            <!-- Scrollable Content -->
             <div class="overflow-y-auto p-6 space-y-8 pb-32">
-                <!-- Mobile Sort -->
                 <div class="space-y-3">
                     <h4
                         class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
@@ -504,7 +484,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 </div>
 
-                <!-- Product Type Filter (MOBILE) -->
                 <div class="space-y-3">
                     <h4
                         class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
@@ -556,7 +535,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 </div>
 
-                <!-- Mobile Categories -->
                 <div class="space-y-3">
                     <h4
                         class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
@@ -602,7 +580,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 </div>
 
-                <!-- Mobile Price -->
                 <div class="space-y-3">
                     <h4
                         class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
@@ -637,7 +614,6 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                 </div>
             </div>
 
-            <!-- Footer Action -->
             <div
                 class="absolute bottom-0 left-0 right-0 p-6 bg-[#0a0a0a]/95 backdrop-blur border-t border-gray-800 flex gap-4 z-10 pb-8"
             >

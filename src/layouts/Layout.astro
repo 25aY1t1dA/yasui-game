@@ -1,6 +1,7 @@
 ---
-// src/layouts/Layout.astro
 import FloatingWA from "../components/FloatingWA.astro";
+import Icon from "../components/ui/Icon.astro";
+import "../styles/global.css";
 
 interface Props {
 	title: string;
@@ -14,22 +15,13 @@ const {
 	showFooter = true,
 } = Astro.props;
 
-import { translations } from "../lib/translations";
-
-// --- SERVER-SIDE GEO-IP & USER REGIONAL PREFERENCES ---
-// 1. Cek Cookie manual pengguna
 const cookieCurr = Astro.cookies.get("yasui_currency")?.value;
 const cookieLang = Astro.cookies.get("yasui_lang")?.value;
-
-// 2. Cek parameter pengujian lokal (?geo=US atau ?geo=ID)
 const geoParam = Astro.url.searchParams.get("geo")?.toUpperCase();
-
-// 3. Header resmi Vercel Serverless / Edge & Cloudflare
 const vercelCountry = Astro.request.headers.get("x-vercel-ip-country");
 const cfCountry = Astro.request.headers.get("cf-ipcountry");
 const detectedCountry = geoParam || vercelCountry || cfCountry || "ID";
 
-// 4. Default: Jika bukan Indonesia, otomatis USD & English
 const isForeign = detectedCountry !== "ID";
 const serverDefaultCurr = cookieCurr || (isForeign ? "USD" : "IDR");
 const serverDefaultLang = cookieLang || (isForeign ? "en" : "id");
@@ -37,7 +29,6 @@ const serverDefaultLang = cookieLang || (isForeign ? "en" : "id");
 const pathname = Astro.url.pathname;
 const isHome = pathname === "/" || pathname === "";
 const isKatalog = pathname.startsWith("/categories") || pathname.startsWith("/category");
-const isOrders = pathname.startsWith("/orders");
 const isCart = pathname.startsWith("/cart");
 const isCheckout = pathname.startsWith("/checkout");
 
@@ -52,63 +43,19 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
-
 		<link
 			href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&display=swap"
 			rel="stylesheet"
 		/>
-
-		<style is:global>
-			body {
-				font-family: "JetBrains Mono", monospace;
-				background-color: #050505;
-				background-image:
-					linear-gradient(
-						rgba(34, 211, 238, 0.05) 1px,
-						transparent 1px
-					),
-					linear-gradient(
-						90deg,
-						rgba(34, 211, 238, 0.05) 1px,
-						transparent 1px
-					);
-				background-size: 40px 40px;
-				color: #d1d5db;
-			}
-			.cyber-card {
-				clip-path: polygon(
-					0 0,
-					100% 0,
-					100% calc(100% - 15px),
-					calc(100% - 15px) 100%,
-					0 100%
-				);
-			}
-			.scrollbar-none::-webkit-scrollbar,
-			.no-scrollbar::-webkit-scrollbar {
-				display: none !important;
-				width: 0 !important;
-				height: 0 !important;
-			}
-			.scrollbar-none,
-			.no-scrollbar {
-				-ms-overflow-style: none !important;
-				scrollbar-width: none !important;
-			}
-		</style>
 	</head>
 	<body class="min-h-screen pb-24 md:pb-0">
 		<header
 			id="main-header"
 			class="fixed top-0 left-0 right-0 z-50 bg-black/85 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300"
 		>
-			<!-- ROW 1: MAIN NAVBAR -->
-			<div
-				class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-3"
-			>
-				<!-- LEFT: BRAND & MAIN NAVIGATION -->
-				<div class="flex items-center gap-4 lg:gap-6 flex-shrink-0">
-					<a href="/" class="flex items-center gap-2 group flex-shrink-0" aria-label="Yasui Game">
+			<div class="yg-shell h-16 flex items-center justify-between gap-3">
+				<div class="flex items-center gap-4 lg:gap-6 shrink-0">
+					<a href="/" class="flex items-center gap-2 group shrink-0" aria-label="Yasui Game Homepage">
 						<div class="w-8 h-8 rounded-lg bg-cyan-950/70 border border-cyan-500/40 flex items-center justify-center text-cyan-400 group-hover:scale-105 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] transition">
 							<div class="i-lucide-gamepad-2 text-xl"></div>
 						</div>
@@ -117,8 +64,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						</span>
 					</a>
 
-					<!-- Quick Nav Links -->
-					<nav class="hidden md:flex items-center gap-1 text-xs font-bold uppercase tracking-wider">
+					<nav class="hidden md:flex items-center gap-1 text-xs font-bold uppercase tracking-wider" aria-label="Main Navigation">
 						<a
 							href="/categories"
 							class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5"
@@ -137,7 +83,6 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</nav>
 				</div>
 
-				<!-- CENTER: SEARCH BAR (DESKTOP ONLY — always visible) -->
 				<div class="hidden md:block flex-1 max-w-xl mx-2 relative" id="desktop-search-container">
 					<div class="relative group">
 						<input
@@ -155,36 +100,31 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							<kbd class="text-[9px] font-mono text-gray-500 bg-black/70 border border-gray-800 px-1.5 py-0.5 rounded">Enter</kbd>
 						</div>
 					</div>
-					<!-- DESKTOP SEARCH DROPDOWN -->
 					<div
 						id="desktop-search-dropdown"
-						class="hidden absolute top-full left-0 right-0 mt-2 bg-black/95 border border-gray-800 rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.9)] backdrop-blur-xl z-50 overflow-hidden"
+						class="hidden absolute top-full left-0 right-0 mt-2 yg-panel overflow-hidden"
 					>
 						<div id="desktop-search-results" class="max-h-80 overflow-y-auto"></div>
 					</div>
 				</div>
 
-				<!-- RIGHT: ACTIONS -->
-				<div class="flex items-center gap-2 sm:gap-2.5 flex-shrink-0">
-
-					<!-- SEARCH TOGGLE (MOBILE ONLY) -->
+				<div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
 					<button
 						type="button"
 						id="mobile-search-toggle"
-						onclick="toggleMobileSearch()"
-						class="md:hidden flex items-center justify-center w-8.5 h-8.5 rounded-xl bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 hover:bg-cyan-950/30 text-gray-300 hover:text-cyan-400 transition cursor-pointer"
+						onclick="window.toggleMobileSearch && window.toggleMobileSearch()"
+						class="md:hidden yg-btn-icon"
 						aria-label="Cari produk"
 					>
 						<div class="i-lucide-search text-sm"></div>
 					</button>
 
-					<!-- REGIONAL / CURRENCY & LANG SWITCHER (DESKTOP & MOBILE HEADER) -->
 					<div class="relative" id="regional-switcher-container">
 						<button
 							type="button"
 							id="header-regional-btn"
-							onclick="toggleRegionalMenu()"
-							class="flex items-center gap-1.5 h-8.5 sm:h-9 px-2 sm:px-2.5 rounded-xl bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 hover:bg-cyan-950/30 text-gray-300 hover:text-cyan-400 transition group cursor-pointer text-xs font-mono font-bold"
+							onclick="window.toggleRegionalMenu && window.toggleRegionalMenu()"
+							class="yg-btn-icon !w-auto px-2 sm:px-2.5 gap-1.5 text-xs font-mono font-bold"
 							title="Pengaturan Wilayah, Mata Uang & Bahasa"
 							aria-label="Ganti Mata Uang dan Bahasa"
 						>
@@ -192,10 +132,9 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							<span id="header-curr-label" class="text-[11px] sm:text-xs">{serverDefaultCurr}</span>
 						</button>
 
-						<!-- Dropdown Regional Menu -->
 						<div
 							id="header-regional-menu"
-							class="hidden absolute right-0 mt-2 w-64 bg-black/95 border border-cyan-500/40 rounded-2xl p-3 shadow-[0_15px_40px_rgba(0,0,0,0.9)] backdrop-blur-xl z-50 text-left font-mono"
+							class="hidden absolute right-0 mt-2 w-64 yg-panel p-3 text-left font-mono"
 						>
 							<div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2.5 pb-1.5 border-b border-gray-800/80 flex items-center justify-between">
 								<span class="flex items-center gap-1.5">
@@ -205,13 +144,12 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								<span class="text-[9px] text-cyan-400 font-normal">AUTO-SYNC</span>
 							</div>
 
-							<!-- MATA UANG -->
 							<div class="mb-3">
 								<div class="text-[10px] text-gray-400 uppercase tracking-wider mb-1.5">Mata Uang</div>
 								<div class="grid grid-cols-2 gap-1.5">
 									<button
 										type="button"
-										onclick="selectCurrency('IDR')"
+										onclick="window.selectCurrency && window.selectCurrency('IDR')"
 										id="curr-opt-idr"
 										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
 									>
@@ -220,7 +158,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 									</button>
 									<button
 										type="button"
-										onclick="selectCurrency('USD')"
+										onclick="window.selectCurrency && window.selectCurrency('USD')"
 										id="curr-opt-usd"
 										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
 									>
@@ -230,13 +168,12 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								</div>
 							</div>
 
-							<!-- BAHASA -->
 							<div>
 								<div class="text-[10px] text-gray-400 uppercase tracking-wider mb-1.5">Bahasa</div>
 								<div class="grid grid-cols-2 gap-1.5">
 									<button
 										type="button"
-										onclick="selectLanguage('id')"
+										onclick="window.selectLanguage && window.selectLanguage('id')"
 										id="lang-opt-id"
 										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
 									>
@@ -245,7 +182,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 									</button>
 									<button
 										type="button"
-										onclick="selectLanguage('en')"
+										onclick="window.selectLanguage && window.selectLanguage('en')"
 										id="lang-opt-en"
 										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
 									>
@@ -257,25 +194,23 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						</div>
 					</div>
 
-					<!-- Live Chat Admin Button (Mobile & Desktop) -->
 					<button
 						type="button"
 						id="header-chat-btn"
-						onclick="openLiveChatModal()"
-						class="relative flex items-center justify-center w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-xl bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 hover:bg-cyan-950/30 text-gray-300 hover:text-cyan-400 transition group cursor-pointer"
+						onclick="window.openLiveChatModal && window.openLiveChatModal()"
+						class="relative yg-btn-icon"
 						title="Live Chat Admin"
 						aria-label="Buka Live Chat Admin"
 					>
 						<div class="i-lucide-message-square text-sm sm:text-base transition group-hover:scale-105"></div>
-						<!-- Online Status Indicator -->
 						<span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-black animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
 					</button>
 
-					<!-- Cart Button (Desktop only: hidden md:flex) -->
 					<a
 						href="/cart"
-						class="hidden md:flex relative items-center justify-center w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-xl bg-gray-900/80 border border-gray-800 hover:border-cyan-500/50 hover:bg-cyan-950/30 text-gray-300 hover:text-cyan-400 transition group"
+						class="hidden md:flex relative yg-btn-icon"
 						title="Keranjang Belanja"
+						aria-label="Keranjang Belanja"
 					>
 						<div class="i-lucide-shopping-cart text-sm sm:text-base transition group-hover:scale-105"></div>
 						<span
@@ -286,25 +221,23 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						</span>
 					</a>
 
-					<!-- NAV AUTH (DESKTOP ONLY: HIDDEN ON MOBILE TO PREVENT CLUTTER) -->
 					<div id="nav-auth-container" class="relative hidden md:block">
-						<!-- State 1: Guest (Tombol Masuk) -->
 						<button
 							id="nav-login-btn"
-							onclick="openAuthModal('login')"
-							class="flex items-center gap-1.5 bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-white text-black font-black px-3.5 py-1.5 rounded-xl text-xs uppercase tracking-wider transition shadow-[0_0_15px_rgba(34,211,238,0.25)] hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] cursor-pointer"
+							onclick="window.openAuthModal && window.openAuthModal('login')"
+							class="yg-btn-primary"
 							title="Masuk ke Akun"
 						>
 							<div class="i-lucide-user text-xs"></div>
 							<span>Masuk</span>
 						</button>
 
-						<!-- State 2: Logged In (Dropdown Profil Interaktif) -->
 						<div id="nav-user-dropdown" class="hidden relative">
 							<button
 								id="nav-user-btn"
-								onclick="toggleUserMenu()"
-								class="flex items-center gap-2 bg-gray-900 border border-cyan-500/40 hover:border-cyan-400 px-2.5 py-1.5 rounded-xl transition text-gray-200 hover:text-white group"
+								onclick="window.toggleUserMenu && window.toggleUserMenu()"
+								class="flex items-center gap-2 bg-gray-900 border border-cyan-500/40 hover:border-cyan-400 px-2.5 py-1.5 rounded-xl transition text-gray-200 hover:text-white group cursor-pointer"
+								aria-label="Menu Pengguna"
 							>
 								<div class="w-5 h-5 rounded-lg bg-cyan-400 text-black font-black text-[10px] flex items-center justify-center" id="nav-user-initial">
 									U
@@ -315,10 +248,9 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								<div class="i-lucide-chevron-down text-xs text-gray-400 group-hover:text-cyan-400 transition"></div>
 							</button>
 
-							<!-- Dropdown Cyber Card -->
 							<div
 								id="nav-user-menu"
-								class="hidden absolute right-0 mt-2 w-64 bg-black/95 border border-cyan-500/40 rounded-2xl p-2.5 shadow-[0_15px_40px_rgba(0,0,0,0.9)] backdrop-blur-xl z-50 text-left"
+								class="hidden absolute right-0 mt-2 w-64 yg-panel p-2.5 text-left"
 							>
 								<div class="px-3 py-2.5 border-b border-gray-800/80 mb-1.5 bg-gray-900/40 rounded-xl">
 									<div class="text-[9px] text-gray-500 font-mono uppercase tracking-wider">Akun Terhubung</div>
@@ -337,8 +269,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								</a>
 
 								<button
-									onclick="openSetPasswordModal()"
-									class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/20 rounded-xl transition text-left"
+									onclick="window.openSetPasswordModal && window.openSetPasswordModal()"
+									class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/20 rounded-xl transition text-left cursor-pointer"
 								>
 									<div class="i-lucide-key-round text-yellow-400 text-base"></div>
 									<span>Ganti Kata Sandi</span>
@@ -347,8 +279,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								<div class="border-t border-gray-800/80 my-1"></div>
 
 								<button
-									onclick="logoutUser()"
-									class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-red-400 hover:bg-red-950/30 rounded-xl transition text-left"
+									onclick="window.logoutUser && window.logoutUser()"
+									class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-red-400 hover:bg-red-950/30 rounded-xl transition text-left cursor-pointer"
 								>
 									<div class="i-lucide-log-out text-red-400 text-base"></div>
 									<span>Keluar (Logout)</span>
@@ -359,7 +291,6 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 				</div>
 			</div>
 
-			<!-- ROW 2: EXPANDABLE SEARCH BAR (MOBILE ONLY) -->
 			<div
 				id="mobile-search-row"
 				class="md:hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 overflow-hidden"
@@ -379,14 +310,13 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						</div>
 						<button
 							type="button"
-							onclick="toggleMobileSearch()"
+							onclick="window.toggleMobileSearch && window.toggleMobileSearch()"
 							class="absolute right-2 top-1.5 w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition cursor-pointer"
 							aria-label="Tutup pencarian"
 						>
 							<div class="i-lucide-x text-sm"></div>
 						</button>
 					</div>
-					<!-- MOBILE SEARCH DROPDOWN -->
 					<div
 						id="mobile-search-dropdown"
 						class="hidden mt-2 bg-black/95 border border-gray-800 rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.9)] overflow-hidden"
@@ -401,123 +331,67 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 		{
 			shouldShowFooter && (
-				<footer
-					class="bg-black/80 border-t border-gray-800 pt-16 pb-24 md:pb-16 px-4"
-				>
-			<div
-				class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12"
-			>
-				<div class="col-span-1 md:col-span-2">
-					<h2 class="text-white font-black italic mb-4">
-						YASUI GAME
-					</h2>
-					<p
-						class="text-xs text-gray-500 leading-relaxed max-w-sm"
-						data-i18n="footer.desc"
-					>
-						Marketplace game premium paling aman se-Cyber World.
-						Kami menyediakan akun Roblox, MLBB, dan game populer
-						lainnya dengan pengiriman instan.
-					</p>
-				</div>
-				<div>
-					<h3
-						class="text-cyan-400 font-bold text-xs uppercase mb-4 tracking-widest"
-						data-i18n="footer.info"
-					>
-						Informasi
-					</h3>
-					<ul class="space-y-2 text-xs text-gray-400">
-						<li>
-							<a
-								href="/cara-belanja"
-								class="hover:text-white transition"
-								data-i18n="nav.how_to_order">Cara Belanja</a
-							>
-						</li>
-						<li>
-							<a
-								href="/contact"
-								class="hover:text-white transition"
-								data-i18n="nav.contact">Hubungi Kami</a
-							>
-						</li>
-						<li>
-							<a
-								href="/terms"
-								class="hover:text-white transition"
-								data-i18n="footer.terms">Syarat & Ketentuan</a
-							>
-						</li>
-						<li>
-							<a
-								href="/privacy"
-								class="hover:text-white transition"
-								data-i18n="footer.privacy">Kebijakan Privasi</a
-							>
-						</li>
-					</ul>
-				</div>
-				<div>
-					<h3
-						class="text-cyan-400 font-bold text-xs uppercase mb-4 tracking-widest"
-						data-i18n="footer.cs"
-					>
-						Layanan Pelanggan
-					</h3>
-					<ul class="space-y-2 text-xs text-gray-400">
-						<li>
-							<a
-								href="https://wa.me/..."
-								class="hover:text-white transition"
-								data-i18n="footer.contact_wa">Kontak WhatsApp</a
-							>
-						</li>
-						<li>
-							<a
-								href="mailto:support@yasuigame.com"
-								class="hover:text-white transition"
-								data-i18n="footer.email_support"
-								>Email Support</a
-							>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<!-- PREFERENSI REGIONAL (MATA UANG & BAHASA) & COPYRIGHT -->
-			<div class="max-w-7xl mx-auto mt-12 pt-6 border-t border-gray-900 flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
-				<div class="flex items-center gap-3">
-					<span class="text-gray-500 text-[11px]">Pengaturan Regional:</span>
-					<button
-						id="currency-btn"
-						class="flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-cyan-400 px-3 py-1 rounded-lg transition text-gray-300"
-						title="Ganti Mata Uang"
-					>
-						<span id="currency-flag" class="text-cyan-400 font-bold text-xs">$</span>
-						<span id="currency-text" class="font-bold text-xs">USD</span>
-					</button>
+				<footer class="bg-black/80 border-t border-gray-800 pt-16 pb-24 md:pb-16 px-4">
+					<div class="yg-shell grid grid-cols-1 md:grid-cols-4 gap-12">
+						<div class="col-span-1 md:col-span-2">
+							<h2 class="text-white font-black italic mb-4">YASUI GAME</h2>
+							<p class="text-xs text-gray-500 leading-relaxed max-w-sm" data-i18n="footer.desc">
+								Marketplace game premium paling aman se-Cyber World. Kami menyediakan akun Roblox, MLBB, dan game populer lainnya dengan pengiriman instan.
+							</p>
+						</div>
+						<div>
+							<h3 class="text-cyan-400 font-bold text-xs uppercase mb-4 tracking-widest" data-i18n="footer.info">
+								Informasi
+							</h3>
+							<ul class="space-y-2 text-xs text-gray-400">
+								<li><a href="/cara-belanja" class="hover:text-white transition" data-i18n="nav.how_to_order">Cara Belanja</a></li>
+								<li><a href="/contact" class="hover:text-white transition" data-i18n="nav.contact">Hubungi Kami</a></li>
+								<li><a href="/terms" class="hover:text-white transition" data-i18n="footer.terms">Syarat & Ketentuan</a></li>
+								<li><a href="/privacy" class="hover:text-white transition" data-i18n="footer.privacy">Kebijakan Privasi</a></li>
+							</ul>
+						</div>
+						<div>
+							<h3 class="text-cyan-400 font-bold text-xs uppercase mb-4 tracking-widest" data-i18n="footer.cs">
+								Layanan Pelanggan
+							</h3>
+							<ul class="space-y-2 text-xs text-gray-400">
+								<li><a href="https://wa.me/628989685098" target="_blank" rel="noopener noreferrer" class="hover:text-white transition" data-i18n="footer.contact_wa">Kontak WhatsApp</a></li>
+								<li><a href="mailto:support@yasuigame.com" class="hover:text-white transition" data-i18n="footer.email_support">Email Support</a></li>
+							</ul>
+						</div>
+					</div>
 
-					<button
-						id="lang-btn"
-						class="flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-cyan-400 px-3 py-1 rounded-lg transition text-gray-300"
-						title="Ganti Bahasa"
-					>
-						<div class="i-lucide-globe text-cyan-400 text-xs"></div>
-						<span id="lang-text" class="font-bold text-xs">ID</span>
-					</button>
-				</div>
+					<div class="yg-shell mt-12 pt-6 border-t border-gray-900 flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
+						<div class="flex items-center gap-3">
+							<span class="text-gray-500 text-[11px]">Pengaturan Regional:</span>
+							<button
+								id="currency-btn"
+								class="flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-cyan-400 px-3 py-1 rounded-lg transition text-gray-300 cursor-pointer"
+								title="Ganti Mata Uang"
+							>
+								<span id="currency-flag" class="text-cyan-400 font-bold text-xs">$</span>
+								<span id="currency-text" class="font-bold text-xs">USD</span>
+							</button>
 
-				<div class="text-[10px] text-gray-600">
-					&copy; 2026 YASUI-GAME. ALL RIGHTS RESERVED. POWERED BY CYBER-ENGINE.
-				</div>
-			</div>
+							<button
+								id="lang-btn"
+								class="flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-cyan-400 px-3 py-1 rounded-lg transition text-gray-300 cursor-pointer"
+								title="Ganti Bahasa"
+							>
+								<div class="i-lucide-globe text-cyan-400 text-xs"></div>
+								<span id="lang-text" class="font-bold text-xs">ID</span>
+							</button>
+						</div>
+
+						<div class="text-[10px] text-gray-600">
+							&copy; 2026 YASUI-GAME. ALL RIGHTS RESERVED. POWERED BY CYBER-ENGINE.
+						</div>
+					</div>
 				</footer>
 			)
 		}
 
-		<nav
-			class="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gray-800 pt-2 pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] px-3 sm:px-6 md:hidden z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.8)]"
-		>
+		<nav class="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gray-800 pt-2 pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] px-3 sm:px-6 md:hidden z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.8)]" aria-label="Mobile Bottom Navigation">
 			<div class="flex justify-around items-center text-gray-500">
 				<a
 					href="/"
@@ -552,10 +426,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					class="flex flex-col items-center gap-1 text-gray-400 hover:text-cyan-400 transition"
 				>
 					<div class="i-lucide-user text-lg" id="mobile-nav-icon"></div>
-					<span
-						class="text-[9px] font-bold uppercase tracking-wider"
-						id="mobile-nav-label">MASUK</span
-					>
+					<span class="text-[9px] font-bold uppercase tracking-wider" id="mobile-nav-label">MASUK</span>
 				</a>
 			</div>
 		</nav>
@@ -567,37 +438,17 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 			class="hidden md:flex fixed md:bottom-24 right-6 z-50 w-14 h-14 bg-[#5865F2] hover:bg-[#4752c4] text-white rounded-full items-center justify-center shadow-[0_0_20px_rgba(88,101,242,0.5)] transition-all duration-300 hover:scale-110 group"
 			aria-label="Chat on Discord"
 		>
-			<!-- Tooltip -->
-			<div
-				class="absolute right-full mr-3 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-gray-700 pointer-events-none"
-			>
+			<div class="absolute right-full mr-3 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-gray-700 pointer-events-none shadow-lg">
 				Chat on Discord
 			</div>
-			<!-- Official Discord Icon SVG -->
-			<svg
-				width="30"
-				height="30"
-				viewBox="0 0 127.14 96.36"
-				fill="currentColor"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.32-2.73-49-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"
-				></path>
-			</svg>
+			<Icon name="discord" width={28} height={28} />
 		</a>
 
-		<!-- ========================================== -->
-		<!-- GLOBAL CYBER LIVE CHAT MODAL (DUMMY CS)    -->
-		<!-- ========================================== -->
 		<div
 			id="global-livechat-modal"
 			class="fixed inset-0 z-[110] bg-black/85 backdrop-blur-md items-end sm:items-center justify-center p-0 sm:p-4 hidden"
 		>
-			<div
-				class="relative w-full max-w-md bg-black/95 border border-cyan-500/50 rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 shadow-[0_0_50px_rgba(34,211,238,0.25)] flex flex-col h-[85vh] sm:h-[600px] max-h-[85vh] cyber-card"
-			>
-				<!-- Header Chat -->
+			<div class="relative w-full max-w-md bg-black/95 border border-cyan-500/50 rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 shadow-[0_0_50px_rgba(34,211,238,0.25)] flex flex-col h-[85vh] sm:h-[600px] max-h-[85vh] cyber-card">
 				<div class="flex items-center justify-between border-b border-gray-800/80 pb-3 mb-3">
 					<div class="flex items-center gap-3">
 						<div class="relative w-10 h-10 rounded-xl bg-cyan-950/70 border border-cyan-500/50 flex items-center justify-center text-cyan-400">
@@ -607,7 +458,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						<div class="flex flex-col">
 							<div class="flex items-center gap-2">
 								<span class="text-xs sm:text-sm font-black text-white uppercase tracking-tight">Admin Yasui Game</span>
-								<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">OFFICIAL</span>
+								<span class="yg-badge-cyan">OFFICIAL</span>
 							</div>
 							<span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
 								<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online &bull; Membalas &lt; 2 menit
@@ -616,7 +467,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</div>
 					<button
 						type="button"
-						onclick="closeLiveChatModal()"
+						onclick="window.closeLiveChatModal && window.closeLiveChatModal()"
 						class="text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition cursor-pointer"
 						aria-label="Tutup Live Chat"
 					>
@@ -624,11 +475,9 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</button>
 				</div>
 
-				<!-- Area Chat Messages (Scrollable) -->
 				<div id="livechat-messages" class="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-none text-xs">
-					<!-- Pesan Sambutan Admin -->
 					<div class="flex items-start gap-2 max-w-[85%]">
-						<div class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5">
+						<div class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold">
 							Y
 						</div>
 						<div class="bg-gray-900/90 border border-gray-800 rounded-2xl rounded-tl-sm p-3 text-gray-200 shadow-sm leading-relaxed">
@@ -637,7 +486,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</div>
 
 					<div class="flex items-start gap-2 max-w-[85%]">
-						<div class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5">
+						<div class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold">
 							Y
 						</div>
 						<div class="bg-gray-900/90 border border-gray-800 rounded-2xl rounded-tl-sm p-3 text-gray-200 shadow-sm leading-relaxed">
@@ -645,19 +494,18 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						</div>
 					</div>
 
-					<!-- Quick Topic Suggestions -->
 					<div class="pt-2">
 						<div class="text-[9px] font-mono text-gray-500 uppercase tracking-wider mb-1.5">Pertanyaan Populer:</div>
 						<div class="flex flex-wrap gap-1.5">
-							<button type="button" onclick="sendQuickChatMessage('Berapa lama proses pengiriman akun?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
+							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Berapa lama proses pengiriman akun?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
 								<div class="i-lucide-zap w-3 h-3 text-cyan-400"></div>
 								<span>Berapa lama proses kirim?</span>
 							</button>
-							<button type="button" onclick="sendQuickChatMessage('Bagaimana klaim garansi anti hackback?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
+							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Bagaimana klaim garansi anti hackback?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
 								<div class="i-lucide-shield-check w-3 h-3 text-cyan-400"></div>
 								<span>Garansi anti hackback</span>
 							</button>
-							<button type="button" onclick="sendQuickChatMessage('Metode pembayaran apa saja yang tersedia?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
+							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Metode pembayaran apa saja yang tersedia?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
 								<div class="i-lucide-credit-card w-3 h-3 text-cyan-400"></div>
 								<span>Pembayaran QRIS/VA</span>
 							</button>
@@ -665,7 +513,6 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</div>
 				</div>
 
-				<!-- Typing indicator (hidden by default) -->
 				<div id="livechat-typing" class="hidden items-center gap-1.5 py-1.5 text-[10px] text-gray-400 font-mono">
 					<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
 					<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.2s]"></span>
@@ -673,9 +520,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					<span class="ml-1">Admin sedang mengetik...</span>
 				</div>
 
-				<!-- Form Input Pesan -->
 				<div class="pt-3 border-t border-gray-800/80">
-					<form id="livechat-form" onsubmit="handleLiveChatSubmit(event)" class="flex items-center gap-2">
+					<form id="livechat-form" onsubmit="window.handleLiveChatSubmit && window.handleLiveChatSubmit(event)" class="flex items-center gap-2">
 						<input
 							type="text"
 							id="livechat-input"
@@ -685,14 +531,13 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						/>
 						<button
 							type="submit"
-							class="w-9 h-9 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black flex items-center justify-center font-bold shadow-[0_0_15px_rgba(34,211,238,0.3)] transition cursor-pointer flex-shrink-0"
+							class="w-9 h-9 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black flex items-center justify-center font-bold shadow-[0_0_15px_rgba(34,211,238,0.3)] transition cursor-pointer shrink-0"
 							title="Kirim Pesan"
 						>
 							<div class="i-lucide-send text-sm"></div>
 						</button>
 					</form>
 
-					<!-- Shortcut langsung ke WhatsApp Admin -->
 					<div class="mt-2.5 flex items-center justify-between text-[10px] font-mono">
 						<span class="text-gray-500">Butuh respon cepat?</span>
 						<a
@@ -709,27 +554,21 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 			</div>
 		</div>
 
-		<!-- ========================================== -->
-		<!-- GLOBAL CYBER AUTH MODAL (STANDAR INDUSTRI) -->
-		<!-- ========================================== -->
 		<div
 			id="global-auth-modal"
 			class="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md items-center justify-center p-4 hidden"
 		>
-			<div
-				class="relative max-w-md w-full bg-black/95 border border-cyan-500/50 p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.25)] cyber-card"
-			>
-				<!-- Tombol Tutup -->
+			<div class="relative max-w-md w-full bg-black/95 border border-cyan-500/50 p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.25)] cyber-card">
 				<button
-					onclick="closeAuthModal()"
-					class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition"
+					onclick="window.closeAuthModal && window.closeAuthModal()"
+					class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition cursor-pointer"
+					aria-label="Tutup Dialog Autentikasi"
 				>
 					<div class="i-lucide-x text-lg"></div>
 				</button>
 
-				<!-- Terminal Header -->
 				<div class="mb-5">
-					<div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/50 text-cyan-400 text-[10px] font-mono mb-2">
+					<div class="yg-badge-cyan mb-2">
 						<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
 						SISTEM AUTENTIKASI PENGGUNA
 					</div>
@@ -741,11 +580,9 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</p>
 				</div>
 
-				<!-- Alert Error / Sukses -->
 				<div id="auth-modal-alert" class="hidden mb-4 p-3 rounded-lg text-xs font-mono border"></div>
 
-				<!-- FORM LOGIN DENGAN PASSWORD RESMI -->
-				<form id="form-auth-login" onsubmit="handleAuthLogin(event)" class="space-y-4">
+				<form id="form-auth-login" onsubmit="window.handleAuthLogin && window.handleAuthLogin(event)" class="space-y-4">
 					<div>
 						<label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
 							Email Akun <span class="text-red-400">*</span>
@@ -755,7 +592,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							id="auth-login-email"
 							required
 							placeholder="nama@email.com"
-							class="w-full bg-black/90 border border-gray-800 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 font-mono transition"
+							class="yg-input"
 						/>
 					</div>
 
@@ -766,8 +603,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							</label>
 							<button
 								type="button"
-								onclick="openSetPasswordModal()"
-								class="text-[10px] text-cyan-400 hover:underline font-mono"
+								onclick="window.openSetPasswordModal && window.openSetPasswordModal()"
+								class="text-[10px] text-cyan-400 hover:underline font-mono cursor-pointer"
 							>
 								Lupa / Buat Sandi?
 							</button>
@@ -778,12 +615,13 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								id="auth-login-password"
 								required
 								placeholder="••••••••"
-								class="w-full bg-black/90 border border-gray-800 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 font-mono transition pr-10"
+								class="yg-input pr-10"
 							/>
 							<button
 								type="button"
-								onclick="togglePasswordVisibility('auth-login-password', this)"
-								class="absolute right-3 top-2.5 text-gray-500 hover:text-white"
+								onclick="window.togglePasswordVisibility && window.togglePasswordVisibility('auth-login-password', this)"
+								class="absolute right-3 top-2.5 text-gray-500 hover:text-white cursor-pointer"
+								aria-label="Lihat kata sandi"
 							>
 								<div class="i-lucide-eye text-sm"></div>
 							</button>
@@ -793,7 +631,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					<button
 						type="submit"
 						id="btn-submit-login"
-						class="w-full bg-cyan-400 hover:bg-white text-black font-black uppercase py-3 rounded-lg transition shadow-[0_0_20px_rgba(34,211,238,0.2)] text-xs flex items-center justify-center gap-2 mt-2 cursor-pointer"
+						class="w-full yg-btn-primary py-3 text-xs mt-2"
 					>
 						<span>MASUK SEKARANG</span>
 						<div class="i-lucide-arrow-right text-sm"></div>
@@ -806,25 +644,21 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 			</div>
 		</div>
 
-		<!-- ============================================== -->
-		<!-- GLOBAL SET PASSWORD MODAL (PASANG KATA SANDI) -->
-		<!-- ============================================== -->
 		<div
 			id="global-set-password-modal"
 			class="fixed inset-0 z-[110] bg-black/85 backdrop-blur-md items-center justify-center p-4 hidden"
 		>
-			<div
-				class="relative max-w-md w-full bg-black/95 border border-cyan-500/50 p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.25)] cyber-card"
-			>
+			<div class="relative max-w-md w-full bg-black/95 border border-cyan-500/50 p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.25)] cyber-card">
 				<button
-					onclick="closeSetPasswordModal()"
-					class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition"
+					onclick="window.closeSetPasswordModal && window.closeSetPasswordModal()"
+					class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition cursor-pointer"
+					aria-label="Tutup Dialog Sandi"
 				>
 					<div class="i-lucide-x text-lg"></div>
 				</button>
 
 				<div class="mb-5">
-					<div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-yellow-950/60 border border-yellow-800/50 text-yellow-400 text-[10px] font-mono mb-2">
+					<div class="yg-badge-yellow mb-2">
 						<span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
 						PENGATURAN KREDENSIAL
 					</div>
@@ -838,7 +672,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 				<div id="set-pwd-alert" class="hidden mb-4 p-3 rounded-lg text-xs font-mono border"></div>
 
-				<form id="form-set-password" onsubmit="handleSetPassword(event)" class="space-y-4">
+				<form id="form-set-password" onsubmit="window.handleSetPassword && window.handleSetPassword(event)" class="space-y-4">
 					<div>
 						<label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
 							Email Akun <span class="text-red-400">*</span>
@@ -848,7 +682,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							id="set-pwd-email"
 							required
 							placeholder="nama@email.com"
-							class="w-full bg-black/90 border border-gray-800 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 font-mono transition"
+							class="yg-input"
 						/>
 					</div>
 
@@ -862,7 +696,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							required
 							minlength="6"
 							placeholder="Minimal 6 karakter"
-							class="w-full bg-black/90 border border-gray-800 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 font-mono transition"
+							class="yg-input"
 						/>
 					</div>
 
@@ -876,14 +710,14 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							required
 							minlength="6"
 							placeholder="Ketik ulang kata sandi"
-							class="w-full bg-black/90 border border-gray-800 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 font-mono transition"
+							class="yg-input"
 						/>
 					</div>
 
 					<button
 						type="submit"
 						id="btn-submit-pwd"
-						class="w-full bg-cyan-400 hover:bg-white text-black font-black uppercase py-3 rounded-lg transition shadow-[0_0_20px_rgba(34,211,238,0.2)] text-xs flex items-center justify-center gap-2 mt-2"
+						class="w-full yg-btn-primary py-3 text-xs mt-2"
 					>
 						<span>SIMPAN KATA SANDI</span>
 						<div class="i-lucide-shield-check text-sm"></div>
@@ -894,791 +728,13 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 		<FloatingWA />
 
-		<script is:inline define:vars={{ translations, serverDefaultCurr, serverDefaultLang, detectedCountry }}>
-			// --- TRANSLATION DICTIONARY ---
-			const TRANSLATIONS = translations;
-
-			// --- GLOBAL CURRENCY & LANG LOGIC (SERVER-SIDE GEO-IP INTEGRATED) ---
-			const USD_RATE = 16000;
-			
-			// Priority:
-			// 1. localStorage (if user explicitly set previously)
-			// 2. serverDefaultCurr / serverDefaultLang (from Server-Side GeoIP / Cookie)
-			let curr = localStorage.getItem("yasui_currency") || serverDefaultCurr || "IDR";
-			let lang = localStorage.getItem("yasui_lang") || serverDefaultLang || "id";
-
-			// Sync storage on first visit
-			if (!localStorage.getItem("yasui_currency")) {
-				localStorage.setItem("yasui_currency", curr);
-			}
-			if (!localStorage.getItem("yasui_lang")) {
-				localStorage.setItem("yasui_lang", lang);
-			}
-
-			// Footer elements (if rendered)
-			const btn = document.getElementById("currency-btn");
-			const txt = document.getElementById("currency-text");
-			const flag = document.getElementById("currency-flag");
-
-			const langBtn = document.getElementById("lang-btn");
-			const langTxt = document.getElementById("lang-text");
-
-			// Helper functions for selecting Currency & Language
-			window.selectCurrency = function(newCurr) {
-				curr = newCurr;
-				localStorage.setItem("yasui_currency", curr);
-				document.cookie = `yasui_currency=${curr}; path=/; max-age=31536000; SameSite=Lax`;
-				updateGlobalUI();
-				document.dispatchEvent(new Event("yasui-currency-change"));
+		<script is:inline define:vars={{ serverDefaultCurr, serverDefaultLang, detectedCountry }}>
+			window.__YASUI_CONFIG__ = {
+				curr: serverDefaultCurr,
+				lang: serverDefaultLang,
+				country: detectedCountry
 			};
-
-			window.selectLanguage = function(newLang) {
-				lang = newLang;
-				localStorage.setItem("yasui_lang", lang);
-				document.cookie = `yasui_lang=${lang}; path=/; max-age=31536000; SameSite=Lax`;
-				updateGlobalUI();
-				document.dispatchEvent(new Event("yasui-lang-change"));
-			};
-
-			window.toggleRegionalMenu = function() {
-				const menu = document.getElementById("header-regional-menu");
-				if (menu) {
-					menu.classList.toggle("hidden");
-				}
-			};
-
-			// --- MOBILE SEARCH EXPANDABLE ---
-			let mobileSearchOpen = false;
-
-			window.toggleMobileSearch = function() {
-				const row = document.getElementById("mobile-search-row");
-				const header = document.getElementById("main-header");
-				const toggleBtn = document.getElementById("mobile-search-toggle");
-				const mobDropdown = document.getElementById("mobile-search-dropdown");
-				if (!row) return;
-
-				mobileSearchOpen = !mobileSearchOpen;
-
-				if (mobileSearchOpen) {
-					row.classList.remove("max-h-0", "opacity-0");
-					row.classList.add("max-h-16", "opacity-100");
-					header.classList.add("border-cyan-500/20");
-					// Auto-focus the input after animation
-					setTimeout(() => {
-						const input = document.getElementById("mobile-search-input");
-						if (input) input.focus();
-					}, 200);
-					// Swap icon to X
-					if (toggleBtn) {
-						toggleBtn.innerHTML = '<div class="i-lucide-x text-sm"></div>';
-						toggleBtn.classList.add("border-cyan-500/50", "text-cyan-400", "bg-cyan-950/30");
-					}
-				} else {
-					row.classList.remove("max-h-16", "opacity-100");
-					row.classList.add("max-h-0", "opacity-0");
-					header.classList.remove("border-cyan-500/20");
-					// Hide dropdown
-					if (mobDropdown) mobDropdown.classList.add("hidden");
-					// Swap icon back to search
-					if (toggleBtn) {
-						toggleBtn.innerHTML = '<div class="i-lucide-search text-sm"></div>';
-						toggleBtn.classList.remove("border-cyan-500/50", "text-cyan-400", "bg-cyan-950/30");
-					}
-				}
-			};
-
-			// Expand search row when dropdown has results, collapse back when hidden
-			window.expandMobileSearchRow = function() {
-				const row = document.getElementById("mobile-search-row");
-				if (row && mobileSearchOpen) {
-					row.classList.remove("max-h-16", "overflow-hidden");
-					row.classList.add("max-h-96");
-				}
-			};
-
-			window.collapseMobileSearchRow = function() {
-				const row = document.getElementById("mobile-search-row");
-				if (row && mobileSearchOpen) {
-					row.classList.add("max-h-16", "overflow-hidden");
-					row.classList.remove("max-h-96");
-				}
-			};
-
-			// Close mobile search on scroll
-			let lastScrollY = 0;
-			window.addEventListener("scroll", function() {
-				if (mobileSearchOpen && Math.abs(window.scrollY - lastScrollY) > 60) {
-					toggleMobileSearch();
-				}
-				lastScrollY = window.scrollY;
-			}, { passive: true });
-
-			// --- CATEGORY AUTOCOMPLETE SEARCH ---
-			function initCategorySearch(inputId, dropdownId, resultsId) {
-				const input = document.getElementById(inputId);
-				const dropdown = document.getElementById(dropdownId);
-				const results = document.getElementById(resultsId);
-				if (!input || !dropdown || !results) return;
-
-				const isMobileSearch = inputId === "mobile-search-input";
-				let debounceTimer = null;
-				let activeIndex = -1;
-				let searchVersion = 0;
-				const escapeSearchText = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
-
-				function hideDropdown() {
-					dropdown.classList.add("hidden");
-					activeIndex = -1;
-					if (isMobileSearch && window.collapseMobileSearchRow) {
-						window.collapseMobileSearchRow();
-					}
-				}
-
-				function showDropdown() {
-					dropdown.classList.remove("hidden");
-					if (isMobileSearch && window.expandMobileSearchRow) {
-						window.expandMobileSearchRow();
-					}
-				}
-
-				function renderResults(categories, query) {
-					if (!categories || categories.length === 0) {
-						results.innerHTML = `
-							<div class="px-4 py-6 text-center">
-								<div class="i-lucide-search-x text-2xl text-gray-600 mx-auto mb-2"></div>
-								<p class="text-xs text-gray-500 font-mono">Game tidak ditemukan</p>
-								<p class="text-[10px] text-gray-600 mt-1">Coba kata kunci lain</p>
-							</div>`;
-						return;
-					}
-
-					results.innerHTML = categories.map((cat, i) => `
-						<a
-							href="/category/${encodeURIComponent(cat.slug)}"
-							class="search-result-item flex items-center gap-3 px-4 py-3 hover:bg-cyan-950/30 border-b border-gray-800/50 last:border-0 transition group cursor-pointer ${i === activeIndex ? 'bg-cyan-950/30' : ''}"
-							data-index="${i}"
-						>
-							<div class="w-8 h-8 rounded-lg bg-gray-900 border border-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
-								${cat.image
-									? `<img src="/img-proxy?src=${encodeURIComponent(cat.image)}" alt="${escapeSearchText(cat.name)}" class="w-full h-full object-cover" />`
-									: `<div class="i-lucide-gamepad-2 text-sm text-gray-600"></div>`
-								}
-							</div>
-							<div class="flex-1 min-w-0">
-								<div class="text-xs font-bold text-white group-hover:text-cyan-400 transition truncate">${escapeSearchText(cat.name)}</div>
-								<div class="text-[10px] text-gray-500 font-mono">${escapeSearchText(cat.label)}</div>
-							</div>
-							<div class="i-lucide-chevron-right text-xs text-gray-600 group-hover:text-cyan-400 transition flex-shrink-0"></div>
-						</a>
-					`).join("");
-				}
-
-				async function searchCategories(query) {
-					const version = ++searchVersion;
-					activeIndex = -1;
-					if (!query || query.length < 2) {
-						hideDropdown();
-						return;
-					}
-
-					// Show loading state
-					results.innerHTML = `
-						<div class="px-4 py-4 text-center">
-							<div class="inline-block w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
-							<p class="text-[10px] text-gray-500 mt-2 font-mono">Mencari game...</p>
-						</div>`;
-					showDropdown();
-
-					try {
-						const res = await fetch(`/api/search-categories?q=${encodeURIComponent(query)}`);
-						if (!res.ok) throw new Error("Search failed");
-						const data = await res.json();
-						if (version !== searchVersion || input.value.trim() !== query) return;
-						renderResults(data.categories || [], query);
-					} catch (e) {
-						if (version !== searchVersion || input.value.trim() !== query) return;
-						results.innerHTML = `
-							<div class="px-4 py-4 text-center">
-								<p class="text-xs text-red-400 font-mono">Gagal memuat hasil</p>
-							</div>`;
-					}
-				}
-
-				input.addEventListener("input", function() {
-					clearTimeout(debounceTimer);
-					searchVersion++;
-					results.innerHTML = "";
-					hideDropdown();
-					const q = this.value.trim();
-					debounceTimer = setTimeout(() => searchCategories(q), 250);
-				});
-
-				input.addEventListener("keydown", function(e) {
-					const items = results.querySelectorAll(".search-result-item");
-					if (e.key === "ArrowDown") {
-						e.preventDefault();
-						activeIndex = Math.min(activeIndex + 1, items.length - 1);
-						items.forEach((el, i) => el.classList.toggle("bg-cyan-950/30", i === activeIndex));
-					} else if (e.key === "ArrowUp") {
-						e.preventDefault();
-						activeIndex = Math.max(activeIndex - 1, 0);
-						items.forEach((el, i) => el.classList.toggle("bg-cyan-950/30", i === activeIndex));
-					} else if (e.key === "Enter") {
-						e.preventDefault();
-						if (activeIndex >= 0 && items[activeIndex]) {
-							window.location.href = items[activeIndex].href;
-						} else if (items.length > 0) {
-							window.location.href = items[0].href;
-						}
-					} else if (e.key === "Escape") {
-						hideDropdown();
-						input.blur();
-					}
-				});
-
-				input.addEventListener("focus", function() {
-					if (this.value.trim().length >= 2) {
-						searchCategories(this.value.trim());
-					}
-				});
-
-				// Close on click outside
-				document.addEventListener("click", function(e) {
-					if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-						hideDropdown();
-					}
-				});
-			}
-
-			// Init both desktop and mobile search
-			initCategorySearch("desktop-search-input", "desktop-search-dropdown", "desktop-search-results");
-			initCategorySearch("mobile-search-input", "mobile-search-dropdown", "mobile-search-results");
-
-			document.addEventListener("click", function(e) {
-				const container = document.getElementById("regional-switcher-container");
-				const menu = document.getElementById("header-regional-menu");
-				if (container && menu && !container.contains(e.target)) {
-					menu.classList.add("hidden");
-				}
-			});
-
-			function formatRupiah(n) {
-				return new Intl.NumberFormat("id-ID", {
-					style: "currency",
-					currency: "IDR",
-					minimumFractionDigits: 0,
-				}).format(n);
-			}
-			function formatUSD(n) {
-				return new Intl.NumberFormat("en-US", {
-					style: "currency",
-					currency: "USD",
-				}).format(n);
-			}
-
-			function parsePrice(priceStr) {
-				if (!priceStr) return 0;
-				let str = String(priceStr).trim();
-				if (/^\d+$/.test(str)) return parseInt(str);
-				if (str.match(/[,.]00$/)) {
-					str = str.substring(0, str.length - 3);
-				}
-				const clean = str.replace(/\D/g, "");
-				return parseInt(clean) || 0;
-			}
-
-			function updateGlobalUI() {
-				const currentCurr = curr || "IDR";
-				const currentLang = lang || "id";
-
-				// Update header label
-				const headerCurrLabel = document.getElementById("header-curr-label");
-				if (headerCurrLabel) {
-					headerCurrLabel.innerText = currentCurr;
-				}
-
-				// Update active states in header regional dropdown
-				const optIdr = document.getElementById("curr-opt-idr");
-				const optUsd = document.getElementById("curr-opt-usd");
-				if (optIdr && optUsd) {
-					if (currentCurr === "IDR") {
-						optIdr.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-cyan-400 bg-cyan-950/40 text-cyan-400 font-bold text-xs transition cursor-pointer shadow-[0_0_10px_rgba(34,211,238,0.2)]";
-						optUsd.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-gray-800 bg-black/40 text-gray-400 hover:text-white font-bold text-xs transition cursor-pointer";
-					} else {
-						optUsd.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-cyan-400 bg-cyan-950/40 text-cyan-400 font-bold text-xs transition cursor-pointer shadow-[0_0_10px_rgba(34,211,238,0.2)]";
-						optIdr.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-gray-800 bg-black/40 text-gray-400 hover:text-white font-bold text-xs transition cursor-pointer";
-					}
-				}
-
-				const optLangId = document.getElementById("lang-opt-id");
-				const optLangEn = document.getElementById("lang-opt-en");
-				if (optLangId && optLangEn) {
-					if (currentLang === "id") {
-						optLangId.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-cyan-400 bg-cyan-950/40 text-cyan-400 font-bold text-xs transition cursor-pointer shadow-[0_0_10px_rgba(34,211,238,0.2)]";
-						optLangEn.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-gray-800 bg-black/40 text-gray-400 hover:text-white font-bold text-xs transition cursor-pointer";
-					} else {
-						optLangEn.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-cyan-400 bg-cyan-950/40 text-cyan-400 font-bold text-xs transition cursor-pointer shadow-[0_0_10px_rgba(34,211,238,0.2)]";
-						optLangId.className = "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border border-gray-800 bg-black/40 text-gray-400 hover:text-white font-bold text-xs transition cursor-pointer";
-					}
-				}
-
-				// Currency in footer (if rendered)
-				if (txt && flag) {
-					txt.innerText = currentCurr;
-					flag.innerText = currentCurr === "USD" ? "$" : "Rp";
-				}
-				document.querySelectorAll(".price-tag").forEach((tag) => {
-					let raw = tag.getAttribute("data-price-idr");
-					if (!raw) {
-						raw = tag.innerText;
-					}
-
-					let numericRaw = parsePrice(raw);
-
-					tag.setAttribute("data-price-idr", numericRaw);
-					tag.innerText =
-						currentCurr === "USD"
-							? formatUSD(numericRaw / USD_RATE)
-							: formatRupiah(numericRaw);
-				});
-
-				// Language in footer (if rendered)
-				if (langTxt) {
-					langTxt.innerText = currentLang.toUpperCase();
-				}
-
-				const dict = TRANSLATIONS[currentLang] || TRANSLATIONS["id"];
-				document.querySelectorAll("[data-i18n]").forEach((el) => {
-					const key = el.getAttribute("data-i18n");
-					if (dict[key]) {
-						if (
-							el.tagName === "INPUT" &&
-							el.hasAttribute("placeholder")
-						) {
-							el.setAttribute("placeholder", dict[key]);
-						} else {
-							el.innerHTML = dict[key];
-						}
-					}
-				});
-			}
-
-			// Run immediately on page load
-			updateGlobalUI();
-
-			// Fallback click listeners on footer buttons
-			btn?.addEventListener("click", () => {
-				selectCurrency((curr || "IDR") === "IDR" ? "USD" : "IDR");
-			});
-
-			langBtn?.addEventListener("click", () => {
-				selectLanguage((lang || "id") === "id" ? "en" : "id");
-			});
-
-			function updateGlobalCartBadge() {
-				const cart = JSON.parse(
-					localStorage.getItem("yasui_cart") || "[]",
-				);
-				const badge = document.getElementById("global-cart-badge");
-				const mobileBadge = document.getElementById("mobile-cart-badge");
-				if (badge) {
-					badge.innerText = cart.length;
-					badge.classList.toggle("hidden", cart.length === 0);
-				}
-				if (mobileBadge) {
-					mobileBadge.innerText = cart.length;
-					mobileBadge.classList.toggle("hidden", cart.length === 0);
-				}
-			}
-
-			updateGlobalCartBadge();
-			window.addEventListener("storage", updateGlobalCartBadge);
-
-			// ==========================================
-			// --- GLOBAL AUTH & SESSION LOGIC (30 DAYS) ---
-			// ==========================================
-			window.getSession = function() {
-				try {
-					const raw = localStorage.getItem("yasui_session");
-					if (raw) {
-						const session = JSON.parse(raw);
-						// Cek kadaluwarsa (30 hari)
-						if (!session.expiresAt || Date.now() <= session.expiresAt) {
-							return session;
-						}
-						console.log("Sesi 30 hari telah berakhir.");
-						localStorage.removeItem("yasui_session");
-					}
-					// Jika ada email pembeli tersimpan, otomatis buatkan sesi pembeli 30 hari
-					const savedEmail = localStorage.getItem("yasui_buyer_email");
-					if (savedEmail) {
-						const autoSession = {
-							email: savedEmail,
-							name: savedEmail.split("@")[0],
-							isGuestBuyer: true,
-							expiresAt: Date.now() + (30 * 24 * 60 * 60 * 1000)
-						};
-						localStorage.setItem("yasui_session", JSON.stringify(autoSession));
-						return autoSession;
-					}
-					return null;
-				} catch {
-					return null;
-				}
-			};
-
-			window.updateNavAuthUI = function() {
-				const session = window.getSession();
-
-				const loginBtn = document.getElementById("nav-login-btn");
-				const userDropdown = document.getElementById("nav-user-dropdown");
-				const userName = document.getElementById("nav-user-name");
-				const userInitial = document.getElementById("nav-user-initial");
-				const menuEmail = document.getElementById("nav-menu-email");
-				const mobileLabel = document.getElementById("mobile-nav-label");
-
-				const lang = (typeof currentLang !== "undefined" ? currentLang : localStorage.getItem("yasui_language")) || "id";
-
-				// Jika ada sesi aktif atau tersimpan email pembeli
-				if (session && session.email) {
-					const currentEmail = session.email;
-					const displayName = session.name || currentEmail.split("@")[0];
-
-					if (loginBtn) {
-						loginBtn.style.setProperty("display", "none", "important");
-						loginBtn.classList.add("hidden");
-						loginBtn.classList.remove("flex");
-					}
-					if (userDropdown) {
-						userDropdown.style.setProperty("display", "block", "important");
-						userDropdown.classList.remove("hidden");
-						userDropdown.classList.add("block");
-					}
-					if (userName) userName.innerText = displayName;
-					if (userInitial) userInitial.innerText = displayName.charAt(0).toUpperCase();
-					if (menuEmail) menuEmail.innerText = currentEmail;
-					if (mobileLabel) mobileLabel.innerText = lang === "en" ? "ACCOUNT" : "AKUN";
-				} else {
-					if (loginBtn) {
-						loginBtn.style.setProperty("display", "flex", "important");
-						loginBtn.classList.remove("hidden");
-						loginBtn.classList.add("flex");
-					}
-					if (userDropdown) {
-						userDropdown.style.setProperty("display", "none", "important");
-						userDropdown.classList.add("hidden");
-						userDropdown.classList.remove("block");
-					}
-					if (mobileLabel) mobileLabel.innerText = lang === "en" ? "LOGIN" : "MASUK";
-				}
-			};
-
-			window.openAuthModal = function() {
-				const modal = document.getElementById("global-auth-modal");
-				if (!modal) return;
-				modal.classList.remove("hidden");
-				modal.classList.add("flex");
-
-				// Pre-fill email jika ada
-				const savedEmail = localStorage.getItem("yasui_buyer_email") || "";
-				const loginEmailInput = document.getElementById("auth-login-email");
-				if (loginEmailInput && savedEmail && !loginEmailInput.value) loginEmailInput.value = savedEmail;
-			};
-
-			window.closeAuthModal = function() {
-				const modal = document.getElementById("global-auth-modal");
-				if (modal) {
-					modal.classList.add("hidden");
-					modal.classList.remove("flex");
-				}
-				const alert = document.getElementById("auth-modal-alert");
-				if (alert) alert.classList.add("hidden");
-			};
-
-			// ==========================================
-			// --- GLOBAL CYBER LIVE CHAT MODAL LOGIC ---
-			// ==========================================
-			window.openLiveChatModal = function() {
-				const modal = document.getElementById("global-livechat-modal");
-				if (modal) {
-					modal.classList.remove("hidden");
-					modal.classList.add("flex");
-					setTimeout(() => {
-						document.getElementById("livechat-input")?.focus();
-					}, 100);
-				}
-			};
-
-			window.closeLiveChatModal = function() {
-				const modal = document.getElementById("global-livechat-modal");
-				if (modal) {
-					modal.classList.add("hidden");
-					modal.classList.remove("flex");
-				}
-			};
-
-			window.sendQuickChatMessage = function(text) {
-				const input = document.getElementById("livechat-input");
-				if (input) {
-					input.value = text;
-					const form = document.getElementById("livechat-form");
-					if (form) form.dispatchEvent(new Event("submit"));
-				}
-			};
-
-			window.handleLiveChatSubmit = function(e) {
-				e.preventDefault();
-				const input = document.getElementById("livechat-input");
-				const container = document.getElementById("livechat-messages");
-				const typing = document.getElementById("livechat-typing");
-				if (!input || !container) return;
-
-				const text = input.value.trim();
-				if (!text) return;
-				input.value = "";
-
-				// Append user message
-				const userBubble = document.createElement("div");
-				userBubble.className = "flex justify-end";
-				userBubble.innerHTML = `
-					<div class="bg-cyan-950/80 border border-cyan-500/50 rounded-2xl rounded-tr-sm p-3 text-cyan-200 shadow-sm leading-relaxed max-w-[85%] text-left">
-						${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
-					</div>
-				`;
-				container.appendChild(userBubble);
-				container.scrollTop = container.scrollHeight;
-
-				// Show typing indicator
-				if (typing) typing.classList.remove("hidden");
-				container.scrollTop = container.scrollHeight;
-
-				// Automated helpful reply
-				setTimeout(() => {
-					if (typing) typing.classList.add("hidden");
-
-					let reply = "Pesan Anda telah diteruskan ke Admin Yasui Game. Kami akan segera membalasnya di sini. Untuk proses transaksi atau kirim bukti bayar, Anda juga bisa langsung chat ke WhatsApp kami.";
-					const lower = text.toLowerCase();
-					if (lower.includes("lama") || lower.includes("proses") || lower.includes("kirim")) {
-						reply = "Proses pengiriman akun rata-rata memakan waktu 1-5 menit setelah pembayaran berhasil diverifikasi. Akun langsung aktif dan bergaransi!";
-					} else if (lower.includes("garansi") || lower.includes("hackback") || lower.includes("aman")) {
-						reply = "Semua akun di Yasui Game dilindungi Garansi Anti-Hackback 100%. Jika ada kendala, admin siap mengganti akun baru atau refund penuh sesuai ketentuan!";
-					} else if (lower.includes("qris") || lower.includes("bayar") || lower.includes("dana") || lower.includes("gopay")) {
-						reply = "Kami menerima pembayaran otomatis via QRIS (BCA, Mandiri, BRI, Dana, OVO, GoPay, ShopeePay) dan Virtual Account dengan konfirmasi instan!";
-					}
-
-					const adminBubble = document.createElement("div");
-					adminBubble.className = "flex items-start gap-2 max-w-[85%]";
-					adminBubble.innerHTML = `
-						<div class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5">
-							Y
-						</div>
-						<div class="bg-gray-900/90 border border-gray-800 rounded-2xl rounded-tl-sm p-3 text-gray-200 shadow-sm leading-relaxed">
-							${reply}
-						</div>
-					`;
-					container.appendChild(adminBubble);
-					container.scrollTop = container.scrollHeight;
-				}, 800);
-			};
-
-			window.switchAuthTab = function() {};
-
-			window.toggleUserMenu = function() {
-				const menu = document.getElementById("nav-user-menu");
-				if (menu) {
-					menu.classList.toggle("hidden");
-				}
-			};
-
-			// Tutup user dropdown saat klik di luar
-			document.addEventListener("click", function(e) {
-				const container = document.getElementById("nav-user-dropdown");
-				const menu = document.getElementById("nav-user-menu");
-				if (container && menu && !container.contains(e.target)) {
-					menu.classList.add("hidden");
-				}
-			});
-
-			window.togglePasswordVisibility = function(inputId, btn) {
-				const input = document.getElementById(inputId);
-				if (!input) return;
-				const isPwd = input.type === "password";
-				input.type = isPwd ? "text" : "password";
-				btn.innerHTML = isPwd
-					? '<div class="i-lucide-eye-off text-sm"></div>'
-					: '<div class="i-lucide-eye text-sm"></div>';
-			};
-
-			window.handleAuthLogin = async function(e) {
-				e.preventDefault();
-				const email = document.getElementById("auth-login-email")?.value.trim();
-				const password = document.getElementById("auth-login-password")?.value;
-				const btn = document.getElementById("btn-submit-login");
-				const alert = document.getElementById("auth-modal-alert");
-
-				if (!email || !password) return;
-
-				btn.disabled = true;
-				btn.innerText = "MEMERIKSA KREDENSIAL...";
-				alert.classList.add("hidden");
-
-				try {
-					const res = await fetch("/api/auth/login", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ email, password })
-					});
-					const data = await res.json();
-
-					if (!res.ok || !data.success) {
-						throw new Error(data.error || "Email atau kata sandi tidak cocok.");
-					}
-
-					// Simpan sesi 30 hari di localStorage dengan Token HMAC
-					localStorage.setItem("yasui_session", JSON.stringify({
-						...(data.user || {}),
-						email: email,
-						token: data.session?.token,
-						expiresAt: data.session?.expiresAt || (Date.now() + 30 * 24 * 60 * 60 * 1000)
-					}));
-					localStorage.setItem("yasui_buyer_email", email);
-
-					alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-green-950/60 border border-green-500/50 text-green-400 block";
-					alert.innerText = "Login berhasil! Memuat dashboard...";
-
-					window.updateNavAuthUI();
-					document.dispatchEvent(new Event("yasui-auth-changed"));
-
-					setTimeout(() => {
-						window.closeAuthModal();
-						// Jika sedang di halaman orders, reload pesanan, jika di halaman lain, arahkan ke orders
-						if (window.location.pathname.includes("/orders")) {
-							window.location.reload();
-						} else {
-							window.location.href = "/orders";
-						}
-					}, 800);
-
-				} catch (err) {
-					alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-red-950/60 border border-red-500/50 text-red-400 block";
-					alert.innerText = err.message || "Gagal masuk. Silakan coba lagi.";
-					btn.disabled = false;
-					btn.innerHTML = '<span>MASUK SEKARANG</span><div class="i-lucide-arrow-right text-sm"></div>';
-				}
-			};
-
-			window.openSetPasswordModal = function() {
-				window.closeAuthModal();
-				const modal = document.getElementById("global-set-password-modal");
-				if (!modal) return;
-				modal.classList.remove("hidden");
-				modal.classList.add("flex");
-
-				const session = window.getSession();
-				const savedEmail = session?.email || localStorage.getItem("yasui_buyer_email") || "";
-				const emailInput = document.getElementById("set-pwd-email");
-				if (emailInput && savedEmail) emailInput.value = savedEmail;
-			};
-
-			window.closeSetPasswordModal = function() {
-				const modal = document.getElementById("global-set-password-modal");
-				if (modal) {
-					modal.classList.add("hidden");
-					modal.classList.remove("flex");
-				}
-				const alert = document.getElementById("set-pwd-alert");
-				if (alert) alert.classList.add("hidden");
-			};
-
-			window.handleSetPassword = async function(e) {
-				e.preventDefault();
-				const email = document.getElementById("set-pwd-email")?.value.trim();
-				const newPwd = document.getElementById("set-pwd-new")?.value;
-				const confirmPwd = document.getElementById("set-pwd-confirm")?.value;
-				const btn = document.getElementById("btn-submit-pwd");
-				const alert = document.getElementById("set-pwd-alert");
-
-				if (newPwd !== confirmPwd) {
-					alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-red-950/60 border border-red-500/50 text-red-400 block";
-					alert.innerText = "Konfirmasi kata sandi tidak cocok.";
-					return;
-				}
-
-				btn.disabled = true;
-				btn.innerText = "MENYIMPAN KATA SANDI...";
-
-				try {
-					const res = await fetch("/api/auth/set-password", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ email, password: newPwd })
-					});
-					const data = await res.json();
-
-					if (!res.ok || !data.success) {
-						throw new Error(data.error || "Gagal menyimpan kata sandi.");
-					}
-
-					if (data.session?.token) {
-						localStorage.setItem("yasui_session", JSON.stringify({
-							...(data.user || {}),
-							email: email,
-							token: data.session.token,
-							expiresAt: data.session.expiresAt || (Date.now() + 30 * 24 * 60 * 60 * 1000)
-						}));
-						localStorage.setItem("yasui_buyer_email", email);
-						window.updateNavAuthUI();
-						document.dispatchEvent(new Event("yasui-auth-changed"));
-					}
-
-					alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-green-950/60 border border-green-500/50 text-green-400 block";
-					alert.innerText = "Kata sandi Anda berhasil disimpan! Sesi Anda kini aman.";
-
-					setTimeout(() => {
-						window.closeSetPasswordModal();
-						btn.disabled = false;
-						btn.innerHTML = '<span>SIMPAN KATA SANDI</span><div class="i-lucide-shield-check text-sm"></div>';
-						if (window.location.pathname.includes("/orders")) {
-							window.location.reload();
-						}
-					}, 1200);
-
-				} catch (err) {
-					alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-red-950/60 border border-red-500/50 text-red-400 block";
-					alert.innerText = err.message || "Gagal memperbarui kata sandi.";
-					btn.disabled = false;
-					btn.innerHTML = '<span>SIMPAN KATA SANDI</span><div class="i-lucide-shield-check text-sm"></div>';
-				}
-			};
-
-			window.logoutUser = function() {
-				localStorage.removeItem("yasui_session");
-				localStorage.removeItem("yasui_buyer_email");
-				window.updateNavAuthUI();
-				document.dispatchEvent(new Event("yasui-auth-changed"));
-
-				// Jika sedang di halaman orders, bersihkan dashboard
-				if (window.location.pathname.includes("/orders")) {
-					window.location.reload();
-				}
-			};
-
-			// Jalankan inisialisasi status navigasi saat dokumen siap
-			window.updateNavAuthUI();
-			window.addEventListener("storage", window.updateNavAuthUI);
-			document.addEventListener("yasui-auth-changed", window.updateNavAuthUI);
-
-			// Intersep klik pada tombol Masuk di bilah bawah mobile jika belum login
-			const mobileAuthBtn = document.getElementById("mobile-nav-auth");
-			if (mobileAuthBtn) {
-				mobileAuthBtn.addEventListener("click", function(e) {
-					const session = window.getSession();
-					if (!session || !session.email) {
-						e.preventDefault();
-						window.openAuthModal('login');
-					}
-				});
-			}
 		</script>
+		<script src="../scripts/app.ts"></script>
 	</body>
 </html>

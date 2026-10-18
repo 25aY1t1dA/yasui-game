@@ -7,8 +7,7 @@ import Layout from "../layouts/Layout.astro";
     description="Lacak riwayat transaksi, status pembayaran, dan detail akun game yang telah Anda beli di Yasui Game."
 >
     <main class="max-w-5xl mx-auto px-4 pt-24 pb-32">
-        <!-- HEADER DASHBOARD -->
-        <div class="mb-8">
+        <header class="mb-8">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
                 <div>
                     <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-cyan-950/50 border border-cyan-800/50 text-cyan-400 text-xs font-mono mb-2">
@@ -23,7 +22,6 @@ import Layout from "../layouts/Layout.astro";
                     </p>
                 </div>
 
-                <!-- USER BADGE / LOGOUT (HIDDEN JIKA BELUM LOGIN) -->
                 <div id="user-profile-badge" class="hidden items-center gap-3 bg-gray-900/60 border border-gray-800 p-3 rounded-xl">
                     <div class="w-10 h-10 rounded-full bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-sm" id="user-avatar">
                         U
@@ -41,12 +39,9 @@ import Layout from "../layouts/Layout.astro";
                     </button>
                 </div>
             </div>
-        </div>
+        </header>
 
-        <!-- AUTH GUARD: JIKA BELUM LOGIN (LOGIN WAJIB KATA SANDI) -->
-        <div id="auth-box" class="bg-gradient-to-b from-gray-900/80 to-black border border-gray-800 rounded-2xl p-6 md:p-8 mb-8 shadow-2xl relative overflow-hidden">
-            <div class="absolute -right-12 -top-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            
+        <div id="auth-box" class="bg-gradient-to-b from-gray-900/80 to-black border border-gray-800 rounded-2xl p-6 md:p-8 mb-8 shadow-2xl relative overflow-hidden yg-glow-ambient">
             <div class="max-w-md mx-auto text-center py-2">
                 <div class="w-12 h-12 bg-cyan-950/60 border border-cyan-500/40 rounded-2xl flex items-center justify-center text-cyan-400 text-xl mx-auto mb-3 shadow-[0_0_25px_rgba(34,211,238,0.25)]">
                     <div class="i-lucide-lock"></div>
@@ -58,10 +53,8 @@ import Layout from "../layouts/Layout.astro";
                     Untuk melindungi data akun game dan kredensial pesanan Anda, silakan masuk menggunakan email dan kata sandi Anda.
                 </p>
 
-                <!-- Alert Error Login -->
                 <div id="orders-auth-alert" class="hidden mb-4 p-3 rounded-xl text-xs font-mono border text-left"></div>
 
-                <!-- FORM LOGIN LANGSUNG DI HALAMAN ORDERS -->
                 <form onsubmit="handleOrdersPageLogin(event)" class="space-y-4 mb-5 text-left">
                     <div>
                         <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
@@ -123,9 +116,7 @@ import Layout from "../layouts/Layout.astro";
             </div>
         </div>
 
-        <!-- DASHBOARD CONTENT (HIDDEN UNTIL LOADED) -->
-        <div id="dashboard-content" class="hidden">
-            <!-- STATUS FILTER TABS -->
+        <section id="dashboard-content" class="hidden">
             <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-gray-800/80">
                 <button onclick="filterStatus('all')" id="tab-all" class="filter-tab active-filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1.5 whitespace-nowrap">
                     <span>Semua Pesanan</span>
@@ -148,10 +139,8 @@ import Layout from "../layouts/Layout.astro";
                 </button>
             </div>
 
-            <!-- ORDERS LIST CONTAINER -->
             <div id="orders-list" class="space-y-4"></div>
 
-            <!-- EMPTY FILTER STATE -->
             <div id="orders-empty-state" class="hidden text-center py-16 bg-gray-900/20 border border-dashed border-gray-800 rounded-2xl">
                 <div class="i-lucide-inbox text-5xl text-gray-700 mx-auto mb-3"></div>
                 <h3 class="text-base font-bold text-gray-400 uppercase">Tidak Ada Pesanan</h3>
@@ -159,16 +148,14 @@ import Layout from "../layouts/Layout.astro";
                     Tidak ada pesanan yang sesuai dengan filter ini.
                 </p>
             </div>
-        </div>
+        </section>
 
-        <!-- LOADING STATE -->
         <div id="loading-state" class="hidden text-center py-16">
             <div class="inline-block w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4"></div>
             <p class="text-sm font-mono text-gray-400">Memuat data pesanan Anda dari server...</p>
         </div>
     </main>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast" class="fixed bottom-24 md:bottom-8 right-6 z-[100] bg-gray-900 border border-cyan-500/50 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
         <div class="i-lucide-check-circle text-cyan-400 text-base"></div>
         <span id="toast-msg">Kredensial berhasil disalin!</span>
@@ -416,7 +403,6 @@ import Layout from "../layouts/Layout.astro";
 
                 return `
                     <div class="bg-gray-900/40 border border-gray-800 hover:border-gray-700 rounded-2xl p-4 md:p-6 transition-all duration-300">
-                        <!-- HEADER ORDER -->
                         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-800/80 pb-4 mb-4">
                             <div class="flex items-center gap-3">
                                 <span class="text-sm md:text-base font-black text-cyan-400 font-mono tracking-tight">#${order.number}</span>
@@ -427,18 +413,15 @@ import Layout from "../layouts/Layout.astro";
                             </div>
                         </div>
 
-                        <!-- DAFTAR ITEM -->
                         <div class="space-y-1 mb-4">
                             ${itemsHtml}
                         </div>
 
-                        <!-- TOTAL & METODE -->
                         <div class="flex items-center justify-between bg-black/40 border border-gray-800/60 rounded-xl p-3 mb-4 text-xs font-mono">
                             <span class="text-gray-400">Total Tagihan (${order.paymentMethodTitle})</span>
                             <span class="text-sm font-bold text-cyan-400">${formatIDR(order.total)}</span>
                         </div>
 
-                        <!-- KREDENSIAL / CATATAN AKUN (BILA STATUS COMPLETED/PROCESSING) -->
                         ${(isCompleted || isProcessing) && order.customerNote ? `
                             <div class="bg-cyan-950/20 border border-cyan-800/40 rounded-xl p-3.5 mb-4 font-mono text-xs">
                                 <div class="flex items-center justify-between mb-2">
@@ -451,7 +434,6 @@ import Layout from "../layouts/Layout.astro";
                             </div>
                         ` : ''}
 
-                        <!-- TOMBOL AKSI -->
                         <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-gray-800/40">
                             ${isPending && !order.isExpired ? `
                                 <a href="${order.paymentUrl}" class="bg-cyan-400 hover:bg-white text-black font-black uppercase text-xs px-4 py-2.5 rounded-lg transition shadow-[0_0_15px_rgba(34,211,238,0.3)] flex items-center gap-1.5">
@@ -631,11 +613,9 @@ import Layout from "../layouts/Layout.astro";
         document.addEventListener("yasui-auth-changed", checkAndLoadAuth);
     </script>
 
-    <!-- ==================== MODAL: SET ACCOUNT HIVE ID ==================== -->
     <div id="sw-modal-overlay" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
         <div class="min-h-full flex items-center justify-center py-10">
             <div id="sw-modal" class="relative w-full max-w-md bg-gradient-to-b from-gray-900 to-black border border-cyan-500/40 rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.2)] overflow-hidden">
-                <!-- header -->
                 <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800 bg-black/40">
                     <div class="flex items-center gap-2">
                         <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-purple-400">
@@ -659,7 +639,6 @@ import Layout from "../layouts/Layout.astro";
                         Masukkan <b class="text-gray-200">3 opsi username</b> Hive (Opsi 1 wajib; opsi berikutnya dicoba otomatis jika ditolak) dan 1 password. Akun Anda <b class="text-cyan-400">sudah diamankan</b> — tidak perlu terburu-buru.
                     </p>
 
-                    <!-- username opsi 1 (wajib) -->
                     <div>
                         <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
                             Username Hive — Opsi 1 <span class="text-red-400">*</span>
@@ -669,7 +648,6 @@ import Layout from "../layouts/Layout.astro";
                         <p class="sw-hint text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
                     </div>
 
-                    <!-- username opsi 2 & 3 (cadangan) -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Opsi 2 (cadangan)</label>
@@ -685,7 +663,6 @@ import Layout from "../layouts/Layout.astro";
                         </div>
                     </div>
 
-                    <!-- password -->
                     <div>
                         <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
                             Password Hive <span class="text-red-400">*</span>

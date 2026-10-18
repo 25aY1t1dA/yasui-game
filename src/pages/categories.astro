@@ -1,4 +1,5 @@
 ---
+// src/pages/categories.astro
 import Layout from "../layouts/Layout.astro";
 import { getCategories } from "../lib/wc";
 
@@ -28,11 +29,11 @@ try {
 ---
 
 <Layout
-    title="Katalog Game"
-    description="Jelajahi semua kategori game yang tersedia"
+    title="Katalog Game - Yasui Game"
+    description="Jelajahi semua kategori game yang tersedia di Yasui Game"
 >
     <main class="max-w-7xl mx-auto px-4 pt-24 pb-32">
-        <div class="text-center mb-12">
+        <header class="text-center mb-12">
             <h1
                 class="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4"
                 data-i18n="categories.title"
@@ -45,7 +46,7 @@ try {
             >
                 Pilih game favoritmu
             </p>
-        </div>
+        </header>
 
         {
             error && (
@@ -57,20 +58,18 @@ try {
             )
         }
 
-        <div class="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <section class="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {
                 categories.map((cat) => (
                     <a
                         href={`/category/${cat.slug}`}
-                        class="group relative bg-gray-900/40 border border-gray-800 rounded-xl p-4 flex flex-col items-center justify-center gap-3 hover:border-cyan-500/50 hover:bg-gray-900/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] aspect-[4/5] md:aspect-auto"
+                        class="yg-card-interactive group relative p-4 flex flex-col items-center justify-center gap-3 aspect-[4/5] md:aspect-auto"
                     >
-                        {/* Badge Count */}
-                        <div class="absolute top-2 right-2 bg-gray-800 text-gray-400 text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700 group-hover:border-cyan-500/30 group-hover:text-cyan-400 transition-colors">
+                        <div class="absolute top-2 right-2 bg-gray-800 text-gray-400 text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700 group-hover:border-cyan-500/30 group-hover:text-cyan-400 transition-colors font-mono">
                             {cat.count}
                         </div>
 
-                        {/* Image/Icon */}
-                        <div class="w-12 h-12 md:w-20 md:h-20 rounded-full bg-black border border-gray-800 p-2 group-hover:border-cyan-500/50 transition-colors relative overflow-hidden">
+                        <div class="w-12 h-12 md:w-20 md:h-20 rounded-full bg-black border border-gray-800 p-2 group-hover:border-cyan-500/50 transition-colors relative overflow-hidden flex-shrink-0">
                             {cat.image ? (
                                 <img
                                     src={fixImgUrl(cat.image.sourceUrl)}
@@ -84,13 +83,12 @@ try {
                             )}
                         </div>
 
-                        {/* Title */}
-                        <h3 class="text-xs md:text-base font-bold text-gray-300 uppercase tracking-wider text-center group-hover:text-white transition-colors leading-tight">
+                        <h2 class="text-xs md:text-base font-bold text-gray-300 uppercase tracking-wider text-center group-hover:text-white transition-colors leading-tight">
                             {cat.name}
-                        </h3>
+                        </h2>
                     </a>
                 ))
             }
-        </div>
+        </section>
     </main>
 </Layout>

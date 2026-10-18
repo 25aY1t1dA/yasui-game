@@ -8,7 +8,7 @@ async function categoryIndex() {
     if (Date.now() < expires) return cached;
     if (!pending) pending = (async () => {
         const all = [];
-        for (let page = 1; ; page++) {
+        for (let page = 1; page <= 5; page++) {
             const batch = await getCategories({ per_page: 100, page, hide_empty: false });
             all.push(...batch);
             if (batch.length < 100) break;

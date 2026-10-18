@@ -47,7 +47,6 @@ const fixImgUrl = (url) => {
     title={product ? `Review ${product.name} | Yasui Game` : "Review | Yasui Game"}
     description="Berikan ulasan Anda."
 >
-    <!-- GLOBAL TRANSLATION DATA FOR JS -->
     <script is:inline>
         window.i18nData = {
             id: {
@@ -74,7 +73,6 @@ const fixImgUrl = (url) => {
     </script>
 
     <main class="max-w-2xl mx-auto px-4 pt-24 pb-20">
-        <!-- LANG TOGGLE (ALWAYS VISIBLE) -->
         <div class="flex justify-end mb-6">
              <div class="flex bg-gray-900 border border-gray-800 rounded-lg p-1">
                 <button
@@ -94,7 +92,6 @@ const fixImgUrl = (url) => {
             </div>
         </div>
 
-        <!-- HEADER / ERROR STATE -->
         {
             !product ? (
                 <div class="text-center py-20 border border-gray-800 bg-gray-900/50 rounded-xl">
@@ -117,7 +114,6 @@ const fixImgUrl = (url) => {
                 </div>
             ) : (
                 <div class="animate-[fadeIn_0.5s_ease-out]">
-                    <!-- PRODUCT SUMMARY -->
                     <div class="flex items-center gap-4 mb-8 bg-gray-900/30 border border-gray-800 p-4 rounded-xl">
                         <div class="w-16 h-16 bg-black border border-gray-800 rounded-lg overflow-hidden shrink-0">
                             {product.image ? (
@@ -143,7 +139,6 @@ const fixImgUrl = (url) => {
                         </div>
                     </div>
 
-                    <!-- FORM -->
                     <form id="review-form" class="space-y-6">
                         <input
                             type="hidden"
@@ -151,7 +146,6 @@ const fixImgUrl = (url) => {
                             value={product.databaseId}
                         />
                         
-                        <!-- RATING STAR -->
                         <div class="space-y-2 text-center">
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">
                                 <span class="lang-id">Beri Rating Bintang</span>
@@ -177,7 +171,6 @@ const fixImgUrl = (url) => {
                             <div id="rating-error" class="text-red-500 text-xs hidden">Rating wajib diisi!</div>
                         </div>
 
-                        <!-- INPUTS -->
                         <div class="bg-gray-900/20 border border-gray-800 p-6 rounded-xl space-y-4">
                              <div class="space-y-1">
                                 <label class="text-[10px] font-bold text-gray-500 uppercase">
@@ -234,7 +227,6 @@ const fixImgUrl = (url) => {
                         </button>
                     </form>
 
-                     <!-- SUCCESS MESSAGE (Hidden by default) -->
                     <div id="success-message" class="hidden text-center py-20 bg-gray-900/50 border border-green-500/30 rounded-xl">
                         <div class="i-lucide-check-circle text-5xl text-green-500 mx-auto mb-4 animate-bounce"></div>
                         <h2 class="text-2xl font-bold text-white mb-2 uppercase tracking-wider">

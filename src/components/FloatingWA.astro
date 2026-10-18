@@ -1,193 +1,156 @@
 ---
-// src/components/FloatingWA.astro
+import Icon from "./ui/Icon.astro";
+
 const pathname = Astro.url.pathname || "";
 const isProductPage = pathname.startsWith("/product/");
 const isCartPage = pathname.startsWith("/cart");
 const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-32" : "bottom-20";
 ---
 
-<!-- ========================================== -->
-<!-- 1. DESKTOP VIEW: CLASSIC FLOATING WHATSAPP -->
-<!-- ========================================== -->
-<a
-    href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
-    target="_blank"
-    class="hidden md:block fixed md:bottom-6 right-6 z-[90] group"
-    aria-label="Chat WhatsApp Admin"
->
-    <!-- Tooltip (Side) -->
-    <div
-        class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-gray-700 pointer-events-none shadow-lg"
+<aside aria-label="Customer Support Speed Dial">
+    <a
+        href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden md:block fixed md:bottom-6 right-6 z-[90] group"
+        aria-label="Chat WhatsApp Admin"
     >
-        Chat on WhatsApp
-    </div>
+        <div class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-gray-700 pointer-events-none shadow-lg">
+            Chat on WhatsApp
+        </div>
 
-    <!-- Icon Container -->
-    <div
-        class="w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.5)] hover:scale-110 transition duration-300 border-2 border-black/20 animate-bounce-slow relative overflow-hidden"
-    >
-        <!-- Shine Effect -->
+        <div class="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.5)] hover:scale-110 transition duration-300 border-2 border-black/20 animate-bounce-slow relative overflow-hidden">
+            <Icon name="whatsapp" width={28} height={28} />
+        </div>
+    </a>
+
+    <div class={`block md:hidden fixed ${mobileBottomClass} right-3.5 z-40 transition-all duration-300`} id="mobile-cs-container">
         <div
-            class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition duration-500 rounded-full"
+            id="mobile-cs-menu"
+            class="absolute bottom-13 right-0 w-56 bg-black/95 border border-cyan-500/50 rounded-2xl p-2.5 shadow-[0_10px_35px_rgba(0,0,0,0.95)] backdrop-blur-xl transition-all duration-200 transform origin-bottom-right scale-90 opacity-0 pointer-events-none"
         >
+            <div class="px-2 py-1.5 border-b border-gray-800/80 mb-2 flex items-center justify-between">
+                <span class="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Bantuan Admin
+                </span>
+                <span class="text-[9px] text-gray-500 font-mono">Online</span>
+            </div>
+
+            <a
+                href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2.5 p-2 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/40 border border-emerald-500/30 text-white transition mb-1.5 group"
+            >
+                <div class="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition">
+                    <Icon name="whatsapp" width={18} height={18} />
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="text-xs font-bold text-white group-hover:text-emerald-400 transition leading-tight">WhatsApp CS</span>
+                    <span class="text-[9px] text-gray-400 font-mono leading-tight">Balas Cepat & Transaksi</span>
+                </div>
+            </a>
+
+            <a
+                href="https://discord.com/users/1312253061800001541"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-2.5 p-2 rounded-xl bg-indigo-950/40 hover:bg-indigo-900/40 border border-indigo-500/30 text-white transition mb-1.5 group"
+            >
+                <div class="w-8 h-8 rounded-lg bg-[#5865F2] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition">
+                    <Icon name="discord" width={18} height={18} />
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="text-xs font-bold text-white group-hover:text-indigo-400 transition leading-tight">Discord Server</span>
+                    <span class="text-[9px] text-gray-400 font-mono leading-tight">Komunitas Gamers</span>
+                </div>
+            </a>
+
+            <button
+                type="button"
+                id="mobile-cs-livechat-btn"
+                class="w-full flex items-center gap-2.5 p-2 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/40 border border-cyan-500/30 text-white transition group cursor-pointer text-left"
+            >
+                <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-400/50 text-cyan-400 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition">
+                    <div class="i-lucide-messages-square text-lg"></div>
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="text-xs font-bold text-white group-hover:text-cyan-400 transition leading-tight">Live Chat Web</span>
+                    <span class="text-[9px] text-cyan-300 font-mono leading-tight">Admin Yasui Online</span>
+                </div>
+            </button>
         </div>
 
-        <!-- Official WhatsApp Icon SVG (Centered) -->
-        <svg
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="white"
-            xmlns="http://www.w3.org/2000/svg"
-            class="relative z-10"
-        >
-            <path
-                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
-            ></path>
-        </svg>
-    </div>
-</a>
-
-<!-- ============================================================== -->
-<!-- 2. MOBILE VIEW: COMPACT UNIFIED CYBER SUPPORT SPEED-DIAL FAB  -->
-<!--    (TIDAK MENUTUPI PRODUK, ERGONOMIS & BISA DI-TOGGLE)        -->
-<!-- ============================================================== -->
-<div class={`block md:hidden fixed ${mobileBottomClass} right-3.5 z-40 transition-all duration-300`} id="mobile-cs-container">
-    <!-- POPUP MENU CHAT (WHATSAPP & DISCORD) -->
-    <div
-        id="mobile-cs-menu"
-        class="absolute bottom-13 right-0 w-56 bg-black/95 border border-cyan-500/50 rounded-2xl p-2.5 shadow-[0_10px_35px_rgba(0,0,0,0.95)] backdrop-blur-xl transition-all duration-200 transform origin-bottom-right scale-90 opacity-0 pointer-events-none"
-    >
-        <div class="px-2 py-1.5 border-b border-gray-800/80 mb-2 flex items-center justify-between">
-            <span class="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                Bantuan Admin
-            </span>
-            <span class="text-[9px] text-gray-500 font-mono">Online</span>
-        </div>
-
-        <!-- 1. WhatsApp Support -->
-        <a
-            href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2.5 p-2 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/40 border border-emerald-500/30 text-white transition mb-1.5 group"
-        >
-            <div class="w-8 h-8 rounded-lg bg-[#25D366] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-xs font-bold text-white group-hover:text-emerald-400 transition leading-tight">WhatsApp CS</span>
-                <span class="text-[9px] text-gray-400 font-mono leading-tight">Balas Cepat & Transaksi</span>
-            </div>
-        </a>
-
-        <!-- 2. Discord Community -->
-        <a
-            href="https://discord.com/users/1312253061800001541"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2.5 p-2 rounded-xl bg-indigo-950/40 hover:bg-indigo-900/40 border border-indigo-500/30 text-white transition mb-1.5 group"
-        >
-            <div class="w-8 h-8 rounded-lg bg-[#5865F2] flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition">
-                <svg width="18" height="18" viewBox="0 0 127.14 96.36" fill="white">
-                    <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.11,77.11,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.89,105.89,0,0,0,126.6,80.22c2.36-24.32-2.73-49-18.9-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
-                </svg>
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-xs font-bold text-white group-hover:text-indigo-400 transition leading-tight">Discord Server</span>
-                <span class="text-[9px] text-gray-400 font-mono leading-tight">Komunitas Gamers</span>
-            </div>
-        </a>
-
-        <!-- 3. Live Chat Web (Admin) -->
         <button
+            id="mobile-cs-trigger"
             type="button"
-            onclick="if (window.openLiveChatModal) { window.openLiveChatModal(); const m = document.getElementById('mobile-cs-menu'); if (m) { m.classList.add('scale-90', 'opacity-0', 'pointer-events-none'); m.classList.remove('scale-100', 'opacity-100', 'pointer-events-auto'); } }"
-            class="w-full flex items-center gap-2.5 p-2 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/40 border border-cyan-500/30 text-white transition group cursor-pointer text-left"
+            class="w-11 h-11 rounded-full bg-black/90 hover:bg-black border border-cyan-400/80 text-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.35)] backdrop-blur-md active:scale-95 transition-all cursor-pointer relative"
+            aria-label="Layanan Bantuan Pelanggan"
         >
-            <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-400/50 text-cyan-400 flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition">
-                <div class="i-lucide-messages-square text-lg"></div>
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-xs font-bold text-white group-hover:text-cyan-400 transition leading-tight">Live Chat Web</span>
-                <span class="text-[9px] text-cyan-300 font-mono leading-tight">Admin Yasui Online</span>
-            </div>
+            <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"></span>
+            <div id="cs-icon-headset" class="i-lucide-headset text-lg transition-transform duration-200"></div>
+            <div id="cs-icon-close" class="i-lucide-x text-lg hidden transition-transform duration-200"></div>
         </button>
     </div>
+</aside>
 
-    <!-- TRIGGER BUTTON (KOMPAK, 44PX, TIDAK MENGHALANGI KARTU) -->
-    <button
-        id="mobile-cs-trigger"
-        type="button"
-        class="w-11 h-11 rounded-full bg-black/90 hover:bg-black border border-cyan-400/80 text-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.35)] backdrop-blur-md active:scale-95 transition-all cursor-pointer relative"
-        aria-label="Layanan Bantuan Pelanggan"
-    >
-        <!-- Pulse Indicator Online -->
-        <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"></span>
-        
-        <div id="cs-icon-headset" class="i-lucide-headset text-lg transition-transform duration-200"></div>
-        <div id="cs-icon-close" class="i-lucide-x text-lg hidden transition-transform duration-200"></div>
-    </button>
-</div>
+<script>
+    function initMobileCS() {
+        const trigger = document.getElementById("mobile-cs-trigger");
+        const menu = document.getElementById("mobile-cs-menu");
+        const iconHeadset = document.getElementById("cs-icon-headset");
+        const iconClose = document.getElementById("cs-icon-close");
+        const livechatBtn = document.getElementById("mobile-cs-livechat-btn");
+        if (!trigger || !menu) return;
 
-<script is:inline>
-    (function() {
-        function initMobileCS() {
-            const trigger = document.getElementById("mobile-cs-trigger");
-            const menu = document.getElementById("mobile-cs-menu");
-            const iconHeadset = document.getElementById("cs-icon-headset");
-            const iconClose = document.getElementById("cs-icon-close");
-            if (!trigger || !menu) return;
+        let isOpen = false;
 
-            let isOpen = false;
-
-            function toggleMenu(show) {
-                isOpen = typeof show === "boolean" ? show : !isOpen;
-                if (isOpen) {
-                    menu.classList.remove("scale-90", "opacity-0", "pointer-events-none");
-                    menu.classList.add("scale-100", "opacity-100", "pointer-events-auto");
-                    iconHeadset?.classList.add("hidden");
-                    iconClose?.classList.remove("hidden");
-                } else {
-                    menu.classList.add("scale-90", "opacity-0", "pointer-events-none");
-                    menu.classList.remove("scale-100", "opacity-100", "pointer-events-auto");
-                    iconHeadset?.classList.remove("hidden");
-                    iconClose?.classList.add("hidden");
-                }
+        function toggleMenu(show?: boolean) {
+            isOpen = typeof show === "boolean" ? show : !isOpen;
+            if (isOpen) {
+                menu!.classList.remove("scale-90", "opacity-0", "pointer-events-none");
+                menu!.classList.add("scale-100", "opacity-100", "pointer-events-auto");
+                iconHeadset?.classList.add("hidden");
+                iconClose?.classList.remove("hidden");
+            } else {
+                menu!.classList.add("scale-90", "opacity-0", "pointer-events-none");
+                menu!.classList.remove("scale-100", "opacity-100", "pointer-events-auto");
+                iconHeadset?.classList.remove("hidden");
+                iconClose?.classList.add("hidden");
             }
-
-            trigger.addEventListener("click", function(e) {
-                e.stopPropagation();
-                toggleMenu();
-            });
-
-            document.addEventListener("click", function(e) {
-                if (isOpen && !menu.contains(e.target) && !trigger.contains(e.target)) {
-                    toggleMenu(false);
-                }
-            });
         }
 
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", initMobileCS);
-        } else {
-            initMobileCS();
-        }
-    })();
+        trigger.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        livechatBtn?.addEventListener("click", () => {
+            toggleMenu(false);
+            if ((window as any).openLiveChatModal) {
+                (window as any).openLiveChatModal();
+            }
+        });
+
+        document.addEventListener("click", (e) => {
+            if (isOpen && !menu.contains(e.target as Node) && !trigger.contains(e.target as Node)) {
+                toggleMenu(false);
+            }
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initMobileCS);
+    } else {
+        initMobileCS();
+    }
 </script>
 
 <style>
     @keyframes bounce-slow {
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-6px);
-        }
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-6px); }
     }
     .animate-bounce-slow {
         animation: bounce-slow 3s infinite ease-in-out;

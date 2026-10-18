@@ -1,6 +1,11 @@
 import crypto from "node:crypto";
 import { Buffer } from "node:buffer";
 
+// Guard: Modul ini hanya boleh dijalankan di server-side
+if (import.meta.env && import.meta.env.SSR === false) {
+    throw new Error("Security Violation: Duitku payment module can only be imported in server-side context.");
+}
+
 // Auto load .env if running in Node standalone
 if (typeof process !== "undefined" && typeof process.loadEnvFile === "function") {
     try {
@@ -22,14 +27,24 @@ const getEnv = (key, fallback = "") => {
     return fallback;
 };
 
-export const DUITKU_MERCHANT_CODE = getEnv("DUITKU_MERCHANT_CODE") || getEnv("KODE_MERCHANT", "DS27852");
-export const DUITKU_API_KEY = getEnv("DUITKU_API_KEY", "3c1091b18de5e4397e8f2292e5276216");
+// Zero-Trust: Jangan gunakan hardcoded API Key / Merchant Code
+export const DUITKU_MERCHANT_CODE = getEnv("DUITKU_MERCHANT_CODE") || getEnv("KODE_MERCHANT", "");
+export const DUITKU_API_KEY = getEnv("DUITKU_API_KEY", "");
 export const DUITKU_ENV = getEnv("DUITKU_ENV", "sandbox");
 export const APP_URL = getEnv("APP_URL", "http://localhost:4321").replace(/\/+$/, "");
 
 export const DUITKU_BASE_URL = DUITKU_ENV === "production"
     ? "https://passport.duitku.com/webapi"
     : "https://sandbox.duitku.com/webapi";
+
+/**
+ * Validasi kelengkapan kredensial Duitku (Fail-Fast)
+ */
+function assertDuitkuConfig() {
+    if (!DUITKU_MERCHANT_CODE || !DUITKU_API_KEY) {
+        throw new Error("Configuration Error: DUITKU_MERCHANT_CODE dan DUITKU_API_KEY wajib dikonfigurasi di environment server.");
+    }
+}
 
 /**
  * Daftar channel pembayaran Duitku
@@ -69,6 +84,7 @@ export const PAYMENT_CHANNELS = {
  * Rumus: MD5(merchantCode + merchantOrderId + paymentAmount + apiKey)
  */
 export function generateInquirySignature(merchantOrderId, paymentAmount) {
+    assertDuitkuConfig();
     const raw = `${DUITKU_MERCHANT_CODE}${merchantOrderId}${paymentAmount}${DUITKU_API_KEY}`;
     return crypto.createHash("md5").update(raw).digest("hex");
 }
@@ -78,6 +94,7 @@ export function generateInquirySignature(merchantOrderId, paymentAmount) {
  * Rumus: MD5(merchantCode + merchantOrderId + apiKey)
  */
 export function generateStatusSignature(merchantOrderId) {
+    assertDuitkuConfig();
     const raw = `${DUITKU_MERCHANT_CODE}${merchantOrderId}${DUITKU_API_KEY}`;
     return crypto.createHash("md5").update(raw).digest("hex");
 }
@@ -87,6 +104,7 @@ export function generateStatusSignature(merchantOrderId) {
  * Rumus: MD5(merchantCode + amount + merchantOrderId + apiKey)
  */
 export function verifyCallbackSignature(merchantCode, amount, merchantOrderId, signature) {
+    assertDuitkuConfig();
     const raw = `${merchantCode}${amount}${merchantOrderId}${DUITKU_API_KEY}`;
     const calculated = crypto.createHash("md5").update(raw).digest("hex");
     return calculated.toLowerCase() === String(signature).toLowerCase();
@@ -107,6 +125,7 @@ export async function createDuitkuInquiry({
     returnUrl = null,
     expiryPeriod = 15 // 15 menit
 }) {
+    assertDuitkuConfig();
     const finalCallbackUrl = callbackUrl || `${APP_URL}/api/payment/duitku-callback`;
     const finalReturnUrl = returnUrl || `${APP_URL}/order-success?id=${merchantOrderId}`;
     const cleanAmount = Math.round(Number(paymentAmount));
@@ -128,23 +147,28 @@ export async function createDuitkuInquiry({
         signature
     };
 
-    console.log(`[Duitku Inquiry] Requesting payment for order ${merchantOrderId} (Rp ${cleanAmount}) via ${paymentMethod}...`);
+    try {
+        const response = await fetch(`${DUITKU_BASE_URL}/api/merchant/v2/inquiry`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(8000)
+        });
 
-    const response = await fetch(`${DUITKU_BASE_URL}/api/merchant/v2/inquiry`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    });
+        const data = await response.json();
 
-    const data = await response.json();
+        if (!response.ok || data.statusCode !== "00") {
+            console.error("[Duitku Inquiry Error]", data);
+            throw new Error(data.statusMessage || `Duitku Inquiry failed with code ${data.statusCode}`);
+        }
 
-    if (!response.ok || data.statusCode !== "00") {
-        console.error("[Duitku Inquiry Error]", data);
-        throw new Error(data.statusMessage || `Duitku Inquiry failed with code ${data.statusCode}`);
+        return data;
+    } catch (err) {
+        if (err.name === "TimeoutError") {
+            throw new Error("Koneksi ke gateway pembayaran Duitku mengalami timeout (8 detik). Silakan coba lagi.");
+        }
+        throw err;
     }
-
-    console.log(`[Duitku Inquiry Success] Ref: ${data.reference}, Status: ${data.statusCode}`);
-    return data;
 }
 
 /**
@@ -155,18 +179,27 @@ export async function createDuitkuInquiry({
  * - statusCode "02": FAILED / EXPIRED
  */
 export async function checkDuitkuTransactionStatus(merchantOrderId) {
+    assertDuitkuConfig();
     const signature = generateStatusSignature(merchantOrderId);
 
-    const response = await fetch(`${DUITKU_BASE_URL}/api/merchant/transactionStatus`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            merchantCode: DUITKU_MERCHANT_CODE,
-            merchantOrderId,
-            signature
-        })
-    });
+    try {
+        const response = await fetch(`${DUITKU_BASE_URL}/api/merchant/transactionStatus`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                merchantCode: DUITKU_MERCHANT_CODE,
+                merchantOrderId,
+                signature
+            }),
+            signal: AbortSignal.timeout(8000)
+        });
 
-    const data = await response.json();
-    return data;
+        const data = await response.json();
+        return data;
+    } catch (err) {
+        if (err.name === "TimeoutError") {
+            throw new Error("Koneksi ke gateway Duitku timeout saat memeriksa status transaksi.");
+        }
+        throw err;
+    }
 }

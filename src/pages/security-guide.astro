@@ -7,8 +7,7 @@ import Layout from "../layouts/Layout.astro";
     description="Panduan keamanan akun game setelah pembelian."
 >
     <main class="max-w-4xl mx-auto px-4 pt-24 pb-20">
-        <!-- HEADER -->
-        <div
+        <header
             class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-12 border-b border-gray-800 pb-8"
         >
             <div>
@@ -36,34 +35,25 @@ import Layout from "../layouts/Layout.astro";
                 </p>
             </div>
 
-            <!-- LANGUAGE TOGGLE -->
             <div class="flex bg-gray-900 border border-gray-800 rounded-lg p-1">
                 <button
+                    type="button"
                     id="btn-id"
-                    onclick="switchLang('id')"
-                    class="px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+                    class="px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)] cursor-pointer"
                 >
                     INDONESIA
                 </button>
                 <button
+                    type="button"
                     id="btn-en"
-                    onclick="switchLang('en')"
-                    class="px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300"
+                    class="px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300 cursor-pointer"
                 >
                     ENGLISH
                 </button>
             </div>
-        </div>
+        </header>
 
-        <!-- CONTENT CONTAINER -->
         <div class="relative min-h-[400px]">
-            <!-- ORNAMENT -->
-            <div
-                class="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none -z-10"
-            >
-            </div>
-
-            <!-- CONTENT: INDONESIA -->
             <article
                 id="content-id"
                 class="prose prose-invert prose-cyan max-w-none animate-[fadeIn_0.5s_ease-out]"
@@ -136,7 +126,6 @@ import Layout from "../layouts/Layout.astro";
                 </p>
             </article>
 
-            <!-- CONTENT: ENGLISH -->
             <article
                 id="content-en"
                 class="hidden prose prose-invert prose-cyan max-w-none animate-[fadeIn_0.5s_ease-out]"
@@ -210,8 +199,7 @@ import Layout from "../layouts/Layout.astro";
             </article>
         </div>
 
-        <!-- HELP CTA -->
-        <div class="mt-16 border-t border-gray-800 pt-8">
+        <section class="mt-16 border-t border-gray-800 pt-8">
             <div
                 class="bg-gradient-to-r from-gray-900 to-black border border-gray-800 p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group"
             >
@@ -242,55 +230,39 @@ import Layout from "../layouts/Layout.astro";
                     <span id="cta-btn">WhatsApp Admin</span>
                 </a>
             </div>
-        </div>
+        </section>
     </main>
 
     <script is:inline>
-        // Simple Vanilla styling state
         const btnId = document.getElementById("btn-id");
         const btnEn = document.getElementById("btn-en");
         const contentId = document.getElementById("content-id");
         const contentEn = document.getElementById("content-en");
-
-        // Optional: Dynamic CTA
         const ctaTitle = document.getElementById("cta-title");
         const ctaDesc = document.getElementById("cta-desc");
         const ctaBtn = document.getElementById("cta-btn");
 
         function switchLang(lang) {
             if (lang === "id") {
-                // Style Buttons
-                btnId.className =
-                    "px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
-                btnEn.className =
-                    "px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300";
-
-                // Show Content
-                contentId.classList.remove("hidden");
-                contentEn.classList.add("hidden");
-
-                // Update CTA
-                ctaTitle.innerText = "Masih Bingung?";
-                ctaDesc.innerText =
-                    "Hubungi Admin via WhatsApp untuk panduan keamanan spesifik per game (Mobile Legends, Genshin Impact, dll).";
-                ctaBtn.innerText = "WhatsApp Admin";
+                if (btnId) btnId.className = "px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)] cursor-pointer";
+                if (btnEn) btnEn.className = "px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300 cursor-pointer";
+                contentId?.classList.remove("hidden");
+                contentEn?.classList.add("hidden");
+                if (ctaTitle) ctaTitle.innerText = "Masih Bingung?";
+                if (ctaDesc) ctaDesc.innerText = "Hubungi Admin via WhatsApp untuk panduan keamanan spesifik per game (Mobile Legends, Genshin Impact, dll).";
+                if (ctaBtn) ctaBtn.innerText = "WhatsApp Admin";
             } else {
-                // Style Buttons
-                btnEn.className =
-                    "px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
-                btnId.className =
-                    "px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300";
-
-                // Show Content
-                contentEn.classList.remove("hidden");
-                contentId.classList.add("hidden");
-
-                // Update CTA
-                ctaTitle.innerText = "Need Help?";
-                ctaDesc.innerText =
-                    "Contact Admin via WhatsApp for game-specific security guides (Mobile Legends, Genshin Impact, etc).";
-                ctaBtn.innerText = "Contact Support";
+                if (btnEn) btnEn.className = "px-4 py-1.5 rounded text-xs font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)] cursor-pointer";
+                if (btnId) btnId.className = "px-4 py-1.5 rounded text-xs font-bold text-gray-400 hover:text-white transition-all duration-300 cursor-pointer";
+                contentEn?.classList.remove("hidden");
+                contentId?.classList.add("hidden");
+                if (ctaTitle) ctaTitle.innerText = "Need Help?";
+                if (ctaDesc) ctaDesc.innerText = "Contact Admin via WhatsApp for game-specific security guides (Mobile Legends, Genshin Impact, etc).";
+                if (ctaBtn) ctaBtn.innerText = "Contact Support";
             }
         }
+
+        btnId?.addEventListener("click", () => switchLang("id"));
+        btnEn?.addEventListener("click", () => switchLang("en"));
     </script>
 </Layout>

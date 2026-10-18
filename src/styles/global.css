@@ -1,8 +1,66 @@
-/* Yasui Game Global Styles - Powered by UnoCSS */
+/* Yasui Game Global Production Styles - UnoCSS Integrated */
 
+body {
+  font-family: "JetBrains Mono", monospace;
+  background-color: #050505;
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  color: #d1d5db;
+}
 
+/* Cyberpunk Card Polygons */
+.cyber-card {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 15px),
+    calc(100% - 15px) 100%,
+    0 100%
+  );
+}
 
-/* Cross-browser scrollbar hiding utility */
+.cyber-panel {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 16px),
+    calc(100% - 16px) 100%,
+    0 100%
+  );
+}
+
+/* Pseudo-element ambient glow replacement for empty decorative div tags */
+.yg-glow-ambient {
+  position: relative;
+}
+.yg-glow-ambient::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: rgba(34, 211, 238, 0.15);
+  filter: blur(24px);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.yg-glow-ambient-red {
+  position: relative;
+}
+.yg-glow-ambient-red::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(239, 68, 68, 0.12);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Cross-browser scrollbar hiding */
 .scrollbar-none::-webkit-scrollbar,
 .no-scrollbar::-webkit-scrollbar {
   display: none !important;
@@ -12,6 +70,6 @@
 
 .scrollbar-none,
 .no-scrollbar {
-  -ms-overflow-style: none !important;  /* IE and Edge */
-  scrollbar-width: none !important;  /* Firefox */
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }

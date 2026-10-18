@@ -1,263 +1,227 @@
 ---
 // src/pages/order-success.astro
+import Layout from "../layouts/Layout.astro";
 import { getOrder } from "../lib/wc";
 
 const rawId = Astro.url.searchParams.get("id") || "UNKNOWN";
+const orderKey = Astro.url.searchParams.get("key") || "";
 const orderId = rawId.startsWith("YG-") ? rawId.split("-")[1] : rawId;
 
 let order = null;
+let accessDenied = false;
+
 if (orderId && orderId !== "UNKNOWN") {
     try {
-        order = await getOrder(orderId);
+        order = await getOrder(orderId, { bypassCache: true });
+        // Validasi order_key keamanan (Zero-Trust IDOR protection)
+        if (!order || !order.id || !orderKey || order.order_key !== orderKey) {
+            accessDenied = true;
+            order = null;
+        }
     } catch (e) {
         console.warn("Could not fetch order for success page:", e.message);
+        accessDenied = true;
     }
+} else {
+    accessDenied = true;
 }
 
 const formattedTotal = order ? `Rp ${Number(order.total).toLocaleString("id-ID")}` : null;
 const lineItems = order?.line_items || [];
+const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil - Yasui Game";
 ---
 
-<html lang="id" class="dark">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Order Berhasil - Yasui Game</title>
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&display=swap"
-            rel="stylesheet"
-        />
-        <style>
-            body {
-                font-family: "JetBrains Mono", monospace;
-                background-color: #050505;
-                background-image:
-                    linear-gradient(
-                        rgba(34, 211, 238, 0.05) 1px,
-                        transparent 1px
-                    ),
-                    linear-gradient(
-                        90deg,
-                        rgba(34, 211, 238, 0.05) 1px,
-                        transparent 1px
-                    );
-                background-size: 40px 40px;
-            }
-            .cyber-card {
-                clip-path: polygon(
-                    0 0,
-                    100% 0,
-                    100% calc(100% - 20px),
-                    calc(100% - 20px) 100%,
-                    0 100%
-                );
-            }
-            .scan-line {
-                width: 100%;
-                height: 2px;
-                background: rgba(34, 211, 238, 0.5);
-                animation: scan 2s linear infinite;
-            }
-            @keyframes scan {
-                0% {
-                    transform: translateY(-10px);
-                    opacity: 0;
-                }
-                50% {
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(100px);
-                    opacity: 0;
-                }
-            }
-        </style>
-    </head>
-    <body
-        class="bg-black text-gray-300 min-h-screen flex items-center justify-center p-4"
-    >
-        <div class="max-w-md w-full relative">
-            <div
-                class="absolute inset-0 bg-cyan-500/20 blur-[80px] rounded-full"
-            >
-            </div>
-
-            <div
-                class="cyber-card bg-gray-900 border border-cyan-500/50 p-8 relative z-10 shadow-2xl"
-            >
-                <div class="text-center mb-8">
-                    <div
-                        class="w-20 h-20 bg-black border-2 border-cyan-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(34,211,238,0.4)]"
-                    >
-                        <div class="i-lucide-check text-5xl text-cyan-400">
+<Layout title={pageTitle} showFooter={false}>
+    <main class="min-h-[80vh] flex items-center justify-center p-4">
+        <div class="max-w-md w-full relative yg-glow-ambient">
+            <div class="cyber-card bg-gray-900 border border-cyan-500/50 p-8 relative z-10 shadow-2xl">
+                {accessDenied ? (
+                    <div class="text-center py-4">
+                        <div class="w-16 h-16 bg-red-950/60 border border-red-500/50 rounded-full flex items-center justify-center mx-auto mb-4 text-red-400">
+                            <div class="i-lucide-shield-alert text-3xl"></div>
                         </div>
-                    </div>
-                    <h1
-                        class="text-2xl font-black text-white uppercase tracking-widest italic mb-2"
-                    >
-                        PEMBAYARAN DITERIMA
-                    </h1>
-                    <p class="text-xs text-gray-500 font-mono">
-                        ORDER ID: <span class="text-cyan-400 font-bold"
-                            >#{orderId}</span
-                        >
-                    </p>
-                </div>
-
-                <div class="space-y-4 mb-8">
-                    {order && (
-                        <div class="bg-black/60 border border-gray-800 p-4 rounded text-xs font-mono">
-                            <div class="flex justify-between pb-2 border-b border-gray-800 text-gray-400">
-                                <span>Status Pesanan:</span>
-                                <span class="text-green-400 font-bold uppercase">LUNAS / {order.status}</span>
-                            </div>
-                            <div class="py-2 space-y-1.5 border-b border-gray-800">
-                                {lineItems.map(item => (
-                                    <div class="flex justify-between text-gray-300">
-                                        <span class="truncate max-w-[200px]">{item.name} x{item.quantity}</span>
-                                        <span class="text-gray-400">Rp {Number(item.total).toLocaleString("id-ID")}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div class="flex justify-between pt-2 text-white font-bold">
-                                <span>Total Dibayar:</span>
-                                <span class="text-cyan-400">{formattedTotal}</span>
-                            </div>
-                        </div>
-                    )}
-
-                    <div class="bg-black/50 border-l-4 border-cyan-400 p-4">
-                        <h3
-                            class="text-white font-bold text-sm mb-1 flex items-center gap-2"
-                        >
-                            <div class="i-lucide-mail text-cyan-400"></div> Cek Email
-                            & WhatsApp
-                        </h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            Detail akun game telah dikirim ke email yang Anda
-                            daftarkan. Jika tidak ada di inbox, cek folder <b
-                                >SPAM</b
-                            >.
+                        <h1 class="text-xl font-black text-white uppercase tracking-wider mb-2">
+                            Akses Pesanan Dibatasi
+                        </h1>
+                        <p class="text-xs text-gray-400 mb-6 font-mono leading-relaxed">
+                            Parameter otorisasi pesanan (key) tidak valid atau sesi Anda telah kedaluwarsa.
+                            Untuk alasan keamanan, detail faktur dan kredensial akun dilindungi.
                         </p>
-                    </div>
-
-                    <div class="bg-black/50 border-l-4 border-green-500 p-4">
-                        <h3
-                            class="text-white font-bold text-sm mb-1 flex items-center gap-2"
-                        >
-                            <div class="i-lucide-user-check text-green-500">
-                            </div> Admin Yasui Game
-                        </h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">
-                            Admin kami juga akan segera menghubungi WhatsApp
-                            Anda untuk konfirmasi pengiriman akun secara manual.
-                        </p>
-                    </div>
-
-                    <!-- WIDGET PASANG KATA SANDI POST-CHECKOUT (STANDAR INDUSTRI) -->
-                    <div id="quick-pwd-card" class="bg-gradient-to-b from-cyan-950/30 to-black border border-cyan-500/40 p-4 rounded-xl">
-                        <div class="flex items-center gap-2 mb-2">
-                            <div class="i-lucide-shield-check text-cyan-400 text-base"></div>
-                            <h4 class="text-xs font-black text-white uppercase tracking-wider">
-                                Amankan Akun Anda
-                            </h4>
-                        </div>
-                        <p class="text-[11px] text-gray-400 mb-3 leading-relaxed">
-                            Akun Anda telah otomatis dibuat. Pasang kata sandi sekarang agar bisa login cepat di masa depan.
-                        </p>
-                        
-                        <div id="pwd-card-form" class="space-y-2.5">
-                            <input
-                                type="password"
-                                id="success-new-pwd"
-                                minlength="6"
-                                placeholder="Buat kata sandi baru (min 6 karakter)"
-                                class="w-full bg-black/80 border border-gray-800 rounded px-3 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 font-mono transition"
-                            />
-                            <button
-                                onclick="handleSuccessSetPassword()"
-                                id="btn-save-success-pwd"
-                                class="w-full bg-cyan-400 hover:bg-white text-black font-black uppercase py-2.5 rounded transition text-[11px] tracking-wider"
+                        <div class="space-y-3">
+                            <a
+                                href="/orders"
+                                class="yg-btn-primary block w-full text-center"
                             >
-                                KUNCI & SIMPAN KATA SANDI
-                            </button>
+                                Buka Dashboard Pesanan Saya
+                            </a>
+                            <a
+                                href="/"
+                                class="yg-btn-secondary block w-full text-center"
+                            >
+                                Kembali ke Beranda
+                            </a>
                         </div>
-                        <div id="pwd-card-msg" class="hidden text-[11px] font-mono mt-2 p-2 rounded"></div>
                     </div>
-                </div>
+                ) : (
+                    <>
+                        <div class="text-center mb-8">
+                            <div
+                                class="w-20 h-20 bg-black border-2 border-cyan-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(34,211,238,0.4)]"
+                            >
+                                <div class="i-lucide-check text-5xl text-cyan-400">
+                                </div>
+                            </div>
+                            <h1 class="text-2xl font-black text-white uppercase tracking-widest italic mb-2">
+                                Pembayaran Diterima
+                            </h1>
+                            <p class="text-xs text-gray-500 font-mono">
+                                ORDER ID: <span class="text-cyan-400 font-bold">#{order.id}</span>
+                            </p>
+                        </div>
 
-                <div class="space-y-3">
-                    <a
-                        href="/orders"
-                        class="block w-full bg-cyan-500 hover:bg-cyan-400 text-black font-black uppercase py-3 rounded text-center transition flex items-center justify-center gap-2 text-xs shadow-[0_0_20px_rgba(34,211,238,0.3)]"
-                    >
-                        <div class="i-lucide-receipt text-sm"></div> Buka Dashboard Pesanan Saya
-                    </a>
-                    <a
-                        href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20sudah%20order%20dengan%20ID%20referensi%20web"
-                        target="_blank"
-                        class="block w-full bg-green-600 text-white font-bold uppercase py-2.5 rounded text-center hover:bg-green-500 transition flex items-center justify-center gap-2 text-xs"
-                    >
-                        <div class="i-lucide-message-circle"></div> Chat Admin WhatsApp
-                    </a>
-                    <a
-                        href="/"
-                        class="block w-full bg-gray-800 text-gray-400 font-bold uppercase py-2.5 rounded text-center hover:bg-gray-700 transition text-xs"
-                    >
-                        Kembali ke Beranda
-                    </a>
-                </div>
+                        <div class="space-y-4 mb-8">
+                            {order && (
+                                <div class="bg-black/60 border border-gray-800 p-4 rounded text-xs font-mono">
+                                    <div class="flex justify-between pb-2 border-b border-gray-800 text-gray-400">
+                                        <span>Status Pesanan:</span>
+                                        <span class="text-green-400 font-bold uppercase">LUNAS / {order.status}</span>
+                                    </div>
+                                    <div class="py-2 space-y-1.5 border-b border-gray-800">
+                                        {lineItems.map(item => (
+                                            <div class="flex justify-between text-gray-300">
+                                                <span class="truncate max-w-[200px]">{item.name} x{item.quantity}</span>
+                                                <span class="text-gray-400">Rp {Number(item.total).toLocaleString("id-ID")}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div class="flex justify-between pt-2 text-white font-bold">
+                                        <span>Total Dibayar:</span>
+                                        <span class="text-cyan-400">{formattedTotal}</span>
+                                    </div>
+                                </div>
+                            )}
 
-                <script is:inline>
-                    async function handleSuccessSetPassword() {
-                        const pwd = document.getElementById("success-new-pwd")?.value;
-                        const email = localStorage.getItem("yasui_buyer_email") || "";
-                        const btn = document.getElementById("btn-save-success-pwd");
-                        const msg = document.getElementById("pwd-card-msg");
+                            <div class="bg-black/50 border-l-4 border-cyan-400 p-4">
+                                <h2 class="text-white font-bold text-sm mb-1 flex items-center gap-2">
+                                    <div class="i-lucide-mail text-cyan-400"></div> Cek Email & WhatsApp
+                                </h2>
+                                <p class="text-xs text-gray-400 leading-relaxed">
+                                    Detail akun game telah dikirim ke email <b>{order?.billing?.email || "Anda"}</b>. Jika tidak ada di inbox, cek folder <b>SPAM</b>.
+                                </p>
+                            </div>
 
-                        if (!email) {
-                            alert("Email pemesanan tidak ditemukan di sesi browser.");
-                            return;
-                        }
-                        if (!pwd || pwd.length < 6) {
-                            alert("Kata sandi minimal 6 karakter.");
-                            return;
-                        }
+                            <div class="bg-black/50 border-l-4 border-green-500 p-4">
+                                <h2 class="text-white font-bold text-sm mb-1 flex items-center gap-2">
+                                    <div class="i-lucide-user-check text-green-500">
+                                    </div> Admin Yasui Game
+                                </h2>
+                                <p class="text-xs text-gray-400 leading-relaxed">
+                                    Admin kami juga akan segera memproses pengiriman produk digital Anda secara tepat waktu.
+                                </p>
+                            </div>
 
-                        btn.disabled = true;
-                        btn.innerText = "MENYIMPAN...";
+                            <div id="quick-pwd-card" class="bg-gradient-to-b from-cyan-950/30 to-black border border-cyan-500/40 p-4 rounded-xl">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="i-lucide-shield-check text-cyan-400 text-base"></div>
+                                    <h2 class="text-xs font-black text-white uppercase tracking-wider">
+                                        Amankan Akun Anda
+                                    </h2>
+                                </div>
+                                <p class="text-[11px] text-gray-400 mb-3 leading-relaxed">
+                                    Akun Anda telah otomatis dibuat. Pasang kata sandi sekarang agar bisa login cepat di masa depan.
+                                </p>
+                                
+                                <div id="pwd-card-form" class="space-y-2.5">
+                                    <input
+                                        type="password"
+                                        id="success-new-pwd"
+                                        minlength="6"
+                                        placeholder="Buat kata sandi baru (min 6 karakter)"
+                                        class="yg-input"
+                                    />
+                                    <button
+                                        id="btn-save-success-pwd"
+                                        class="yg-btn-primary w-full text-[11px] py-2.5"
+                                    >
+                                        Kunci & Simpan Kata Sandi
+                                    </button>
+                                </div>
+                                <div id="pwd-card-msg" class="hidden text-[11px] font-mono mt-2 p-2 rounded"></div>
+                            </div>
+                        </div>
 
-                        try {
-                            const res = await fetch("/api/auth/set-password", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ email: email, password: pwd })
+                        <div class="space-y-3">
+                            <a
+                                href="/orders"
+                                class="yg-btn-primary block w-full text-center flex items-center justify-center gap-2"
+                            >
+                                <div class="i-lucide-receipt text-sm"></div> Buka Dashboard Pesanan Saya
+                            </a>
+                            <a
+                                href="/"
+                                class="yg-btn-secondary block w-full text-center"
+                            >
+                                Kembali ke Beranda
+                            </a>
+                        </div>
+
+                        <script is:inline define:vars={{ orderId: order?.id, orderKey: order?.order_key, orderEmail: order?.billing?.email }}>
+                            const btn = document.getElementById("btn-save-success-pwd");
+                            btn?.addEventListener("click", async () => {
+                                const pwd = document.getElementById("success-new-pwd")?.value;
+                                const email = orderEmail || localStorage.getItem("yasui_buyer_email") || "";
+                                const msg = document.getElementById("pwd-card-msg");
+
+                                if (!email) {
+                                    alert("Email pemesanan tidak ditemukan.");
+                                    return;
+                                }
+                                if (!pwd || pwd.length < 6) {
+                                    alert("Kata sandi minimal 6 karakter.");
+                                    return;
+                                }
+
+                                btn.disabled = true;
+                                btn.innerText = "MENYIMPAN...";
+
+                                try {
+                                    const res = await fetch("/api/auth/set-password", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ 
+                                            email: email, 
+                                            password: pwd,
+                                            orderId: orderId,
+                                            orderKey: orderKey
+                                        })
+                                    });
+                                    const data = await res.json();
+                                    if (!res.ok || !data.success) {
+                                        throw new Error(data.error || "Gagal menyimpan kata sandi");
+                                    }
+
+                                    if (data.session?.token) {
+                                        localStorage.setItem("yasui_session", JSON.stringify({
+                                            ...(data.user || {}),
+                                            email: email,
+                                            token: data.session.token,
+                                            expiresAt: data.session.expiresAt || (Date.now() + 30 * 24 * 60 * 60 * 1000)
+                                        }));
+                                    }
+
+                                    msg.className = "text-[11px] font-mono mt-2 p-2 rounded bg-green-950/60 border border-green-500/50 text-green-400 block";
+                                    msg.innerText = "✓ Kata sandi berhasil dibuat! Akun Anda kini aktif & aman.";
+                                    document.getElementById("pwd-card-form")?.classList.add("hidden");
+                                } catch (err) {
+                                    msg.className = "text-[11px] font-mono mt-2 p-2 rounded bg-red-950/60 border border-red-500/50 text-red-400 block";
+                                    msg.innerText = err.message || "Gagal menyimpan";
+                                    btn.disabled = false;
+                                    btn.innerText = "KUNCI & SIMPAN KATA SANDI";
+                                }
                             });
-                            const data = await res.json();
-                            if (!res.ok || !data.success) {
-                                throw new Error(data.error || "Gagal menyimpan kata sandi");
-                            }
-
-                            if (data.session?.token) {
-                                localStorage.setItem("yasui_session", JSON.stringify({
-                                    ...(data.user || {}),
-                                    email: email,
-                                    token: data.session.token,
-                                    expiresAt: data.session.expiresAt || (Date.now() + 30 * 24 * 60 * 60 * 1000)
-                                }));
-                            }
-
-                            msg.className = "text-[11px] font-mono mt-2 p-2 rounded bg-green-950/60 border border-green-500/50 text-green-400 block";
-                            msg.innerText = "✓ Kata sandi berhasil dibuat! Akun Anda kini aktif & aman.";
-                            document.getElementById("pwd-card-form").classList.add("hidden");
-                        } catch (err) {
-                            msg.className = "text-[11px] font-mono mt-2 p-2 rounded bg-red-950/60 border border-red-500/50 text-red-400 block";
-                            msg.innerText = err.message || "Gagal menyimpan";
-                            btn.disabled = false;
-                            btn.innerText = "KUNCI & SIMPAN KATA SANDI";
-                        }
-                    }
-                </script>
+                        </script>
+                    </>
+                )}
 
                 <div class="mt-6 pt-4 border-t border-gray-800 text-center">
                     <p class="text-[10px] text-gray-600 font-mono">
@@ -266,5 +230,5 @@ const lineItems = order?.line_items || [];
                 </div>
             </div>
         </div>
-    </body>
-</html>
+    </main>
+</Layout>
