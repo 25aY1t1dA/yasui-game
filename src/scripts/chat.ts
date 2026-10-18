@@ -3,6 +3,7 @@ export function openLiveChatModal(): void {
     if (modal) {
         modal.classList.remove("hidden");
         modal.classList.add("flex");
+        modal.setAttribute("aria-hidden", "false");
         setTimeout(() => {
             (document.getElementById("livechat-input") as HTMLInputElement | null)?.focus();
         }, 100);
@@ -12,8 +13,9 @@ export function openLiveChatModal(): void {
 export function closeLiveChatModal(): void {
     const modal = document.getElementById("global-livechat-modal");
     if (modal) {
-        modal.classList.add("hidden");
         modal.classList.remove("flex");
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
     }
 }
 
@@ -83,4 +85,14 @@ export function initLiveChat(): void {
     (window as any).closeLiveChatModal = closeLiveChatModal;
     (window as any).sendQuickChatMessage = sendQuickChatMessage;
     (window as any).handleLiveChatSubmit = handleLiveChatSubmit;
+
+    const chatModal = document.getElementById("global-livechat-modal");
+    if (chatModal) {
+        chatModal.addEventListener("click", (e) => {
+            if (e.target === chatModal) closeLiveChatModal();
+        });
+    }
+
+    closeLiveChatModal();
 }
+

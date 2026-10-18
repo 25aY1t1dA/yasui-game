@@ -1,7 +1,7 @@
 /**
  * IMPORT PRODUK SUMMONERS WAR ke WooCommerce
  *
- * Sumber data : scratch/sw-products.json  (2.196 kombinasi monster×region×tier)
+ * Sumber data : scripts/maintenance/sw-products.json  (2.196 kombinasi monster×region×tier)
  * Harga       : src/lib/skyarena-pricelist.js (price_* = harga jual; skip tanpa harga)
  * Deskripsi   : src/lib/skyarena-description.js (buildDescription/buildShortDescription)
  * Foto        : public/assets/SW_Monster/<Nama>.png + alias typo
@@ -12,14 +12,14 @@
  * Stok: hanya stok>0 yang di-publish; stok 0 juga dibuat (status outofstock, tetap tampil utk SEO)
  *       — tapi untuk menjaga katalog bersih, produk stok 0 TIDAK diimport kecuali flag --include-empty.
  *
- * Jalankan: node --env-file=.env scratch/import-sw-products.mjs [--limit=N] [--dry-run] [--include-empty]
+ * Jalankan: node --env-file=.env scripts/maintenance/import-sw-products.mjs [--limit=N] [--dry-run] [--include-empty]
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { wcFetch } from "../src/lib/wc.js";
-import { getPricesForMonster } from "../src/lib/skyarena-pricelist.js";
-import { buildDescription, buildShortDescription } from "../src/lib/skyarena-description.js";
+import { wcFetch } from "../../src/lib/wc.js";
+import { getPricesForMonster } from "../../src/lib/skyarena-pricelist.js";
+import { buildDescription, buildShortDescription } from "../../src/lib/skyarena-description.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -28,7 +28,7 @@ const INCLUDE_EMPTY = args.includes("--include-empty");
 const LIMIT = (() => { const m = args.find(a => a.startsWith("--limit=")); return m ? Number(m.split("=")[1]) : null; })();
 
 const DATA = JSON.parse(fs.readFileSync(path.join(__dirname, "sw-products.json"), "utf8"));
-const SHOT_DIR = path.join(__dirname, "../public/assets/SW_Monster");
+const SHOT_DIR = path.join(__dirname, "../../public/assets/SW_Monster");
 
 // --- Mapping nama monster -> file screenshot (termasuk alias typo di folder owner) ---
 const norm = (s) => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");

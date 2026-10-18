@@ -1,6 +1,6 @@
 /**
  * SUMMONERS WAR PRICE LIST
- * Sumber: scratch/Summoners_War_Price_List.csv
+ * Sumber: src/data/Summoners_War_Price_List.csv
  *
  * price_*   = harga JUAL ke pembeli (ditampilkan di toko Yasui)
  * setoran_* = harga MODAL ke supplier (dikirim sebagai `price` saat rekap penjualan di SkyArena)
@@ -18,7 +18,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CSV_PATH = path.join(__dirname, "../../scratch/Summoners_War_Price_List.csv");
+const CSV_PATH = path.join(__dirname, "../data/Summoners_War_Price_List.csv");
 
 // Peta salah-eja -> nama resmi SkyArena (dari hasil matching)
 const NAME_FIX = {

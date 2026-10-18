@@ -1,22 +1,36 @@
 /* Yasui Game Global Production Styles - UnoCSS Integrated */
 
-body {
-  font-family: "JetBrains Mono", monospace;
-  background-color: #050505;
-  background-image:
-    linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
-  color: #d1d5db;
+:root {
+  --bg-canvas: #090A0F;
+  --bg-surface: #11131A;
+  --bg-elevated: #161922;
+  --border-carbon: #222634;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --accent-cyan: #00E5FF;
 }
 
-/* Cyberpunk Card Polygons */
+body {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #090A0F;
+  color: #94A3B8;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Monospace numerals helper for financial & game values */
+.font-mono, [data-mono="true"] {
+  font-family: "JetBrains Mono", "Geist Mono", monospace;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* Tactical Precision Polygons */
 .cyber-card {
   clip-path: polygon(
     0 0,
     100% 0,
-    100% calc(100% - 15px),
-    calc(100% - 15px) 100%,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
     0 100%
   );
 }
@@ -25,13 +39,13 @@ body {
   clip-path: polygon(
     0 0,
     100% 0,
-    100% calc(100% - 16px),
-    calc(100% - 16px) 100%,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
     0 100%
   );
 }
 
-/* Pseudo-element ambient glow replacement for empty decorative div tags */
+/* Controlled pseudo-element ambient subtle glow */
 .yg-glow-ambient {
   position: relative;
 }
@@ -39,8 +53,8 @@ body {
   content: "";
   position: absolute;
   inset: -1px;
-  background: rgba(34, 211, 238, 0.15);
-  filter: blur(24px);
+  background: rgba(0, 229, 255, 0.06);
+  filter: blur(18px);
   border-radius: inherit;
   pointer-events: none;
   z-index: -1;
@@ -53,11 +67,10 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(239, 68, 68, 0.12);
-  filter: blur(20px);
+  background: rgba(239, 68, 68, 0.08);
+  filter: blur(16px);
   pointer-events: none;
-  z-index: 0;
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  z-index: -1;
 }
 
 /* Cross-browser scrollbar hiding */
@@ -72,4 +85,12 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
+}
+
+/* Modal dialogs closed state integrity */
+#global-livechat-modal[aria-hidden="true"],
+#global-auth-modal[aria-hidden="true"],
+#global-set-password-modal[aria-hidden="true"],
+#mobile-drawer-backdrop[aria-hidden="true"] {
+  display: none !important;
 }

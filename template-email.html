@@ -4,104 +4,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Pesanan Akun - Yasui Game</title>
     <style>
-        /* Reset CSS agar tampil konsisten di semua client */
         body {
             margin: 0;
-            padding: 0;
-            background-color: #0f172a;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 24px 12px;
+            background-color: #090A0F;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #94A3B8;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 580px;
             margin: 0 auto;
-            background-color: #1e293b;
+            background-color: #11131A;
             border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #334155;
+            border: 1px solid #222634;
         }
 
         .header {
-            background-color: #0f172a;
-            padding: 20px;
+            background-color: #090A0F;
+            padding: 24px;
             text-align: center;
-            border-bottom: 2px solid #06b6d4;
+            border-bottom: 1px solid #222634;
         }
 
         .logo {
-            color: #06b6d4;
-            font-size: 24px;
-            font-weight: bold;
+            color: #F8FAFC;
+            font-size: 20px;
+            font-weight: 800;
             text-decoration: none;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .logo span {
+            color: #00E5FF;
         }
 
         .content {
-            padding: 30px;
-            color: #e2e8f0;
+            padding: 28px 24px;
+            color: #F8FAFC;
+        }
+
+        .title {
+            margin-top: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #F8FAFC;
+            letter-spacing: -0.5px;
+        }
+
+        .desc {
+            font-size: 14px;
+            color: #94A3B8;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
         .box-account {
-            background-color: #0f172a;
-            border: 1px dashed #475569;
+            background-color: #0D0F15;
+            border: 1px solid #222634;
             padding: 20px;
             border-radius: 6px;
             margin: 20px 0;
         }
 
-        .label {
-            font-size: 12px;
+        .box-title {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
             text-transform: uppercase;
-            color: #94a3b8;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
+            color: #00E5FF;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #222634;
+        }
+
+        .item-row {
+            margin-bottom: 12px;
+        }
+
+        .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #64748B;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+            display: block;
         }
 
         .value {
-            font-size: 16px;
-            font-family: 'Courier New', monospace;
-            color: #22d3ee;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #F8FAFC;
+            font-weight: 600;
             display: block;
+            word-break: break-all;
+            background-color: #161922;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #222634;
         }
 
         .btn {
             display: inline-block;
             padding: 12px 24px;
-            background-color: #06b6d4;
-            color: #000000;
+            background-color: #00E5FF;
+            color: #090A0F;
             text-decoration: none;
-            font-weight: bold;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background-color: #22d3ee;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 6px;
+            margin-top: 8px;
         }
 
         .warning {
-            background-color: #451a03;
-            border-left: 4px solid #f59e0b;
-            padding: 15px;
-            margin-top: 20px;
+            background-color: #161922;
+            border-left: 3px solid #F59E0B;
+            padding: 16px;
+            margin-top: 24px;
+            border-radius: 4px;
             font-size: 13px;
-            color: #fcd34d;
+            color: #F8FAFC;
+            line-height: 1.6;
+        }
+
+        .warning strong {
+            color: #F59E0B;
         }
 
         .footer {
             text-align: center;
             padding: 20px;
             font-size: 12px;
-            color: #64748b;
-            background-color: #0f172a;
+            color: #64748B;
+            background-color: #090A0F;
+            border-top: 1px solid #222634;
+            line-height: 1.6;
         }
 
         .link {
-            color: #06b6d4;
+            color: #00E5FF;
             text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -110,46 +163,49 @@
 
     <div class="container">
         <div class="header">
-            <a href="https://yasuigame.com" class="logo">YASUI GAME ⚡</a>
+            <a href="https://yasuigame.com" class="logo">YASUI <span>GAME</span></a>
         </div>
 
         <div class="content">
-            <h2 style="margin-top: 0; color: #f8fafc;">Order Selesai! 🚀</h2>
-            <p>Halo <strong>{NAMA_PEMBELI}</strong>,</p>
-            <p>Terima kasih sudah berbelanja. Berikut adalah detail akun pesanan Anda untuk game
-                <strong>{NAMA_GAME}</strong>:
-            </p>
+            <h1 class="title">Detail Akun & Kredensial</h1>
+            <p class="desc">Halo <strong>{NAMA_PEMBELI}</strong>,<br>
+            Pembayaran pesanan Anda telah diverifikasi. Berikut adalah data kredensial akses untuk <strong>{NAMA_GAME}</strong>:</p>
 
             <div class="box-account">
-                <div class="label">LOGIN DETAILS</div>
+                <div class="box-title">KREDENSIAL AKUN TERVERIFIKASI</div>
 
-                <span class="label">Username / Email:</span>
-                <span class="value">{USERNAME_AKUN}</span>
+                <div class="item-row">
+                    <span class="label">Username / Akun ID:</span>
+                    <span class="value">{USERNAME_AKUN}</span>
+                </div>
 
-                <span class="label">Password:</span>
-                <span class="value">{PASSWORD_AKUN}</span>
+                <div class="item-row">
+                    <span class="label">Kata Sandi:</span>
+                    <span class="value">{PASSWORD_AKUN}</span>
+                </div>
 
-                <span class="label">Login Via:</span>
-                <span class="value">{LOGIN_METHOD}</span>
+                <div class="item-row" style="margin-bottom: 0;">
+                    <span class="label">Metode Login:</span>
+                    <span class="value">{LOGIN_METHOD}</span>
+                </div>
             </div>
 
             <div class="warning">
-                <strong>⚠️ PENTING: PANDUAN KEAMANAN</strong><br>
-                Demi keamanan, Anda WAJIB mengubah password dan mengaktifkan 2FA segera setelah login. Garansi hangus
-                jika tidak mengikuti panduan.
+                <strong>PANDUAN KEAMANAN WAJIB:</strong><br>
+                Segera ganti kata sandi utama dan pasang verifikasi 2 langkah (2FA) pada akun Anda. Garansi anti-hackback berlaku penuh selama ketentuan keamanan dipatuhi.
                 <br><br>
-                <a href="https://yasuigame.com/security-guide" class="link">Baca Panduan Pengamanan →</a>
+                <a href="https://yasuigame.com/security-guide" class="link">Pelajari Panduan Keamanan Akun &rarr;</a>
             </div>
 
-            <div style="text-align: center; margin-top: 30px;">
-                <p style="margin-bottom: 10px;">Puas dengan pelayanan kami?</p>
-                <a href="https://yasuigame.com/review?slug={SLUG_PRODUK}" class="btn">BERI BINTANG 5 ⭐</a>
+            <div style="text-align: center; margin-top: 28px;">
+                <p style="margin-bottom: 12px; font-size: 13px; color: #94A3B8;">Puas dengan kecepatan transaksi kami?</p>
+                <a href="https://yasuigame.com/review?slug={SLUG_PRODUK}" class="btn">Tulis Ulasan Transaksi</a>
             </div>
         </div>
 
         <div class="footer">
-            &copy; 2026 Yasui Game. All rights reserved.<br>
-            Butuh bantuan? <a href="https://wa.me/62812345678" class="link">Hubungi WhatsApp Admin</a>
+            &copy; 2026 Yasui Game. Hak Cipta Dilindungi.<br>
+            Butuh bantuan teknis? <a href="https://wa.me/628989685098" class="link">Hubungi CS WhatsApp Yasui</a>
         </div>
     </div>
 

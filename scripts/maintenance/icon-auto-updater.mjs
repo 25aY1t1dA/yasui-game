@@ -6,7 +6,7 @@
  *   1. Mining icon terbaru (Roblox thumbnails API / Play og:image / AppStore artwork / fallback Itemku og:image)
  *   2. Bandingkan dengan icon yang sudah terpasang (meta term `_yasui_icon_source_url` di kategori WP)
  *   3. Jika berubah: download -> upload ke WP Media (multipart) -> attach ke kategori (thumbnail/term meta)
- *   4. Report per run: scratch/icon-sync-report.json
+ *   4. Report per run: scripts/maintenance/icon-sync-report.json
  *
  * Catatan WP:
  *   - Kategori produk WP tidak punya "featured image" native; Yasui memakai term meta
@@ -14,16 +14,16 @@
  *   - Upload media memakai endpoint wp/v2/media (auth Basic sama dengan wcFetch).
  *
  * Jalankan:
- *   node scratch/icon-auto-updater.mjs              # cek + sync (hanya yang berubah)
- *   node scratch/icon-auto-updater.mjs --dry        # laporkan perubahan tanpa upload
- *   node scratch/icon-auto-updater.mjs --force      # upload ulang semua
- *   node scratch/icon-auto-updater.mjs --game=fish-it
+ *   node scripts/maintenance/icon-auto-updater.mjs              # cek + sync (hanya yang berubah)
+ *   node scripts/maintenance/icon-auto-updater.mjs --dry        # laporkan perubahan tanpa upload
+ *   node scripts/maintenance/icon-auto-updater.mjs --force      # upload ulang semua
+ *   node scripts/maintenance/icon-auto-updater.mjs --game=fish-it
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { wcFetch, WP_URL } from "../src/lib/wc.js";
+import { wcFetch, WP_URL } from "../../src/lib/wc.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
@@ -139,7 +139,7 @@ async function main() {
     REPORT.finishedAt = new Date().toISOString();
     fs.writeFileSync(path.join(__dirname, "icon-sync-report.json"), JSON.stringify(REPORT, null, 2));
     console.log(`\nCek: ${REPORT.checked} | berubah: ${REPORT.changed} | upload: ${REPORT.uploaded} | gagal: ${REPORT.failed}`);
-    console.log("Report: scratch/icon-sync-report.json");
+    console.log("Report: scripts/maintenance/icon-sync-report.json");
 }
 
 main().catch(e => { console.error("FATAL:", e); process.exit(1); });

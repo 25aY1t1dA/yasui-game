@@ -7,7 +7,7 @@
  *   OLD (>=30 hari, harga flat) -> 1 tier
  * Produk = monster(LD nat5) × region(ASIA/GLOBAL/EUROPA) × {band_1_3, band_4_7, band_8_30, old}
  *
- * Jalankan:  node --env-file=.env scratch/generate-sw-products.mjs [--limit=N] [--quick]
+ * Jalankan:  node --env-file=.env scripts/maintenance/generate-sw-products.mjs [--limit=N] [--quick]
  *   --quick : stok cepat (count endpoint, tanpa tarik semua akun) — TIDAK split per band
  *   default : stok akurat per band umur (tarik semua akun blessing+old, LAMBAT)
  */
@@ -15,8 +15,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import * as sky from "../src/lib/skyarena.js";
-import { AGE_BANDS, ageBand, makeSku, SW_CATEGORY_SLUG } from "../src/lib/skyarena-stock.js";
+import * as sky from "../../src/lib/skyarena.js";
+import { AGE_BANDS, ageBand, makeSku, SW_CATEGORY_SLUG } from "../../src/lib/skyarena-stock.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);

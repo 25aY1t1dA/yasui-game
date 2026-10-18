@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import FlashSaleTimer from "../components/FlashSaleTimer.astro";
+import HeroSlider from "../components/HeroSlider.astro";
 import { parsePrice } from "../lib/price";
 import { getProducts, getCategories, getCategoryBySlug, getBanners, normalizeProduct } from "../lib/wc";
 
@@ -50,14 +51,14 @@ try {
 
 const getBadges = (product: any) => {
     const attrs = product.attributes?.nodes || [];
-    const badges = [];
+    const badges: any[] = [];
 
     const server = attrs.find((a: any) => a.name.toLowerCase().includes("server"));
     if (server && server.options && server.options.length > 0) {
-        let val = server.options[0];
+        const val = server.options[0];
         badges.push({
             label: val.toUpperCase(),
-            class: "border-cyan-500 text-cyan-400 bg-cyan-900/20",
+            class: "yg-badge-cyan",
         });
     }
 
@@ -71,19 +72,18 @@ const getBadges = (product: any) => {
         const val = tier.options[0];
         const lowerVal = val.toLowerCase();
 
-        let colorClass = "border-gray-500 text-gray-400 bg-gray-900/20";
-
+        let badgeClass = "yg-badge-gray";
         if (lowerVal.includes("fresh") || lowerVal.includes("new")) {
-            colorClass = "border-green-500 text-green-400 bg-green-900/20";
+            badgeClass = "yg-badge-emerald";
         } else if (lowerVal.includes("mid")) {
-            colorClass = "border-blue-500 text-blue-400 bg-blue-900/20";
+            badgeClass = "yg-badge-cyan";
         } else if (lowerVal.includes("end") || lowerVal.includes("high")) {
-            colorClass = "border-purple-500 text-purple-400 bg-purple-900/20";
+            badgeClass = "yg-badge-yellow";
         }
 
         badges.push({
             label: val.toUpperCase(),
-            class: colorClass,
+            class: badgeClass,
         });
     }
 
@@ -91,116 +91,120 @@ const getBadges = (product: any) => {
 };
 ---
 
-<Layout title="Yasui Game - Premium Game Accounts">
-    <main class="yg-shell pt-24 pb-8">
-        <section aria-labelledby="featured-games-title" class="mb-6 md:mb-8">
-            <div class="flex items-center justify-between mb-3 md:mb-4">
+<Layout title="Yasui Game - High-Trust RMT Marketplace">
+    <main class="yg-shell pt-4 md:pt-6 pb-12">
+        <section aria-labelledby="featured-games-title" class="mb-8">
+            <div class="flex items-center justify-between mb-3.5">
                 <div class="flex items-center gap-2">
-                    <div class="w-1.5 h-4 md:h-5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
-                    <h2 id="featured-games-title" class="text-xs md:text-sm font-black text-white uppercase tracking-wider">GAME POPULER</h2>
+                    <span class="w-1 h-4 bg-[#00E5FF] rounded-sm" aria-hidden="true"></span>
+                    <h2 id="featured-games-title" class="text-xs md:text-sm font-bold text-[#F8FAFC] uppercase tracking-wider" data-i18n="home.popular_catalog">
+                        Katalog Game Populer
+                    </h2>
                 </div>
                 <a
                     href="/categories"
-                    class="text-[11px] md:text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition"
+                    class="text-xs font-mono text-[#00E5FF] hover:underline flex items-center gap-1 transition-colors"
                 >
-                    Lihat Semua <div class="i-lucide-chevron-right text-xs"></div>
+                    <span data-i18n="home.view_all">Lihat Semua</span>
+                    <span class="i-lucide-arrow-right text-xs" aria-hidden="true"></span>
                 </a>
             </div>
 
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3">
-                {
-                    categories.map((cat) => (
-                        <a
-                            href={`/category/${cat.slug}`}
-                            class="group relative yg-card p-2 sm:p-3 flex flex-col items-center justify-center transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-400/50 shadow-sm text-center"
-                        >
-                            {cat.count > 0 && (
-                                <span class="absolute top-1.5 right-1.5 text-[8px] sm:text-[9px] font-mono font-bold px-1 py-0.2 rounded bg-black/70 border border-gray-800 text-gray-400 group-hover:text-cyan-400 group-hover:border-cyan-500/40 transition-colors">
-                                    {cat.count}
-                                </span>
-                            )}
-                            <div class="w-10 h-10 sm:w-12 sm:h-12 mb-1 sm:mb-1.5 rounded-xl bg-black/60 border border-gray-800 group-hover:border-cyan-500/40 p-1.5 transition-transform duration-200 group-hover:scale-105 flex items-center justify-center shadow-inner">
-                                {cat.image ? (
-                                    <img
-                                        src={fixImgUrl(cat.image.sourceUrl)}
-                                        alt={cat.name}
-                                        class="w-full h-full object-contain filter drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
-                                    />
-                                ) : (
-                                    <div class="i-lucide-gamepad-2 text-xl text-gray-500 group-hover:text-cyan-400" />
-                                )}
-                            </div>
-                            <span class="text-[10px] sm:text-xs font-bold text-gray-200 group-hover:text-cyan-400 text-center uppercase tracking-tight line-clamp-1 w-full px-0.5 transition-colors">
-                                {cat.name}
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
+                {categories.map((cat) => (
+                    <a
+                        href={`/category/${cat.slug}`}
+                        class="group relative yg-card-interactive p-3 flex flex-col items-center justify-center text-center gap-2"
+                    >
+                        {cat.count > 0 && (
+                            <span class="absolute top-2 right-2 text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded bg-[#0D0F15] border border-[#222634] text-[#94A3B8] group-hover:text-[#00E5FF] group-hover:border-[#00E5FF]/30 transition-colors">
+                                {cat.count}
                             </span>
-                        </a>
-                    ))
-                }
+                        )}
+                        <div class="w-12 h-12 rounded-lg bg-[#0D0F15] border border-[#222634] group-hover:border-[#00E5FF]/30 p-2 transition-transform duration-200 group-hover:scale-105 flex items-center justify-center">
+                            {cat.image ? (
+                                <img
+                                    src={fixImgUrl(cat.image.sourceUrl)}
+                                    alt={cat.name}
+                                    class="w-full h-full object-contain"
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <span class="i-lucide-gamepad-2 text-xl text-[#64748B] group-hover:text-[#00E5FF] transition-colors" />
+                            )}
+                        </div>
+                        <span class="text-xs font-medium text-[#F8FAFC] group-hover:text-[#00E5FF] uppercase tracking-tight line-clamp-1 w-full transition-colors">
+                            {cat.name}
+                        </span>
+                    </a>
+                ))}
             </div>
         </section>
 
-        {banners.length > 0 && (
+        {banners.length > 0 ? (
             <section aria-label="Promo Banners" class="mb-10">
-                <div class="relative w-full">
-                    <div class="relative w-full h-[120px] sm:h-[160px] md:h-[200px] lg:h-[220px] rounded-xl md:rounded-2xl overflow-hidden border border-gray-800/80 hover:border-cyan-500/40 bg-gray-950 shadow-md group transition-colors">
-                        <div
-                            id="hero-carousel-track"
-                            class="flex w-full h-full transition-transform duration-700 ease-out"
-                            style="transform: translateX(0%);"
-                        >
-                            {banners.map((banner, index) => (
-                                <div class="w-full h-full shrink-0 relative">
-                                    {banner.featuredImage?.node?.sourceUrl ? (
-                                        <img
-                                            src={fixImgUrl(banner.featuredImage.node.sourceUrl)}
-                                            alt={banner.featuredImage.node.altText || banner.title || "Promo Banner"}
-                                            class="w-full h-full object-cover object-center select-none"
-                                            loading={index === 0 ? "eager" : "lazy"}
-                                        />
-                                    ) : (
-                                        <div class="w-full h-full bg-gray-900 flex items-center justify-center text-gray-600 font-mono text-xs">
-                                            NO SIGNAL
-                                        </div>
-                                    )}
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
-                                </div>
-                            ))}
-                        </div>
+                <div class="relative w-full h-[150px] sm:h-[200px] md:h-[260px] lg:h-[300px] rounded-lg overflow-hidden border border-[#222634] bg-[#0D0F15] group">
+                    <div
+                        id="hero-carousel-track"
+                        class="flex w-full h-full transition-transform duration-500 ease-out"
+                        style="transform: translateX(0%);"
+                    >
+                        {banners.map((banner, index) => (
+                            <div class="w-full h-full shrink-0 relative">
+                                {banner.featuredImage?.node?.sourceUrl ? (
+                                    <img
+                                        src={fixImgUrl(banner.featuredImage.node.sourceUrl)}
+                                        alt={banner.featuredImage.node.altText || banner.title || "Promo Banner"}
+                                        class="w-full h-full object-cover object-center select-none"
+                                        loading={index === 0 ? "eager" : "lazy"}
+                                    />
+                                ) : (
+                                    <div class="w-full h-full bg-[#11131A] flex items-center justify-center text-[#64748B] font-mono text-xs">
+                                        OFFLINE SIGNAL
+                                    </div>
+                                )}
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#090A0F] via-transparent to-transparent pointer-events-none"></div>
+                            </div>
+                        ))}
+                    </div>
 
-                        <button
-                            id="hero-prev-btn"
-                            aria-label="Previous Slide"
-                            class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-cyan-400 hover:text-black border border-white/10 text-white items-center justify-center transition backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-md z-20 cursor-pointer"
-                        >
-                            <div class="i-lucide-chevron-left text-lg"></div>
-                        </button>
-                        <button
-                            id="hero-next-btn"
-                            aria-label="Next Slide"
-                            class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/60 hover:bg-cyan-400 hover:text-black border border-white/10 text-white items-center justify-center transition backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-md z-20 cursor-pointer"
-                        >
-                            <div class="i-lucide-chevron-right text-lg"></div>
-                        </button>
+                    <button
+                        id="hero-prev-btn"
+                        aria-label="Previous Slide"
+                        class="yg-btn-icon absolute left-3 top-1/2 -translate-y-1/2 hidden md:flex opacity-0 group-hover:opacity-100 z-20"
+                    >
+                        <span class="i-lucide-chevron-left text-base" aria-hidden="true" />
+                    </button>
+                    <button
+                        id="hero-next-btn"
+                        aria-label="Next Slide"
+                        class="yg-btn-icon absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex opacity-0 group-hover:opacity-100 z-20"
+                    >
+                        <span class="i-lucide-chevron-right text-base" aria-hidden="true" />
+                    </button>
 
-                        <div class="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full border border-white/10">
-                            {banners.map((_, i) => (
-                                <button
-                                    class={`hero-indicator h-1 rounded-full transition-all duration-300 cursor-pointer ${i === 0 ? "w-6 bg-cyan-400" : "w-1.5 bg-gray-600 hover:bg-gray-400"}`}
-                                    data-index={i}
-                                    aria-label={`Slide ${i + 1}`}
-                                ></button>
-                            ))}
-                        </div>
+                    <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-[#090A0F]/85 backdrop-blur-sm px-2.5 py-1 rounded border border-[#222634]">
+                        {banners.map((_, i) => (
+                            <button
+                                class={`hero-indicator h-1.5 rounded-full transition-all duration-300 cursor-pointer ${i === 0 ? "w-5 bg-[#00E5FF]" : "w-2 bg-[#262B3D] hover:bg-[#64748B]"}`}
+                                data-index={i}
+                                aria-label={`Slide ${i + 1}`}
+                            />
+                        ))}
                     </div>
                 </div>
+            </section>
+        ) : (
+            <section aria-label="Promo Slider" class="mb-10">
+                <HeroSlider />
             </section>
         )}
 
         {flashSaleProducts.length > 0 && (
-            <section aria-labelledby="flash-sale-title" class="mb-12 border border-red-900/50 bg-red-950/10 p-4 relative overflow-hidden">
+            <section aria-labelledby="flash-sale-title" class="mb-10 p-4 md:p-5 rounded-lg border border-[#222634] bg-[#0D0F15]">
                 <FlashSaleTimer />
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4 mt-4">
                     {flashSaleProducts.map((item) => {
                         const priceVal = parsePrice(item.price);
                         const regularVal = parsePrice(item.regularPrice);
@@ -208,68 +212,79 @@ const getBadges = (product: any) => {
                         const discount = hasDiscount
                             ? Math.round(((regularVal - priceVal) / regularVal) * 100)
                             : 0;
+                        const isAccount = (item.categories || []).some((c: any) => c.slug?.includes("akun") || c.name?.toLowerCase().includes("akun"));
 
                         return (
                             <a
                                 href={`/product/${item.slug}`}
-                                class="cyber-card bg-black border border-red-500/50 hover:border-red-500 transition-all duration-300 group hover:-translate-y-1 block relative shadow-[0_0_15px_rgba(220,38,38,0.15)]"
+                                class="yg-product-card group flex flex-col justify-between"
                             >
-                                <div class="absolute -top-1 -left-1 z-10 bg-red-600 text-white px-2 py-0.5 text-[10px] font-black italic shadow-lg border border-red-400 rotate-[-5deg]">
-                                    HOT DEAL 🔥
-                                </div>
+                                <div>
+                                    <div class="aspect-video bg-[#090A0F] relative overflow-hidden border-b border-[#222634] flex items-center justify-center">
+                                        {item.image ? (
+                                            <img
+                                                src={fixImgUrl(item.image.sourceUrl)}
+                                                alt={item.name}
+                                                class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                                                loading="lazy"
+                                            />
+                                        ) : (
+                                            <div class="flex items-center justify-center h-full text-[#64748B] text-xs font-mono">
+                                                NO VISUAL
+                                            </div>
+                                        )}
 
-                                <div class="aspect-video bg-gray-900 relative overflow-hidden border-b border-red-900/30">
-                                    {item.image ? (
-                                        <img
-                                            src={fixImgUrl(item.image.sourceUrl)}
-                                            alt={item.name}
-                                            class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100"
-                                        />
-                                    ) : (
-                                        <div class="flex items-center justify-center h-full text-gray-700 text-xs">
-                                            NO IMAGE
-                                        </div>
-                                    )}
-
-                                    {hasDiscount && (
-                                        <div class="absolute top-2 right-0 bg-yellow-500 text-black px-2 py-0.5 text-[10px] font-black italic skew-x-[-10deg]">
-                                            -{discount}%
-                                        </div>
-                                    )}
-                                </div>
-                                <div class="p-4">
-                                    <div class="flex flex-wrap gap-1 mb-2">
-                                        {getBadges(item).map((badge) => (
-                                            <span class={`text-[9px] font-bold px-1.5 py-0.5 rounded border border-opacity-50 uppercase tracking-wider ${badge.class}`}>
-                                                {badge.label}
-                                            </span>
-                                        ))}
-                                    </div>
-                                    <h3 class="text-xs md:text-sm font-bold text-gray-200 leading-snug mb-3 line-clamp-2 h-[2.5em] group-hover:text-red-400 transition">
-                                        {item.name}
-                                    </h3>
-                                    <div class="flex items-center justify-between border-t border-gray-800 pt-3">
-                                        <div class="flex flex-col">
-                                            {hasDiscount && (
-                                                <span
-                                                    class="price-tag text-[10px] text-gray-500 line-through decoration-red-500 decoration-2 font-mono leading-none mb-0.5"
-                                                    data-price-idr={regularVal}
-                                                >
-                                                    {item.regularPrice}
-                                                </span>
-                                            )}
-                                            <span
-                                                class="price-tag text-red-400 font-mono text-sm md:text-base font-bold text-shadow-red"
-                                                data-price-idr={priceVal}
-                                            >
-                                                {item.price || "Rp 0"}
+                                        <div class="absolute top-2 left-2">
+                                            <span class={isAccount ? "yg-badge-overlay" : "yg-badge-overlay-online"} data-i18n={isAccount ? "badge.instant" : "badge.online"}>
+                                                {isAccount ? "INSTANT" : "ONLINE"}
                                             </span>
                                         </div>
-                                        <div class="w-6 h-6 bg-red-900/30 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition skew-x-[-10deg]">
-                                            <div class="i-lucide-flame text-xs skew-x-[10deg]" />
-                                        </div>
+
+                                        {hasDiscount && (
+                                            <div class="absolute top-2 right-2 bg-[#090A0F]/90 backdrop-blur-md border border-red-500/40 text-red-400 font-mono text-[10px] px-1.5 py-0.5 rounded font-bold shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+                                                -{discount}%
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
+
+                                    <div class="p-3">
+                                        <div class="flex flex-wrap gap-1 mb-1.5">
+                                            {getBadges(item).map((badge) => (
+                                                 <span class={badge.class}>
+                                                     {badge.label}
+                                                 </span>
+                                             ))}
+                                         </div>
+                                         <h3 class="line-clamp-2 text-xs md:text-sm font-medium text-[#F8FAFC] leading-snug group-hover:text-[#00E5FF] transition-colors mb-2">
+                                             {item.name}
+                                         </h3>
+                                     </div>
+                                 </div>
+
+                                 <div class="p-3 pt-0 border-t border-[#222634]/60 mt-auto">
+                                     <div class="flex items-center justify-between pt-2">
+                                         <div class="flex flex-col">
+                                             {hasDiscount && (
+                                                 <span
+                                                     class="price-tag text-[10px] text-[#64748B] line-through font-mono tabular-nums leading-none mb-0.5"
+                                                     data-price-idr={regularVal}
+                                                 >
+                                                     {item.regularPrice}
+                                                 </span>
+                                             )}
+                                             <span
+                                                 class="yg-price text-sm md:text-base text-[#00E5FF]"
+                                                 data-price-idr={priceVal}
+                                             >
+                                                 {item.price || "Rp 0"}
+                                             </span>
+                                         </div>
+                                         <span class="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                             <span data-i18n="badge.ready">Ready</span>
+                                         </span>
+                                     </div>
+                                 </div>
                             </a>
                         );
                     })}
@@ -278,157 +293,170 @@ const getBadges = (product: any) => {
         )}
 
         <section aria-labelledby="catalog-recommendation-title">
-            <div class="flex items-center justify-between mb-3 md:mb-4">
+            <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
-                    <div class="w-1.5 h-4 md:h-5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div>
+                    <span class="w-1 h-4 bg-[#00E5FF] rounded-sm" aria-hidden="true"></span>
                     <h2
                         id="catalog-recommendation-title"
-                        class="text-xs md:text-sm font-black text-white uppercase tracking-wider"
+                        class="text-xs md:text-sm font-bold text-[#F8FAFC] uppercase tracking-wider"
                         data-i18n="home.admin_rec"
                     >
-                        REKOMENDASI ADMIN
+                        Katalog Unggulan
                     </h2>
                 </div>
-                <span class="text-[11px] md:text-xs font-mono text-gray-500">
-                    Pilihan Akun Terbaik
+                <span class="text-xs font-mono text-[#64748B]" data-i18n="home.verified_badge">
+                    Terverifikasi Yasui Game
                 </span>
             </div>
 
             {!connectionSuccess && (
-                <div class="p-8 text-center border border-dashed border-red-900 bg-red-900/10 rounded-xl mb-8">
-                    <p class="text-red-400 font-bold" data-i18n="home.waiting_conn">
-                        ⚠️ Menunggu koneksi ke WordPress...
+                <div class="p-6 text-center border border-dashed border-red-500/30 bg-red-950/10 rounded-lg mb-6">
+                    <p class="text-red-400 text-xs font-mono" data-i18n="home.waiting_conn">
+                        Sinkronisasi katalog WooCommerce sedang berlangsung...
                     </p>
                 </div>
             )}
 
-            <div class="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-2.5 mb-5 scrollbar-none text-xs font-bold uppercase tracking-wider">
+            <div class="flex items-center gap-1.5 md:gap-2 overflow-x-auto pb-2.5 mb-5 scrollbar-none text-xs font-mono uppercase tracking-wider">
                 <button
                     type="button"
-                    class="admin-rec-filter active-filter-tab px-3 py-1.5 rounded-lg border border-cyan-400 bg-cyan-950/60 text-cyan-400 text-[11px] md:text-xs transition cursor-pointer shrink-0"
+                    class="admin-rec-filter active-filter-tab px-3 py-1.5 rounded-md border border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] text-xs transition-colors cursor-pointer shrink-0 font-semibold"
                     data-category="all"
+                    data-i18n="home.filter_all"
                 >
                     SEMUA
                 </button>
-                {
-                    categories.map((cat) => (
-                        <button
-                            type="button"
-                            class="admin-rec-filter px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-gray-700 text-[11px] md:text-xs transition cursor-pointer shrink-0"
-                            data-category={cat.slug}
-                        >
-                            {cat.name}
-                        </button>
-                    ))
-                }
+                {categories.map((cat) => (
+                    <button
+                        type="button"
+                        class="admin-rec-filter px-3 py-1.5 rounded-md border border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#2E3446] text-xs transition-colors cursor-pointer shrink-0"
+                        data-category={cat.slug}
+                    >
+                        {cat.name}
+                    </button>
+                ))}
             </div>
 
-            <div id="admin-rec-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-                {
-                    products.map((item, index) => {
-                        const priceVal = parsePrice(item.price);
-                        const regularVal = parsePrice(item.regularPrice);
-                        const hasDiscount = regularVal > priceVal;
-                        const discount = hasDiscount
-                            ? Math.round(((regularVal - priceVal) / regularVal) * 100)
-                            : 0;
+            <div id="admin-rec-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+                {products.map((item, index) => {
+                    const priceVal = parsePrice(item.price);
+                    const regularVal = parsePrice(item.regularPrice);
+                    const hasDiscount = regularVal > priceVal;
+                    const discount = hasDiscount
+                        ? Math.round(((regularVal - priceVal) / regularVal) * 100)
+                        : 0;
 
-                        const itemCatSlugs = (item.categories || []).map((c: any) => c.slug).join(",");
+                    const itemCatSlugs = (item.categories || []).map((c: any) => c.slug).join(",");
+                    const isAccount = itemCatSlugs.includes("akun") || (item.name || "").toLowerCase().includes("akun");
 
-                        return (
-                            <a
-                                href={`/product/${item.slug}`}
-                                class={`admin-rec-card yg-product-card ${index >= 10 ? "hidden" : ""}`}
-                                data-category={itemCatSlugs}
-                            >
-                                <div class="aspect-video bg-black relative overflow-hidden border-b border-gray-800 flex items-center justify-center">
+                    return (
+                        <a
+                            href={`/product/${item.slug}`}
+                            class={`admin-rec-card yg-product-card group flex flex-col justify-between ${index >= 10 ? "hidden" : ""}`}
+                            data-category={itemCatSlugs}
+                        >
+                            <div>
+                                <div class="aspect-video bg-[#090A0F] relative overflow-hidden border-b border-[#222634] flex items-center justify-center">
                                     {item.image ? (
                                         <img
                                             src={fixImgUrl(item.image.sourceUrl)}
                                             alt={item.name}
-                                            class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100"
+                                            class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
                                             loading={index < 4 ? "eager" : "lazy"}
                                         />
                                     ) : (
                                         <div
-                                            class="flex items-center justify-center h-full text-gray-700 text-xs"
+                                            class="flex items-center justify-center h-full text-[#64748B] text-xs font-mono"
                                             data-i18n="home.no_image"
                                         >
                                             NO IMAGE
                                         </div>
                                     )}
-                                    <div class="absolute top-1.5 left-1.5 bg-black/80 backdrop-blur px-1.5 py-0.5 rounded text-[8px] sm:text-[9px] text-cyan-400 font-bold uppercase tracking-wider border border-gray-800">
-                                        {item.productCategories?.nodes[0]?.name || "GAME"}
+
+                                    <div class="absolute top-2 left-2">
+                                        <span class={isAccount ? "yg-badge-overlay" : "yg-badge-overlay-online"} data-i18n={isAccount ? "badge.instant" : "badge.online"}>
+                                            {isAccount ? "INSTANT" : "ONLINE"}
+                                        </span>
                                     </div>
 
                                     {hasDiscount && (
-                                        <div class="absolute top-1.5 right-0 bg-red-600 text-white px-2 py-0.5 text-[9px] sm:text-[10px] font-black italic shadow-md border-l border-red-400">
-                                            <span data-i18n="product.save">HEMAT</span> {discount}%
+                                        <div class="absolute top-2 right-2 bg-[#090A0F]/90 backdrop-blur-md border border-red-500/40 text-red-400 font-mono text-[10px] px-1.5 py-0.5 rounded font-bold shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+                                            -{discount}%
                                         </div>
                                     )}
                                 </div>
 
-                                <div class="p-2.5 sm:p-3.5">
-                                    <div class="flex flex-wrap gap-1 mb-1.5">
-                                        {getBadges(item).map((badge) => (
-                                            <span class={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded border border-opacity-50 uppercase tracking-wider ${badge.class}`}>
-                                                {badge.label}
-                                            </span>
-                                        ))}
+                                <div class="p-3">
+                                    <div class="flex items-center justify-between gap-1 mb-1.5">
+                                        <span class="text-[10px] font-mono text-[#94A3B8] truncate">
+                                            {item.productCategories?.nodes[0]?.name || "GAME"}
+                                        </span>
+                                        <div class="flex flex-wrap gap-1">
+                                            {getBadges(item).slice(0, 1).map((badge) => (
+                                                <span class={badge.class}>
+                                                    {badge.label}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <h3 class="text-[11px] sm:text-xs md:text-sm font-bold text-gray-200 leading-snug mb-2 sm:mb-3 line-clamp-2 h-[2.6em] group-hover:text-cyan-400 transition">
+
+                                    <h3 class="line-clamp-2 text-xs md:text-sm font-medium text-[#F8FAFC] leading-snug group-hover:text-[#00E5FF] transition-colors mb-2">
                                         {item.name}
                                     </h3>
-                                    <div class="flex items-center justify-between border-t border-gray-800/80 pt-2.5">
-                                        <div class="flex flex-col">
-                                            {hasDiscount && (
-                                                <span
-                                                    class="price-tag text-[9px] sm:text-[10px] text-gray-500 line-through decoration-red-500 decoration-1 font-mono leading-none mb-0.5"
-                                                    data-price-idr={regularVal}
-                                                >
-                                                    {item.regularPrice}
-                                                </span>
-                                            )}
-                                            <span
-                                                class="price-tag text-cyan-400 font-mono text-xs sm:text-sm md:text-base font-bold"
-                                                data-price-idr={priceVal}
-                                            >
-                                                {item.price || "Rp 0"}
-                                            </span>
-                                        </div>
-                                        <div class="w-6 h-6 rounded bg-gray-800 text-gray-400 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-black transition">
-                                            <div class="i-lucide-plus text-xs" />
-                                        </div>
-                                    </div>
                                 </div>
-                            </a>
-                        );
-                    })
-                }
+                            </div>
+
+                            <div class="p-3 pt-0 border-t border-[#222634]/60 mt-auto">
+                                <div class="flex items-center justify-between pt-2">
+                                    <div class="flex flex-col">
+                                        {hasDiscount && (
+                                            <span
+                                                class="price-tag text-[10px] text-[#64748B] line-through font-mono tabular-nums leading-none mb-0.5"
+                                                data-price-idr={regularVal}
+                                            >
+                                                {item.regularPrice}
+                                            </span>
+                                        )}
+                                        <span
+                                            class="yg-price text-xs sm:text-sm md:text-base text-[#00E5FF]"
+                                            data-price-idr={priceVal}
+                                        >
+                                            {item.price || "Rp 0"}
+                                        </span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                        <span data-i18n="home.stock_ready">Stok Ready</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    );
+                })}
             </div>
 
-            <div id="admin-rec-empty" class="hidden py-12 text-center border border-dashed border-gray-800 rounded-xl my-6">
-                <div class="i-lucide-package-open text-3xl text-gray-600 mx-auto mb-2"></div>
-                <p class="text-xs text-gray-400 font-mono">Belum ada akun di kategori ini.</p>
+            <div id="admin-rec-empty" class="hidden py-12 text-center border border-dashed border-[#222634] rounded-lg my-6 bg-[#0D0F15]">
+                <div class="i-lucide-package-open text-2xl text-[#64748B] mx-auto mb-2"></div>
+                <p class="text-xs text-[#94A3B8] font-mono" data-i18n="home.empty_cat">Belum ada akun di kategori ini.</p>
             </div>
 
-            <div class="mt-8 mb-12 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
                     id="btn-load-more"
                     type="button"
-                    class="w-full sm:w-auto yg-btn-primary px-6 py-3"
+                    class="w-full sm:w-auto yg-btn-primary px-5 py-2.5 text-xs"
                 >
-                    <div class="i-lucide-chevron-down text-base"></div>
-                    <span>MUAT LEBIH BANYAK</span>
-                    <span id="load-more-counter" class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/50 text-cyan-300 font-bold"></span>
+                    <span class="i-lucide-chevron-down text-sm" aria-hidden="true"></span>
+                    <span data-i18n="home.load_more">Muat Lebih Banyak</span>
+                    <span id="load-more-counter" class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-[#090A0F] font-bold"></span>
                 </button>
 
                 <a
                     href="/search"
-                    class="w-full sm:w-auto yg-btn-secondary px-6 py-3"
+                    class="w-full sm:w-auto yg-btn-secondary px-5 py-2.5 text-xs"
                 >
-                    <span>Jelajahi Semua Produk</span>
-                    <div class="i-lucide-arrow-right text-sm"></div>
+                    <span data-i18n="home.explore_all">Jelajahi Semua Produk</span>
+                    <span class="i-lucide-arrow-right text-xs" aria-hidden="true"></span>
                 </a>
             </div>
         </section>
@@ -452,9 +480,9 @@ const getBadges = (product: any) => {
                         track.style.transform = `translateX(-${current * 100}%)`;
                         indicators.forEach((ind, i) => {
                             if (i === current) {
-                                ind.className = "hero-indicator h-1 rounded-full transition-all duration-300 w-6 bg-cyan-400";
+                                ind.className = "hero-indicator h-1.5 rounded-full transition-all duration-300 w-5 bg-[#00E5FF]";
                             } else {
-                                ind.className = "hero-indicator h-1 rounded-full transition-all duration-300 w-1.5 bg-gray-600 hover:bg-gray-400";
+                                ind.className = "hero-indicator h-1.5 rounded-full transition-all duration-300 w-2 bg-[#262B3D] hover:bg-[#64748B]";
                             }
                         });
                     };
@@ -536,9 +564,9 @@ const getBadges = (product: any) => {
                 filterButtons.forEach(btn => {
                     btn.addEventListener("click", () => {
                         filterButtons.forEach(b => {
-                            b.className = "admin-rec-filter px-3 py-1.5 rounded-lg border border-gray-800 bg-gray-900/60 text-gray-400 hover:text-white hover:border-gray-700 text-[11px] md:text-xs transition cursor-pointer shrink-0";
+                            b.className = "admin-rec-filter px-3 py-1.5 rounded-md border border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#2E3446] text-xs transition-colors cursor-pointer shrink-0";
                         });
-                        btn.className = "admin-rec-filter active-filter-tab px-3 py-1.5 rounded-lg border border-cyan-400 bg-cyan-950/60 text-cyan-400 text-[11px] md:text-xs transition cursor-pointer shrink-0";
+                        btn.className = "admin-rec-filter active-filter-tab px-3 py-1.5 rounded-md border border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] text-xs transition-colors cursor-pointer shrink-0 font-semibold";
 
                         currentCategory = btn.getAttribute("data-category") || "all";
                         visibleCount = BATCH_SIZE;
@@ -549,11 +577,7 @@ const getBadges = (product: any) => {
                 updateDisplay();
             }
 
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", initIndexFeatures);
-            } else {
-                initIndexFeatures();
-            }
+            initIndexFeatures();
             document.addEventListener("astro:page-load", initIndexFeatures);
         </script>
     </main>

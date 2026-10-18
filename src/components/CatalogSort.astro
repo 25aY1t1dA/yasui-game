@@ -1,21 +1,58 @@
 ---
 const { value = "newest" } = Astro.props;
-const options = [{ value: "newest", label: "Terbaru" }, { value: "cheapest", label: "Harga terendah" }, { value: "expensive", label: "Harga tertinggi" }, { value: "popular", label: "Terlaris" }];
+const options = [
+    { value: "newest", key: "search.sort.newest", label: "Terbaru" },
+    { value: "cheapest", key: "search.sort.cheapest", label: "Harga Terendah" },
+    { value: "expensive", key: "search.sort.expensive", label: "Harga Tertinggi" },
+    { value: "popular", key: "search.sort.popular", label: "Terpopuler" },
+];
 const selected = options.find((option) => option.value === value) || options[0];
 ---
+
 <catalog-sort class="block relative flex-1 min-w-0">
     <input type="hidden" name="sort" value={selected.value} />
-    <button type="button" aria-haspopup="listbox" aria-expanded="false" aria-label={`Urutkan: ${selected.label}`} class="sort-trigger flex items-center justify-between gap-2 w-full h-12 px-3 bg-gray-900/60 border border-gray-800 text-xs font-mono text-gray-300 hover:border-cyan-400 focus-visible:outline-2 focus-visible:outline-cyan-400"><span class="i-lucide-sliders-horizontal text-cyan-400 shrink-0" aria-hidden="true" /><span data-sort-label class="flex-1 text-left">{selected.label}</span><span class="i-lucide-chevron-down text-cyan-400 shrink-0" /></button>
-    <div role="listbox" aria-label="Urutkan produk" hidden class="sort-menu absolute left-0 right-0 top-full mt-2 p-1 z-40 bg-[#080d14] border border-cyan-400/40 border-t-2 border-t-cyan-400 shadow-[0_12px_32px_rgba(0,0,0,0.65)]">
-        {options.map((option) => <button type="button" role="option" aria-selected={option.value === selected.value} data-value={option.value} tabindex="-1" class="sort-option flex items-center justify-between gap-2 w-full min-h-11 px-3 border-l-2 border-transparent text-left font-mono text-xs text-gray-300 hover:bg-cyan-400/10 focus:bg-cyan-400/10 focus:outline-none"><span>{option.label}</span><span class="sort-check i-lucide-check text-cyan-400 shrink-0" /></button>)}
+    <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        aria-label={`Urutkan: ${selected.label}`}
+        class="sort-trigger flex items-center justify-between gap-2 w-full h-11 px-3 bg-[#0D0F17] border border-[#222634] rounded-md text-xs font-mono text-[#F8FAFC] hover:border-[#00E5FF]/50 focus:border-[#00E5FF] transition-colors cursor-pointer outline-none"
+    >
+        <span class="i-lucide-arrow-up-down text-[#00E5FF] text-xs shrink-0" aria-hidden="true"></span>
+        <span data-sort-label data-i18n={selected.key} class="flex-1 text-left truncate">{selected.label}</span>
+        <span class="sort-chevron i-lucide-chevron-down text-[#64748B] text-xs shrink-0 transition-transform duration-150"></span>
+    </button>
+    <div
+        role="listbox"
+        aria-label="Urutkan produk"
+        hidden
+        class="sort-menu absolute left-0 right-0 top-full mt-1.5 p-1 z-40 bg-[#11131A] border border-[#222634] rounded-md shadow-xl"
+    >
+        {options.map((option) => (
+            <button
+                type="button"
+                role="option"
+                aria-selected={option.value === selected.value}
+                data-value={option.value}
+                data-key={option.key}
+                tabindex="-1"
+                class="sort-option flex items-center justify-between gap-2 w-full h-9 px-3 rounded text-left font-mono text-xs text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] transition-colors cursor-pointer"
+            >
+                <span data-i18n={option.key}>{option.label}</span>
+                <span class="sort-check i-lucide-check text-[#00E5FF] text-xs shrink-0" />
+            </button>
+        ))}
     </div>
 </catalog-sort>
+
 <style>
     .sort-menu[hidden] { display: none; }
-    .sort-option[aria-selected="true"] { color: #22d3ee; background: rgb(34 211 238 / .1); border-left-color: #22d3ee; }
-    .sort-trigger[aria-expanded="true"] { border-color: #22d3ee; }
+    .sort-option[aria-selected="true"] { color: #00E5FF; background: rgba(0, 229, 255, 0.08); font-weight: 600; }
+    .sort-trigger[aria-expanded="true"] { border-color: #00E5FF; }
+    .sort-trigger[aria-expanded="true"] .sort-chevron { transform: rotate(180deg); }
     .sort-option[aria-selected="false"] .sort-check { visibility: hidden; }
 </style>
+
 <script>
     class CatalogSort extends HTMLElement {
         controller?: AbortController;
@@ -26,27 +63,59 @@ const selected = options.find((option) => option.value === value) || options[0];
             const trigger = this.querySelector<HTMLButtonElement>(".sort-trigger")!;
             const menu = this.querySelector<HTMLElement>("[role=listbox]")!;
             const options = Array.from(this.querySelectorAll<HTMLButtonElement>("[role=option]"));
-            const close = (focus = false) => { menu.hidden = true; trigger.setAttribute("aria-expanded", "false"); if (focus) trigger.focus(); };
-            const open = () => { menu.hidden = false; trigger.setAttribute("aria-expanded", "true"); (options.find((option) => option.getAttribute("aria-selected") === "true") || options[0]).focus(); };
-            trigger.addEventListener("click", () => menu.hidden ? open() : close(), { signal });
-            trigger.addEventListener("keydown", (event) => { if (["ArrowDown", "ArrowUp"].includes(event.key)) { event.preventDefault(); open(); } }, { signal });
+            const close = (focus = false) => {
+                menu.hidden = true;
+                trigger.setAttribute("aria-expanded", "false");
+                if (focus) trigger.focus();
+            };
+            const open = () => {
+                menu.hidden = false;
+                trigger.setAttribute("aria-expanded", "true");
+                (options.find((option) => option.getAttribute("aria-selected") === "true") || options[0])?.focus();
+            };
+            trigger.addEventListener("click", () => (menu.hidden ? open() : close()), { signal });
+            trigger.addEventListener("keydown", (event) => {
+                if (["ArrowDown", "ArrowUp"].includes(event.key)) {
+                    event.preventDefault();
+                    open();
+                }
+            }, { signal });
             options.forEach((option, index) => {
                 option.addEventListener("click", () => {
-                    this.querySelector<HTMLInputElement>("input")!.value = option.dataset.value!;
-                    this.querySelector("[data-sort-label]")!.textContent = option.textContent!.trim();
+                    const hiddenInput = this.querySelector<HTMLInputElement>("input");
+                    if (hiddenInput) hiddenInput.value = option.dataset.value!;
+                    const label = this.querySelector("[data-sort-label]");
+                    if (label) label.textContent = option.textContent!.trim();
                     trigger.setAttribute("aria-label", `Urutkan: ${option.textContent!.trim()}`);
                     options.forEach((item) => item.setAttribute("aria-selected", String(item === option)));
                     close(true);
+                    // trigger change event on form or custom event
+                    hiddenInput?.dispatchEvent(new Event("change", { bubbles: true }));
                 }, { signal });
                 option.addEventListener("keydown", (event) => {
-                    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) { event.preventDefault(); options[event.key === "Home" ? 0 : event.key === "End" ? options.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length].focus(); }
+                    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+                        event.preventDefault();
+                        const nextIdx = event.key === "Home" ? 0 : event.key === "End" ? options.length - 1 : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+                        options[nextIdx]?.focus();
+                    }
                 }, { signal });
             });
-            this.addEventListener("keydown", (event) => { if (event.key === "Escape") { event.preventDefault(); close(true); } }, { signal });
-            document.addEventListener("click", (event) => { if (!this.contains(event.target as Node)) close(); }, { signal });
-            this.addEventListener("focusout", (event) => { if (!this.contains(event.relatedTarget as Node)) close(); }, { signal });
+            this.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") {
+                    event.preventDefault();
+                    close(true);
+                }
+            }, { signal });
+            document.addEventListener("click", (event) => {
+                if (!this.contains(event.target as Node)) close();
+            }, { signal });
+            this.addEventListener("focusout", (event) => {
+                if (!this.contains(event.relatedTarget as Node)) close();
+            }, { signal });
         }
-        disconnectedCallback() { this.controller?.abort(); }
+        disconnectedCallback() {
+            this.controller?.abort();
+        }
     }
     if (!customElements.get("catalog-sort")) customElements.define("catalog-sort", CatalogSort);
 </script>

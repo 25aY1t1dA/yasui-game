@@ -76,6 +76,7 @@ export function openAuthModal(mode = "login"): void {
     if (!modal) return;
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    modal.setAttribute("aria-hidden", "false");
 
     const savedEmail = localStorage.getItem("yasui_buyer_email") || "";
     const loginEmailInput = document.getElementById("auth-login-email") as HTMLInputElement | null;
@@ -87,8 +88,9 @@ export function openAuthModal(mode = "login"): void {
 export function closeAuthModal(): void {
     const modal = document.getElementById("global-auth-modal");
     if (modal) {
-        modal.classList.add("hidden");
         modal.classList.remove("flex");
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
     }
     const alert = document.getElementById("auth-modal-alert");
     if (alert) alert.classList.add("hidden");
@@ -170,6 +172,7 @@ export function openSetPasswordModal(): void {
     if (!modal) return;
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    modal.setAttribute("aria-hidden", "false");
 
     const session = getSession();
     const savedEmail = session?.email || localStorage.getItem("yasui_buyer_email") || "";
@@ -180,8 +183,9 @@ export function openSetPasswordModal(): void {
 export function closeSetPasswordModal(): void {
     const modal = document.getElementById("global-set-password-modal");
     if (modal) {
-        modal.classList.add("hidden");
         modal.classList.remove("flex");
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
     }
     const alert = document.getElementById("set-pwd-alert");
     if (alert) alert.classList.add("hidden");
@@ -302,6 +306,21 @@ export function initAuth(): void {
         });
     }
 
+    const authModal = document.getElementById("global-auth-modal");
+    if (authModal) {
+        authModal.addEventListener("click", (e) => {
+            if (e.target === authModal) closeAuthModal();
+        });
+    }
+    const pwdModal = document.getElementById("global-set-password-modal");
+    if (pwdModal) {
+        pwdModal.addEventListener("click", (e) => {
+            if (e.target === pwdModal) closeSetPasswordModal();
+        });
+    }
+
+    closeAuthModal();
+    closeSetPasswordModal();
     updateNavAuthUI();
     window.addEventListener("storage", updateNavAuthUI);
     document.addEventListener("yasui-auth-changed", updateNavAuthUI);

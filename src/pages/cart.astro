@@ -11,74 +11,69 @@ import { translations } from "../lib/translations";
 >
     <div
         id="cyber-modal"
-        class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm hidden flex-col justify-center items-center p-4"
+        class="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm hidden flex-col justify-center items-center p-4"
     >
         <div
-            class="relative bg-gray-900 border border-gray-700 w-full max-w-sm p-6 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.8)] modal-animate"
+            class="relative bg-[#11131A] border border-[#222634] w-full max-w-sm p-6 rounded-lg shadow-2xl modal-animate"
         >
-            <div
-                class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-transparent to-cyan-500 rounded-t-2xl"
-            >
-            </div>
-
             <div class="flex items-center gap-3 mb-4">
                 <div
-                    class="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700"
+                    class="w-10 h-10 bg-[#161922] rounded-md flex items-center justify-center border border-[#222634]"
                 >
                     <div
                         id="modal-icon"
-                        class="i-lucide-alert-triangle text-xl text-yellow-500"
+                        class="i-lucide-alert-triangle text-xl text-amber-400"
                     >
                     </div>
                 </div>
                 <div>
                     <h3
                         id="modal-title"
-                        class="text-white font-black uppercase tracking-wider text-sm"
+                        class="text-[#F8FAFC] font-bold uppercase tracking-wider text-xs"
                     >
-                        SYSTEM WARNING
+                        KONFIRMASI
                     </h3>
-                    <p class="text-[10px] text-gray-500 font-mono">
-                        Confirm Action
+                    <p class="text-[10px] text-[#64748B] font-mono">
+                        System Prompt
                     </p>
                 </div>
             </div>
 
             <p
                 id="modal-message"
-                class="text-gray-300 text-sm mb-6 leading-relaxed"
+                class="text-[#94A3B8] text-xs mb-6 leading-relaxed"
             >
-                Are you sure you want to proceed?
+                Apakah Anda yakin ingin melanjutkan tindakan ini?
             </p>
 
-            <div class="flex gap-3" id="modal-actions"></div>
+            <div class="flex gap-2.5" id="modal-actions"></div>
         </div>
     </div>
 
-    <main class="max-w-3xl mx-auto px-4 pt-20 sm:pt-24 pb-44 md:pb-28">
+    <main class="max-w-3xl mx-auto px-4 pt-4 md:pt-6 pb-44 md:pb-28">
         <div class="flex items-center justify-between mb-4">
             <a
                 href="/"
-                class="text-xs font-bold text-gray-400 hover:text-white flex items-center gap-1.5 transition"
+                class="text-xs font-semibold text-[#94A3B8] hover:text-[#F8FAFC] flex items-center gap-1.5 transition-colors"
                 data-i18n="cart.continue_shopping"
             >
                 <div class="i-lucide-arrow-left text-sm"></div> LANJUT BELANJA
             </a>
             <div
-                class="text-xs font-bold text-cyan-400 uppercase tracking-widest font-mono"
+                class="text-[11px] font-mono font-medium text-[#00E5FF] uppercase tracking-widest flex items-center gap-1.5"
             >
-                SECURE CART
+                <div class="i-lucide-shield-check text-xs"></div> SECURE CART
             </div>
         </div>
 
         <nav
-            class="flex items-center gap-6 mb-6 border-b border-gray-800"
+            class="flex items-center gap-6 mb-6 border-b border-[#222634]"
             aria-label="Cart Navigation"
         >
             <button
                 id="btn-tab-cart"
                 onclick="switchTab('cart')"
-                class="pb-3 border-b-2 border-cyan-400 text-white font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition cursor-pointer"
+                class="pb-3 border-b-2 border-[#00E5FF] text-[#F8FAFC] font-semibold text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
             >
                 <div class="i-lucide-shopping-cart text-sm"></div>
                 <span data-i18n="cart.title">KERANJANG</span>
@@ -86,34 +81,34 @@ import { translations } from "../lib/translations";
             <button
                 id="btn-tab-transactions"
                 onclick="switchTab('transactions')"
-                class="pb-3 border-b-2 border-transparent text-gray-500 hover:text-gray-300 font-bold text-xs uppercase tracking-wider flex items-center gap-2 transition cursor-pointer"
+                class="pb-3 border-b-2 border-transparent text-[#64748B] hover:text-[#94A3B8] font-semibold text-xs uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer"
             >
                 <div class="i-lucide-history text-sm"></div>
-                <span>RIWAYAT TRANSAKSI</span>
+                <span data-i18n="cart.tab_history">RIWAYAT TRANSAKSI</span>
             </button>
         </nav>
 
         <section id="tab-cart">
-            <div id="cart-empty" class="hidden text-center py-16 sm:py-20 bg-gray-900/30 border border-gray-800/80 rounded-2xl p-8">
+            <div id="cart-empty" class="hidden text-center py-16 sm:py-20 bg-[#11131A] border border-[#222634] rounded-lg p-8">
                 <div
-                    class="i-lucide-shopping-cart text-5xl sm:text-6xl text-gray-700 mx-auto mb-4"
+                    class="i-lucide-shopping-cart text-5xl sm:text-6xl text-[#222634] mx-auto mb-4"
                 >
                 </div>
                 <h2
-                    class="text-lg sm:text-xl font-bold text-gray-400 mb-2"
+                    class="text-base sm:text-lg font-bold text-[#F8FAFC] mb-2"
                     data-i18n="cart.empty_title"
                 >
-                    Keranjang Kosong
+                    Keranjang Belanja Kosong
                 </h2>
                 <p
-                    class="text-xs text-gray-500 mb-6 max-w-sm mx-auto"
+                    class="text-xs text-[#94A3B8] mb-6 max-w-sm mx-auto"
                     data-i18n="cart.empty_desc"
                 >
-                    Belum ada item yang siap dicheckout. Yuk cari akun impianmu di katalog!
+                    Belum ada item yang siap dicheckout. Silakan jelajahi katalog game untuk menemukan akun idaman Anda.
                 </p>
                 <a
                     href="/"
-                    class="inline-flex items-center gap-2 text-cyan-400 border border-cyan-400/50 hover:border-cyan-400 px-6 py-2.5 rounded-xl hover:bg-cyan-400 hover:text-black transition font-bold text-xs uppercase shadow-[0_0_15px_rgba(34,211,238,0.15)]"
+                    class="yg-btn-primary"
                     data-i18n="cart.find_game"
                 >
                     <div class="i-lucide-gamepad-2 text-sm"></div>
@@ -125,7 +120,7 @@ import { translations } from "../lib/translations";
                 id="cart-header"
                 class="hidden items-center justify-between mb-4 px-1"
             >
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2.5">
                     <input
                         type="checkbox"
                         id="select-all"
@@ -134,13 +129,13 @@ import { translations } from "../lib/translations";
                     />
                     <label
                         for="select-all"
-                        class="text-xs font-bold text-gray-400 cursor-pointer select-none"
+                        class="text-xs font-semibold text-[#94A3B8] cursor-pointer select-none"
                         data-i18n="cart.select_all">Pilih Semua</label
                     >
                 </div>
                 <button
                     onclick="removeSelected()"
-                    class="text-[11px] text-red-400 hover:text-red-300 transition font-bold uppercase flex items-center gap-1.5 cursor-pointer"
+                    class="text-[11px] text-red-400 hover:text-red-300 transition-colors font-mono font-medium uppercase flex items-center gap-1.5 cursor-pointer"
                     data-i18n="cart.delete_selected"
                 >
                     <div class="i-lucide-trash-2 text-xs"></div> Hapus Dipilih
@@ -151,21 +146,21 @@ import { translations } from "../lib/translations";
 
             <div
                 id="cart-footer"
-                class="fixed bottom-[52px] md:bottom-0 left-0 right-0 bg-black/95 border-t border-gray-800 p-3 sm:p-4 hidden z-40 backdrop-blur-lg shadow-[0_-5px_20px_rgba(0,0,0,0.8)]"
+                class="fixed bottom-[52px] md:bottom-0 left-0 right-0 bg-[#0D0F15]/95 border-t border-[#222634] p-3 sm:p-4 hidden z-40 backdrop-blur-md shadow-2xl"
             >
                 <div
                     class="max-w-3xl mx-auto flex items-center justify-between gap-4"
                 >
                     <div class="flex flex-col">
                         <div
-                            class="text-[10px] text-gray-500 uppercase font-bold mb-0.5"
+                            class="text-[10px] text-[#64748B] uppercase font-mono font-semibold mb-0.5"
                         >
                             <span data-i18n="cart.total_selected"
                                 >Total Dipilih</span
-                            > (<span id="selected-count">0</span>)
+                            > (<span id="selected-count" class="text-[#F8FAFC]">0</span> item)
                         </div>
                         <div
-                            class="text-lg sm:text-xl font-mono font-bold text-cyan-400 leading-none"
+                            class="text-lg sm:text-xl font-mono font-bold text-[#00E5FF] tabular-nums leading-none"
                             id="cart-total"
                         >
                             Rp 0
@@ -174,36 +169,37 @@ import { translations } from "../lib/translations";
                     <button
                         id="checkout-btn"
                         onclick="proceedToCheckout()"
-                        class="bg-cyan-400 hover:bg-cyan-300 text-black font-black uppercase px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl transition shadow-[0_0_20px_rgba(34,211,238,0.25)] text-xs sm:text-sm cursor-pointer disabled-btn"
+                        class="yg-btn-primary px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm"
                         data-i18n="cart.checkout"
                     >
-                        CHECKOUT
+                        LANJUT CHECKOUT
                     </button>
                 </div>
             </div>
         </section>
 
         <section id="tab-transactions" class="hidden">
-            <div id="transactions-empty" class="hidden text-center py-16 sm:py-20 bg-gray-900/30 border border-gray-800/80 rounded-2xl p-8">
+            <div id="transactions-empty" class="hidden text-center py-16 sm:py-20 bg-[#11131A] border border-[#222634] rounded-lg p-8">
                 <div
-                    class="i-lucide-history text-5xl sm:text-6xl text-gray-700 mx-auto mb-4"
+                    class="i-lucide-history text-5xl sm:text-6xl text-[#222634] mx-auto mb-4"
                 >
                 </div>
-                <h2 class="text-lg sm:text-xl font-bold text-gray-400 mb-2">
+                <h2 class="text-base sm:text-lg font-bold text-[#F8FAFC] mb-2" data-i18n="cart.no_history_title">
                     Belum Ada Riwayat
                 </h2>
-                <p class="text-xs text-gray-500 mb-6 max-w-sm mx-auto">
+                <p class="text-xs text-[#94A3B8] mb-6 max-w-sm mx-auto" data-i18n="cart.no_history_desc">
                     Riwayat pesanan yang sudah dibuat di akun kamu dapat dipantau di halaman Pesanan Saya.
                 </p>
                 <a
                     href="/orders"
-                    class="inline-flex items-center gap-2 text-cyan-400 border border-cyan-400/50 hover:border-cyan-400 px-6 py-2.5 rounded-xl hover:bg-cyan-400 hover:text-black transition font-bold text-xs uppercase shadow-[0_0_15px_rgba(34,211,238,0.15)]"
+                    class="yg-btn-secondary"
+                    data-i18n="cart.open_orders"
                 >
-                    <div class="i-lucide-receipt text-sm"></div>
+                    <div class="i-lucide-receipt text-sm text-[#00E5FF]"></div>
                     <span>Buka Pesanan Saya</span>
                 </a>
             </div>
-            <div id="transactions-content" class="space-y-4"></div>
+            <div id="transactions-content" class="space-y-3"></div>
         </section>
     </main>
 
@@ -212,39 +208,40 @@ import { translations } from "../lib/translations";
             appearance: none;
             width: 18px;
             height: 18px;
-            border: 1px solid #374151;
+            border: 1px solid #222634;
             border-radius: 4px;
-            background: #000;
+            background: #0D0F15;
             cursor: pointer;
             position: relative;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
+        }
+        .cyber-checkbox:hover {
+            border-color: #00E5FF;
         }
         .cyber-checkbox:checked {
-            background: #22d3ee;
-            border-color: #22d3ee;
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
+            background: #00E5FF;
+            border-color: #00E5FF;
         }
         .cyber-checkbox:checked::after {
             content: "✓";
-            color: #000;
+            color: #090A0F;
             font-weight: 900;
-            font-size: 13px;
+            font-size: 12px;
+            line-height: 1;
         }
 
         .disabled-btn {
-            opacity: 0.5;
+            opacity: 0.45 !important;
             cursor: not-allowed !important;
-            background-color: #374151 !important;
-            color: #9ca3af !important;
-            box-shadow: none !important;
+            pointer-events: none;
         }
 
         @keyframes modalPop {
             0% {
-                transform: scale(0.9);
+                transform: scale(0.96);
                 opacity: 0;
             }
             100% {
@@ -253,7 +250,7 @@ import { translations } from "../lib/translations";
             }
         }
         .modal-animate {
-            animation: modalPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: modalPop 0.15s ease-out;
         }
     </style>
 
@@ -281,6 +278,12 @@ import { translations } from "../lib/translations";
 
         updatePageTranslations();
         document.addEventListener("yasui-lang-change", updatePageTranslations);
+        document.addEventListener("yasui-currency-change", () => {
+            renderCart();
+            if (document.getElementById("tab-transactions")?.classList.contains("hidden") === false) {
+                renderTransactions();
+            }
+        });
 
         // --- ROBUST PRICE PARSER ---
         function parsePrice(priceStr) {
@@ -339,14 +342,14 @@ import { translations } from "../lib/translations";
 
                 const confirmClass =
                     type === "danger"
-                        ? "bg-red-500 hover:bg-red-400 text-white"
-                        : "bg-cyan-400 hover:bg-white text-black";
+                        ? "yg-btn-danger"
+                        : "yg-btn-primary";
 
                 modalActions.innerHTML = `
-                    <button onclick="closeModal(false)" class="flex-1 border border-gray-600 text-gray-400 font-bold text-xs uppercase py-2.5 rounded-xl hover:bg-gray-800 transition cursor-pointer">
+                    <button onclick="closeModal(false)" class="yg-btn-secondary flex-1 py-2 text-xs">
                         Batal
                     </button>
-                    <button onclick="closeModal(true)" class="flex-1 ${confirmClass} font-black text-xs uppercase py-2.5 rounded-xl shadow-lg transition cursor-pointer">
+                    <button onclick="closeModal(true)" class="${confirmClass} flex-1 py-2 text-xs">
                         Ya, Hapus
                     </button>
                 `;
@@ -362,10 +365,10 @@ import { translations } from "../lib/translations";
                 modalTitle.innerText = title;
                 modalMsg.innerText = message;
                 modalIcon.className =
-                    "i-lucide-info text-xl text-cyan-400";
+                    "i-lucide-info text-xl text-[#00E5FF]";
 
                 modalActions.innerHTML = `
-                    <button onclick="closeModal(true)" class="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-black text-xs uppercase py-2.5 rounded-xl transition shadow-lg cursor-pointer">
+                    <button onclick="closeModal(true)" class="yg-btn-primary w-full py-2.5 text-xs">
                         MENGERTI
                     </button>
                 `;
@@ -525,28 +528,28 @@ import { translations } from "../lib/translations";
                     }
 
                     return `
-                    <div class="bg-gray-900/60 border ${item.selected ? "border-cyan-500/50 bg-cyan-950/20 shadow-[0_0_15px_rgba(34,211,238,0.1)]" : "border-gray-800"} rounded-xl p-3 sm:p-4 flex gap-3 sm:gap-4 items-start relative group transition-all duration-300">
+                    <div class="bg-[#11131A] border ${item.selected ? "border-[#00E5FF] bg-[#00E5FF]/5" : "border-[#222634]"} rounded-lg p-3 sm:p-4 flex gap-3 sm:gap-4 items-start relative group transition-colors">
                         <div class="pt-1">
                             <input type="checkbox" class="cyber-checkbox" 
                                 ${item.selected ? "checked" : ""} 
                                 onchange="toggleItem(${index})"
                             >
                         </div>
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-black rounded-lg overflow-hidden shrink-0 border border-gray-800">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-[#0D0F15] rounded-md overflow-hidden shrink-0 border border-[#222634]">
                             <img src="${item.image || "/favicon.svg"}" alt="${item.name || "Produk"}" class="w-full h-full object-cover ${item.selected ? "opacity-100" : "opacity-60"}">
                         </div>
                         <div class="flex-1 min-w-0 pr-8">
-                            <h3 class="text-xs sm:text-sm font-bold ${item.selected ? "text-white" : "text-gray-400"} truncate transition-colors">${item.name}</h3>
-                            <div class="${item.selected ? "text-cyan-400" : "text-gray-500"} font-mono font-bold text-xs sm:text-sm my-1 transition-colors">${formatMoney(price)}</div>
+                            <h3 class="text-xs sm:text-sm font-semibold ${item.selected ? "text-[#F8FAFC]" : "text-[#94A3B8]"} truncate transition-colors">${item.name}</h3>
+                            <div class="${item.selected ? "text-[#00E5FF]" : "text-[#64748B]"} font-mono font-bold text-xs sm:text-sm my-1 tabular-nums transition-colors">${formatMoney(price)}</div>
                             
                             ${item.email || item.wa ? `
-                            <div class="text-[10px] text-gray-500 font-mono mt-1 flex flex-wrap gap-2">
-                                ${item.email ? `<span><span class="text-gray-600">Email:</span> ${item.email}</span>` : ""}
-                                ${item.wa ? `<span><span class="text-gray-600">Kontak:</span> ${item.wa}</span>` : ""}
+                            <div class="text-[10px] text-[#64748B] font-mono mt-1 flex flex-wrap gap-2">
+                                ${item.email ? `<span><span class="text-[#475569]">Email:</span> <span class="text-[#94A3B8]">${item.email}</span></span>` : ""}
+                                ${item.wa ? `<span><span class="text-[#475569]">Kontak:</span> <span class="text-[#94A3B8]">${item.wa}</span></span>` : ""}
                             </div>
                             ` : ""}
                         </div>
-                        <button onclick="removeItem(${index})" class="text-gray-600 hover:text-red-400 p-2 absolute top-2 right-2 transition cursor-pointer" title="Hapus Item">
+                        <button onclick="removeItem(${index})" class="text-[#64748B] hover:text-red-400 p-2 absolute top-2 right-2 transition-colors cursor-pointer" title="Hapus Item">
                             <div class="i-lucide-trash-2 text-sm sm:text-base"></div>
                         </button>
                     </div>
@@ -584,11 +587,11 @@ import { translations } from "../lib/translations";
                 tabCart?.classList.remove("hidden");
                 tabTrans?.classList.add("hidden");
 
-                btnCart?.classList.add("border-cyan-400", "text-white");
-                btnCart?.classList.remove("border-transparent", "text-gray-500");
+                btnCart?.classList.add("border-[#00E5FF]", "text-[#F8FAFC]");
+                btnCart?.classList.remove("border-transparent", "text-[#64748B]");
 
-                btnTrans?.classList.remove("border-cyan-400", "text-white");
-                btnTrans?.classList.add("border-transparent", "text-gray-500");
+                btnTrans?.classList.remove("border-[#00E5FF]", "text-[#F8FAFC]");
+                btnTrans?.classList.add("border-transparent", "text-[#64748B]");
 
                 if (getCart().length > 0) footer?.classList.remove("hidden");
 
@@ -599,11 +602,11 @@ import { translations } from "../lib/translations";
                 tabCart?.classList.add("hidden");
                 tabTrans?.classList.remove("hidden");
 
-                btnCart?.classList.remove("border-cyan-400", "text-white");
-                btnCart?.classList.add("border-transparent", "text-gray-500");
+                btnCart?.classList.remove("border-[#00E5FF]", "text-[#F8FAFC]");
+                btnCart?.classList.add("border-transparent", "text-[#64748B]");
 
-                btnTrans?.classList.add("border-cyan-400", "text-white");
-                btnTrans?.classList.remove("border-transparent", "text-gray-500");
+                btnTrans?.classList.add("border-[#00E5FF]", "text-[#F8FAFC]");
+                btnTrans?.classList.remove("border-transparent", "text-[#64748B]");
 
                 footer?.classList.add("hidden");
                 renderTransactions();
@@ -642,18 +645,18 @@ import { translations } from "../lib/translations";
                 .map((tx) => {
                     const statusColor =
                         tx.status === "PAID"
-                            ? "text-emerald-400 border-emerald-500/40 bg-emerald-950/20"
+                            ? "yg-badge-emerald"
                             : tx.status === "PENDING"
-                              ? "text-yellow-400 border-yellow-500/40 bg-yellow-950/20"
-                              : "text-gray-400 border-gray-700 bg-black/50";
+                              ? "yg-badge-yellow"
+                              : "yg-badge-gray";
                     return `
-                        <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-4">
+                        <div class="bg-[#11131A] border border-[#222634] rounded-lg p-4 transition-colors">
                             <div class="flex justify-between items-start mb-3">
                                 <div>
-                                    <div class="text-[10px] text-gray-500 font-mono mb-1">ID: ${tx.id || "-"}</div>
-                                    <div class="text-xs font-bold text-white">${tx.date || "Baru Saja"}</div>
+                                    <div class="text-[10px] text-[#64748B] font-mono mb-0.5">ID: ${tx.id || "-"}</div>
+                                    <div class="text-xs font-semibold text-[#F8FAFC]">${tx.date || "Baru Saja"}</div>
                                 </div>
-                                <div class="text-[11px] font-bold ${statusColor} border px-2 py-0.5 rounded-lg">
+                                <div class="${statusColor}">
                                     ${tx.status || "PENDING"}
                                 </div>
                             </div>
@@ -662,21 +665,21 @@ import { translations } from "../lib/translations";
                                     .map(
                                         (item) => `
                                     <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 bg-black rounded-lg overflow-hidden shrink-0 border border-gray-800">
+                                        <div class="w-9 h-9 bg-[#0D0F15] rounded-md overflow-hidden shrink-0 border border-[#222634]">
                                             <img src="${item.image || "/favicon.svg"}" class="w-full h-full object-cover">
                                         </div>
-                                        <div class="min-w-0">
-                                            <div class="text-xs font-bold text-gray-300 truncate">${item.name}</div>
-                                            <div class="text-[10px] text-cyan-400 font-mono">${formatMoney(item.price)}</div>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="text-xs font-medium text-[#F8FAFC] truncate">${item.name}</div>
+                                            <div class="text-[10px] text-[#00E5FF] font-mono tabular-nums">${formatMoney(item.price)}</div>
                                         </div>
                                     </div>
                                 `,
                                     )
                                     .join("")}
                             </div>
-                            <div class="border-t border-gray-800/80 pt-3 flex justify-between items-center">
-                                <div class="text-[10px] text-gray-500 font-mono uppercase">TOTAL ORDER</div>
-                                <div class="text-sm font-bold text-cyan-400 font-mono">${formatMoney(tx.total || 0)}</div>
+                            <div class="border-t border-[#222634] pt-3 flex justify-between items-center">
+                                <div class="text-[10px] text-[#64748B] font-mono uppercase font-semibold">TOTAL ORDER</div>
+                                <div class="text-xs font-mono font-bold text-[#00E5FF] tabular-nums">${formatMoney(tx.total || 0)}</div>
                             </div>
                         </div>
                     `;

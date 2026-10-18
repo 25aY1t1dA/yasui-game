@@ -1,55 +1,140 @@
 ---
 name: frontend-design
-description: Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.
-license: Complete terms in LICENSE.txt
+description: Standard operational guideline for Yasui Game visual design. Enforces Tactical Precision UI (Anti-AI Slop), strict 90-8-2 color distribution, UnoCSS semantic classes, and crisp RMT geometry.
 ---
 
-# Frontend Design
+# Tactical Precision UI — Standard Desain Yasui Game (Anti-AI Slop)
 
-Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
+Dokumen ini adalah pedoman desain antarmuka frontend resmi untuk **Yasui Game**. Semua agen AI dan desainer wajib mematuhi panduan ini dalam membangun atau merombak tampilan antarmuka (UI).
 
-## Ground it in the subject
+---
 
-If the brief does not pin down what the product or subject is, pin it yourself before designing: name one concrete subject, its audience, and the page's single job, and state your choice. If there's any information in your memory about the human's preferences, context about what they're building, or designs you've made before – use that as a hint. The subject's own world, its materials, instruments, artifacts, and vernacular, is where distinctive choices come from. Build with the brief's real content and subject matter throughout.
+## 1. Filosofi Desain: Tactical Precision UI
 
-## Design principles
+Yasui Game adalah platform *Single-Vendor RMT (Real Money Trading) Game Store* premium. Karakter visual yang diusung adalah **Tactical Precision UI**: perpaduan antara estetika terminal cyber, ruang operasi digital yang tenang, dan ketegasan alat finansial/trading. 
 
-For web designs, the hero is a thesis. Open with the most characteristic thing in the subject's world, in whatever form makes sense for it: a headline, an image, an animation, a live demo, an interactive moment. Be deliberate with your choice: a big number with a small label, supporting stats, and a gradient accent is the template answer, only use if that's truly the best option.
+UI Yasui Game dirancang untuk menginspirasi rasa aman, kecepatan eksekusi, dan kredibilitas profesional, bukan kesan "toko mainan neon" atau "template AI generik".
 
-Typography carries the personality of the page. Pair the display and body faces deliberately, not the same families you would reach for on any other project, and set a clear type scale with intentional weights, widths, and spacing. Make the type treatment itself a memorable part of the design, not a neutral delivery vehicle for the content.
+### Ciri Khas Desain:
+1. **Presisi di Atas Dekorasi:** Setiap garis, border, dan badge memiliki makna fungsional. Tidak ada elemen visual yang ada semata-mata sebagai "gimmick pemanis".
+2. **Kontras Tinggi & Keterbacaan Kristal:** Angka harga, stok, waktu countdown, dan status pesanan harus dapat dibaca sekilas tanpa distorsi visual.
+3. **Tenang & Berwibawa:** Background gelap matte (obsidian/carbon) yang nyaman di mata berjam-jam, dengan aksen warna tajam yang digunakan secara sangat hemat.
 
-Structure is information. Structural devices, numbering, eyebrows, dividers, labels, should encode something true about the content, not decorate it. Many generic designs use numbered markers (01 / 02 / 03), but that's only appropriate if the content actually is a sequence - like a real process or a typed timeline where order carries information the reader needs. Question if choices like numbered markers actually make sense before incorporating them.
+---
 
-Leverage motion deliberately. Think about where and if animation can serve the subject: a page-load sequence, a scroll-triggered reveal, hover micro-interactions, ambient atmosphere. An orchestrated moment usually lands harder than scattered effects; choose what the direction calls for. However, sometimes less is more, and extra animation contributes to the feeling that the design is AI-generated.
+## 2. Rasio Warna 90-8-2 (Strict Color Distribution)
 
-Match complexity to the vision. Maximalist directions need elaborate execution; minimal directions need precision in spacing, type, and detail. Elegance is executing the chosen vision well.
+Semua halaman dan komponen Yasui Game wajib mematuhi aturan distribusi palet warna **90-8-2**:
 
-Consider written content carefully. Often a design brief may not contain real content, and it's up to you to come up with copy. Copy can make a design feel as templated as the design itself. See the below section on writing for more guidance.
+### A. 90% Matte Carbon & Obsidian (Base Canvas & Surface Architecture)
+Warna dasar yang mendominasi 90% area visual antarmuka:
+- **Page Canvas / Body Background:** `#090A0F` (Matte Obsidian)
+- **Primary Card Surface:** `#11131A` (Carbon Base)
+- **Elevated / Hover / Modal Surface:** `#161922` (Elevated Obsidian)
+- **Sub-panel / Inset Container Surface:** `#0D0F15` (Deep Inset)
 
-## Process: brainstorm, explore, plan, critique, build, critique again
+> [!NOTE]
+> Permukaan gelap ini tidak boleh flat murahan atau abu-abu pucat. Warna ini menyerap cahaya, menciptakan kontras sempurna bagi teks dan data transaksi.
 
-For calibration: AI-generated design right now clusters around three looks: (1) a warm cream background (near #F4F1EA) with a high-contrast serif display and a terracotta accent; (2) a near-black background with a single bright acid-green or vermilion accent; (3) a broadsheet-style layout with hairline rules, zero border-radius, and dense newspaper-like columns. All three are legitimate for some briefs, but they are defaults rather than choices, and they appear regardless of subject. Where the brief pins down a visual direction, follow it exactly — the brief's own words always win, including when it asks for one of these looks. Where it leaves an axis free, don't spend that freedom on one of these defaults. Just like a human designer who's hired, there's often a careful balance between doing what you're good at and taking each project as a chance to experiment and learn.
+### B. 8% Crisp Metallic & Alabaster (Legibility, Contrast & Structure)
+Warna pembentuk struktur visual, hierarki tipografi, dan pembatas konten:
+- **Primary Heading & Value Text:** `#F8FAFC` (Crisp Alabaster / Slate-50) — tingkat kontras maksimal untuk judul produk dan nominal harga.
+- **Secondary / Supporting Text:** `#94A3B8` (Metallic Slate / Slate-400) — untuk label atribut, deskripsi singkat, dan breadcrumb.
+- **Muted / Timestamp / Caption Text:** `#64748B` (Subtle Slate / Slate-500) — untuk placeholder, helper text, dan tanggal.
+- **Structural Border (Wajib 1px Tegas):** `1px solid #222634` (Tear-resistant border yang memisahkan kartu dan panel secara presisi).
+- **Subtle Divider / Hairline Rule:** `#1A1D27`
 
-Work in two passes. First, brainstorm a short design plan based on the human's design brief: create a compact token system with color, type, layout, and signature. Color: describe the palette as 4–6 named hex values. Type: the typefaces for 2+ roles (a characterful display face that's used with restraint, a complementary body face, and a utility face for captions or data if needed). Layout: a layout concept, using one-sentence prose descriptions and ASCII wireframes to ideate and compare. Signature: the single unique element this page will be remembered by that embodies the brief in an appropriate way.
+### C. 2% Surgical Cyber Blue & Tactical Indicators (High-Value Focal Points Only)
+Aksen tajam yang **HANYA** boleh menempati maksimal 2% dari keseluruhan luas layar:
+- **Primary CTA & Active Indicator:** `#00E5FF` (Cyber Blue) / `#38BDF8` (Sky Blue)
+  - Digunakan khusus pada: Tombol "Beli Sekarang", step indikator checkout aktif, tab terpilih, dan badge `INSTANT DELIVERY`.
+- **Status Taktis Tambahan (Hanya untuk badge status data):**
+  - **Success / Terverifikasi / Ready:** `#10B981` (Emerald-500)
+  - **Warning / Pending / Limit:** `#F59E0B` (Amber-500)
+  - **Danger / Stok Habis / Sold Out:** `#EF4444` (Rose-500)
 
-Then review that plan against the brief before building: if any part of it reads like the generic default you would produce for any similar page (work through a similar prompt to see if you arrive somewhere similar) rather than a choice made for this specific brief — revise that part, say what you changed and why. Only after you've confirmed the relative uniqueness of your design plan should you start to write the code, following the revised plan exactly and deriving every color and type decision from it.
+> [!CAUTION]
+> Dilarang membocorkan aksen 2% menjadi latar belakang kartu besar, gradasi teks raksasa, atau cahaya ambient yang membanjiri viewport pengguna!
 
-When writing the code, be careful of structuring your CSS selector specificities. It's easy to generate CSS classes that cancel each other out (especially with a type-based selector like .section and a element-based selector like .cta). This can happen often with paddings/margins between sections.
+---
 
-Try to do a lot of this planning and iteration in your thinking, and only show ideas to the user when you have higher confidence it'll delight them.
+## 3. Aturan Geometri & Tipografi RMT
 
-## Restraint and self-critique
+### A. Aturan Geometri: Presisi & Taktis
+- **Radius Sudut Standar:** Gunakan `rounded-md` (6px) untuk tombol kecil, badge, dan input; serta `rounded-lg` (8px) untuk kontainer kartu dan modal dialog.
+- **Dilarang Keras Sudut Membulat Gemuk:** Dilarang menggunakan `rounded-2xl` (16px), `rounded-3xl` (24px), atau `rounded-full` pada kartu utama. Sudut yang terlalu bulat merusak nuansa taktis dan membuat antarmuka tampak kekanak-kanakan seperti game kasual mobile.
 
-Spend your boldness in one place. Let the signature element be the one memorable thing, keep everything around it quiet and disciplined, and cut any decoration that does not serve the brief. Not taking a risk can be a risk itself! Build to a quality floor without announcing it: responsive down to mobile, visible keyboard focus, reduced motion respected. Critique your own work as you build, taking screenshots if your environment supports it – a picture is worth 1000 tokens. Consider Chanel's advice: before leaving the house, take a look in the mirror and remove one accessory. Human creators have memory and always try to do something new, so if you have a space to quickly jot down notes about what you've tried, it can help you in future passes.
+### B. Tipografi Dual-Role
+- **Teks UI & Narasi (Display & Body):**
+  - Gunakan font Sans-serif yang tegas, modern, dan bersih (Inter, Plus Jakarta Sans, atau default sans-serif sistem modern).
+  - Judul menggunakan *letter-spacing* sedikit rapat (`tracking-tight`) dengan bobot semi-bold (`font-semibold` / `font-bold`).
+- **Data Kritis & Nilai Finansial (Wajib Monospace):**
+  - **Wajib menggunakan `font-mono tabular-nums`** untuk:
+    - Seluruh nominal harga (`Rp 150.000`, `$12.50`)
+    - Countdown timer flash sale (`02:14:59`)
+    - Jumlah stok akun/item (`Sisa 3 unit`)
+    - Order ID & Nomor Invoice (`#YG-20261018-091`)
+    - Nomor Virtual Account & Kode Kupon Diskon
+  - *Tabular numbers* menjamin lebar karakter digit angka selalu seragam sehingga angka tidak bergeser atau "goyang" saat diperbarui atau saat diurutkan dalam tabel/grid.
 
-## More on writing in design
+---
 
-Words appear in a design for one reason: to make it easier to understand, and therefore easier to use. They are design material, not decoration. Bring the same intentionality to copy that you would bring to spacing and color. Before writing anything, ask what the design needs to say, and how it can best be said to help the person navigate the experience.
+## 4. Larangan Mutlak: Anti-AI Slop Rules
 
-Write from the end user's side of the screen. Name things by what people control and recognize, never by how the system is built. A person manages notifications, not webhook config. Describe what something does in plain terms rather than selling it. Being specific is always better than being clever.
+Untuk menjamin kualitas kode dan DOM sesuai standar senior engineer:
 
-Use active voice as default. A control should say exactly what happens when it's used: "Save changes," not "Submit." An action keeps the same name through the whole flow, so the button that says "Publish" produces a toast that says "Published." The vocabulary of an interface is the signposting for someone navigating the product. Cohesion and consistency are how people learn their way around.
+1. **Dilarang Tag `<div>` Kosong untuk Efek Dekoratif:**
+   - Dilarang membuat tag `<div class="absolute blur-3xl ..."></div>` untuk membuat glow atau berkas cahaya.
+   - Gunakan CSS pseudo-element (`::before`, `::after`), box-shadow terkontrol, atau class semantik `.yg-glow-ambient`.
 
-Treat failure and emptiness as moments for direction, not mood. Explain what went wrong and how to fix it, in the interface's voice rather than a person's. Errors don't apologize, and they are never vague about what happened. An empty screen is an invitation to act.
+2. **Dilarang Gradient Text Pelangi:**
+   - Dilarang memberi efek `bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500` pada judul halaman atau heading. Gunakan warna solid berbobot (`#F8FAFC`).
 
-Keep the register conversational and tuned: plain verbs, sentence case, no filler, with tone matched to the brand and the audience. Let each element do exactly one job. A label labels, an example demonstrates, and nothing quietly does double duty.
+3. **Dilarang Glow Neon Berlebihan:**
+   - Dilarang menggunakan shadow neon raksasa seperti `shadow-cyan-500/50` atau `shadow-[0_0_50px_rgba(...)]`. Gunakan border tipis `border-cyan-500/40` atau hover transition yang halus.
+
+4. **Dilarang Rentetan Utility Class Mentah:**
+   - Dilarang menumpuk lebih dari 6 utility class mentah berulang kali pada elemen HTML yang sama.
+   - Gunakan selalu semantic shortcuts `yg-*` yang telah didefinisikan di `uno.config.ts`.
+
+5. **Dilarang Menggunakan TailwindCSS:**
+   - Proyek ini **100% menggunakan UnoCSS**. Dilarang menginstal Tailwind atau mengimpor dependensi styling eksternal di luar preset UnoCSS.
+
+6. **Dilarang Komentar Boilerplate AI:**
+   - Hapus semua komentar otomatis seperti `<!-- Hero Section -->`, `<!-- DAFTAR ITEM -->`, `<!-- Animated Background -->`. Komentar hanya diperkenankan jika menjelaskan algoritma non-trivial.
+
+---
+
+## 5. Daftar Semantic Shortcuts UnoCSS (`uno.config.ts`)
+
+Gunakan class berikut saat merancang atau memperbarui markup:
+
+| Shortcut Class | Deskripsi Fungsional & Karakter Visual |
+| :--- | :--- |
+| `yg-shell` | Wrapper batas kontainer halaman toko dengan padding responsif |
+| `yg-card` | Kartu obsidian standar (`bg-[#11131A] border border-[#222634] rounded-lg`) |
+| `yg-card-interactive` | Kartu interaktif dengan hover elevation, transisi border, dan kursor pointer |
+| `yg-card-cyber` | Kartu taktis dengan sudut terpotong presisi dan aksen border khas gaming |
+| `yg-panel` | Kontainer sekunder untuk sub-section di dalam halaman atau modal |
+| `yg-input` | Elemen input form presisi (`bg-[#0D0F15] border border-[#222634] focus:border-cyan-400 font-mono`) |
+| `yg-btn-primary` | Tombol CTA utama (2% Surgical Cyan: `bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-md`) |
+| `yg-btn-secondary` | Tombol sekunder obsidian (`bg-[#161922] hover:bg-[#1E2230] text-slate-200 border border-[#222634]`) |
+| `yg-btn-danger` | Tombol aksi destruktif atau pembatalan (`bg-rose-500/10 text-rose-400 border border-rose-500/30`) |
+| `yg-badge-primary` | Badge penanda utama tema toko (Cyber Blue halus) |
+| `yg-badge-cyan` | Badge varian Cyan untuk kategori atau fitur instan |
+| `yg-badge-green` | Badge status sukses, produk instock, atau akun fresh |
+| `yg-badge-amber` | Badge countdown flash sale, status pending, atau akun lama |
+| `yg-badge-red` | Badge stok habis atau peringatan |
+| `yg-product-card` | Kontainer produk toko terstandarisasi dengan rasio gambar dan layout presisi |
+
+---
+
+## 6. Checklist Verifikasi Komponen Sebelum Dianggap Selesai
+
+Setiap komponen UI baru atau yang dirombak wajib lulus uji berikut:
+- [ ] **Color Check:** Apakah background 90% Matte Carbon/Obsidian? Apakah warna terang hanya menempati 2%?
+- [ ] **Font Check:** Apakah angka harga, stok, ID, dan timer sudah memakai `font-mono tabular-nums`?
+- [ ] **DOM Check:** Apakah ada `<div>` kosong tanpa konten? Jika ada, hapus dan ubah ke pseudo-element atau CSS.
+- [ ] **Class Check:** Apakah ada elemen dengan rentetan > 6 utility class mentah berulang? Jika ya, ganti dengan shortcut `yg-*`.
+- [ ] **Responsiveness Check:** Apakah tampilan nyaman di layar mobile 360px - 440px tanpa horizontal scroll yang tidak diinginkan?
+- [ ] **Inspect Element Cleanliness:** Apakah struktur DOM terlihat profesional, semantik (`<nav>`, `<header>`, `<main>`, `<article>`, `<section>`, `<footer>`), dan bebas dari jejak AI generatif?

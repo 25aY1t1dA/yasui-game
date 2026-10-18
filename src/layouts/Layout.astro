@@ -11,7 +11,7 @@ interface Props {
 
 const {
 	title,
-	description = "Yasui Game - Marketplace Game Premium Terpercaya, Aman, dan Bergaransi.",
+	description = "Yasui Game - Marketplace Game RMT Premium, Pengiriman Instan, Aman, dan Bergaransi 100%.",
 	showFooter = true,
 } = Astro.props;
 
@@ -20,11 +20,14 @@ const cookieLang = Astro.cookies.get("yasui_lang")?.value;
 const geoParam = Astro.url.searchParams.get("geo")?.toUpperCase();
 const vercelCountry = Astro.request.headers.get("x-vercel-ip-country");
 const cfCountry = Astro.request.headers.get("cf-ipcountry");
-const detectedCountry = geoParam || vercelCountry || cfCountry || "ID";
+const acceptLang = Astro.request.headers.get("accept-language")?.toLowerCase() || "";
 
-const isForeign = detectedCountry !== "ID";
-const serverDefaultCurr = cookieCurr || (isForeign ? "USD" : "IDR");
-const serverDefaultLang = cookieLang || (isForeign ? "en" : "id");
+const isForeignByGeo = (geoParam && geoParam !== "ID") || (vercelCountry && vercelCountry !== "ID") || (cfCountry && cfCountry !== "ID");
+const isIndonesianByLang = acceptLang.startsWith("id") || acceptLang.includes(",id") || acceptLang.includes("id-");
+
+const serverDefaultLang = cookieLang || (isForeignByGeo ? "en" : (isIndonesianByLang ? "id" : "en"));
+const serverDefaultCurr = cookieCurr || (serverDefaultLang === "id" ? "IDR" : "USD");
+const detectedCountry = geoParam || vercelCountry || cfCountry || (serverDefaultLang === "id" ? "ID" : "US");
 
 const pathname = Astro.url.pathname;
 const isHome = pathname === "/" || pathname === "";
@@ -39,70 +42,102 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 <html lang={serverDefaultLang} class="dark">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<meta name="theme-color" content="#090A0F" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;800&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
 			rel="stylesheet"
 		/>
+
+		{/* Anti-Flicker & Regional Auto-Detection Inline Script */}
+		<script is:inline>
+			(function () {
+				try {
+					var storedLang = localStorage.getItem("yasui_lang");
+					var storedCurr = localStorage.getItem("yasui_currency");
+
+					if (!storedLang) {
+						var browserLang = (navigator.language || navigator.userLanguage || "").toLowerCase();
+						storedLang = browserLang.startsWith("id") ? "id" : "en";
+						localStorage.setItem("yasui_lang", storedLang);
+					}
+					if (!storedCurr) {
+						storedCurr = storedLang === "id" ? "IDR" : "USD";
+						localStorage.setItem("yasui_currency", storedCurr);
+					}
+
+					document.cookie = "yasui_lang=" + storedLang + "; path=/; max-age=31536000; SameSite=Lax";
+					document.cookie = "yasui_currency=" + storedCurr + "; path=/; max-age=31536000; SameSite=Lax";
+
+					document.documentElement.lang = storedLang;
+					window.__YASUI_INITIAL_LANG__ = storedLang;
+					window.__YASUI_INITIAL_CURR__ = storedCurr;
+				} catch (e) {}
+			})();
+		</script>
 	</head>
-	<body class="min-h-screen pb-24 md:pb-0">
+	<body class="min-h-screen pb-20 md:pb-0 bg-[#090A0F] text-[#94A3B8] font-sans selection:bg-[#00E5FF]/20 selection:text-[#00E5FF]">
 		<header
 			id="main-header"
-			class="fixed top-0 left-0 right-0 z-50 bg-black/85 backdrop-blur-md border-b border-white/10 shadow-lg transition-all duration-300"
+			class="fixed top-0 left-0 right-0 z-50 h-16 bg-[#090A0F]/95 backdrop-blur-sm border-b border-[#222634] transition-all duration-150"
 		>
-			<div class="yg-shell h-16 flex items-center justify-between gap-3">
+			<div class="yg-shell h-full flex items-center justify-between gap-3">
 				<div class="flex items-center gap-4 lg:gap-6 shrink-0">
-					<a href="/" class="flex items-center gap-2 group shrink-0" aria-label="Yasui Game Homepage">
-						<div class="w-8 h-8 rounded-lg bg-cyan-950/70 border border-cyan-500/40 flex items-center justify-center text-cyan-400 group-hover:scale-105 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] transition">
-							<div class="i-lucide-gamepad-2 text-xl"></div>
+					<a href="/" class="flex items-center gap-2.5 group shrink-0" aria-label="Yasui Game Homepage">
+						<div class="w-8 h-8 rounded-md bg-[#11131A] border border-[#222634] flex items-center justify-center text-[#00E5FF] group-hover:border-[#00E5FF]/50 transition-colors">
+							<div class="i-lucide-gamepad-2 text-lg"></div>
 						</div>
-						<span class="text-base sm:text-lg font-black text-white italic tracking-tighter inline">
-							YASUI <span class="text-cyan-400">GAME</span>
+						<span class="text-sm sm:text-base font-bold text-[#F8FAFC] tracking-tight inline font-mono">
+							YASUI<span class="text-[#00E5FF]">GAME</span>
 						</span>
 					</a>
 
-					<nav class="hidden md:flex items-center gap-1 text-xs font-bold uppercase tracking-wider" aria-label="Main Navigation">
+					<nav class="hidden md:flex items-center gap-1 text-xs font-medium" aria-label="Main Navigation">
 						<a
 							href="/categories"
-							class="px-3 py-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5"
+							class="px-3 py-1.5 rounded-md text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] transition-colors flex items-center gap-1.5"
+							data-i18n="nav.catalog"
 						>
-							<div class="i-lucide-grid text-sm text-cyan-400"></div>
+							<div class="i-lucide-grid text-sm text-[#00E5FF]"></div>
 							<span>Katalog</span>
 						</a>
 						<a
 							href="/cara-belanja"
-							class="px-3 py-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition flex items-center gap-1.5"
+							class="px-3 py-1.5 rounded-md text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] transition-colors flex items-center gap-1.5"
 							data-i18n="nav.how_to_order"
 						>
-							<div class="i-lucide-book-open text-sm text-gray-500"></div>
+							<div class="i-lucide-book-open text-sm text-[#64748B]"></div>
 							<span>Cara Order</span>
 						</a>
 					</nav>
 				</div>
 
-				<div class="hidden md:block flex-1 max-w-xl mx-2 relative" id="desktop-search-container">
+				<div class="hidden md:block flex-1 max-w-md mx-2 relative" id="desktop-search-container">
 					<div class="relative group">
 						<input
 							id="desktop-search-input"
 							type="text"
 							name="q"
-							placeholder="Cari game atau platform..."
+							placeholder="Cari game, produk, atau voucher..."
+							data-i18n-placeholder="nav.search_placeholder"
 							autocomplete="off"
-							class="w-full bg-gray-900/70 hover:bg-gray-900 focus:bg-black border border-gray-800 focus:border-cyan-400 text-white placeholder-gray-500 text-xs pl-8.5 pr-8 py-2 rounded-xl transition outline-none font-mono focus:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+							class="w-full bg-[#0D0F17] hover:bg-[#11131A] focus:bg-[#0D0F17] border border-[#222634] focus:border-[#00E5FF] text-[#F8FAFC] placeholder-[#64748B] text-xs pl-8 pr-12 py-2 rounded-md transition-colors outline-none font-mono"
 						/>
-						<div class="absolute left-2.5 top-2.5 text-gray-500 group-focus-within:text-cyan-400 transition pointer-events-none">
-							<div class="i-lucide-search text-sm"></div>
+						<div class="absolute left-2.5 top-2.5 text-[#64748B] group-focus-within:text-[#00E5FF] transition-colors pointer-events-none">
+							<div class="i-lucide-search text-xs"></div>
 						</div>
 						<div class="absolute right-2.5 top-2 hidden lg:flex items-center gap-1 pointer-events-none">
-							<kbd class="text-[9px] font-mono text-gray-500 bg-black/70 border border-gray-800 px-1.5 py-0.5 rounded">Enter</kbd>
+							<kbd class="text-[9px] font-mono text-[#64748B] bg-[#161922] border border-[#222634] px-1.5 py-0.5 rounded">Enter</kbd>
 						</div>
 					</div>
 					<div
 						id="desktop-search-dropdown"
-						class="hidden absolute top-full left-0 right-0 mt-2 yg-panel overflow-hidden"
+						class="hidden absolute top-full left-0 right-0 mt-1.5 yg-panel border border-[#222634] overflow-hidden z-50"
 					>
 						<div id="desktop-search-results" class="max-h-80 overflow-y-auto"></div>
 					</div>
@@ -124,58 +159,58 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							type="button"
 							id="header-regional-btn"
 							onclick="window.toggleRegionalMenu && window.toggleRegionalMenu()"
-							class="yg-btn-icon !w-auto px-2 sm:px-2.5 gap-1.5 text-xs font-mono font-bold"
+							class="yg-btn-icon !w-auto px-2.5 gap-1.5 text-xs font-mono font-medium"
 							title="Pengaturan Wilayah, Mata Uang & Bahasa"
 							aria-label="Ganti Mata Uang dan Bahasa"
 						>
-							<div class="i-lucide-globe text-xs sm:text-sm text-cyan-400"></div>
-							<span id="header-curr-label" class="text-[11px] sm:text-xs">{serverDefaultCurr}</span>
+							<div class="i-lucide-globe text-xs text-[#00E5FF]"></div>
+							<span id="header-curr-label" class="text-[11px] sm:text-xs text-[#F8FAFC]">{serverDefaultCurr}</span>
 						</button>
 
 						<div
 							id="header-regional-menu"
-							class="hidden absolute right-0 mt-2 w-64 yg-panel p-3 text-left font-mono"
+							class="hidden absolute right-0 mt-2 w-64 yg-panel p-3 text-left font-mono z-50"
 						>
-							<div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2.5 pb-1.5 border-b border-gray-800/80 flex items-center justify-between">
-								<span class="flex items-center gap-1.5">
-									<span class="i-lucide-sliders-horizontal text-cyan-400 text-xs"></span>
+							<div class="text-[10px] text-[#94A3B8] uppercase tracking-widest font-semibold mb-2.5 pb-1.5 border-b border-[#222634] flex items-center justify-between">
+								<span class="flex items-center gap-1.5" data-i18n="regional.title">
+									<span class="i-lucide-sliders-horizontal text-[#00E5FF] text-xs"></span>
 									PREFERENSI REGIONAL
 								</span>
-								<span class="text-[9px] text-cyan-400 font-normal">AUTO-SYNC</span>
+								<span class="text-[9px] text-[#00E5FF]" data-i18n="regional.auto">AUTO</span>
 							</div>
 
 							<div class="mb-3">
-								<div class="text-[10px] text-gray-400 uppercase tracking-wider mb-1.5">Mata Uang</div>
+								<div class="text-[10px] text-[#64748B] uppercase tracking-wider mb-1.5 font-sans" data-i18n="regional.currency">Mata Uang</div>
 								<div class="grid grid-cols-2 gap-1.5">
 									<button
 										type="button"
 										onclick="window.selectCurrency && window.selectCurrency('IDR')"
 										id="curr-opt-idr"
-										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
+										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-xs font-semibold text-[#F8FAFC] transition-colors cursor-pointer"
 									>
-										<span class="text-gray-500 text-[10px]">Rp</span>
+										<span class="text-[#64748B] text-[10px]">Rp</span>
 										<span>IDR</span>
 									</button>
 									<button
 										type="button"
 										onclick="window.selectCurrency && window.selectCurrency('USD')"
 										id="curr-opt-usd"
-										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
+										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-xs font-semibold text-[#F8FAFC] transition-colors cursor-pointer"
 									>
-										<span class="text-cyan-400 text-[10px]">$</span>
+										<span class="text-[#00E5FF] text-[10px]">$</span>
 										<span>USD</span>
 									</button>
 								</div>
 							</div>
 
 							<div>
-								<div class="text-[10px] text-gray-400 uppercase tracking-wider mb-1.5">Bahasa</div>
+								<div class="text-[10px] text-[#64748B] uppercase tracking-wider mb-1.5 font-sans" data-i18n="regional.language">Bahasa</div>
 								<div class="grid grid-cols-2 gap-1.5">
 									<button
 										type="button"
 										onclick="window.selectLanguage && window.selectLanguage('id')"
 										id="lang-opt-id"
-										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
+										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-xs font-semibold text-[#F8FAFC] transition-colors cursor-pointer"
 									>
 										<span>🇮🇩</span>
 										<span>INDONESIA</span>
@@ -184,7 +219,7 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 										type="button"
 										onclick="window.selectLanguage && window.selectLanguage('en')"
 										id="lang-opt-en"
-										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl border text-xs font-bold transition cursor-pointer"
+										class="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-xs font-semibold text-[#F8FAFC] transition-colors cursor-pointer"
 									>
 										<span>🇬🇧</span>
 										<span>ENGLISH</span>
@@ -202,8 +237,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						title="Live Chat Admin"
 						aria-label="Buka Live Chat Admin"
 					>
-						<div class="i-lucide-message-square text-sm sm:text-base transition group-hover:scale-105"></div>
-						<span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-black animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>
+						<div class="i-lucide-message-square text-sm"></div>
+						<span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full border border-[#090A0F]"></span>
 					</button>
 
 					<a
@@ -212,10 +247,10 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						title="Keranjang Belanja"
 						aria-label="Keranjang Belanja"
 					>
-						<div class="i-lucide-shopping-cart text-sm sm:text-base transition group-hover:scale-105"></div>
+						<div class="i-lucide-shopping-cart text-sm"></div>
 						<span
 							id="global-cart-badge"
-							class="absolute -top-1.5 -right-1.5 bg-cyan-400 text-black font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center hidden border-2 border-black font-mono shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+							class="absolute -top-1.5 -right-1.5 bg-[#00E5FF] text-[#090A0F] font-bold text-[10px] min-w-4 h-4 px-1 rounded flex items-center justify-center hidden font-mono tabular-nums border border-[#090A0F]"
 						>
 							0
 						</span>
@@ -225,8 +260,9 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 						<button
 							id="nav-login-btn"
 							onclick="window.openAuthModal && window.openAuthModal('login')"
-							class="yg-btn-primary"
+							class="yg-btn-primary py-1.5 px-3"
 							title="Masuk ke Akun"
+							data-i18n="nav.login"
 						>
 							<div class="i-lucide-user text-xs"></div>
 							<span>Masuk</span>
@@ -236,53 +272,56 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 							<button
 								id="nav-user-btn"
 								onclick="window.toggleUserMenu && window.toggleUserMenu()"
-								class="flex items-center gap-2 bg-gray-900 border border-cyan-500/40 hover:border-cyan-400 px-2.5 py-1.5 rounded-xl transition text-gray-200 hover:text-white group cursor-pointer"
+								class="flex items-center gap-2 bg-[#161922] border border-[#222634] hover:border-[#00E5FF]/40 px-2.5 py-1.5 rounded-md transition-colors text-[#F8FAFC] cursor-pointer"
 								aria-label="Menu Pengguna"
 							>
-								<div class="w-5 h-5 rounded-lg bg-cyan-400 text-black font-black text-[10px] flex items-center justify-center" id="nav-user-initial">
+								<div class="w-5 h-5 rounded bg-[#00E5FF] text-[#090A0F] font-bold text-[10px] flex items-center justify-center font-mono" id="nav-user-initial">
 									U
 								</div>
-								<span class="hidden md:block text-xs font-bold uppercase tracking-wider max-w-[90px] truncate" id="nav-user-name">
+								<span class="hidden md:block text-xs font-semibold uppercase tracking-wider max-w-[90px] truncate" id="nav-user-name" data-i18n="nav.account">
 									AKUN
 								</span>
-								<div class="i-lucide-chevron-down text-xs text-gray-400 group-hover:text-cyan-400 transition"></div>
+								<div class="i-lucide-chevron-down text-xs text-[#94A3B8]"></div>
 							</button>
 
 							<div
 								id="nav-user-menu"
-								class="hidden absolute right-0 mt-2 w-64 yg-panel p-2.5 text-left"
+								class="hidden absolute right-0 mt-2 w-60 yg-panel p-2 text-left z-50"
 							>
-								<div class="px-3 py-2.5 border-b border-gray-800/80 mb-1.5 bg-gray-900/40 rounded-xl">
-									<div class="text-[9px] text-gray-500 font-mono uppercase tracking-wider">Akun Terhubung</div>
-									<div class="text-xs font-bold text-white truncate" id="nav-menu-email">user@email.com</div>
-									<div class="text-[10px] text-cyan-400 flex items-center gap-1.5 mt-1 font-mono">
-										<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> Sesi 30 Hari Aktif
+								<div class="px-3 py-2 border-b border-[#222634] mb-1.5 bg-[#0D0F15] rounded-md">
+									<div class="text-[9px] text-[#64748B] font-mono uppercase tracking-wider" data-i18n="nav.connected_account">Akun Terhubung</div>
+									<div class="text-xs font-semibold text-[#F8FAFC] truncate" id="nav-menu-email">user@email.com</div>
+									<div class="text-[10px] text-[#00E5FF] flex items-center gap-1.5 mt-0.5 font-mono" data-i18n="nav.session_active">
+										<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Sesi 30 Hari Aktif
 									</div>
 								</div>
 
 								<a
 									href="/orders"
-									class="flex items-center gap-3 px-3 py-2 text-xs font-bold text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/20 rounded-xl transition"
+									class="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] rounded-md transition-colors"
+									data-i18n="nav.my_orders"
 								>
-									<div class="i-lucide-receipt text-cyan-400 text-base"></div>
+									<div class="i-lucide-receipt text-[#00E5FF] text-sm"></div>
 									<span>Pesanan Saya</span>
 								</a>
 
 								<button
 									onclick="window.openSetPasswordModal && window.openSetPasswordModal()"
-									class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/20 rounded-xl transition text-left cursor-pointer"
+									class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] rounded-md transition-colors text-left cursor-pointer"
+									data-i18n="nav.change_password"
 								>
-									<div class="i-lucide-key-round text-yellow-400 text-base"></div>
+									<div class="i-lucide-key-round text-amber-400 text-sm"></div>
 									<span>Ganti Kata Sandi</span>
 								</button>
 
-								<div class="border-t border-gray-800/80 my-1"></div>
+								<div class="border-t border-[#222634] my-1"></div>
 
 								<button
 									onclick="window.logoutUser && window.logoutUser()"
-									class="w-full flex items-center gap-3 px-3 py-2 text-xs font-bold text-red-400 hover:bg-red-950/30 rounded-xl transition text-left cursor-pointer"
+									class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-400 hover:bg-red-950/30 rounded-md transition-colors text-left cursor-pointer"
+									data-i18n="nav.logout"
 								>
-									<div class="i-lucide-log-out text-red-400 text-base"></div>
+									<div class="i-lucide-log-out text-red-400 text-sm"></div>
 									<span>Keluar (Logout)</span>
 								</button>
 							</div>
@@ -293,129 +332,187 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 			<div
 				id="mobile-search-row"
-				class="md:hidden transition-all duration-300 ease-in-out max-h-0 opacity-0 overflow-hidden"
+				class="md:hidden transition-all duration-200 ease-in-out max-h-0 opacity-0 overflow-hidden bg-[#090A0F] border-b border-[#222634]"
 			>
-				<div class="px-4 pb-3 pt-1">
+				<div class="px-4 py-2.5">
 					<div class="relative group">
 						<input
 							id="mobile-search-input"
 							type="text"
 							name="q"
 							placeholder="Cari game atau platform..."
+							data-i18n-placeholder="nav.mobile_search_placeholder"
 							autocomplete="off"
-							class="w-full bg-gray-900/80 focus:bg-black border border-gray-700 focus:border-cyan-400 text-white placeholder-gray-500 text-sm pl-10 pr-10 py-2.5 rounded-xl transition outline-none font-mono focus:shadow-[0_0_20px_rgba(34,211,238,0.15)]"
+							class="w-full bg-[#0D0F17] focus:bg-[#11131A] border border-[#222634] focus:border-[#00E5FF] text-[#F8FAFC] placeholder-[#64748B] text-xs pl-8 pr-8 py-2 rounded-md outline-none font-mono transition-colors"
 						/>
-						<div class="absolute left-3 top-3 text-gray-500 group-focus-within:text-cyan-400 transition pointer-events-none">
-							<div class="i-lucide-search text-base"></div>
+						<div class="absolute left-2.5 top-2.5 text-[#64748B] group-focus-within:text-[#00E5FF] transition-colors pointer-events-none">
+							<div class="i-lucide-search text-xs"></div>
 						</div>
 						<button
 							type="button"
 							onclick="window.toggleMobileSearch && window.toggleMobileSearch()"
-							class="absolute right-2 top-1.5 w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition cursor-pointer"
+							class="absolute right-2 top-1.5 w-6 h-6 flex items-center justify-center rounded text-[#64748B] hover:text-[#F8FAFC] transition-colors cursor-pointer"
 							aria-label="Tutup pencarian"
 						>
-							<div class="i-lucide-x text-sm"></div>
+							<div class="i-lucide-x text-xs"></div>
 						</button>
 					</div>
 					<div
 						id="mobile-search-dropdown"
-						class="hidden mt-2 bg-black/95 border border-gray-800 rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.9)] overflow-hidden"
+						class="hidden mt-1.5 bg-[#11131A] border border-[#222634] rounded-md shadow-xl overflow-hidden"
 					>
-						<div id="mobile-search-results" class="max-h-64 overflow-y-auto"></div>
+						<div id="mobile-search-results" class="max-h-60 overflow-y-auto"></div>
 					</div>
 				</div>
 			</div>
 		</header>
 
-		<slot />
+		<div class="pt-16">
+			<slot />
+		</div>
 
 		{
 			shouldShowFooter && (
-				<footer class="bg-black/80 border-t border-gray-800 pt-16 pb-24 md:pb-16 px-4">
-					<div class="yg-shell grid grid-cols-1 md:grid-cols-4 gap-12">
-						<div class="col-span-1 md:col-span-2">
-							<h2 class="text-white font-black italic mb-4">YASUI GAME</h2>
-							<p class="text-xs text-gray-500 leading-relaxed max-w-sm" data-i18n="footer.desc">
-								Marketplace game premium paling aman se-Cyber World. Kami menyediakan akun Roblox, MLBB, dan game populer lainnya dengan pengiriman instan.
-							</p>
-						</div>
-						<div>
-							<h3 class="text-cyan-400 font-bold text-xs uppercase mb-4 tracking-widest" data-i18n="footer.info">
-								Informasi
-							</h3>
-							<ul class="space-y-2 text-xs text-gray-400">
-								<li><a href="/cara-belanja" class="hover:text-white transition" data-i18n="nav.how_to_order">Cara Belanja</a></li>
-								<li><a href="/contact" class="hover:text-white transition" data-i18n="nav.contact">Hubungi Kami</a></li>
-								<li><a href="/terms" class="hover:text-white transition" data-i18n="footer.terms">Syarat & Ketentuan</a></li>
-								<li><a href="/privacy" class="hover:text-white transition" data-i18n="footer.privacy">Kebijakan Privasi</a></li>
-							</ul>
-						</div>
-						<div>
-							<h3 class="text-cyan-400 font-bold text-xs uppercase mb-4 tracking-widest" data-i18n="footer.cs">
-								Layanan Pelanggan
-							</h3>
-							<ul class="space-y-2 text-xs text-gray-400">
-								<li><a href="https://wa.me/628989685098" target="_blank" rel="noopener noreferrer" class="hover:text-white transition" data-i18n="footer.contact_wa">Kontak WhatsApp</a></li>
-								<li><a href="mailto:support@yasuigame.com" class="hover:text-white transition" data-i18n="footer.email_support">Email Support</a></li>
-							</ul>
-						</div>
-					</div>
+				<footer class="bg-[#090A0F] border-t border-[#222634] pt-14 pb-20 md:pb-12 mt-16">
+					<div class="yg-shell">
+						<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 pb-10 border-b border-[#222634]">
+							<div class="flex items-start gap-3.5 p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+								<div class="w-10 h-10 rounded-md bg-[#00E5FF]/10 border border-[#00E5FF]/25 text-[#00E5FF] flex items-center justify-center shrink-0">
+									<div class="i-lucide-zap text-lg"></div>
+								</div>
+								<div>
+									<h4 class="text-xs font-bold text-[#F8FAFC] uppercase tracking-wider font-mono" data-i18n="footer.instant_delivery_title">Instant Delivery</h4>
+									<p class="text-xs text-[#94A3B8] mt-1 leading-relaxed" data-i18n="footer.instant_delivery_desc">
+										Kredensial akun dikirim otomatis ke email dan dashboard <span class="font-mono text-[#F8FAFC]">&lt; 2 menit</span> pasca pembayaran.
+									</p>
+								</div>
+							</div>
 
-					<div class="yg-shell mt-12 pt-6 border-t border-gray-900 flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
-						<div class="flex items-center gap-3">
-							<span class="text-gray-500 text-[11px]">Pengaturan Regional:</span>
-							<button
-								id="currency-btn"
-								class="flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-cyan-400 px-3 py-1 rounded-lg transition text-gray-300 cursor-pointer"
-								title="Ganti Mata Uang"
-							>
-								<span id="currency-flag" class="text-cyan-400 font-bold text-xs">$</span>
-								<span id="currency-text" class="font-bold text-xs">USD</span>
-							</button>
+							<div class="flex items-start gap-3.5 p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+								<div class="w-10 h-10 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 flex items-center justify-center shrink-0">
+									<div class="i-lucide-shield-check text-lg"></div>
+								</div>
+								<div>
+									<h4 class="text-xs font-bold text-[#F8FAFC] uppercase tracking-wider font-mono" data-i18n="footer.anti_hackback_title">100% Anti-Hackback</h4>
+									<p class="text-xs text-[#94A3B8] mt-1 leading-relaxed" data-i18n="footer.anti_hackback_desc">
+										Garansi penuh pergantian akun atau pengembalian saldo jika terjadi masalah kepemilikan.
+									</p>
+								</div>
+							</div>
 
-							<button
-								id="lang-btn"
-								class="flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-cyan-400 px-3 py-1 rounded-lg transition text-gray-300 cursor-pointer"
-								title="Ganti Bahasa"
-							>
-								<div class="i-lucide-globe text-cyan-400 text-xs"></div>
-								<span id="lang-text" class="font-bold text-xs">ID</span>
-							</button>
+							<div class="flex items-start gap-3.5 p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+								<div class="w-10 h-10 rounded-md bg-amber-500/10 border border-amber-500/25 text-amber-400 flex items-center justify-center shrink-0">
+									<div class="i-lucide-lock text-lg"></div>
+								</div>
+								<div>
+									<h4 class="text-xs font-bold text-[#F8FAFC] uppercase tracking-wider font-mono" data-i18n="footer.payment_title">Official Payment</h4>
+									<p class="text-xs text-[#94A3B8] mt-1 leading-relaxed" data-i18n="footer.payment_desc">
+										Gateway pembayaran berlisensi via Duitku (QRIS dinamis, Virtual Account BCA/Mandiri/BRI, E-Wallet).
+									</p>
+								</div>
+							</div>
 						</div>
 
-						<div class="text-[10px] text-gray-600">
-							&copy; 2026 YASUI-GAME. ALL RIGHTS RESERVED. POWERED BY CYBER-ENGINE.
+						<div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-10">
+							<div class="col-span-1 md:col-span-2">
+								<div class="flex items-center gap-2 mb-3">
+									<div class="w-6 h-6 rounded bg-[#11131A] border border-[#222634] flex items-center justify-center text-[#00E5FF]">
+										<div class="i-lucide-gamepad-2 text-sm"></div>
+									</div>
+									<span class="text-sm font-bold text-[#F8FAFC] font-mono tracking-tight">YASUI<span class="text-[#00E5FF]">GAME</span></span>
+								</div>
+								<p class="text-xs text-[#94A3B8] leading-relaxed max-w-md" data-i18n="footer.desc">
+									Platform Single-Vendor Real Money Trading (RMT) terpercaya. Spesialisasi akun Summoners War, Roblox Universe, Mobile Legends, dan layanan digital gaming terverifikasi.
+								</p>
+								<div class="mt-4 flex items-center gap-2 text-xs font-mono text-[#64748B]">
+									<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#11131A] border border-[#222634]" data-i18n="footer.api_status">
+										<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Status Sistem: Beroperasi Normal
+									</span>
+								</div>
+							</div>
+
+							<div>
+								<h3 class="text-[#F8FAFC] font-semibold text-xs uppercase tracking-wider mb-3.5 font-mono" data-i18n="footer.info">
+									Navigasi & Ketentuan
+								</h3>
+								<ul class="space-y-2 text-xs text-[#94A3B8]">
+									<li><a href="/cara-belanja" class="hover:text-[#F8FAFC] transition-colors" data-i18n="footer.how_to_order">Cara Belanja</a></li>
+									<li><a href="/security-guide" class="hover:text-[#F8FAFC] transition-colors" data-i18n="footer.security_guide">Panduan Keamanan Akun</a></li>
+									<li><a href="/terms" class="hover:text-[#F8FAFC] transition-colors" data-i18n="footer.terms">Syarat & Ketentuan</a></li>
+									<li><a href="/privacy" class="hover:text-[#F8FAFC] transition-colors" data-i18n="footer.privacy">Kebijakan Privasi</a></li>
+								</ul>
+							</div>
+
+							<div>
+								<h3 class="text-[#F8FAFC] font-semibold text-xs uppercase tracking-wider mb-3.5 font-mono" data-i18n="footer.cs">
+									Dukungan CS
+								</h3>
+								<ul class="space-y-2 text-xs text-[#94A3B8]">
+									<li><a href="https://wa.me/628989685098" target="_blank" rel="noopener noreferrer" class="hover:text-[#F8FAFC] transition-colors flex items-center gap-1.5" data-i18n="footer.contact_wa"><Icon name="whatsapp" width={14} height={14} class="text-emerald-400" /> WhatsApp Support</a></li>
+									<li><a href="https://discord.com/users/1312253061800001541" target="_blank" rel="noopener noreferrer" class="hover:text-[#F8FAFC] transition-colors flex items-center gap-1.5" data-i18n="footer.discord_support"><Icon name="discord" width={14} height={14} class="text-indigo-400" /> Discord Official</a></li>
+									<li><a href="mailto:support@yasuigame.com" class="hover:text-[#F8FAFC] transition-colors flex items-center gap-1.5" data-i18n="footer.email_support"><div class="i-lucide-mail text-xs text-[#00E5FF]"></div> support@yasuigame.com</a></li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="pt-6 border-t border-[#222634] flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
+							<div class="flex items-center gap-2">
+								<span class="text-[#64748B] text-[11px]" data-i18n="footer.region_label">Wilayah:</span>
+								<button
+									type="button"
+									id="currency-btn"
+									class="flex items-center gap-1.5 bg-[#11131A] hover:bg-[#161922] border border-[#222634] hover:border-[#00E5FF]/40 px-2.5 py-1 rounded text-xs text-[#F8FAFC] transition-colors cursor-pointer"
+									title="Ganti Mata Uang"
+								>
+									<span id="currency-flag" class="text-[#00E5FF] font-bold">{serverDefaultCurr === "USD" ? "$" : "Rp"}</span>
+									<span id="currency-text" class="font-bold">{serverDefaultCurr}</span>
+								</button>
+
+								<button
+									type="button"
+									id="lang-btn"
+									class="flex items-center gap-1.5 bg-[#11131A] hover:bg-[#161922] border border-[#222634] hover:border-[#00E5FF]/40 px-2.5 py-1 rounded text-xs text-[#F8FAFC] transition-colors cursor-pointer"
+									title="Ganti Bahasa"
+								>
+									<div class="i-lucide-globe text-[#00E5FF] text-xs"></div>
+									<span id="lang-text" class="font-bold">{serverDefaultLang.toUpperCase()}</span>
+								</button>
+							</div>
+
+							<div class="text-[11px] text-[#64748B]" data-i18n="footer.rights">
+								&copy; 2026 YASUI GAME. ZERO-TRUST ARCHITECTURE. ALL RIGHTS RESERVED.
+							</div>
 						</div>
 					</div>
 				</footer>
 			)
 		}
 
-		<nav class="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-lg border-t border-gray-800 pt-2 pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] px-3 sm:px-6 md:hidden z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.8)]" aria-label="Mobile Bottom Navigation">
-			<div class="flex justify-around items-center text-gray-500">
+		<nav class="fixed bottom-0 left-0 right-0 bg-[#090A0F]/95 backdrop-blur-sm border-t border-[#222634] pt-2 pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] px-4 md:hidden z-50" aria-label="Mobile Bottom Navigation">
+			<div class="flex justify-around items-center text-[#64748B]">
 				<a
 					href="/"
-					class={`flex flex-col items-center gap-1 transition ${isHome ? "text-cyan-400" : "text-gray-400 hover:text-cyan-400"}`}
+					class={`flex flex-col items-center gap-1 transition-colors ${isHome ? "text-[#00E5FF]" : "text-[#94A3B8] hover:text-[#00E5FF]"}`}
 				>
-					<div class={`i-lucide-home text-lg ${isHome ? "filter drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" : ""}`}></div>
-					<span class="text-[9px] font-bold" data-i18n="nav.home">HOME</span>
+					<div class="i-lucide-home text-base"></div>
+					<span class="text-[9px] font-semibold font-mono" data-i18n="nav.home">BERANDA</span>
 				</a>
 				<a
 					href="/categories"
-					class={`flex flex-col items-center gap-1 transition ${isKatalog ? "text-cyan-400" : "text-gray-400 hover:text-cyan-400"}`}
+					class={`flex flex-col items-center gap-1 transition-colors ${isKatalog ? "text-[#00E5FF]" : "text-[#94A3B8] hover:text-[#00E5FF]"}`}
 				>
-					<div class={`i-lucide-grid text-lg ${isKatalog ? "filter drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" : ""}`}></div>
-					<span class="text-[9px] font-bold">KATALOG</span>
+					<div class="i-lucide-grid text-base"></div>
+					<span class="text-[9px] font-semibold font-mono" data-i18n="nav.catalog">KATALOG</span>
 				</a>
 				<a
 					href="/cart"
-					class={`flex flex-col items-center gap-1 transition relative ${isCart ? "text-cyan-400" : "text-gray-400 hover:text-cyan-400"}`}
+					class={`flex flex-col items-center gap-1 transition-colors relative ${isCart ? "text-[#00E5FF]" : "text-[#94A3B8] hover:text-[#00E5FF]"}`}
 				>
-					<div class={`i-lucide-shopping-cart text-lg ${isCart ? "filter drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" : ""}`}></div>
-					<span class="text-[9px] font-bold" data-i18n="nav.cart">CART</span>
+					<div class="i-lucide-shopping-cart text-base"></div>
+					<span class="text-[9px] font-semibold font-mono" data-i18n="nav.cart">KERANJANG</span>
 					<span
 						id="mobile-cart-badge"
-						class="absolute -top-1 -right-2 bg-cyan-400 text-black font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center hidden border-2 border-black font-mono shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+						class="absolute -top-1 -right-2 bg-[#00E5FF] text-[#090A0F] font-bold text-[9px] min-w-3.5 h-3.5 px-0.5 rounded flex items-center justify-center hidden font-mono tabular-nums border border-[#090A0F]"
 					>
 						0
 					</span>
@@ -423,131 +520,121 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 				<a
 					href="/orders"
 					id="mobile-nav-auth"
-					class="flex flex-col items-center gap-1 text-gray-400 hover:text-cyan-400 transition"
+					class="flex flex-col items-center gap-1 text-[#94A3B8] hover:text-[#00E5FF] transition-colors"
 				>
-					<div class="i-lucide-user text-lg" id="mobile-nav-icon"></div>
-					<span class="text-[9px] font-bold uppercase tracking-wider" id="mobile-nav-label">MASUK</span>
+					<div class="i-lucide-user text-base" id="mobile-nav-icon"></div>
+					<span class="text-[9px] font-semibold font-mono uppercase tracking-wider" id="mobile-nav-label" data-i18n="nav.login">MASUK</span>
 				</a>
 			</div>
 		</nav>
 
-		<a
-			href="https://discord.com/users/1312253061800001541"
-			target="_blank"
-			rel="noopener noreferrer"
-			class="hidden md:flex fixed md:bottom-24 right-6 z-50 w-14 h-14 bg-[#5865F2] hover:bg-[#4752c4] text-white rounded-full items-center justify-center shadow-[0_0_20px_rgba(88,101,242,0.5)] transition-all duration-300 hover:scale-110 group"
-			aria-label="Chat on Discord"
-		>
-			<div class="absolute right-full mr-3 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-gray-700 pointer-events-none shadow-lg">
-				Chat on Discord
-			</div>
-			<Icon name="discord" width={28} height={28} />
-		</a>
-
 		<div
 			id="global-livechat-modal"
-			class="fixed inset-0 z-[110] bg-black/85 backdrop-blur-md items-end sm:items-center justify-center p-0 sm:p-4 hidden"
+			class="fixed inset-0 z-[110] bg-[#090A0F]/80 backdrop-blur-xs items-end sm:items-center justify-center p-0 sm:p-4 hidden"
+			aria-hidden="true"
 		>
-			<div class="relative w-full max-w-md bg-black/95 border border-cyan-500/50 rounded-t-3xl sm:rounded-2xl p-4 sm:p-5 shadow-[0_0_50px_rgba(34,211,238,0.25)] flex flex-col h-[85vh] sm:h-[600px] max-h-[85vh] cyber-card">
-				<div class="flex items-center justify-between border-b border-gray-800/80 pb-3 mb-3">
+			<div class="relative w-full max-w-md bg-[#11131A] border border-[#222634] rounded-t-lg sm:rounded-lg p-4 shadow-2xl flex flex-col h-[85vh] sm:h-[580px] max-h-[85vh]">
+				<div class="flex items-center justify-between border-b border-[#222634] pb-3 mb-3">
 					<div class="flex items-center gap-3">
-						<div class="relative w-10 h-10 rounded-xl bg-cyan-950/70 border border-cyan-500/50 flex items-center justify-center text-cyan-400">
-							<div class="i-lucide-headset text-xl"></div>
-							<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-black animate-pulse"></span>
+						<div class="w-9 h-9 rounded-md bg-[#161922] border border-[#222634] flex items-center justify-center text-[#00E5FF] relative">
+							<div class="i-lucide-headset text-lg"></div>
+							<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border border-[#090A0F]"></span>
 						</div>
 						<div class="flex flex-col">
 							<div class="flex items-center gap-2">
-								<span class="text-xs sm:text-sm font-black text-white uppercase tracking-tight">Admin Yasui Game</span>
-								<span class="yg-badge-cyan">OFFICIAL</span>
+								<span class="text-xs font-bold text-[#F8FAFC] uppercase tracking-tight" data-i18n="chat.admin_name">Admin Yasui Game</span>
+								<span class="yg-badge-cyan" data-i18n="chat.official">OFFICIAL</span>
 							</div>
-							<span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-								<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online &bull; Membalas &lt; 2 menit
+							<span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1" data-i18n="chat.status_online">
+								<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online &bull; Respon &lt; 2 menit
 							</span>
 						</div>
 					</div>
 					<button
 						type="button"
 						onclick="window.closeLiveChatModal && window.closeLiveChatModal()"
-						class="text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition cursor-pointer"
+						class="text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] p-1.5 rounded-md transition-colors cursor-pointer"
 						aria-label="Tutup Live Chat"
 					>
-						<div class="i-lucide-x text-lg"></div>
+						<div class="i-lucide-x text-base"></div>
 					</button>
 				</div>
 
 				<div id="livechat-messages" class="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-none text-xs">
 					<div class="flex items-start gap-2 max-w-[85%]">
-						<div class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold">
+						<div class="w-6 h-6 rounded bg-[#161922] border border-[#222634] text-[#00E5FF] flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold font-mono">
 							Y
 						</div>
-						<div class="bg-gray-900/90 border border-gray-800 rounded-2xl rounded-tl-sm p-3 text-gray-200 shadow-sm leading-relaxed">
-							Halo Gamers! Selamat datang di <strong>Yasui Game</strong>. Ada akun game atau voucher yang ingin ditanyakan stoknya?
+						<div class="bg-[#161922] border border-[#222634] rounded-lg rounded-tl-none p-3 text-[#F8FAFC] leading-relaxed" data-i18n="chat.welcome_msg">
+							Halo Gamers! Selamat datang di <strong>Yasui Game</strong>. Ada akun game atau item yang ingin ditanyakan ketersediaannya?
 						</div>
 					</div>
 
 					<div class="flex items-start gap-2 max-w-[85%]">
-						<div class="w-6 h-6 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold">
+						<div class="w-6 h-6 rounded bg-[#161922] border border-[#222634] text-[#00E5FF] flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold font-mono">
 							Y
 						</div>
-						<div class="bg-gray-900/90 border border-gray-800 rounded-2xl rounded-tl-sm p-3 text-gray-200 shadow-sm leading-relaxed">
-							Kami melayani transaksi aman 24 jam dengan garansi 100% anti hackback. Silakan ketik pertanyaan Anda di bawah!
+						<div class="bg-[#161922] border border-[#222634] rounded-lg rounded-tl-none p-3 text-[#F8FAFC] leading-relaxed" data-i18n="chat.guarantee_msg">
+							Semua transaksi diproses aman dengan garansi 100% anti hackback. Silakan ketik pertanyaan Anda.
 						</div>
 					</div>
 
 					<div class="pt-2">
-						<div class="text-[9px] font-mono text-gray-500 uppercase tracking-wider mb-1.5">Pertanyaan Populer:</div>
+						<div class="text-[9px] font-mono text-[#64748B] uppercase tracking-wider mb-1.5" data-i18n="chat.quick_questions">Pertanyaan Cepat:</div>
 						<div class="flex flex-wrap gap-1.5">
-							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Berapa lama proses pengiriman akun?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
-								<div class="i-lucide-zap w-3 h-3 text-cyan-400"></div>
-								<span>Berapa lama proses kirim?</span>
+							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Berapa lama proses pengiriman akun?')" class="text-[10px] bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-[#F8FAFC] px-2.5 py-1 rounded transition-colors cursor-pointer flex items-center gap-1 font-mono" data-i18n="chat.quick_q1">
+								<div class="i-lucide-zap w-3 h-3 text-[#00E5FF]"></div>
+								<span>Berapa lama kirim?</span>
 							</button>
-							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Bagaimana klaim garansi anti hackback?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
-								<div class="i-lucide-shield-check w-3 h-3 text-cyan-400"></div>
-								<span>Garansi anti hackback</span>
+							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Bagaimana klaim garansi anti hackback?')" class="text-[10px] bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-[#F8FAFC] px-2.5 py-1 rounded transition-colors cursor-pointer flex items-center gap-1 font-mono" data-i18n="chat.quick_q2">
+								<div class="i-lucide-shield-check w-3 h-3 text-emerald-400"></div>
+								<span>Garansi anti-hackback</span>
 							</button>
-							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Metode pembayaran apa saja yang tersedia?')" class="text-[10px] bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 px-2.5 py-1 rounded-full transition cursor-pointer flex items-center gap-1">
-								<div class="i-lucide-credit-card w-3 h-3 text-cyan-400"></div>
-								<span>Pembayaran QRIS/VA</span>
+							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Metode pembayaran apa saja yang tersedia?')" class="text-[10px] bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-[#F8FAFC] px-2.5 py-1 rounded transition-colors cursor-pointer flex items-center gap-1 font-mono" data-i18n="chat.quick_q3">
+								<div class="i-lucide-credit-card w-3 h-3 text-amber-400"></div>
+								<span>Metode Pembayaran</span>
 							</button>
 						</div>
 					</div>
 				</div>
 
-				<div id="livechat-typing" class="hidden items-center gap-1.5 py-1.5 text-[10px] text-gray-400 font-mono">
-					<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce"></span>
-					<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.2s]"></span>
-					<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.4s]"></span>
-					<span class="ml-1">Admin sedang mengetik...</span>
+				<div id="livechat-typing" class="hidden items-center gap-1.5 py-1.5 text-[10px] text-[#94A3B8] font-mono">
+					<span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-bounce"></span>
+					<span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-bounce [animation-delay:0.2s]"></span>
+					<span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-bounce [animation-delay:0.4s]"></span>
+					<span class="ml-1" data-i18n="chat.typing">Admin sedang mengetik...</span>
 				</div>
 
-				<div class="pt-3 border-t border-gray-800/80">
+				<div class="pt-3 border-t border-[#222634]">
 					<form id="livechat-form" onsubmit="window.handleLiveChatSubmit && window.handleLiveChatSubmit(event)" class="flex items-center gap-2">
 						<input
 							type="text"
 							id="livechat-input"
 							placeholder="Ketik pesan untuk Admin..."
-							class="flex-1 bg-gray-900 border border-gray-800 focus:border-cyan-400 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-500 outline-none font-mono transition"
+							data-i18n-placeholder="chat.input_placeholder"
+							class="flex-1 bg-[#0D0F17] border border-[#222634] focus:border-[#00E5FF] rounded-md px-3 py-2 text-xs text-[#F8FAFC] placeholder-[#64748B] outline-none font-mono transition-colors"
 							autocomplete="off"
 						/>
 						<button
 							type="submit"
-							class="w-9 h-9 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-black flex items-center justify-center font-bold shadow-[0_0_15px_rgba(34,211,238,0.3)] transition cursor-pointer shrink-0"
+							class="w-8.5 h-8.5 rounded-md bg-[#00E5FF] hover:bg-[#33EBFF] text-[#090A0F] flex items-center justify-center font-bold transition-colors cursor-pointer shrink-0"
 							title="Kirim Pesan"
 						>
-							<div class="i-lucide-send text-sm"></div>
+							<div class="i-lucide-send text-xs"></div>
 						</button>
 					</form>
 
 					<div class="mt-2.5 flex items-center justify-between text-[10px] font-mono">
-						<span class="text-gray-500">Butuh respon cepat?</span>
+						<span class="text-[#64748B]" data-i18n="chat.need_instant">Butuh respon instan?</span>
 						<a
 							href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
 							target="_blank"
 							rel="noopener noreferrer"
-							class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-bold transition"
+							class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-semibold transition-colors"
+							data-i18n="chat.continue_wa"
 						>
 							<div class="i-lucide-external-link text-xs"></div>
-							Lanjutkan di WhatsApp &rarr;
+							Lanjut ke WhatsApp &rarr;
 						</a>
 					</div>
 				</div>
@@ -556,35 +643,36 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 		<div
 			id="global-auth-modal"
-			class="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md items-center justify-center p-4 hidden"
+			class="fixed inset-0 z-[100] bg-[#090A0F]/80 backdrop-blur-xs items-center justify-center p-4 hidden"
+			aria-hidden="true"
 		>
-			<div class="relative max-w-md w-full bg-black/95 border border-cyan-500/50 p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.25)] cyber-card">
+			<div class="relative max-w-md w-full bg-[#11131A] border border-[#222634] p-6 rounded-lg shadow-2xl">
 				<button
 					onclick="window.closeAuthModal && window.closeAuthModal()"
-					class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition cursor-pointer"
+					class="absolute top-4 right-4 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] p-1.5 rounded-md transition-colors cursor-pointer"
 					aria-label="Tutup Dialog Autentikasi"
 				>
-					<div class="i-lucide-x text-lg"></div>
+					<div class="i-lucide-x text-base"></div>
 				</button>
 
 				<div class="mb-5">
-					<div class="yg-badge-cyan mb-2">
-						<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-						SISTEM AUTENTIKASI PENGGUNA
+					<div class="yg-badge-cyan mb-2" data-i18n="auth.badge">
+						<span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF]"></span>
+						AUTENTIKASI PELANGGAN
 					</div>
-					<h2 class="text-xl font-black text-white uppercase tracking-tight" id="auth-modal-title">
+					<h2 class="text-lg font-bold text-[#F8FAFC] uppercase tracking-tight font-mono" id="auth-modal-title" data-i18n="auth.title">
 						MASUK KE YASUI GAME
 					</h2>
-					<p class="text-xs text-gray-400 mt-1">
-						Kelola semua akun game, status pengiriman, dan klaim garansi Anda.
+					<p class="text-xs text-[#94A3B8] mt-1 leading-relaxed" data-i18n="auth.subtitle">
+						Akses akun game, pantau status pengiriman instan, dan klaim garansi.
 					</p>
 				</div>
 
-				<div id="auth-modal-alert" class="hidden mb-4 p-3 rounded-lg text-xs font-mono border"></div>
+				<div id="auth-modal-alert" class="hidden mb-4 p-2.5 rounded-md text-xs font-mono border"></div>
 
-				<form id="form-auth-login" onsubmit="window.handleAuthLogin && window.handleAuthLogin(event)" class="space-y-4">
+				<form id="form-auth-login" onsubmit="window.handleAuthLogin && window.handleAuthLogin(event)" class="space-y-3.5">
 					<div>
-						<label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+						<label class="block text-[11px] font-semibold text-[#F8FAFC] uppercase tracking-wider mb-1 font-mono" data-i18n="auth.email_label">
 							Email Akun <span class="text-red-400">*</span>
 						</label>
 						<input
@@ -597,14 +685,15 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</div>
 
 					<div>
-						<div class="flex items-center justify-between mb-1.5">
-							<label class="text-[11px] font-bold text-gray-300 uppercase tracking-wider">
+						<div class="flex items-center justify-between mb-1">
+							<label class="text-[11px] font-semibold text-[#F8FAFC] uppercase tracking-wider font-mono" data-i18n="auth.pwd_label">
 								Kata Sandi <span class="text-red-400">*</span>
 							</label>
 							<button
 								type="button"
 								onclick="window.openSetPasswordModal && window.openSetPasswordModal()"
-								class="text-[10px] text-cyan-400 hover:underline font-mono cursor-pointer"
+								class="text-[10px] text-[#00E5FF] hover:underline font-mono cursor-pointer"
+								data-i18n="auth.forgot_pwd"
 							>
 								Lupa / Buat Sandi?
 							</button>
@@ -615,15 +704,15 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								id="auth-login-password"
 								required
 								placeholder="••••••••"
-								class="yg-input pr-10"
+								class="yg-input pr-9"
 							/>
 							<button
 								type="button"
 								onclick="window.togglePasswordVisibility && window.togglePasswordVisibility('auth-login-password', this)"
-								class="absolute right-3 top-2.5 text-gray-500 hover:text-white cursor-pointer"
+								class="absolute right-2.5 top-2 text-[#64748B] hover:text-[#F8FAFC] cursor-pointer"
 								aria-label="Lihat kata sandi"
 							>
-								<div class="i-lucide-eye text-sm"></div>
+								<div class="i-lucide-eye text-xs"></div>
 							</button>
 						</div>
 					</div>
@@ -631,13 +720,14 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					<button
 						type="submit"
 						id="btn-submit-login"
-						class="w-full yg-btn-primary py-3 text-xs mt-2"
+						class="w-full yg-btn-primary py-2.5 text-xs mt-2"
+						data-i18n="auth.submit_login"
 					>
 						<span>MASUK SEKARANG</span>
-						<div class="i-lucide-arrow-right text-sm"></div>
+						<div class="i-lucide-arrow-right text-xs"></div>
 					</button>
 
-					<p class="text-[10px] text-gray-500 text-center font-mono mt-2">
+					<p class="text-[10px] text-[#64748B] text-center font-mono mt-2" data-i18n="auth.security_note">
 						Sesi login aman tersimpan 30 hari di peramban ini.
 					</p>
 				</form>
@@ -646,35 +736,36 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 		<div
 			id="global-set-password-modal"
-			class="fixed inset-0 z-[110] bg-black/85 backdrop-blur-md items-center justify-center p-4 hidden"
+			class="fixed inset-0 z-[110] bg-[#090A0F]/80 backdrop-blur-xs items-center justify-center p-4 hidden"
+			aria-hidden="true"
 		>
-			<div class="relative max-w-md w-full bg-black/95 border border-cyan-500/50 p-6 md:p-8 shadow-[0_0_50px_rgba(34,211,238,0.25)] cyber-card">
+			<div class="relative max-w-md w-full bg-[#11131A] border border-[#222634] p-6 rounded-lg shadow-2xl">
 				<button
 					onclick="window.closeSetPasswordModal && window.closeSetPasswordModal()"
-					class="absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-gray-800/80 p-1.5 rounded-lg transition cursor-pointer"
+					class="absolute top-4 right-4 text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] p-1.5 rounded-md transition-colors cursor-pointer"
 					aria-label="Tutup Dialog Sandi"
 				>
-					<div class="i-lucide-x text-lg"></div>
+					<div class="i-lucide-x text-base"></div>
 				</button>
 
 				<div class="mb-5">
-					<div class="yg-badge-yellow mb-2">
-						<span class="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></span>
+					<div class="yg-badge-yellow mb-2" data-i18n="pwd.badge">
+						<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
 						PENGATURAN KREDENSIAL
 					</div>
-					<h2 class="text-xl font-black text-white uppercase tracking-tight">
+					<h2 class="text-lg font-bold text-[#F8FAFC] uppercase tracking-tight font-mono" data-i18n="pwd.title">
 						PASANG / GANTI KATA SANDI
 					</h2>
-					<p class="text-xs text-gray-400 mt-1">
-						Pasang kata sandi untuk mengamankan akun dan memudahkan login di masa depan.
+					<p class="text-xs text-[#94A3B8] mt-1 leading-relaxed" data-i18n="pwd.subtitle">
+						Amankan akun Anda untuk mempercepat pelacakan transaksi masa depan.
 					</p>
 				</div>
 
-				<div id="set-pwd-alert" class="hidden mb-4 p-3 rounded-lg text-xs font-mono border"></div>
+				<div id="set-pwd-alert" class="hidden mb-4 p-2.5 rounded-md text-xs font-mono border"></div>
 
-				<form id="form-set-password" onsubmit="window.handleSetPassword && window.handleSetPassword(event)" class="space-y-4">
+				<form id="form-set-password" onsubmit="window.handleSetPassword && window.handleSetPassword(event)" class="space-y-3.5">
 					<div>
-						<label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+						<label class="block text-[11px] font-semibold text-[#F8FAFC] uppercase tracking-wider mb-1 font-mono" data-i18n="pwd.email_label">
 							Email Akun <span class="text-red-400">*</span>
 						</label>
 						<input
@@ -687,8 +778,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</div>
 
 					<div>
-						<label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
-							Kata Sandi Baru <span class="text-red-400">*</span> (Minimal 6 Karakter)
+						<label class="block text-[11px] font-semibold text-[#F8FAFC] uppercase tracking-wider mb-1 font-mono" data-i18n="pwd.new_pwd_label">
+							Kata Sandi Baru <span class="text-red-400">*</span> (Min. 6 Karakter)
 						</label>
 						<input
 							type="password"
@@ -701,8 +792,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					</div>
 
 					<div>
-						<label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
-							Konfirmasi Kata Sandi <span class="text-red-400">*</span>
+						<label class="block text-[11px] font-semibold text-[#F8FAFC] uppercase tracking-wider mb-1 font-mono" data-i18n="pwd.confirm_pwd_label">
+							Konfirmasi Sandi <span class="text-red-400">*</span>
 						</label>
 						<input
 							type="password"
@@ -717,10 +808,11 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 					<button
 						type="submit"
 						id="btn-submit-pwd"
-						class="w-full yg-btn-primary py-3 text-xs mt-2"
+						class="w-full yg-btn-primary py-2.5 text-xs mt-2"
+						data-i18n="pwd.submit"
 					>
 						<span>SIMPAN KATA SANDI</span>
-						<div class="i-lucide-shield-check text-sm"></div>
+						<div class="i-lucide-shield-check text-xs"></div>
 					</button>
 				</form>
 			</div>
@@ -730,8 +822,8 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 		<script is:inline define:vars={{ serverDefaultCurr, serverDefaultLang, detectedCountry }}>
 			window.__YASUI_CONFIG__ = {
-				curr: serverDefaultCurr,
-				lang: serverDefaultLang,
+				curr: window.__YASUI_INITIAL_CURR__ || serverDefaultCurr,
+				lang: window.__YASUI_INITIAL_LANG__ || serverDefaultLang,
 				country: detectedCountry
 			};
 		</script>

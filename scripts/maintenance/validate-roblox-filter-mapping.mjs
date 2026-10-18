@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { getCategoryBySlug, getCategories } from '../src/lib/wc.js';
+import { getCategoryBySlug, getCategories } from '../../src/lib/wc.js';
 
 const jobs = JSON.parse(readFileSync(new URL('./roblox-filter-jobs.json', import.meta.url), 'utf8'));
 const grouped = new Map();

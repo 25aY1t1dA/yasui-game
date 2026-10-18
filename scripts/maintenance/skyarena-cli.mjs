@@ -3,7 +3,7 @@
  * SKYARENA CLI — pusat kendali otomasi Summoners War
  *
  * Pemakaian (dari root proyek):
- *   node --env-file=.env scratch/skyarena-cli.mjs <command>
+ *   node --env-file=.env scripts/maintenance/skyarena-cli.mjs <command>
  *
  * Commands:
  *   test-login                      Uji login & tampilkan meta stok
@@ -16,9 +16,9 @@
  *   sse                             Dengarkan SSE stok real-time
  */
 
-import * as sky from "../src/lib/skyarena.js";
-import * as stock from "../src/lib/skyarena-stock.js";
-import * as fulfill from "../src/lib/skyarena-fulfill.js";
+import * as sky from "../../src/lib/skyarena.js";
+import * as stock from "../../src/lib/skyarena-stock.js";
+import * as fulfill from "../../src/lib/skyarena-fulfill.js";
 
 const [cmd, ...args] = process.argv.slice(2);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

@@ -4,122 +4,118 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Terms of Service - Yasui Game">
-    <main class="max-w-3xl mx-auto px-4 pt-24 pb-16">
-        <header class="text-center mb-12">
+    <main class="max-w-3xl mx-auto px-4 pt-4 md:pt-6 pb-16">
+        <header class="text-center mb-10">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[#00E5FF] text-xs font-mono mb-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF]"></span>
+                KETENTUAN LAYANAN & TRANSAKSI
+            </span>
             <h1
-                class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4"
+                class="text-3xl md:text-4xl font-bold text-white tracking-tight uppercase mb-3"
                 data-i18n="terms.title"
             >
-                TERMS OF <span class="text-cyan-400">SERVICE</span>
+                Syarat & Ketentuan
             </h1>
             <p
-                class="text-gray-400 font-mono text-xs md:text-sm max-w-lg mx-auto"
+                class="text-[#94A3B8] font-mono text-xs md:text-sm max-w-lg mx-auto leading-relaxed"
                 data-i18n="terms.subtitle"
             >
-                Syarat dan ketentuan pembelian produk di Yasui Game.
+                Syarat, ketentuan pembelian produk, dan ketentuan garansi di Yasui Game.
             </p>
         </header>
 
-        <section class="relative yg-glow-ambient">
+        <section>
             <div
-                class="bg-gray-900/40 border border-gray-800 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
+                class="bg-[#11131A] border border-[#222634] rounded-lg p-6 md:p-10"
             >
                 <div
-                    class="prose prose-invert prose-sm md:prose-base max-w-none font-mono text-gray-300"
+                    class="space-y-6 font-mono text-xs text-[#94A3B8] leading-relaxed"
                 >
-                    <p class="leading-relaxed" data-i18n="terms.intro">
-                        Selamat datang di Yasui Game. Dengan membeli produk
-                        kami, Anda menyetujui syarat dan ketentuan berikut ini.
-                        Harap baca dengan seksama sebelum melakukan transaksi.
+                    <p data-i18n="terms.intro">
+                        Selamat datang di Yasui Game. Dengan melakukan pemesanan dan pembayaran di platform kami, Anda menyetujui syarat dan ketentuan transaksi di bawah ini. Harap dibaca secara teliti sebelum checkout.
                     </p>
 
-                    <h2
-                        class="text-white font-bold mt-8 mb-4 text-lg"
-                        data-i18n="terms.sec1_title"
-                    >
-                        1. Produk & Garansi
-                    </h2>
-                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
-                        <li data-i18n="terms.sec1_li1">
-                            <strong class="text-white">Garansi 7 Hari:</strong> Semua
-                            akun (Produk Digital) yang dibeli di Yasui Game memiliki
-                            masa garansi 7 hari sejak tanggal pembelian.
-                        </li>
-                        <li data-i18n="terms.sec1_li2">
-                            Garansi mencakup: Akun tidak bisa diakses (invalid
-                            credentials), terbanned sebelum digunakan, atau
-                            tidak sesuai deskripsi.
-                        </li>
-                        <li data-i18n="terms.sec1_li3">
-                            Garansi <strong class="text-red-400">HANGUS</strong> jika:
-                            Pembeli mengubah email/password bawaan sebelum masa garansi
-                            habis (kecuali diinstruksikan), atau melanggar poin penggunaan
-                            (lihat poin 2).
-                        </li>
-                    </ul>
+                    <div>
+                        <h2
+                            class="text-white font-bold mb-3 text-sm uppercase tracking-wider"
+                            data-i18n="terms.sec1_title"
+                        >
+                            1. Produk & Garansi Toko
+                        </h2>
+                        <ul class="list-disc pl-5 space-y-2 marker:text-[#00E5FF]">
+                            <li data-i18n="terms.sec1_li1">
+                                <strong class="text-white">Garansi 7 - 30 Hari:</strong> Semua
+                                akun game yang dibeli di Yasui Game dilindungi garansi resmi sesuai deskripsi pada halaman produk.
+                            </li>
+                            <li data-i18n="terms.sec1_li2">
+                                Garansi mencakup: Akun tidak dapat diakses (invalid credentials), ter-banned sebelum serah terima, atau spesifikasi tidak sesuai listing.
+                            </li>
+                            <li data-i18n="terms.sec1_li3">
+                                Garansi <strong class="text-red-400">HANGUS</strong> jika:
+                                Pembeli melanggar pedoman penggunaan platform game atau menggunakan program pihak ketiga terlarang.
+                            </li>
+                        </ul>
+                    </div>
 
-                    <h2
-                        class="text-white font-bold mt-8 mb-4 text-lg"
-                        data-i18n="terms.sec2_title"
-                    >
-                        2. Penggunaan Akun
-                    </h2>
-                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
-                        <li data-i18n="terms.sec2_li1">
-                            <strong class="text-red-400 warning">PENTING:</strong> Dilarang keras menggunakan program ilegal, cheat, bot,
-                            script, atau makro pada akun yang dibeli dari Yasui Game.
-                        </li>
-                        <li data-i18n="terms.sec2_li2">
-                            Segala bentuk banned/penangguhan akun akibat
-                            penggunaan software pihak ketiga oleh pembeli <strong>bukan</strong> merupakan tanggung jawab Yasui Game dan tidak akan diganti.
-                        </li>
-                        <li data-i18n="terms.sec2_li3">
-                            Akun yang dijual adalah akun fresh atau akun rawatan
-                            sesuai deskripsi. Pembeli bertanggung jawab penuh
-                            atas keamanan akun setelah serah terima selesai.
-                        </li>
-                    </ul>
+                    <div>
+                        <h2
+                            class="text-white font-bold mb-3 text-sm uppercase tracking-wider"
+                            data-i18n="terms.sec2_title"
+                        >
+                            2. Penggunaan Akun
+                        </h2>
+                        <ul class="list-disc pl-5 space-y-2 marker:text-[#00E5FF]">
+                            <li data-i18n="terms.sec2_li1">
+                                <strong class="text-amber-400">PENTING:</strong> Dilarang keras menggunakan program ilegal, cheat, bot,
+                                script injeksi, atau makro eksploitasi pada akun yang dibeli dari Yasui Game.
+                            </li>
+                            <li data-i18n="terms.sec2_li2">
+                                Segala bentuk penangguhan akun akibat pelanggaran ToS game oleh pembeli pasca serah terima berada di luar tanggung jawab Yasui Game.
+                            </li>
+                            <li data-i18n="terms.sec2_li3">
+                                Pembeli bertanggung jawab penuh untuk mengamankan kredensial akun setelah serah terima selesai sesuai petunjuk di Security Center.
+                            </li>
+                        </ul>
+                    </div>
 
-                    <h2
-                        class="text-white font-bold mt-8 mb-4 text-lg"
-                        data-i18n="terms.sec3_title"
-                    >
-                        3. Kebijakan Pengembalian Dana (Refund)
-                    </h2>
-                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
-                        <li data-i18n="terms.sec3_li1">
-                            Tidak ada fitur Refund (Uang Kembali) jika kesalahan
-                            berasal dari pembeli (salah membeli item, berubah
-                            pikiran, atau tidak membaca deskripsi).
-                        </li>
-                        <li data-i18n="terms.sec3_li2">
-                            Refund hanya diberikan jika: Stok habis setelah
-                            pembayaran terkonfirmasi, atau akun pengganti tidak
-                            tersedia saat klaim garansi yang valid.
-                        </li>
-                    </ul>
+                    <div>
+                        <h2
+                            class="text-white font-bold mb-3 text-sm uppercase tracking-wider"
+                            data-i18n="terms.sec3_title"
+                        >
+                            3. Kebijakan Pengembalian Dana (Refund)
+                        </h2>
+                        <ul class="list-disc pl-5 space-y-2 marker:text-[#00E5FF]">
+                            <li data-i18n="terms.sec3_li1">
+                                Pengembalian dana (refund) tidak berlaku jika kesalahan pemilihan item/server atau perubahan pikiran berasal dari pihak pembeli.
+                            </li>
+                            <li data-i18n="terms.sec3_li2">
+                                Refund penuh diberikan apabila stok habis setelah pembayaran diverifikasi atau jika unit pengganti tidak tersedia dalam klaim garansi yang sah.
+                            </li>
+                        </ul>
+                    </div>
 
-                    <h2
-                        class="text-white font-bold mt-8 mb-4 text-lg"
-                        data-i18n="terms.sec4_title"
-                    >
-                        4. Pengiriman & Keamanan
-                    </h2>
-                    <ul class="list-disc pl-5 space-y-2 marker:text-cyan-400">
-                        <li data-i18n="terms.sec4_li1">
-                            Pengiriman dilakukan secara instan/otomatis ke Email
-                            dan WhatsApp yang didaftarkan.
-                        </li>
-                        <li data-i18n="terms.sec4_li2">
-                            Yasui Game tidak pernah meminta password akun Anda
-                            setelah transaksi selesai untuk alasan apapun.
-                        </li>
-                    </ul>
+                    <div>
+                        <h2
+                            class="text-white font-bold mb-3 text-sm uppercase tracking-wider"
+                            data-i18n="terms.sec4_title"
+                        >
+                            4. Pengiriman & Keamanan
+                        </h2>
+                        <ul class="list-disc pl-5 space-y-2 marker:text-[#00E5FF]">
+                            <li data-i18n="terms.sec4_li1">
+                                Kredensial akun dikirim secara instan ke Email dan nomor WhatsApp yang diinputkan saat checkout, serta tampil pada Dashboard Pesanan.
+                            </li>
+                            <li data-i18n="terms.sec4_li2">
+                                Admin Yasui Game tidak akan pernah meminta kata sandi baru atau kode OTP Anda setelah transaksi selesai.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="mt-10 pt-6 border-t border-gray-800 text-center">
+                <div class="mt-8 pt-6 border-t border-[#222634] text-center">
                     <p
-                        class="text-[10px] text-gray-500"
+                        class="text-[10px] text-[#64748B] font-mono"
                         data-i18n="terms.last_updated"
                     >
                         Terakhir diperbarui: 10 Januari 2026

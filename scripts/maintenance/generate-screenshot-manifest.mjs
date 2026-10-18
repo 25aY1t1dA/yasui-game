@@ -5,22 +5,22 @@
  * plus struktur foldernya, agar mudah di-mapping ke produk WooCommerce.
  *
  * Output:
- *   scratch/sw-screenshot-manifest.json  -> daftar lengkap (nama file yang diharapkan)
- *   scratch/sw-screenshot-manifest.csv   -> checklist spreadsheet
+ *   scripts/maintenance/sw-screenshot-manifest.json  -> daftar lengkap (nama file yang diharapkan)
+ *   scripts/maintenance/sw-screenshot-manifest.csv   -> checklist spreadsheet
  *   public/assets/games/sw/            -> folder tujuan (dibuat kosong + .gitkeep)
  *
  * Konvensi nama file: <slug-nama>-<element>.png  (misal lucifer-light.png, gandalf-dark.png)
- * Jalankan: node --env-file=.env scratch/generate-screenshot-manifest.mjs
+ * Jalankan: node --env-file=.env scripts/maintenance/generate-screenshot-manifest.mjs
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import * as sky from "../src/lib/skyarena.js";
-import { loadPriceList } from "../src/lib/skyarena-pricelist.js";
+import * as sky from "../../src/lib/skyarena.js";
+import { loadPriceList } from "../../src/lib/skyarena-pricelist.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const OUT_DIR = path.join(__dirname, "../public/assets/games/sw");
+const OUT_DIR = path.join(__dirname, "../../public/assets/games/sw");
 
 function slugify(s) {
     return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");

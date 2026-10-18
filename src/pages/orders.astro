@@ -6,78 +6,79 @@ import Layout from "../layouts/Layout.astro";
     title="Pesanan Saya & Dashboard Akun - Yasui Game"
     description="Lacak riwayat transaksi, status pembayaran, dan detail akun game yang telah Anda beli di Yasui Game."
 >
-    <main class="max-w-5xl mx-auto px-4 pt-24 pb-32">
+    <main class="max-w-5xl mx-auto px-4 pt-4 md:pt-6 pb-32">
         <header class="mb-8">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#222634] pb-6">
                 <div>
-                    <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-cyan-950/50 border border-cyan-800/50 text-cyan-400 text-xs font-mono mb-2">
-                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-                        TERMINAL PENGGUNA
+                    <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[#00E5FF] text-xs font-mono mb-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
+                        <span data-i18n="orders.terminal">TERMINAL PENGGUNA</span>
                     </div>
-                    <h1 class="text-2xl md:text-4xl font-black text-white tracking-tight uppercase">
-                        PESANAN & AKUN SAYA
+                    <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight uppercase" data-i18n="orders.heading">
+                        Pesanan & Akun Saya
                     </h1>
-                    <p class="text-gray-400 text-xs md:text-sm mt-1">
-                        Akses seluruh akun game, status invoice, dan riwayat pesanan Anda secara aman.
+                    <p class="text-[#94A3B8] text-xs md:text-sm mt-1" data-i18n="orders.subtitle">
+                        Akses seluruh kredensial akun game, status invoice, dan riwayat pesanan Anda secara aman.
                     </p>
                 </div>
 
-                <div id="user-profile-badge" class="hidden items-center gap-3 bg-gray-900/60 border border-gray-800 p-3 rounded-xl">
-                    <div class="w-10 h-10 rounded-full bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold text-sm" id="user-avatar">
+                <div id="user-profile-badge" class="hidden items-center gap-3 bg-[#11131A] border border-[#222634] p-3 rounded-lg">
+                    <div class="w-9 h-9 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF] font-bold text-xs font-mono" id="user-avatar">
                         U
                     </div>
                     <div class="text-left">
                         <div class="text-xs font-bold text-white truncate max-w-[180px]" id="user-display-email">user@email.com</div>
-                        <div class="text-[10px] text-gray-500 font-mono" id="user-orders-count">0 Pesanan</div>
+                        <div class="text-[10px] text-[#64748B] font-mono" id="user-orders-count">0 Pesanan</div>
                     </div>
                     <button
                         onclick="logoutUser()"
                         title="Ganti Email / Keluar"
-                        class="p-2 text-gray-500 hover:text-red-400 hover:bg-gray-800/80 rounded-lg transition"
+                        class="p-2 text-[#94A3B8] hover:text-red-400 hover:bg-[#0D0F15] rounded-lg transition"
                     >
-                        <div class="i-lucide-log-out text-base"></div>
+                        <div class="i-lucide-log-out text-sm"></div>
                     </button>
                 </div>
             </div>
         </header>
 
-        <div id="auth-box" class="bg-gradient-to-b from-gray-900/80 to-black border border-gray-800 rounded-2xl p-6 md:p-8 mb-8 shadow-2xl relative overflow-hidden yg-glow-ambient">
+        <div id="auth-box" class="bg-[#11131A] border border-[#222634] rounded-lg p-6 md:p-8 mb-8">
             <div class="max-w-md mx-auto text-center py-2">
-                <div class="w-12 h-12 bg-cyan-950/60 border border-cyan-500/40 rounded-2xl flex items-center justify-center text-cyan-400 text-xl mx-auto mb-3 shadow-[0_0_25px_rgba(34,211,238,0.25)]">
+                <div class="w-12 h-12 bg-[#00E5FF]/10 border border-[#00E5FF]/30 rounded-lg flex items-center justify-center text-[#00E5FF] text-xl mx-auto mb-3">
                     <div class="i-lucide-lock"></div>
                 </div>
-                <h2 class="text-lg md:text-xl font-black text-white uppercase tracking-wider mb-2">
+                <h2 class="text-lg md:text-xl font-bold text-white uppercase tracking-wider mb-2 font-mono" data-i18n="orders.login_title">
                     Masuk ke Akun Anda
                 </h2>
-                <p class="text-xs text-gray-400 mb-6 leading-relaxed">
+                <p class="text-xs text-[#94A3B8] mb-6 leading-relaxed" data-i18n="orders.login_desc">
                     Untuk melindungi data akun game dan kredensial pesanan Anda, silakan masuk menggunakan email dan kata sandi Anda.
                 </p>
 
-                <div id="orders-auth-alert" class="hidden mb-4 p-3 rounded-xl text-xs font-mono border text-left"></div>
+                <div id="orders-auth-alert" class="hidden mb-4 p-3 rounded-lg text-xs font-mono border text-left"></div>
 
                 <form onsubmit="handleOrdersPageLogin(event)" class="space-y-4 mb-5 text-left">
                     <div>
-                        <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
-                            Email Pembelian <span class="text-red-400">*</span>
+                        <label class="block text-[11px] font-bold text-[#F8FAFC] uppercase tracking-wider mb-1.5 font-mono">
+                            <span data-i18n="orders.email_label">Email Pembelian</span> <span class="text-red-400">*</span>
                         </label>
                         <input
                             type="email"
                             id="orders-login-email"
                             required
                             placeholder="nama@email.com"
-                            class="w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 font-mono transition outline-none"
+                            class="yg-input"
                         />
                     </div>
 
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
-                            <label class="text-[11px] font-bold text-gray-300 uppercase tracking-wider">
-                                Kata Sandi <span class="text-red-400">*</span>
+                            <label class="text-[11px] font-bold text-[#F8FAFC] uppercase tracking-wider font-mono">
+                                <span data-i18n="orders.password_label">Kata Sandi</span> <span class="text-red-400">*</span>
                             </label>
                             <button
                                 type="button"
                                 onclick="window.openSetPasswordModal ? window.openSetPasswordModal() : null"
-                                class="text-[10px] text-cyan-400 hover:underline font-mono"
+                                class="text-[10px] text-[#00E5FF] hover:underline font-mono"
+                                data-i18n="orders.forgot_password"
                             >
                                 Lupa / Buat Sandi?
                             </button>
@@ -88,12 +89,12 @@ import Layout from "../layouts/Layout.astro";
                                 id="orders-login-password"
                                 required
                                 placeholder="••••••••"
-                                class="w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-3 text-xs text-white placeholder-gray-600 font-mono transition outline-none pr-10"
+                                class="yg-input pr-10"
                             />
                             <button
                                 type="button"
                                 onclick="toggleOrdersPasswordVisibility('orders-login-password', this)"
-                                class="absolute right-3 top-3 text-gray-500 hover:text-white"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-white"
                             >
                                 <div class="i-lucide-eye text-sm"></div>
                             </button>
@@ -103,69 +104,70 @@ import Layout from "../layouts/Layout.astro";
                     <button
                         type="submit"
                         id="btn-orders-submit-login"
-                        class="w-full bg-cyan-400 hover:bg-white text-black font-black uppercase py-3.5 rounded-xl text-xs transition shadow-[0_0_20px_rgba(34,211,238,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+                        class="yg-btn-primary w-full py-3.5 flex items-center justify-center gap-2 cursor-pointer"
                     >
-                        <span>MASUK SEKARANG</span>
+                        <span data-i18n="orders.login_btn">MASUK SEKARANG</span>
                         <div class="i-lucide-arrow-right text-xs"></div>
                     </button>
                 </form>
 
-                <p class="text-[11px] text-gray-500 flex items-center justify-center gap-1.5 font-mono">
-                    <span class="i-lucide-shield-check text-cyan-400"></span> Riwayat transaksi aman & kredensial akun terenkripsi
+                <p class="text-[11px] text-[#64748B] flex items-center justify-center gap-1.5 font-mono">
+                    <span class="i-lucide-shield-check text-[#00E5FF]"></span>
+                    <span data-i18n="orders.login_guarantee">Riwayat transaksi aman & kredensial akun terenkripsi</span>
                 </p>
             </div>
         </div>
 
         <section id="dashboard-content" class="hidden">
-            <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-gray-800/80">
-                <button onclick="filterStatus('all')" id="tab-all" class="filter-tab active-filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1.5 whitespace-nowrap">
-                    <span>Semua Pesanan</span>
-                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-all">0</span>
+            <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-[#222634]">
+                <button onclick="filterStatus('all')" id="tab-all" class="filter-tab active-filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1.5 whitespace-nowrap font-mono">
+                    <span data-i18n="orders.tab_all">Semua Pesanan</span>
+                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-all">0</span>
                 </button>
-                <button onclick="filterStatus('pending')" id="tab-pending" class="filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase text-gray-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
-                    <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
-                    <span>Menunggu Bayar</span>
-                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-pending">0</span>
+                <button onclick="filterStatus('pending')" id="tab-pending" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono">
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <span data-i18n="orders.tab_pending">Menunggu Bayar</span>
+                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-pending">0</span>
                 </button>
-                <button onclick="filterStatus('processing')" id="tab-processing" class="filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase text-gray-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
-                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                    <span>Diproses</span>
-                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-processing">0</span>
+                <button onclick="filterStatus('processing')" id="tab-processing" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono">
+                    <span class="w-2 h-2 rounded-full bg-[#00E5FF]"></span>
+                    <span data-i18n="orders.tab_processing">Diproses</span>
+                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-processing">0</span>
                 </button>
-                <button onclick="filterStatus('completed')" id="tab-completed" class="filter-tab px-4 py-2 rounded-lg text-xs font-bold uppercase text-gray-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap">
-                    <span class="w-2 h-2 rounded-full bg-green-400"></span>
-                    <span>Selesai</span>
-                    <span class="bg-gray-800 text-gray-400 text-[10px] px-1.5 py-0.2 rounded font-mono" id="count-completed">0</span>
+                <button onclick="filterStatus('completed')" id="tab-completed" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span data-i18n="orders.tab_completed">Selesai</span>
+                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-completed">0</span>
                 </button>
             </div>
 
             <div id="orders-list" class="space-y-4"></div>
 
-            <div id="orders-empty-state" class="hidden text-center py-16 bg-gray-900/20 border border-dashed border-gray-800 rounded-2xl">
-                <div class="i-lucide-inbox text-5xl text-gray-700 mx-auto mb-3"></div>
-                <h3 class="text-base font-bold text-gray-400 uppercase">Tidak Ada Pesanan</h3>
-                <p class="text-xs text-gray-600 mt-1 max-w-sm mx-auto">
+            <div id="orders-empty-state" class="hidden text-center py-16 bg-[#11131A] border border-[#222634] rounded-lg">
+                <div class="i-lucide-inbox text-4xl text-[#64748B] mx-auto mb-3"></div>
+                <h3 class="text-sm font-bold text-[#F8FAFC] uppercase font-mono" data-i18n="orders.empty_title">Tidak Ada Pesanan</h3>
+                <p class="text-xs text-[#94A3B8] mt-1 max-w-sm mx-auto" data-i18n="orders.empty_desc">
                     Tidak ada pesanan yang sesuai dengan filter ini.
                 </p>
             </div>
         </section>
 
         <div id="loading-state" class="hidden text-center py-16">
-            <div class="inline-block w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p class="text-sm font-mono text-gray-400">Memuat data pesanan Anda dari server...</p>
+            <div class="inline-block w-8 h-8 border-2 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="text-xs font-mono text-[#94A3B8]" data-i18n="orders.loading">Memuat data pesanan Anda dari server...</p>
         </div>
     </main>
 
-    <div id="toast" class="fixed bottom-24 md:bottom-8 right-6 z-[100] bg-gray-900 border border-cyan-500/50 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="i-lucide-check-circle text-cyan-400 text-base"></div>
+    <div id="toast" class="fixed bottom-24 md:bottom-8 right-6 z-[100] bg-[#11131A] border border-[#00E5FF]/40 text-white text-xs px-4 py-3 rounded-lg shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none font-mono">
+        <div class="i-lucide-check-circle text-[#00E5FF] text-base"></div>
         <span id="toast-msg">Kredensial berhasil disalin!</span>
     </div>
 
     <style>
         .active-filter-tab {
-            background-color: rgba(34, 211, 238, 0.1);
-            color: #22d3ee;
-            border: 1px solid rgba(34, 211, 238, 0.4);
+            background-color: rgba(0, 229, 255, 0.08);
+            color: #00E5FF;
+            border: 1px solid rgba(0, 229, 255, 0.4);
         }
     </style>
 
@@ -192,8 +194,27 @@ import Layout from "../layouts/Layout.astro";
             });
         };
 
-        function formatIDR(num) {
+        function getCurr() {
+            return typeof window.getCurrentCurrency === "function" ? window.getCurrentCurrency() : (localStorage.getItem("yasui_currency") || "IDR");
+        }
+
+        function getLang() {
+            return typeof window.getCurrentLanguage === "function" ? window.getCurrentLanguage() : (localStorage.getItem("yasui_lang") || "id");
+        }
+
+        function formatMoney(num) {
+            const curr = getCurr();
+            if (typeof window.formatCurrency === "function") {
+                return window.formatCurrency(num, curr);
+            }
+            if (curr === "USD") {
+                return "$" + (Number(num || 0) / 16000).toFixed(2);
+            }
             return "Rp " + Number(num || 0).toLocaleString("id-ID");
+        }
+
+        function formatIDR(num) {
+            return formatMoney(num);
         }
 
         /* ====== SUMMONERS WAR: SET ACCOUNT HELPERS ====== */
@@ -205,10 +226,11 @@ import Layout from "../layouts/Layout.astro";
             return (order.items || []).some(i => (i.sku || "").startsWith("sw-"));
         }
         function swButtonLabel(status) {
+            const isEn = getLang() === "en";
             switch (status) {
-                case "processing": return "Set Akun: Memproses…";
-                case "completed": return "Akun Ter-set ✓";
-                case "failed": return "Set Akun Gagal — Hubungi CS";
+                case "processing": return isEn ? "Setting Account: Processing…" : "Set Akun: Memproses…";
+                case "completed": return isEn ? "Account Bound ✓" : "Akun Ter-set ✓";
+                case "failed": return isEn ? "Binding Failed — Contact CS" : "Set Akun Gagal — Hubungi CS";
                 default: return "Set Account Hive ID";
             }
         }
@@ -216,7 +238,8 @@ import Layout from "../layouts/Layout.astro";
         function formatDate(dateStr) {
             if (!dateStr) return "-";
             const d = new Date(dateStr);
-            return d.toLocaleDateString("id-ID", {
+            const locale = getLang() === "en" ? "en-US" : "id-ID";
+            return d.toLocaleDateString(locale, {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
@@ -226,31 +249,32 @@ import Layout from "../layouts/Layout.astro";
         }
 
         function getStatusBadge(status, isExpired = false) {
+            const isEn = getLang() === "en";
             if (isExpired || status === "cancelled") {
-                return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/40 text-red-400 border border-red-800/60 text-[10px] font-bold uppercase tracking-wider">
-                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> KADALUARSA
+                return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/40 text-red-400 border border-red-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> ${isEn ? 'EXPIRED' : 'KADALUARSA'}
                 </span>`;
             }
             switch(status) {
                 case "completed":
-                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-950/60 text-green-400 border border-green-800 text-[10px] font-bold uppercase tracking-wider">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> SELESAI
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${isEn ? 'COMPLETED' : 'SELESAI'}
                     </span>`;
                 case "processing":
-                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-950/60 text-blue-400 border border-blue-800 text-[10px] font-bold uppercase tracking-wider">
-                        <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> DIPROSES
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/40 text-[10px] font-mono font-bold uppercase tracking-wider">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span> ${isEn ? 'PROCESSING' : 'DIPROSES'}
                     </span>`;
                 case "pending":
                 case "on-hold":
-                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-yellow-950/60 text-yellow-400 border border-yellow-800 text-[10px] font-bold uppercase tracking-wider animate-pulse">
-                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> MENUNGGU BAYAR
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-950/40 text-amber-400 border border-amber-500/40 text-[10px] font-mono font-bold uppercase tracking-wider animate-pulse">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> ${isEn ? 'AWAITING PAYMENT' : 'MENUNGGU BAYAR'}
                     </span>`;
                 case "failed":
-                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/60 text-red-400 border border-red-800 text-[10px] font-bold uppercase tracking-wider">
-                        GAGAL
+                    return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/40 text-red-400 border border-red-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">
+                        ${isEn ? 'FAILED' : 'GAGAL'}
                     </span>`;
                 default:
-                    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-gray-800 text-gray-400 text-[10px] font-bold uppercase">
+                    return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] font-mono font-bold uppercase">
                         ${status}
                     </span>`;
             }
@@ -343,13 +367,13 @@ import Layout from "../layouts/Layout.astro";
             currentFilter = status;
             document.querySelectorAll(".filter-tab").forEach(btn => {
                 btn.classList.remove("active-filter-tab");
-                btn.classList.add("text-gray-400");
+                btn.classList.add("text-[#94A3B8]");
             });
 
             const activeBtn = document.getElementById(`tab-${status}`);
             if (activeBtn) {
                 activeBtn.classList.add("active-filter-tab");
-                activeBtn.classList.remove("text-gray-400");
+                activeBtn.classList.remove("text-[#94A3B8]");
             }
 
             renderOrders();
@@ -377,6 +401,7 @@ import Layout from "../layouts/Layout.astro";
             emptyState.classList.add("hidden");
 
             container.innerHTML = filtered.map(order => {
+                const isEn = getLang() === "en";
                 const isPending = order.status === "pending" || order.status === "on-hold";
                 const isCompleted = order.status === "completed";
                 const isProcessing = order.status === "processing";
@@ -387,26 +412,26 @@ import Layout from "../layouts/Layout.astro";
                 const waSupportUrl = `https://wa.me/6285972775966?text=${encodeURIComponent(`Halo Admin Yasui Game, saya butuh bantuan/garansi untuk Pesanan #${order.number} (${order.items?.[0]?.name || 'Akun Game'}).`)}`;
 
                 const itemsHtml = (order.items || []).map(item => `
-                    <div class="flex items-center gap-3 py-2 border-b border-gray-800/40 last:border-none">
-                        <div class="w-12 h-12 bg-black rounded-lg border border-gray-800 flex-shrink-0 overflow-hidden flex items-center justify-center">
-                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover">` : `<div class="i-lucide-gamepad-2 text-xl text-gray-700"></div>`}
+                    <div class="flex items-center gap-3 py-2.5 border-b border-[#222634] last:border-none">
+                        <div class="w-12 h-12 bg-[#0D0F15] rounded-lg border border-[#222634] flex-shrink-0 overflow-hidden flex items-center justify-center">
+                            ${item.image ? `<img src="${item.image}" class="w-full h-full object-cover">` : `<div class="i-lucide-gamepad-2 text-xl text-[#64748B]"></div>`}
                         </div>
                         <div class="flex-1 min-w-0">
                             <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
-                            <div class="text-[11px] text-gray-400 font-mono">Qty: ${item.quantity} × ${formatIDR(item.price)}</div>
+                            <div class="text-[11px] text-[#94A3B8] font-mono tabular-nums">Qty: ${item.quantity} × <span class="yg-price" data-price-idr="${item.price}">${formatMoney(item.price)}</span></div>
                         </div>
-                        <div class="text-xs font-mono font-bold text-gray-300">
-                            ${formatIDR(item.total)}
+                        <div class="text-xs font-mono font-bold text-[#F8FAFC] tabular-nums yg-price" data-price-idr="${item.total}">
+                            ${formatMoney(item.total)}
                         </div>
                     </div>
                 `).join("");
 
                 return `
-                    <div class="bg-gray-900/40 border border-gray-800 hover:border-gray-700 rounded-2xl p-4 md:p-6 transition-all duration-300">
-                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-800/80 pb-4 mb-4">
+                    <div class="bg-[#11131A] border border-[#222634] hover:border-[#33394D] rounded-lg p-4 md:p-6 transition-all duration-200">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#222634] pb-4 mb-4">
                             <div class="flex items-center gap-3">
-                                <span class="text-sm md:text-base font-black text-cyan-400 font-mono tracking-tight">#${order.number}</span>
-                                <span class="text-xs text-gray-500 font-mono">● ${formatDate(order.dateCreated)}</span>
+                                <span class="text-sm md:text-base font-bold text-[#00E5FF] font-mono tracking-tight">#${order.number}</span>
+                                <span class="text-xs text-[#64748B] font-mono">● ${formatDate(order.dateCreated)}</span>
                             </div>
                             <div class="flex items-center gap-2">
                                 ${getStatusBadge(order.status, order.isExpired)}
@@ -417,61 +442,61 @@ import Layout from "../layouts/Layout.astro";
                             ${itemsHtml}
                         </div>
 
-                        <div class="flex items-center justify-between bg-black/40 border border-gray-800/60 rounded-xl p-3 mb-4 text-xs font-mono">
-                            <span class="text-gray-400">Total Tagihan (${order.paymentMethodTitle})</span>
-                            <span class="text-sm font-bold text-cyan-400">${formatIDR(order.total)}</span>
+                        <div class="flex items-center justify-between bg-[#0D0F15] border border-[#222634] rounded-lg p-3 mb-4 text-xs font-mono">
+                            <span class="text-[#94A3B8]">${isEn ? 'Total Bill' : 'Total Tagihan'} (${order.paymentMethodTitle || 'Gateway'})</span>
+                            <span class="text-sm font-bold text-[#00E5FF] tabular-nums yg-price" data-price-idr="${order.total}">${formatMoney(order.total)}</span>
                         </div>
 
                         ${(isCompleted || isProcessing) && order.customerNote ? `
-                            <div class="bg-cyan-950/20 border border-cyan-800/40 rounded-xl p-3.5 mb-4 font-mono text-xs">
+                            <div class="bg-[#0D0F15] border-l-2 border-[#00E5FF] border-y border-r border-[#222634] rounded-r-lg p-3.5 mb-4 font-mono text-xs">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-cyan-400 font-bold text-[11px] uppercase flex items-center gap-1.5">
-                                        <div class="i-lucide-key text-xs"></div> INFORMASI PENGIRIMAN / CATATAN
+                                    <span class="text-[#00E5FF] font-bold text-[11px] uppercase flex items-center gap-1.5">
+                                        <div class="i-lucide-key text-xs"></div> ${isEn ? 'DELIVERY CREDENTIALS / NOTES' : 'INFORMASI PENGIRIMAN / CATATAN'}
                                     </span>
-                                    <button onclick="copyText('${order.customerNote.replace(/'/g, "\\'")}', 'Informasi Akun')" class="text-[10px] text-gray-400 hover:text-cyan-400 underline">Salin</button>
+                                    <button onclick="copyText('${order.customerNote.replace(/'/g, "\\'")}', '${isEn ? 'Account Info' : 'Informasi Akun'}')" class="text-[10px] text-[#94A3B8] hover:text-[#00E5FF] underline cursor-pointer">${isEn ? 'Copy' : 'Salin'}</button>
                                 </div>
-                                <div class="text-gray-300 break-words whitespace-pre-wrap bg-black/60 p-2.5 rounded border border-gray-800">${order.customerNote}</div>
+                                <div class="text-[#F8FAFC] break-words whitespace-pre-wrap bg-[#11131A] p-2.5 rounded border border-[#222634]">${order.customerNote}</div>
                             </div>
                         ` : ''}
 
-                        <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-gray-800/40">
+                        <div class="flex flex-wrap items-center justify-end gap-2 pt-3 border-t border-[#222634]">
                             ${isPending && !order.isExpired ? `
-                                <a href="${order.paymentUrl}" class="bg-cyan-400 hover:bg-white text-black font-black uppercase text-xs px-4 py-2.5 rounded-lg transition shadow-[0_0_15px_rgba(34,211,238,0.3)] flex items-center gap-1.5">
+                                <a href="${order.paymentUrl}" class="yg-btn-primary text-xs py-2 px-3.5 flex items-center gap-1.5">
                                     <div class="i-lucide-credit-card text-xs"></div>
-                                    <span>BAYAR SEKARANG</span>
-                                    ${order.remainingSeconds > 0 ? `<span class="text-[10px] bg-black/20 text-black px-1.5 py-0.5 rounded font-mono font-bold">Sisa ${Math.ceil(order.remainingSeconds / 60)}m</span>` : ''}
+                                    <span>${isEn ? 'PAY NOW' : 'BAYAR SEKARANG'}</span>
+                                    ${order.remainingSeconds > 0 ? `<span class="text-[10px] bg-black/30 text-black px-1.5 py-0.5 rounded font-mono font-bold">${isEn ? 'Expires in' : 'Sisa'} ${Math.ceil(order.remainingSeconds / 60)}m</span>` : ''}
                                 </a>
                             ` : ''}
 
                             ${(order.isExpired || order.status === "cancelled" || order.status === "failed") && order.items && order.items.length > 0 ? `
-                                <button onclick="reorderItems(${JSON.stringify(order.items).replace(/"/g, '&quot;')})" class="bg-red-500/10 hover:bg-red-500 hover:text-black text-red-400 border border-red-500/40 font-bold uppercase text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-[0_0_10px_rgba(239,68,68,0.1)]">
+                                <button onclick="reorderItems(${JSON.stringify(order.items).replace(/"/g, '&quot;')})" class="bg-red-950/30 hover:bg-red-900/50 text-red-400 border border-red-500/40 font-mono font-bold uppercase text-xs px-3.5 py-2 rounded-lg transition flex items-center gap-1.5">
                                     <div class="i-lucide-refresh-cw text-xs"></div>
-                                    <span>PESAN ULANG</span>
+                                    <span>${isEn ? 'REORDER' : 'PESAN ULANG'}</span>
                                 </button>
                             ` : ''}
 
                             ${isCompleted && order.items?.[0]?.productId ? `
-                                <a href="/review?id=${order.items[0].productId}" class="bg-amber-400/10 hover:bg-amber-400/20 text-amber-400 border border-amber-400/30 font-bold text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-[0_0_10px_rgba(251,191,36,0.1)]">
+                                <a href="/review?id=${order.items[0].productId}" class="bg-amber-950/30 hover:bg-amber-900/50 text-amber-400 border border-amber-400/30 font-mono font-bold text-xs px-3.5 py-2 rounded-lg transition flex items-center gap-1.5">
                                     <div class="i-lucide-star text-xs fill-current"></div>
-                                    <span>Tulis Ulasan</span>
+                                    <span>${isEn ? 'Write Review' : 'Tulis Ulasan'}</span>
                                 </a>
                             ` : ''}
 
                             ${(isCompleted || isProcessing) && hasSwItems(order) ? `
-                                <button onclick="openSwSetAccount(${order.id}, '${(order.swFulfillStatus || 'awaiting_form')}')" class="sw-set-btn bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-400/30 font-bold text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5 shadow-[0_0_10px_rgba(168,85,247,0.1)]" ${order.swFulfillStatus === 'processing' || order.swFulfillStatus === 'completed' ? 'disabled' : ''}>
+                                <button onclick="openSwSetAccount(${order.id}, '${(order.swFulfillStatus || 'awaiting_form')}')" class="sw-set-btn bg-purple-950/30 hover:bg-purple-900/50 text-purple-400 border border-purple-400/30 font-mono font-bold text-xs px-3.5 py-2 rounded-lg transition flex items-center gap-1.5" ${order.swFulfillStatus === 'processing' || order.swFulfillStatus === 'completed' ? 'disabled' : ''}>
                                     <div class="i-lucide-user-cog text-xs"></div>
                                     <span>${swButtonLabel(order.swFulfillStatus)}</span>
                                 </button>
                             ` : ''}
 
-                            <a href="${waSupportUrl}" target="_blank" rel="noopener noreferrer" class="bg-gray-800 hover:bg-green-600 text-white font-bold text-xs px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5">
-                                <div class="i-lucide-message-circle text-xs text-green-400"></div>
-                                <span>Bantuan / Garansi WA</span>
+                            <a href="${waSupportUrl}" target="_blank" rel="noopener noreferrer" class="yg-btn-secondary text-xs py-2 px-3 flex items-center gap-1.5">
+                                <div class="i-lucide-message-circle text-xs text-emerald-400"></div>
+                                <span>${isEn ? 'WA Support' : 'Bantuan WA'}</span>
                             </a>
 
-                            <button onclick="copyText('#${order.number}', 'Nomor Order')" class="border border-gray-800 hover:border-gray-600 text-gray-400 hover:text-white text-xs px-3 py-2.5 rounded-lg transition flex items-center gap-1">
+                            <button onclick="copyText('#${order.number}', '${isEn ? 'Order Number' : 'Nomor Order'}')" class="border border-[#222634] hover:border-[#33394D] text-[#94A3B8] hover:text-white text-xs px-3 py-2 rounded-lg font-mono transition flex items-center gap-1">
                                 <div class="i-lucide-copy text-xs"></div>
-                                <span>Salin No. Order</span>
+                                <span>${isEn ? 'Copy No.' : 'Salin No.'}</span>
                             </button>
                         </div>
                     </div>
@@ -560,7 +585,7 @@ import Layout from "../layouts/Layout.astro";
                 fetchUserOrders(email, data.session?.token);
 
             } catch (err) {
-                alert.className = "mb-4 p-3 rounded-xl text-xs font-mono bg-red-950/60 border border-red-500/50 text-red-400 block text-left";
+                alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-red-950/40 border border-red-500/40 text-red-400 block text-left";
                 alert.innerText = err.message || "Gagal masuk. Silakan periksa kembali email & sandi Anda.";
                 btn.disabled = false;
                 btn.innerHTML = '<span>MASUK SEKARANG</span><div class="i-lucide-arrow-right text-xs"></div>';
@@ -611,79 +636,86 @@ import Layout from "../layouts/Layout.astro";
         // AUTO-DETECT SAAT HALAMAN DIBUKA & SAAT STATUS LOGIN BERUBAH
         document.addEventListener("DOMContentLoaded", checkAndLoadAuth);
         document.addEventListener("yasui-auth-changed", checkAndLoadAuth);
+        window.addEventListener("yasui-currency-change", () => {
+            if (allOrdersData && allOrdersData.length > 0) renderOrders();
+        });
+        window.addEventListener("yasui-lang-change", () => {
+            if (allOrdersData && allOrdersData.length > 0) renderOrders();
+        });
     </script>
 
     <div id="sw-modal-overlay" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
         <div class="min-h-full flex items-center justify-center py-10">
-            <div id="sw-modal" class="relative w-full max-w-md bg-gradient-to-b from-gray-900 to-black border border-cyan-500/40 rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.2)] overflow-hidden">
-                <div class="flex items-center justify-between px-5 py-4 border-b border-gray-800 bg-black/40">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-500/40 flex items-center justify-center text-purple-400">
+            <div id="sw-modal" class="relative w-full max-w-md bg-[#11131A] border border-[#222634] rounded-lg shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-5 py-4 border-b border-[#222634] bg-[#0D0F15]">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-lg bg-purple-950/40 border border-purple-500/40 flex items-center justify-center text-purple-400">
                             <div class="i-lucide-user-cog text-sm"></div>
                         </div>
                         <div>
-                            <h3 class="text-sm font-black text-white uppercase tracking-wider">Set Account Hive ID</h3>
-                            <p class="text-[10px] text-gray-500 font-mono">Order <span id="sw-order-number">#-</span> · Summoners War</p>
+                            <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono">Set Account Hive ID</h3>
+                            <p class="text-[10px] text-[#64748B] font-mono">Order <span id="sw-order-number" class="text-[#00E5FF]">#-</span> · Summoners War</p>
                         </div>
                     </div>
-                    <button onclick="closeSwModal()" class="p-1.5 text-gray-500 hover:text-white hover:bg-gray-800 rounded-lg transition" aria-label="Tutup">
+                    <button onclick="closeSwModal()" class="p-1.5 text-[#94A3B8] hover:text-white hover:bg-[#1A1E29] rounded-lg transition" aria-label="Tutup">
                         <div class="i-lucide-x text-base"></div>
                     </button>
                 </div>
 
                 <form id="sw-set-form" class="p-5 space-y-4" novalidate>
-                    <div id="sw-alert" class="hidden p-3 rounded-xl text-xs font-mono border"></div>
+                    <div id="sw-alert" class="hidden p-3 rounded-lg text-xs font-mono border"></div>
 
-                    <p class="text-[11px] text-gray-400 leading-relaxed bg-cyan-950/20 border border-cyan-800/40 rounded-xl p-3">
-                        <span class="i-lucide-info inline-block align-[-2px] mr-1 text-cyan-400"></span>
-                        Masukkan <b class="text-gray-200">3 opsi username</b> Hive (Opsi 1 wajib; opsi berikutnya dicoba otomatis jika ditolak) dan 1 password. Akun Anda <b class="text-cyan-400">sudah diamankan</b> — tidak perlu terburu-buru.
+                    <p class="text-[11px] text-[#94A3B8] leading-relaxed bg-[#0D0F15] border border-[#222634] rounded-lg p-3">
+                        <span class="i-lucide-info inline-block align-[-2px] mr-1 text-[#00E5FF]"></span>
+                        Masukkan <b class="text-[#F8FAFC]">3 opsi username</b> Hive (Opsi 1 wajib; opsi berikutnya dicoba otomatis jika ditolak) dan 1 password. Akun Anda <b class="text-[#00E5FF]">sudah diamankan</b> — tidak perlu terburu-buru.
                     </p>
 
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                        <label class="block text-[10px] font-bold text-[#F8FAFC] uppercase tracking-wider mb-1.5 font-mono">
                             Username Hive — Opsi 1 <span class="text-red-400">*</span>
                         </label>
                         <input type="text" id="sw-u1" required autocomplete="off" placeholder="mis. yasuiplayer01"
-                            class="sw-u-input w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
-                        <p class="sw-hint text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                            class="sw-u-input yg-input" />
+                        <p class="sw-hint text-[10px] mt-1 text-[#64748B] font-mono hidden"></p>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Opsi 2 (cadangan)</label>
+                            <label class="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono">Opsi 2 (cadangan)</label>
                             <input type="text" id="sw-u2" autocomplete="off" placeholder="opsional"
-                                class="sw-u-input w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
-                            <p class="sw-hint text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                                class="sw-u-input yg-input" />
+                            <p class="sw-hint text-[10px] mt-1 text-[#64748B] font-mono hidden"></p>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Opsi 3 (cadangan)</label>
+                            <label class="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono">Opsi 3 (cadangan)</label>
                             <input type="text" id="sw-u3" autocomplete="off" placeholder="opsional"
-                                class="sw-u-input w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
-                            <p class="sw-hint text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                                class="sw-u-input yg-input" />
+                            <p class="sw-hint text-[10px] mt-1 text-[#64748B] font-mono hidden"></p>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider mb-1.5">
+                        <label class="block text-[10px] font-bold text-[#F8FAFC] uppercase tracking-wider mb-1.5 font-mono">
                             Password Hive <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
                             <input type="password" id="sw-pass" required autocomplete="new-password" placeholder="min 9 karakter, ada angka & simbol"
-                                class="w-full bg-black/90 border border-gray-800 focus:border-cyan-400 rounded-xl px-4 py-2.5 pr-10 text-xs text-white placeholder-gray-600 font-mono transition outline-none" />
-                            <button type="button" id="sw-pass-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-400 transition" aria-label="Tampilkan password">
+                                class="yg-input pr-10" />
+                            <button type="button" id="sw-pass-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#00E5FF] transition" aria-label="Tampilkan password">
                                 <div class="i-lucide-eye text-sm"></div>
                             </button>
                         </div>
-                        <p id="sw-pass-hint" class="text-[10px] mt-1 text-gray-600 font-mono hidden"></p>
+                        <p id="sw-pass-hint" class="text-[10px] mt-1 text-[#64748B] font-mono hidden"></p>
                     </div>
 
-                    <div class="text-[10px] text-gray-500 leading-relaxed border-t border-gray-800 pt-3">
-                        <b class="text-gray-400">Cek ketersediaan username:</b> gunakan fitur <i>Forgot Password</i> di dalam game — jika muncul "ID tidak ditemukan", berarti username bisa dipakai.
+                    <div class="text-[10px] text-[#64748B] leading-relaxed border-t border-[#222634] pt-3">
+                        <b class="text-[#94A3B8]">Cek ketersediaan username:</b> gunakan fitur <i>Forgot Password</i> di dalam game — jika muncul "ID tidak ditemukan", berarti username bisa dipakai.
                     </div>
 
                     <button type="submit" id="sw-submit" disabled
-                        class="w-full bg-cyan-400 disabled:bg-gray-800 disabled:text-gray-600 hover:bg-white text-black font-black uppercase text-xs py-3 rounded-xl transition shadow-[0_0_15px_rgba(34,211,238,0.3)] flex items-center justify-center gap-2">
-                        <div class="i-lucide-send text-xs"></div> Kirim & Mulai Set Akun
+                        class="yg-btn-primary w-full text-xs py-3 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        <div class="i-lucide-send text-xs"></div>
+                        <span>Kirim & Mulai Set Akun</span>
                     </button>
                 </form>
             </div>
@@ -695,6 +727,10 @@ import Layout from "../layouts/Layout.astro";
         const SW_U_RE = /^[A-Za-z0-9\-_.]{6,12}$/;
         const SW_P_RE = /^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{9,}$/;
         let swOrderId = null;
+
+        window.openSwSetAccount = function(orderId, status) {
+            openSwModal(orderId, status);
+        };
 
         function openSwModal(orderId, status) {
             if (status === "processing" || status === "completed") return;
@@ -731,10 +767,10 @@ import Layout from "../layouts/Layout.astro";
                 ok = false; msg = "";
             }
             el.classList.toggle("border-red-500", v && !ok);
-            el.classList.toggle("border-green-500", ok && !!v);
+            el.classList.toggle("border-emerald-500", ok && !!v);
             if (hint) { hint.textContent = msg; hint.classList.toggle("hidden", !msg); }
-            hint && hint.classList.toggle("text-green-500", ok && !!v);
-            hint && hint.classList.toggle("text-red-500", v && !ok);
+            hint && hint.classList.toggle("text-emerald-400", ok && !!v);
+            hint && hint.classList.toggle("text-red-400", v && !ok);
             swUpdateSubmit();
         }
         function swValidatePassword(el) {
@@ -742,12 +778,12 @@ import Layout from "../layouts/Layout.astro";
             const hint = document.getElementById("sw-pass-hint");
             const ok = SW_P_RE.test(v);
             el.classList.toggle("border-red-500", v && !ok);
-            el.classList.toggle("border-green-500", ok);
+            el.classList.toggle("border-emerald-500", ok);
             if (hint) {
                 hint.textContent = v ? (ok ? "✓ password valid" : "✗ min 9 karakter, wajib ada angka & simbol") : "";
                 hint.classList.toggle("hidden", !v);
-                hint.classList.toggle("text-green-500", ok);
-                hint.classList.toggle("text-red-500", v && !ok);
+                hint.classList.toggle("text-emerald-400", ok);
+                hint.classList.toggle("text-red-400", v && !ok);
             }
             swUpdateSubmit();
         }
@@ -791,7 +827,7 @@ import Layout from "../layouts/Layout.astro";
         function swAlert(msg, type) {
             const b = document.getElementById("sw-alert");
             b.textContent = msg;
-            b.className = `p-3 rounded-xl text-xs font-mono border ${type === "error" ? "bg-red-950/30 border-red-800/60 text-red-400" : "bg-green-950/30 border-green-800/60 text-green-400"}`;
+            b.className = `p-3 rounded-lg text-xs font-mono border ${type === "error" ? "bg-red-950/30 border-red-800/60 text-red-400" : "bg-emerald-950/30 border-emerald-800/60 text-emerald-400"}`;
         }
 
         // polling status fulfillment utk kartu order aktif (jika ada yang processing)

@@ -4,51 +4,61 @@ import Icon from "./ui/Icon.astro";
 const pathname = Astro.url.pathname || "";
 const isProductPage = pathname.startsWith("/product/");
 const isCartPage = pathname.startsWith("/cart");
-const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-32" : "bottom-20";
+const isCheckoutPage = pathname.startsWith("/checkout");
+
+// Hide entirely on checkout to avoid distraction and layout blockage
+const shouldHide = isCheckoutPage;
+const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-28" : "bottom-20";
 ---
 
+{!shouldHide && (
 <aside aria-label="Customer Support Speed Dial">
     <a
         href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
         target="_blank"
         rel="noopener noreferrer"
-        class="hidden md:block fixed md:bottom-6 right-6 z-[90] group"
+        class="hidden md:flex items-center gap-2.5 fixed bottom-6 right-6 z-[90] bg-[#11131A] hover:bg-[#161922] text-[#F8FAFC] border border-[#222634] hover:border-emerald-500/40 px-3.5 py-2.5 rounded-lg shadow-lg transition-colors group cursor-pointer"
         aria-label="Chat WhatsApp Admin"
     >
-        <div class="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap border border-gray-700 pointer-events-none shadow-lg">
-            Chat on WhatsApp
+        <div class="w-7 h-7 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 group-hover:bg-emerald-900/60 transition-colors">
+            <Icon name="whatsapp" width={16} height={16} />
         </div>
-
-        <div class="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,211,102,0.5)] hover:scale-110 transition duration-300 border-2 border-black/20 animate-bounce-slow relative overflow-hidden">
-            <Icon name="whatsapp" width={28} height={28} />
+        <div class="flex flex-col text-left pr-1">
+            <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-emerald-400 transition-colors leading-tight" data-i18n="cs.wa_title">
+                WhatsApp CS
+            </span>
+            <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1 leading-tight mt-0.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span data-i18n="badge.online">Online</span>
+            </span>
         </div>
     </a>
 
-    <div class={`block md:hidden fixed ${mobileBottomClass} right-3.5 z-40 transition-all duration-300`} id="mobile-cs-container">
+    <div class={`block md:hidden fixed ${mobileBottomClass} right-3 z-40 transition-all duration-200`} id="mobile-cs-container">
         <div
             id="mobile-cs-menu"
-            class="absolute bottom-13 right-0 w-56 bg-black/95 border border-cyan-500/50 rounded-2xl p-2.5 shadow-[0_10px_35px_rgba(0,0,0,0.95)] backdrop-blur-xl transition-all duration-200 transform origin-bottom-right scale-90 opacity-0 pointer-events-none"
+            class="absolute bottom-12 right-0 w-60 bg-[#11131A] border border-[#222634] rounded-lg p-2 shadow-2xl transition-all duration-150 transform origin-bottom-right scale-95 opacity-0 pointer-events-none"
         >
-            <div class="px-2 py-1.5 border-b border-gray-800/80 mb-2 flex items-center justify-between">
-                <span class="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Bantuan Admin
+            <div class="px-2 py-1.5 border-b border-[#222634] mb-1.5 flex items-center justify-between">
+                <span class="text-[10px] font-mono font-semibold text-[#00E5FF] uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span data-i18n="cs.title">BANTUAN & CS</span>
                 </span>
-                <span class="text-[9px] text-gray-500 font-mono">Online</span>
+                <span class="text-[9px] text-[#64748B] font-mono" data-i18n="cs.24h">24 JAM</span>
             </div>
 
             <a
                 href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-2.5 p-2 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/40 border border-emerald-500/30 text-white transition mb-1.5 group"
+                class="flex items-center gap-2.5 p-2 rounded-md bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-emerald-500/40 text-[#F8FAFC] transition-colors mb-1.5 group"
             >
-                <div class="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition">
-                    <Icon name="whatsapp" width={18} height={18} />
+                <div class="w-7 h-7 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+                    <Icon name="whatsapp" width={15} height={15} />
                 </div>
                 <div class="flex flex-col text-left">
-                    <span class="text-xs font-bold text-white group-hover:text-emerald-400 transition leading-tight">WhatsApp CS</span>
-                    <span class="text-[9px] text-gray-400 font-mono leading-tight">Balas Cepat & Transaksi</span>
+                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-emerald-400 transition-colors leading-tight" data-i18n="cs.wa_title">WhatsApp CS</span>
+                    <span class="text-[9px] text-[#94A3B8] font-mono leading-tight" data-i18n="cs.wa_desc">Respon Cepat & Order</span>
                 </div>
             </a>
 
@@ -56,28 +66,28 @@ const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-32" : "bottom-
                 href="https://discord.com/users/1312253061800001541"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-2.5 p-2 rounded-xl bg-indigo-950/40 hover:bg-indigo-900/40 border border-indigo-500/30 text-white transition mb-1.5 group"
+                class="flex items-center gap-2.5 p-2 rounded-md bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-indigo-500/40 text-[#F8FAFC] transition-colors mb-1.5 group"
             >
-                <div class="w-8 h-8 rounded-lg bg-[#5865F2] text-white flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition">
-                    <Icon name="discord" width={18} height={18} />
+                <div class="w-7 h-7 rounded-md bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
+                    <Icon name="discord" width={15} height={15} />
                 </div>
                 <div class="flex flex-col text-left">
-                    <span class="text-xs font-bold text-white group-hover:text-indigo-400 transition leading-tight">Discord Server</span>
-                    <span class="text-[9px] text-gray-400 font-mono leading-tight">Komunitas Gamers</span>
+                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-indigo-400 transition-colors leading-tight" data-i18n="cs.discord_title">Discord Server</span>
+                    <span class="text-[9px] text-[#94A3B8] font-mono leading-tight" data-i18n="cs.discord_desc">Komunitas & Tiket</span>
                 </div>
             </a>
 
             <button
                 type="button"
                 id="mobile-cs-livechat-btn"
-                class="w-full flex items-center gap-2.5 p-2 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/40 border border-cyan-500/30 text-white transition group cursor-pointer text-left"
+                class="w-full flex items-center gap-2.5 p-2 rounded-md bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-[#00E5FF]/40 text-[#F8FAFC] transition-colors group cursor-pointer text-left"
             >
-                <div class="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-400/50 text-cyan-400 flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition">
-                    <div class="i-lucide-messages-square text-lg"></div>
+                <div class="w-7 h-7 rounded-md bg-[#00E5FF]/10 border border-[#00E5FF]/20 text-[#00E5FF] flex items-center justify-center shrink-0">
+                    <div class="i-lucide-messages-square text-sm"></div>
                 </div>
                 <div class="flex flex-col text-left">
-                    <span class="text-xs font-bold text-white group-hover:text-cyan-400 transition leading-tight">Live Chat Web</span>
-                    <span class="text-[9px] text-cyan-300 font-mono leading-tight">Admin Yasui Online</span>
+                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors leading-tight" data-i18n="cs.livechat_title">Live Chat Web</span>
+                    <span class="text-[9px] text-[#00E5FF] font-mono leading-tight" data-i18n="cs.livechat_desc">Online &bull; Siap Bantu</span>
                 </div>
             </button>
         </div>
@@ -85,15 +95,17 @@ const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-32" : "bottom-
         <button
             id="mobile-cs-trigger"
             type="button"
-            class="w-11 h-11 rounded-full bg-black/90 hover:bg-black border border-cyan-400/80 text-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(34,211,238,0.35)] backdrop-blur-md active:scale-95 transition-all cursor-pointer relative"
-            aria-label="Layanan Bantuan Pelanggan"
+            class="w-10 h-10 rounded-md bg-[#11131A] hover:bg-[#161922] border border-[#222634] hover:border-[#00E5FF]/40 text-[#00E5FF] flex items-center justify-center shadow-lg transition-colors cursor-pointer relative"
+            aria-label="Bantuan Layanan Pelanggan"
+            data-i18n-title="cs.speed_dial_aria"
         >
-            <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"></span>
-            <div id="cs-icon-headset" class="i-lucide-headset text-lg transition-transform duration-200"></div>
-            <div id="cs-icon-close" class="i-lucide-x text-lg hidden transition-transform duration-200"></div>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400"></span>
+            <div id="cs-icon-headset" class="i-lucide-headset text-base"></div>
+            <div id="cs-icon-close" class="i-lucide-x text-base hidden"></div>
         </button>
     </div>
 </aside>
+)}
 
 <script>
     function initMobileCS() {
@@ -109,12 +121,12 @@ const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-32" : "bottom-
         function toggleMenu(show?: boolean) {
             isOpen = typeof show === "boolean" ? show : !isOpen;
             if (isOpen) {
-                menu!.classList.remove("scale-90", "opacity-0", "pointer-events-none");
+                menu!.classList.remove("scale-95", "opacity-0", "pointer-events-none");
                 menu!.classList.add("scale-100", "opacity-100", "pointer-events-auto");
                 iconHeadset?.classList.add("hidden");
                 iconClose?.classList.remove("hidden");
             } else {
-                menu!.classList.add("scale-90", "opacity-0", "pointer-events-none");
+                menu!.classList.add("scale-95", "opacity-0", "pointer-events-none");
                 menu!.classList.remove("scale-100", "opacity-100", "pointer-events-auto");
                 iconHeadset?.classList.remove("hidden");
                 iconClose?.classList.add("hidden");
@@ -146,13 +158,3 @@ const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-32" : "bottom-
         initMobileCS();
     }
 </script>
-
-<style>
-    @keyframes bounce-slow {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-6px); }
-    }
-    .animate-bounce-slow {
-        animation: bounce-slow 3s infinite ease-in-out;
-    }
-</style>

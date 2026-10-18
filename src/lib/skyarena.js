@@ -1,7 +1,7 @@
 /**
  * Sky Arena Station — API Client
  * Reverse-engineered dari https://visual.skyarenastation.com
- * Lihat dokumentasi: scratch/SKYARENA-API.md
+ * Lihat dokumentasi: docs/SKYARENA-API.md
  *
  * Auth: POST /api/login {email,password} -> JWT bearer (~24 jam)
  */

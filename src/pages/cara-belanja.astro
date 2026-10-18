@@ -3,215 +3,185 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Panduan Cara Belanja - Yasui Game">
-    <main class="max-w-4xl mx-auto px-4 pt-24 pb-16">
-        <header class="text-center mb-16">
+<Layout
+    title="Panduan Cara Belanja - Yasui Game"
+    description="Panduan langkah demi langkah berbelanja akun dan voucher game di Yasui Game secara aman, cepat, dan otomatis."
+>
+    <main class="max-w-4xl mx-auto px-4 pt-4 md:pt-6 pb-20">
+        <header class="text-center mb-12">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[#00E5FF] text-xs font-mono mb-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF]"></span>
+                DOKUMENTASI OPERASIONAL
+            </span>
             <h1
-                class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4"
+                class="text-3xl md:text-4xl font-bold text-white tracking-tight uppercase mb-3"
                 data-i18n="guide.title"
             >
-                CARA <span class="text-cyan-400">ORDER</span>
+                Cara Order & Checkout
             </h1>
             <p
-                class="text-gray-400 font-mono text-xs md:text-sm max-w-lg mx-auto"
+                class="text-[#94A3B8] font-mono text-xs md:text-sm max-w-lg mx-auto leading-relaxed"
                 data-i18n="guide.subtitle"
             >
-                Panduan lengkap berbelanja akun game premium di Yasui Game.
-                Aman, Cepat, dan Otomatis.
+                Panduan lengkap berbelanja akun game di Yasui Game.
+                Aman, terverifikasi, dan otomatis 24/7.
             </p>
         </header>
 
-        <section class="grid gap-8 relative">
-            <div class="hidden md:block absolute left-[2.25rem] top-8 bottom-8 w-1 bg-gradient-to-b from-cyan-500/20 via-cyan-400 to-purple-500/20 -z-10 pointer-events-none"></div>
-
-            <article
-                class="cyber-card bg-gray-900/40 border border-gray-800 p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group hover:border-cyan-400 transition-all duration-300"
-            >
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition pointer-events-none">
-                    <div class="i-lucide-search text-6xl md:text-8xl text-cyan-400"></div>
+        <section class="space-y-4">
+            <article class="bg-[#11131A] border border-[#222634] hover:border-[#33394D] rounded-lg p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start transition-colors">
+                <div class="flex-shrink-0 w-14 h-14 bg-[#0D0F15] border border-[#222634] rounded-lg flex items-center justify-center font-mono font-bold text-xl text-[#00E5FF]">
+                    01
                 </div>
 
-                <div
-                    class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 bg-gray-900 border border-gray-700 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 group-hover:scale-110 transition duration-300 group-hover:border-cyan-400 font-mono"
-                >
-                    <span class="text-2xl md:text-3xl font-black text-cyan-400">01</span>
-                </div>
-
-                <div class="flex-1 relative z-10">
+                <div class="flex-1">
                     <h2
-                        class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition"
+                        class="text-base font-bold text-white uppercase tracking-wider mb-2 font-mono"
                         data-i18n="guide.step1"
                     >
-                        PILIH ITEM
+                        Pilih Item & Spesifikasi Akun
                     </h2>
                     <p
-                        class="text-gray-400 text-sm leading-relaxed mb-4"
+                        class="text-[#94A3B8] text-xs sm:text-sm leading-relaxed mb-4"
                         data-i18n="guide.step1_desc"
                     >
-                        Jelajahi katalog game favoritmu (Roblox, MLBB, Genshin,
-                        dll). Pilih akun yang sesuai dengan spesifikasi dan
-                        budget kamu. Baca deskripsi produk dengan teliti untuk
-                        memastikan kelengkapan akun.
+                        Jelajahi katalog game favorit Anda (Summoners War, Roblox, MLBB, dll). Pilih akun atau tier yang sesuai dengan spesifikasi dan budget. Seluruh listing telah melalui verifikasi spesifikasi manual dan otomatis.
                     </p>
-                    <div class="flex gap-2 text-[10px] font-mono text-gray-500 uppercase">
-                        <span class="bg-black/50 px-2 py-1 border border-gray-800 rounded">Katalog Lengkap</span>
-                        <span class="bg-black/50 px-2 py-1 border border-gray-800 rounded">Spesifikasi Detail</span>
+                    <div class="flex flex-wrap gap-2 text-[10px] font-mono text-[#94A3B8] uppercase">
+                        <span class="bg-[#0D0F15] px-2.5 py-1 border border-[#222634] rounded">Katalog Terverifikasi</span>
+                        <span class="bg-[#0D0F15] px-2.5 py-1 border border-[#222634] rounded">Filter Tier & Server</span>
+                        <span class="bg-[#0D0F15] px-2.5 py-1 border border-[#222634] rounded">Stok Real-Time</span>
                     </div>
                 </div>
             </article>
 
-            <article
-                class="cyber-card bg-gray-900/40 border border-gray-800 p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group hover:border-cyan-400 transition-all duration-300"
-            >
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition pointer-events-none">
-                    <div class="i-lucide-user-plus text-6xl md:text-8xl text-cyan-400"></div>
+            <article class="bg-[#11131A] border border-[#222634] hover:border-[#33394D] rounded-lg p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start transition-colors">
+                <div class="flex-shrink-0 w-14 h-14 bg-[#0D0F15] border border-[#222634] rounded-lg flex items-center justify-center font-mono font-bold text-xl text-[#00E5FF]">
+                    02
                 </div>
 
-                <div
-                    class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 bg-gray-900 border border-gray-700 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 group-hover:scale-110 transition duration-300 group-hover:border-cyan-400 font-mono"
-                >
-                    <span class="text-2xl md:text-3xl font-black text-cyan-400">02</span>
-                </div>
-
-                <div class="flex-1 relative z-10">
+                <div class="flex-1">
                     <h2
-                        class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition"
+                        class="text-base font-bold text-white uppercase tracking-wider mb-2 font-mono"
                         data-i18n="guide.step2"
                     >
-                        MASUKKAN KONTAK
+                        Lengkapi Data Kontak Pemesan
                     </h2>
                     <p
-                        class="text-gray-400 text-sm leading-relaxed mb-4"
+                        class="text-[#94A3B8] text-xs sm:text-sm leading-relaxed mb-4"
                         data-i18n="guide.step2_desc"
                     >
-                        Pada saat checkout, kamu wajib mengisi <strong>Email & Nomor WhatsApp</strong> yang aktif. Ini sangat penting karena detail info login
-                        akun (Username/Password) akan dikirimkan secara otomatis ke
-                        kontak tersebut.
+                        Pada form checkout, masukkan <b class="text-[#F8FAFC]">Email & Nomor WhatsApp aktif</b>. Data ini digunakan untuk pengiriman faktur, instruksi pembayaran, dan kredensial akun game yang Anda beli.
                     </p>
                     <div
-                        class="p-3 bg-yellow-500/10 border-l-2 border-yellow-500 text-[10px] text-yellow-200/80 font-mono"
+                        class="p-3 bg-[#0D0F15] border-l-2 border-amber-500 border-y border-r border-[#222634] rounded-r-lg text-xs text-amber-300 font-mono"
                         data-i18n="guide.important_typo"
                     >
-                        PENTING: Pastikan tidak ada typo agar pengiriman lancar.
+                        <span class="font-bold">PERHATIAN:</span> Pastikan email tidak salah ketik (typo) agar link invoice dan notifikasi terkirim tepat sasaran.
                     </div>
                 </div>
             </article>
 
-            <article
-                class="cyber-card bg-gray-900/40 border border-gray-800 p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group hover:border-cyan-400 transition-all duration-300"
-            >
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition pointer-events-none">
-                    <div class="i-lucide-credit-card text-6xl md:text-8xl text-cyan-400"></div>
+            <article class="bg-[#11131A] border border-[#222634] hover:border-[#33394D] rounded-lg p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start transition-colors">
+                <div class="flex-shrink-0 w-14 h-14 bg-[#0D0F15] border border-[#222634] rounded-lg flex items-center justify-center font-mono font-bold text-xl text-[#00E5FF]">
+                    03
                 </div>
 
-                <div
-                    class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 bg-gray-900 border border-gray-700 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 group-hover:scale-110 transition duration-300 group-hover:border-cyan-400 font-mono"
-                >
-                    <span class="text-2xl md:text-3xl font-black text-cyan-400">03</span>
-                </div>
-
-                <div class="flex-1 relative z-10">
+                <div class="flex-1">
                     <h2
-                        class="text-xl font-bold text-white mb-2 group-hover:text-cyan-400 transition"
+                        class="text-base font-bold text-white uppercase tracking-wider mb-2 font-mono"
                         data-i18n="guide.step3"
                     >
-                        PEMBAYARAN
+                        Pilih Metode Pembayaran & Lunasi
                     </h2>
                     <p
-                        class="text-gray-400 text-sm leading-relaxed mb-4"
+                        class="text-[#94A3B8] text-xs sm:text-sm leading-relaxed mb-4"
                         data-i18n="guide.step3_desc"
                     >
-                        Pilih metode pembayaran yang kamu inginkan. Kami
-                        mendukung berbagai metode modern:
+                        Pilih kanal bayar yang didukung oleh Payment Gateway resmi Duitku. Pembayaran diproses dengan verifikasi otomatis tanpa perlu upload bukti transfer manual:
                     </p>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                         <div
-                            class="flex items-center gap-2 text-xs text-gray-300 bg-black/40 p-2 rounded border border-gray-800"
+                            class="flex items-center gap-2 text-xs font-mono text-[#F8FAFC] bg-[#0D0F15] p-2.5 rounded border border-[#222634]"
                             data-i18n="guide.payment_qris"
                         >
-                            <div class="i-lucide-qr-code text-cyan-400"></div> QRIS (All E-Wallet)
+                            <div class="i-lucide-qr-code text-[#00E5FF]"></div>
+                            <span>QRIS Real-Time</span>
                         </div>
                         <div
-                            class="flex items-center gap-2 text-xs text-gray-300 bg-black/40 p-2 rounded border border-gray-800"
+                            class="flex items-center gap-2 text-xs font-mono text-[#F8FAFC] bg-[#0D0F15] p-2.5 rounded border border-[#222634]"
                             data-i18n="guide.payment_card"
                         >
-                            <div class="i-lucide-credit-card text-cyan-400"></div> VISA / Mastercard
+                            <div class="i-lucide-credit-card text-[#00E5FF]"></div>
+                            <span>Virtual Account (VA)</span>
                         </div>
                         <div
-                            class="flex items-center gap-2 text-xs text-gray-300 bg-black/40 p-2 rounded border border-gray-800"
+                            class="flex items-center gap-2 text-xs font-mono text-[#F8FAFC] bg-[#0D0F15] p-2.5 rounded border border-[#222634]"
                             data-i18n="guide.payment_crypto"
                         >
-                            <div class="i-lucide-globe text-cyan-400"></div> Crypto / PayPal
+                            <div class="i-lucide-wallet text-[#00E5FF]"></div>
+                            <span>E-Wallet & Retail</span>
                         </div>
                     </div>
                 </div>
             </article>
 
-            <article
-                class="cyber-card bg-gray-900/40 border border-gray-800 p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start relative overflow-hidden group hover:border-green-400 transition-all duration-300"
-            >
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition pointer-events-none">
-                    <div class="i-lucide-check-circle text-6xl md:text-8xl text-green-400"></div>
+            <article class="bg-[#11131A] border border-[#222634] hover:border-[#33394D] rounded-lg p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start transition-colors">
+                <div class="flex-shrink-0 w-14 h-14 bg-[#0D0F15] border border-emerald-500/40 rounded-lg flex items-center justify-center font-mono font-bold text-xl text-emerald-400">
+                    04
                 </div>
 
-                <div
-                    class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 bg-gray-900 border border-gray-700 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.5)] z-10 group-hover:scale-110 transition duration-300 group-hover:border-green-400 font-mono"
-                >
-                    <span class="text-2xl md:text-3xl font-black text-green-400">04</span>
-                </div>
-
-                <div class="flex-1 relative z-10">
+                <div class="flex-1">
                     <h2
-                        class="text-xl font-bold text-white mb-2 group-hover:text-green-400 transition"
+                        class="text-base font-bold text-white uppercase tracking-wider mb-2 font-mono"
                         data-i18n="guide.step4"
                     >
-                        TERIMA AKUN
+                        Terima Kredensial & Amankan Akun
                     </h2>
                     <p
-                        class="text-gray-400 text-sm leading-relaxed mb-4"
+                        class="text-[#94A3B8] text-xs sm:text-sm leading-relaxed mb-4"
                         data-i18n="guide.step4_desc"
                     >
-                        Setelah pembayaran terkonfirmasi (biasanya instan),
-                        sistem otomatis kami akan memproses pesananmu. Detail
-                        akun akan dikirimkan ke Email dan WhatsApp kamu dalam
-                        waktu <strong>1 - 5 menit</strong>.
+                        Setelah pembayaran terverifikasi otomatis, pesanan langsung diproses. Kredensial akun dikirim via Email, WhatsApp, dan dapat diakses langsung di Dashboard Pesanan dalam waktu 1 - 5 menit.
                     </p>
-                    <div class="flex flex-col gap-2 mt-2">
+                    <div class="flex flex-wrap gap-4 text-xs font-mono">
                         <div
-                            class="flex items-center gap-2 text-[10px] text-green-400 uppercase font-bold tracking-wider"
+                            class="flex items-center gap-2 text-emerald-400 uppercase font-bold"
                             data-i18n="guide.instant_delivery"
                         >
-                            <div class="i-lucide-zap w-4 h-4"></div> Pengiriman Instan 24/7
+                            <div class="i-lucide-zap w-4 h-4"></div>
+                            <span>Pengiriman Otomatis 24/7</span>
                         </div>
                         <div
-                            class="flex items-center gap-2 text-[10px] text-green-400 uppercase font-bold tracking-wider"
+                            class="flex items-center gap-2 text-emerald-400 uppercase font-bold"
                             data-i18n="guide.warranty"
                         >
-                            <div class="i-lucide-shield-check w-4 h-4"></div> Garansi 30 Hari
+                            <div class="i-lucide-shield-check w-4 h-4"></div>
+                            <span>Garansi Toko Resmi</span>
                         </div>
                     </div>
                 </div>
             </article>
         </section>
 
-        <section class="mt-16 text-center border-t border-gray-800 pt-12">
-            <h3 class="text-white font-bold mb-4 text-base" data-i18n="guide.need_help">
-                Masih bingung atau ada kendala?
+        <section class="mt-12 text-center border-t border-[#222634] pt-8">
+            <h3 class="text-white font-bold mb-3 text-sm font-mono uppercase" data-i18n="guide.need_help">
+                Butuh Bantuan atau Panduan Khusus?
             </h3>
             <a
-                href="https://wa.me/6281991400395"
+                href="https://wa.me/6285972775966"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-black font-bold uppercase py-3 px-8 rounded shadow-lg hover:shadow-green-500/20 transition transform hover:-translate-y-1"
+                class="yg-btn-secondary inline-flex items-center gap-2 text-xs"
             >
-                <div class="i-lucide-message-circle"></div>
-                <span data-i18n="guide.contact_admin">Hubungi Admin WhatsApp</span>
+                <div class="i-lucide-message-circle text-emerald-400"></div>
+                <span data-i18n="guide.contact_admin">Hubungi CS WhatsApp Yasui Game</span>
             </a>
             <p
-                class="text-[10px] text-gray-500 mt-4 font-mono"
+                class="text-[10px] text-[#64748B] mt-3 font-mono"
                 data-i18n="guide.cs_hours"
             >
-                CS Online Setiap Hari: 09:00 - 23:00 WIB
+                Operasional Setiap Hari: 09:00 - 23:00 WIB
             </p>
         </section>
     </main>

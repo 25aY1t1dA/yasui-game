@@ -12,6 +12,7 @@
     "@astrojs/node": "^9.5.1",
     "@astrojs/sitemap": "^3.6.0",
     "@astrojs/vercel": "^8.0.0",
+    "@supabase/supabase-js": "^2.118.0",
     "@unocss/astro": "^66.5.12",
     "astro": "^5.16.6",
     "qrcode": "^1.5.4",

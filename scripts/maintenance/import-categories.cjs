@@ -5,9 +5,9 @@ const fs = require('fs');
 const path = require('path');
 
 // WooCommerce API config
-const WC_URL = 'https://admin.yasuigame.com';
-const WC_KEY = 'ck_8165d13b8849337be94e925d5d6fa4968e8fc779';
-const WC_SECRET = 'cs_bd3ef96b491cf24c555b8924cec6cafdc7ead9d8';
+const WC_URL = process.env.WP_URL || 'https://admin.yasuigame.com';
+const WC_KEY = process.env.WC_CONSUMER_KEY || '';
+const WC_SECRET = process.env.WC_CONSUMER_SECRET || '';
 const AUTH = Buffer.from(`${WC_KEY}:${WC_SECRET}`).toString('base64');
 
 // Rate limiting: max 3 requests per second

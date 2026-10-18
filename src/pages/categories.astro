@@ -3,26 +3,26 @@
 import Layout from "../layouts/Layout.astro";
 import { getCategories } from "../lib/wc";
 
-const fixImgUrl = (url) => {
+const fixImgUrl = (url: string | null) => {
     if (typeof url !== "string" || !url) return null;
     return `/img-proxy?src=${encodeURIComponent(url)}`;
 };
 
-let categories = [];
-let error = null;
+let categories: any[] = [];
+let error: string | null = null;
 
 try {
     const rawCategories = await getCategories({ per_page: 100, hide_empty: false, parent: 0 });
     categories = (rawCategories || [])
-        .filter(cat => cat.slug !== 'flash-sale' && cat.slug !== 'uncategorized' && cat.slug !== 'arsip-internal')
-        .map(cat => ({
+        .filter((cat: any) => cat.slug !== 'flash-sale' && cat.slug !== 'uncategorized' && cat.slug !== 'arsip-internal')
+        .map((cat: any) => ({
             id: cat.id,
             name: cat.name,
             slug: cat.slug,
-            count: cat.count,
+            count: cat.count || 0,
             image: cat.image?.src ? { sourceUrl: cat.image.src } : null
         }));
-} catch (e) {
+} catch (e: any) {
     console.error("Error fetching categories:", e);
     error = e.message;
 }
@@ -30,65 +30,132 @@ try {
 
 <Layout
     title="Katalog Game - Yasui Game"
-    description="Jelajahi semua kategori game yang tersedia di Yasui Game"
+    description="Jelajahi seluruh kategori game dan direktori RMT terverifikasi di Yasui Game."
 >
-    <main class="max-w-7xl mx-auto px-4 pt-24 pb-32">
-        <header class="text-center mb-12">
-            <h1
-                class="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4"
-                data-i18n="categories.title"
-            >
-                KATALOG GAME
-            </h1>
-            <p
-                class="text-gray-400 text-sm md:text-base font-mono uppercase tracking-widest"
-                data-i18n="categories.subtitle"
-            >
-                Pilih game favoritmu
-            </p>
+    <main class="yg-shell pt-4 md:pt-6 pb-20">
+        <nav
+            class="flex py-3 text-[#64748B] text-[10px] font-mono uppercase tracking-wider overflow-x-auto"
+            aria-label="Breadcrumb"
+        >
+            <ol class="flex items-center space-x-2 whitespace-nowrap">
+                <li><a href="/" class="hover:text-[#00E5FF] transition-colors" data-i18n="nav.home">HOME</a></li>
+                <li><span class="text-[#262B3D]">/</span></li>
+                <li class="text-[#F8FAFC] font-bold" data-i18n="categories.breadcrumb">KATALOG GAME</li>
+            </ol>
+        </nav>
+
+        <header class="mb-8 pb-5 border-b border-[#222634] flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h1
+                    class="text-xl md:text-3xl font-extrabold text-[#F8FAFC] tracking-tight uppercase"
+                    data-i18n="categories.title"
+                >
+                    Katalog Game & Semesta RMT
+                </h1>
+                <p
+                    class="text-xs md:text-sm text-[#94A3B8] mt-1"
+                    data-i18n="categories.subtitle"
+                >
+                    Pilih game untuk menjelajahi akun, item, dan mata uang digital bergaransi.
+                </p>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-mono text-[#94A3B8]">
+                    <span data-i18n="categories.total_games">Total Game</span>: <strong class="text-[#00E5FF] tabular-nums">{categories.length}</strong>
+                </span>
+            </div>
         </header>
 
-        {
-            error && (
-                <div class="p-8 text-center border border-dashed border-red-900 bg-red-900/10 rounded-xl mb-8">
-                    <p class="text-red-400 font-bold">
-                        ⚠️ Gagal memuat kategori: {error}
-                    </p>
-                </div>
-            )
+        {error && (
+            <div class="p-6 text-center border border-dashed border-red-500/30 bg-red-950/20 rounded-lg mb-8">
+                <p class="text-red-400 text-xs font-mono">
+                    Gagal memuat kategori: {error}
+                </p>
+            </div>
+        )}
+
+        <div class="relative mb-6">
+            <span class="i-lucide-search absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B] text-sm pointer-events-none" />
+            <input
+                id="category-search-input"
+                type="search"
+                placeholder="Cari kategori game..."
+                data-i18n-placeholder="categories.search_placeholder"
+                autocomplete="off"
+                class="yg-input !h-11 !pl-10 !pr-4 !text-xs !bg-[#0D0F15]"
+            />
+        </div>
+
+        <section id="categories-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+            {categories.map((cat) => (
+                <a
+                    href={`/category/${cat.slug}`}
+                    data-cat-name={cat.name.toLowerCase()}
+                    class="category-card yg-card-interactive group p-3.5 sm:p-4 flex flex-col items-center justify-center text-center gap-2.5 relative"
+                >
+                    <span class="absolute top-2.5 right-2.5 text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded bg-[#0D0F15] border border-[#222634] text-[#94A3B8] group-hover:text-[#00E5FF] group-hover:border-[#00E5FF]/30 transition-colors">
+                        {cat.count}
+                    </span>
+
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-[#0D0F15] border border-[#222634] p-2 group-hover:border-[#00E5FF]/40 transition-all duration-200 group-hover:scale-105 flex items-center justify-center">
+                        {cat.image ? (
+                            <img
+                                src={fixImgUrl(cat.image.sourceUrl)}
+                                alt={cat.name}
+                                class="w-full h-full object-contain"
+                                loading="lazy"
+                            />
+                        ) : (
+                            <span class="i-lucide-gamepad-2 text-2xl text-[#64748B] group-hover:text-[#00E5FF] transition-colors" />
+                        )}
+                    </div>
+
+                    <h2 class="text-xs sm:text-sm font-semibold text-[#F8FAFC] uppercase tracking-wide group-hover:text-[#00E5FF] transition-colors leading-tight line-clamp-1 w-full">
+                        {cat.name}
+                    </h2>
+                    <span class="text-[10px] font-mono text-[#64748B]">
+                        {cat.count > 0 ? (
+                            <span><span class="tabular-nums">{cat.count}</span> <span data-i18n="categories.active_products">Produk Aktif</span></span>
+                        ) : (
+                            <span data-i18n="categories.catalog_available">Katalog Tersedia</span>
+                        )}
+                    </span>
+                </a>
+            ))}
+        </section>
+
+        <div id="no-categories" class="hidden py-12 text-center rounded-lg border border-dashed border-[#222634] bg-[#0D0F15] my-6">
+            <p class="text-xs text-[#F8FAFC]" data-i18n="categories.empty">Kategori tidak ditemukan.</p>
+            <p class="text-[11px] text-[#94A3B8] mt-1 font-mono" data-i18n="categories.empty_desc">Coba kata kunci lain.</p>
+        </div>
+    </main>
+
+    <script>
+        function initCategorySearch() {
+            const input = document.getElementById("category-search-input") as HTMLInputElement | null;
+            const cards = document.querySelectorAll<HTMLElement>(".category-card");
+            const emptyState = document.getElementById("no-categories");
+
+            if (!input || !cards.length) return;
+
+            input.addEventListener("input", () => {
+                const query = input.value.trim().toLowerCase();
+                let matchCount = 0;
+
+                cards.forEach((card) => {
+                    const name = card.getAttribute("data-cat-name") || "";
+                    const matches = !query || name.includes(query);
+                    card.style.display = matches ? "flex" : "none";
+                    if (matches) matchCount++;
+                });
+
+                if (emptyState) {
+                    emptyState.style.display = matchCount === 0 ? "block" : "none";
+                }
+            });
         }
 
-        <section class="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {
-                categories.map((cat) => (
-                    <a
-                        href={`/category/${cat.slug}`}
-                        class="yg-card-interactive group relative p-4 flex flex-col items-center justify-center gap-3 aspect-[4/5] md:aspect-auto"
-                    >
-                        <div class="absolute top-2 right-2 bg-gray-800 text-gray-400 text-[9px] font-bold px-1.5 py-0.5 rounded border border-gray-700 group-hover:border-cyan-500/30 group-hover:text-cyan-400 transition-colors font-mono">
-                            {cat.count}
-                        </div>
-
-                        <div class="w-12 h-12 md:w-20 md:h-20 rounded-full bg-black border border-gray-800 p-2 group-hover:border-cyan-500/50 transition-colors relative overflow-hidden flex-shrink-0">
-                            {cat.image ? (
-                                <img
-                                    src={fixImgUrl(cat.image.sourceUrl)}
-                                    alt={cat.name}
-                                    class="w-full h-full object-cover rounded-full transition-all duration-300"
-                                />
-                            ) : (
-                                <div class="w-full h-full flex items-center justify-center text-gray-700">
-                                    <div class="i-lucide-gamepad-2 text-xl md:text-2xl" />
-                                </div>
-                            )}
-                        </div>
-
-                        <h2 class="text-xs md:text-base font-bold text-gray-300 uppercase tracking-wider text-center group-hover:text-white transition-colors leading-tight">
-                            {cat.name}
-                        </h2>
-                    </a>
-                ))
-            }
-        </section>
-    </main>
+        initCategorySearch();
+        document.addEventListener("astro:page-load", initCategorySearch);
+    </script>
 </Layout>

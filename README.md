@@ -1,291 +1,280 @@
-# Yasui Game - Premium Gaming Marketplace
+# Yasui Game — Headless RMT Gaming Store & Automation Platform
 
-Platform marketplace akun game premium dan voucher berbasis web dengan konsep visual **Cyberpunk / Sci-Fi Gaming Dark Mode**. Dibangun dengan arsitektur headless yang cepat, aman, dan modern.
+Yasui Game adalah platform *Single-Vendor RMT (Real Money Trading) Game Store* premium untuk penjualan akun game, item, voucher, dan jasa digital (Summoners War: Sky Arena, Roblox Universe, Mobile Legends, dll.).
+
+Dibangun dengan arsitektur **Headless Server-Side Rendering (SSR)** berkecepatan tinggi, integrasi payment gateway tanpa perantara (direct API), sistem otomasi pemenuhan pesanan real-time (*zero-storage account fulfillment*), dan sistem desain taktis **Tactical Precision UI**.
 
 ---
 
-## 🛠️ Tech Stack & Konfigurasi Utama
+## 🛠️ Arsitektur & Teknologi Inti
 
-| Komponen | Teknologi | Keterangan |
+| Lapisan Sistem | Teknologi / Library | Catatan & Peran |
 | :--- | :--- | :--- |
-| **Framework** | [Astro v5](https://astro.build/) | Mode Server-Side Rendering (`output: 'server'`) |
-| **Adapter** | `@astrojs/vercel` | Siap deploy ke Vercel Serverless / Edge |
-| **CSS Engine** | **UnoCSS** (`@unocss/astro`) | **Wajib**: Hanya UnoCSS (Preset Uno, Icons, Typography). Dilarang Tailwind. |
-| **Icons** | `presetIcons` (Lucide via ESM CDN) | Sintaks: `<div class="i-lucide-[icon-name]"></div>` |
-| **Typography** | Google Fonts: `JetBrains Mono` | Font monospace gaming untuk nuansa cyberpunk terminal |
-| **Backend CMS** | WordPress + WooCommerce REST API | Endpoint `https://admin.yasuigame.com` via `wc.js` |
-| **Payment Gateway** | **Duitku (100% Headless)** | QRIS, VA Bank, E-Wallet (DANA), & Kartu Internasional (Visa/MC 3D-Secure) |
-| **Image Proxy** | `/img-proxy?src=...` | Mengatasi CORS / Mixed-Content saat memuat aset gambar dari WordPress |
-| **Supply Reseller** | SkyArena Station (reverse-engineered API) | Sumber akun Summoners War: Sky Arena — lihat bagian [Sistem Summoners War](#-sistem-summoners-war--sky-arena-otomatis) |
+| **Framework Core** | [Astro v5.16.6](https://astro.build/) | Mode Server-Side Rendering (`output: 'server'`) |
+| **Hosting & Deployment** | `@astrojs/vercel` / `@astrojs/node` | Vercel Serverless / Node.js runtime |
+| **Styling Engine** | **UnoCSS** (`unocss` & `@unocss/astro`) | **Eksklusif:** Proyek hanya menggunakan UnoCSS (Preset Uno, Icons, Typography) |
+| **Design System** | Tactical Precision UI | Palet 90-8-2 (Carbon-Alabaster-Cyber Blue), sudut presisi `rounded-md`/`rounded-lg`, `yg-*` shortcuts |
+| **Backend & Catalog** | WordPress + WooCommerce REST API v3 | Endpoint terproteksi via `src/lib/wc.js` dengan In-Memory LRU Cache (45-60s) |
+| **Payment Gateway** | **Duitku (100% Headless Direct API)** | QRIS Dinamis, Virtual Accounts, E-Wallets, & Kartu Internasional (Visa/MC 3D-Secure) |
+| **Game Automation Engine** | Sky Arena Station REST Client | Automasi pemenuhan pesanan Summoners War, sinkronisasi stok SSE, & validasi Hive ID |
+| **Security & Middleware** | Astro Middleware (`src/middleware.ts`) | CSRF protection, Zero-Trust backend isolation, strict HTTP security headers |
 
 ---
 
-## 📁 Struktur Direktori
+## 📁 Struktur Direktori Repositori
 
 ```text
 yasui-game/
-├── public/
+├── docs/                                 # Dokumentasi arsitektur, API internal & operasional
+│   ├── ROBLOX-FILTERS.md                 # Skema & strategi mapping filter Itemku untuk katalog Roblox
+│   ├── SKYARENA-API.md                   # Dokumentasi reverse-engineering API SkyArena Station
+│   ├── SW-SYSTEM-OVERVIEW.md             # Arsitektur bisnis & alur fulfillment Summoners War
+│   ├── SYNC-SW-STOCK.md                  # Panduan operasional sinkronisasi stok Summoners War
+│   └── sw-missing-prices.txt             # Daftar 51 monster kolaborasi yang belum memiliki harga
+│
+├── public/                               # Aset statis publik
 │   ├── assets/
-│   │   ├── banners/              # Gambar banner slider promo lokal
-│   │   ├── games/                # Ikon/cover game resolusi tinggi
-│   │   └── SW_Monster/           # 🆕 Screenshot monster SW (owner) — 128 PNG + alias
+│   │   ├── banners/                      # Banner promosi lokal
+│   │   ├── games/                        # Cover & thumbnail game resolusi tinggi
+│   │   └── SW_Monster/                   # Screenshot monster Summoners War resmi (128 PNG)
 │   └── favicon.svg
+│
+├── scripts/
+│   └── maintenance/                      # Skrip CLI maintenance katalog, stok, dan tooling offline
+│       ├── fix-sw-images.mjs             # Perbaikan gambar produk SW (screenshot lokal -> swarfarm)
+│       ├── game-icons.json               # Database referensi ikon game multi-platform
+│       ├── generate-screenshot-manifest.mjs # Generator checklist screenshot monster SW
+│       ├── generate-sw-products.mjs      # Generator produk SW (monster × region × tier)
+│       ├── icon-auto-updater.mjs         # Sinkronisasi ikon game ke media WordPress
+│       ├── import-categories.cjs         # Batch import 1.200+ kategori game ke WooCommerce
+│       ├── import-sw-products.mjs        # Import produk SW ke WooCommerce (idempoten by SKU)
+│       ├── normalize-roblox-filters.mjs  # Normalisasi skema filter katalog Roblox
+│       ├── roblox-filter-jobs.json       # Job referensi mapping filter Roblox
+│       ├── roblox-filter-mapping-report.json # Laporan audit filter Roblox
+│       ├── roblox-filter-schema.json     # Skema ternormalisasi filter Roblox
+│       ├── roblox-filters.json           # Data mentah filter game Roblox
+│       ├── roblox-games-with-subs.json   # Direktori 260+ game Roblox & subkategori
+│       ├── skyarena-cli.mjs              # Pusat kendali CLI otomasi Summoners War
+│       ├── sw-products.csv               # Data produk SW (format CSV untuk review)
+│       ├── sw-products.json              # Data 2.196 kombinasi produk SW
+│       ├── sw-screenshot-manifest.csv    # Checklist spreadsheet screenshot SW
+│       ├── sw-screenshot-manifest.json   # Manifest JSON screenshot SW
+│       ├── sw-sync-state.json            # State snapshot stok terakhir SW (±50 KB)
+│       ├── sync-sw-stock.mjs             # Worker sync stok SW (Full scan + SSE daemon)
+│       ├── validate-roblox-filter-mapping.mjs # Validasi mapping filter Roblox ke WooCommerce
+│       └── wc-import-plan.json           # Rencana import kategori WooCommerce
+│
 ├── src/
-│   ├── components/
-│   │   ├── FlashSaleTimer.astro  # Komponen hitung mundur & timer flash sale
-│   │   ├── FloatingWA.astro      # Tombol melayang WhatsApp customer service
-│   │   └── RobloxHub.astro       # Hub kategori Roblox (direktori game + tab)
+│   ├── components/                       # Komponen UI Astro
+│   │   ├── ui/
+│   │   │   └── Icon.astro                # Komponen SVG icon terpadu (WhatsApp, Discord, dll.)
+│   │   ├── CatalogSort.astro             # Dropdown sorting katalog (terbaru, harga, terlaris)
+│   │   ├── FlashSaleTimer.astro          # Countdown timer flash sale
+│   │   ├── FloatingWA.astro              # Floating WhatsApp CTA & drawer CS
+│   │   ├── HeroSlider.astro              # Slider promo beranda
+│   │   └── RobloxHub.astro               # Direktori game Roblox & quick filters
+│   │
+│   ├── data/                             # Data internal toko & konfigurasi statis
+│   │   ├── Summoners_War_Price_List.csv  # Price list USD resmi Summoners War
+│   │   ├── roblox.ts                     # Definisi kategori game & filter Roblox
+│   │   └── slides.ts                     # Definisi data banner promosi
+│   │
 │   ├── layouts/
-│   │   └── Layout.astro          # Layout global (navbar mobile expandable, dll.)
-│   ├── lib/
-│   │   ├── duitku.js             # Helper SDK Duitku: Signature MD5, Inquiry V2, Status Check
-│   │   ├── price.js              # Parser & formatter harga (IDR, USD, dll.)
-│   │   ├── translations.js       # Kamus terjemahan bilingual (ID & EN)
-│   │   ├── wc.js                 # Klien WooCommerce REST API & Session HMAC-SHA256
-│   │   ├── skyarena.js           # 🆕 Klien API SkyArena (JWT auto-refresh, SSE, set-account)
-│   │   ├── skyarena-stock.js     # 🆕 Tier umur akun, SKU builder, update stok WP
-│   │   ├── skyarena-pricelist.js # 🆕 Parser price list CSV + koreksi nama monster
-│   │   ├── skyarena-fulfill.js   # 🆕 Fulfillment order: buy/lock → sale → set-account → complete
-│   │   └── skyarena-description.js # 🆕 Template deskripsi & short description produk SW
-│   ├── pages/
+│   │   └── Layout.astro                  # Master layout: Cyber shell, Header, Search modal,
+│   │                                     # Auth modal, LiveChat, Bottom bar, & Footer
+│   │
+│   ├── lib/                              # Modul backend & utilitas server Astro
+│   │   ├── duitku.js                     # Handler Duitku: Signature MD5, Inquiry V2, Callback
+│   │   ├── price.js                      # Parser & formatter harga (IDR, USD, MYR, dll.)
+│   │   ├── sanitize.js                   # Sanitasi input XSS & pembersihan rich-text HTML
+│   │   ├── search.js                     # Algoritma pencarian fuzzy & scoring relevansi
+│   │   ├── skyarena-description.js       # Generator deskripsi produk SW
+│   │   ├── skyarena-fulfill.js           # Pipeline fulfillment akun SW (lock, sale, set, complete)
+│   │   ├── skyarena-pricelist.js         # Parser price list CSV & normalisasi nama monster
+│   │   ├── skyarena-stock.js             # Generator SKU, umur tier, & update stok WooCommerce
+│   │   ├── skyarena-username.js          # Validator & checker format Hive Com2uS ID
+│   │   ├── skyarena.js                   # API Client ke Sky Arena Station (JWT auto-refresh, SSE)
+│   │   ├── translations.js               # Kamus lokalisasi multi-bahasa (ID & EN)
+│   │   ├── wc.js                         # Klien resmi WooCommerce REST API v3 (cache, retry, auth)
+│   │   └── wp.js                         # Re-export alias ke wc.js (deprecated)
+│   │
+│   ├── pages/                            # Rute halaman toko & SSR API endpoints
 │   │   ├── api/
-│   │   │   ├── auth/             # login.js & set-password.js
-│   │   │   ├── payment/
-│   │   │   │   ├── check-status.js    # Polling real-time status transaksi Duitku
-│   │   │   │   └── duitku-callback.js # Webhook IPN resmi Duitku
-│   │   │   ├── user/             # orders.js (riwayat order by email — kini termasuk SKU per item)
-│   │   │   ├── sw/               # 🆕 set-account/index.js (POST) + set-account/status.js (GET)
-│   │   │   ├── create-order.js   # Buat order WooCommerce + Inquiry Duitku
-│   │   │   ├── search-categories.js # API autocomplete kategori untuk search utama
-│   │   │   └── submit-review.js  # Kirim review ulasan pembeli
-│   │   ├── category/
-│   │   │   └── [slug].astro      # Halaman kategori (Roblox tabs, 🆕 filter SW: server + tier umur)
-│   │   ├── product/
-│   │   │   └── [slug].astro      # Halaman detail produk (🆕 badge Age Band SW)
-│   │   ├── orders.astro          # Riwayat transaksi + 🆕 modal "Set Account Hive ID" (SW)
-│   │   └── ...                   # cart, checkout, order-pay, search, review, dll.
-│   └── styles/
-│       └── global.css            # Utility scrollbar-none & styling global
-├── scratch/                      # Data scraping, import plan & tooling
-│   ├── SKYARENA-API.md           # 🆕 Peta lengkap API SkyArena (reverse-engineered)
-│   ├── SW-SYSTEM-OVERVIEW.md     # 🆕 Dokumen handoff sistem SW (bisnis + alur + spec UI)
-│   ├── SYNC-SW-STOCK.md          # 🆕 Cara menjalankan sync stok SW
-│   ├── sw-products.json          # 🆕 2.196 kombinasi produk SW (monster × region × tier)
-│   ├── Summoners_War_Price_List.csv # 🆕 Price list USD (price_* = jual, setoran_* = modal)
-│   ├── sw-missing-prices.txt     # 🆕 51 monster kolaborasi yang di-skip (belum ada harga)
-│   ├── sw-screenshot-manifest.csv # 🆕 Checklist screenshot monster
-│   ├── import-sw-products.mjs    # 🆕 Import produk SW ke WooCommerce (idempoten by SKU)
-│   ├── fix-sw-images.mjs         # 🆕 Perbaiki foto produk SW (screenshot → swarfarm fallback)
-│   ├── sync-sw-stock.mjs         # 🆕 Sync stok otomatis: full scan + SSE → WooCommerce
-│   ├── sw-sync-state.json        # 🆕 Snapshot stok terakhir (±50 KB, satu-satunya "database")
-│   ├── skyarena-cli.mjs          # 🆕 CLI uji: test-login, stock, sync-stock, fulfill, sse
-│   ├── itemku-categories.json    # 28 game utama + sub-kategori (verified)
-│   ├── roblox-games-with-subs.json # 264 Roblox games + 892 sub-categories
-│   ├── wc-import-plan.json       # Struktur lengkap kategori untuk WooCommerce
-│   └── import-results.json       # Hasil import ke WooCommerce
-├── astro.config.mjs
-├── package.json
-├── template-email.html
-└── uno.config.ts
+│   │   │   ├── auth/                     # login.js (sesi WP) & set-password.js (terproteksi)
+│   │   │   ├── payment/                  # check-status.js (polling IDOR-safe) & duitku-callback.js
+│   │   │   ├── sw/                       # set-account/index.js & set-account/status.js
+│   │   │   ├── user/                     # orders.js (riwayat transaksi berotentikasi)
+│   │   │   ├── create-order.js           # Pembuatan pesanan WooCommerce + payment inquiry
+│   │   │   ├── search-categories.js      # Autocomplete pencarian instan kategori
+│   │   │   └── submit-review.js          # Pengiriman ulasan pembeli (status hold)
+│   │   │
+│   │   ├── category/[slug].astro         # Halaman kategori game (filter, sorting, pagination)
+│   │   ├── product/[slug].astro          # Halaman produk detail (form order tunggal responsif)
+│   │   ├── index.astro                   # Beranda toko
+│   │   ├── categories.astro              # Direktori seluruh kategori root game
+│   │   ├── cart.astro                    # Keranjang belanja & riwayat lokal
+│   │   ├── checkout.astro                # Checkout mandiri
+│   │   ├── order-pay.astro               # Pembayaran (QRIS dinamis, VA, kartu 3D-Secure)
+│   │   ├── order-success.astro           # Konfirmasi pesanan sukses
+│   │   ├── orders.astro                  # Dashboard riwayat pesanan & form Set Account SW
+│   │   ├── search.astro                  # Halaman pencarian global
+│   │   ├── review.astro                  # Halaman testimoni pembeli
+│   │   ├── cara-belanja.astro            # Panduan langkah order
+│   │   ├── security-guide.astro          # Panduan keamanan akun & garansi
+│   │   ├── terms.astro                   # Syarat & ketentuan layanan
+│   │   ├── privacy.astro                 # Kebijakan privasi
+│   │   ├── contact.astro                 # Kontak support & CS
+│   │   ├── account.astro                 # Redirect ke /orders
+│   │   └── img-proxy.js                  # Proxy gambar aman (proteksi SSRF)
+│   │
+│   ├── scripts/                          # Modul client-side terpisah (modular TypeScript)
+│   │   ├── app.ts                        # Master orchestration client via event delegation
+│   │   ├── auth.ts                       # Manajemen sesi autentikasi & avatar header
+│   │   ├── cart.ts                       # State manajemen keranjang belanja & badge kuantitas
+│   │   ├── chat.ts                       # LiveChat drawer & floating trigger
+│   │   ├── currency.ts                   # Multi-currency state manager (IDR, USD, MYR, dll.)
+│   │   └── search.ts                     # Modal pencarian instan & keyboard navigation
+│   │
+│   ├── styles/
+│   │   └── global.css                    # Styling global, font reset, & utilitas pseudo-element
+│   │
+│   ├── types/
+│   │   └── index.ts                      # Strict TypeScript interfaces untuk seluruh domain toko
+│   │
+│   └── middleware.ts                     # Astro SSR middleware: CSRF guard & security headers
+│
+├── .env.example                          # Template konfigurasi environment variables
+├── astro.config.mjs                      # Konfigurasi Astro (output: server, Vercel adapter, UnoCSS)
+├── GEMINI.md                             # Pedoman arsitektur, standar keamanan & konvensi kode
+├── HANDOFF.md                            # Catatan status pengembangan & estafet sesi
+├── package.json                          # Dependensi proyek
+├── template-email.html                   # Template email transaksi
+├── tsconfig.json                         # Konfigurasi TypeScript
+└── uno.config.ts                         # Konfigurasi UnoCSS & semantic shortcuts `yg-*`
 ```
 
 ---
 
-## 🆕 Sistem Summoners War: Sky Arena (Otomatis)
+## ⚡ Fitur Integrasi Utama
 
-Sistem end-to-end untuk menjual akun **Summoners War: Sky Arena** bersumber dari reseller
-SkyArena Station (`visual.skyarenastation.com`, API internal hasil reverse-engineering —
-dokumentasi lengkap di `scratch/SKYARENA-API.md`).
+### 1. Otomasi Summoners War: Sky Arena (Zero-Storage Fulfillment)
+Sistem end-to-end terintegrasi ke reseller upstream (SkyArena Station):
+- **Model Produk:** Monster LD nat5★ × Server (`ASIA`, `GLOBAL`, `EUROPA`) × Tier Umur (`Fresh 1-3 Hari`, `Fresh 4-7 Hari`, `Fresh 8-30 Hari`, `Akun Tua ≥30 Hari`).
+- **Zero-Storage:** Database Yasui tidak menyimpan kredensial akun mentah sebelum terjual; akun ditarik dan dikunci secara live saat fulfillment.
+- **Fulfillment Pipeline:**
+  1. Pembeli menyelesaikan pembayaran (`order status: completed`).
+  2. Pembeli memasukkan 3 pilihan Hive ID & 1 password melalui modal di `/orders`.
+  3. Endpoint `POST /api/sw/set-account` melakukan verifikasi kepemilikan invoice dan session token.
+  4. Server memicu siklus: `buy/lock` (anti-serobot) → `buy/sale` (rekap harga modal ke supplier) → kirim kredensial Hive → verifikasi `buy/complete`.
 
-### Model Produk
+### 2. Roblox Universe Hub & Smart Filters
+- Mengakomodasi 260+ judul game Roblox terpopuler dengan pembagian subkategori terstruktur (Robux, Gamepass, Akun, Item, Mata Uang In-Game).
+- Smart filters instan per game tab tanpa perlu reload halaman.
 
-Setiap produk = **Monster LD nat5★ × Server (ASIA/GLOBAL/EUROPA) × Tier Umur**:
-
-| Tier | Label | Harga (USD → IDR) |
-| :--- | :--- | :--- |
-| `band_1_3` | Fresh 1-3 Hari | `price_band_1_3` (termahal) |
-| `band_4_7` | Fresh 4-7 Hari | `price_band_4_7` |
-| `band_8_30` | Fresh 8-30 Hari | `price_band_7_30` |
-| `old` | Akun Tua (≥30 hari) | `price_old` (flat) |
-
-- SKU: `sw-<unitMasterId>-<region>-<tier>` (contoh `sw-23114-asia-band_1_3`)
-- Kurs: `SW_USD_RATE` di `.env` (saat ini **18500**); re-run import untuk terapkan kurs baru
-- Kategori WP: `summoners-war-sky-arena` (parent) + `sw-akun` (anak)
-- Stok tampil = hasil agregasi real-time, **bukan database akun** (zero-storage — akun dicari
-  real-time saat fulfillment, tidak disimpan di sisi Yasui)
-
-### Fitur yang Sudah Jalan
-
-| Fitur | Detail |
-| :--- | :--- |
-| **UI Kategori** (`/category/sw-akun`) | Filter **Server** (Asia/Global/Europe) + **Tier Umur** (Fresh 1-3/4-7/8-30/Old), client-side instan, badge "Stok Habis" (produk tetap tampil demi SEO). Terverifikasi via Playwright. |
-| **UI Detail Produk** | Badge Age Band (FRESH hijau / AKUN TUA abu), Server, Element |
-| **Fulfillment Otomatis** | Order `completed` → `buy/lock` (anti-serobot) → `buy/sale` (rekap modal, platform "Yasui Game") → `set-account` job → submit kredensial Hive pembeli → `buy/complete` |
-| **Form Set Account Hive ID** | Modal di `/orders` untuk order SW completed: 3 opsi username + 1 password, validasi real-time (username 6-12 char `[A-Za-z0-9-_.]`, password min 9 + angka + simbol), polling status otomatis |
-| **Import Produk** | `scratch/import-sw-products.mjs` — idempoten by SKU; foto screenshot owner (`public/assets/SW_Monster/`) dengan alias typo + fallback icon swarfarm; 196 produk aktif |
-| **Sync Stok** | `scratch/sync-sw-stock.mjs` — full scan (53k akun, ±5 mnt) + SSE real-time (debounced rescan per region) + full scan tiap 12 jam |
-
-### Endpoint API SW
-
-| Endpoint | Fungsi |
-| :--- | :--- |
-| `POST /api/sw/set-account` | Terima `{orderId, usernames[3], password}` dari pembeli; validasi session + kepemilikan order + status `completed`; simpan ke meta `_sw_set_account`; trigger fulfillment di background |
-| `GET /api/sw/set-account/status?orderId&email` | Polling status fulfillment (`awaiting_form` → `processing` → `completed/failed`) |
-
-### Menjalankan Sync Stok
-
-```bash
-node --env-file=.env scratch/sync-sw-stock.mjs --once    # full scan sekali (cron-friendly)
-node --env-file=.env scratch/sync-sw-stock.mjs           # daemon: SSE + full scan 12 jam
-```
-
-⚠️ Jangan jalankan dua instance bersamaan. Detail: `scratch/SYNC-SW-STOCK.md`.
-
-### Testing Tanpa Biaya
-
-Fulfillment **hanya** terpicu dari endpoint server dengan order `completed` milik pembeli
-terautentikasi — tidak bisa terpicu dari UI test. Pengujian aman: dry-run import (`--dry-run`),
-validasi form (submit tidak dilakukan), dan `GET rebuy-info` (read-only). Uji end-to-end
-sungguhan butuh persetujuan owner (akun old $1 = opsi termurah).
-
-### Status SW & Tahap Lanjut
-
-- [x] Reverse-engineer API SkyArena + dokumentasi
-- [x] Klien API + tier umur + price list + fulfillment + template deskripsi
-- [x] UI kategori (filter server + tier) & detail produk
-- [x] Modal Set Account Hive ID + endpoint API + polling status
-- [x] Import 196 produk (kurs 18.500, foto, atribut, meta fulfillment)
-- [x] Sync stok otomatis (full scan + SSE → WooCommerce)
-- [ ] Kategori "scroll" (akun dengan user/pass Hive) — tahap akhir
-- [ ] 51 monster kolaborasi (Frieren, Gojo, dll.) — menunggu harga dari owner
-- [ ] 5 monster perlu screenshot owner: Old Wood (Light/Dark), Rick (Dark), Night Fang (Dark), Elder Horn (Light)
-- [ ] Opsional: cap stok tampil maks 50 unit per produk (sanitas merchandising)
+### 3. Headless Payment Gateway (Duitku Direct API)
+- **100% Headless:** Pelanggan tidak dialihkan ke halaman Duitku hosted page.
+- **Metode Pembayaran:**
+  - QRIS Dinamis (generate QR code on-the-fly, auto-refresh status).
+  - Virtual Accounts (BCA, Mandiri, BNI, BRI, Permata, CIMB).
+  - E-Wallets (DANA, OVO, ShopeePay).
+  - Kartu Kredit/Debit Internasional (Visa, Mastercard, JCB dengan 3D-Secure OTP).
+- **Polling & Webhook Aman:**
+  - Polling status transaksi via `/api/payment/check-status` dilindungi HMAC session / order key (mencegah IDOR enumerasi ID).
+  - Webhook `/api/payment/duitku-callback` memvalidasi signature MD5 sebelum mengubah status order.
 
 ---
 
-## 🆕 Perubahan Sesi Lainnya (2025)
+## 🔒 Standar Keamanan Zero-Trust
 
-### 1. UX Mobile Navbar Remodeling
-**File:** `src/layouts/Layout.astro`
+Sesuai ketetapan di `GEMINI.md`:
+1. **Isolasi Total Kredensial:** Seluruh kredensial backend (`WC_CONSUMER_*`, `WP_APP_*`, `DUITKU_*`, `SKYARENA_*`) wajib berjalan di sisi server (SSR). Dilarang menyematkan prefix `PUBLIC_` atau `ASTRO_PUBLIC_`.
+2. **Proteksi IDOR & Enumerasi Pesanan:** Akses ke invoice, pembayaran, dan status pemesanan (`/order-pay`, `/order-success`, `/api/payment/check-status`) wajib menyertakan parameter `key` (`order_key` WooCommerce) atau session token customer yang sah.
+3. **Anti-SSRF Media Proxy:** `src/pages/img-proxy.js` memblokir akses ke IP private/internal (`127.0.0.1`, `10.*`, `192.168.*`, `169.254.*`) dan hanya mengizinkan domain resmi WordPress backend.
+4. **Proteksi Akun:** Penggantian password via `/api/auth/set-password.js` wajib menyertakan bukti autentikasi valid (Session token HMAC, password lama, atau order key verifikasi).
+5. **Global HTTP Security Headers:** `src/middleware.ts` menegakkan proteksi `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, dan CSRF token guard.
 
-- Search bar mobile dipindah ke baris kedua expandable (auto-focus, auto-collapse saat scroll, icon toggle 🔍 ↔ ✕). Desktop tidak berubah.
+---
 
-### 2. Logo Mobile Diperbesar
-Ukuran logo mobile `text-xs` → `text-base`; tablet+ `text-lg`.
+## 🎨 Sistem Desain: Tactical Precision UI (Anti-AI Slop)
 
-### 3. Fix Category Parent Breadcrumb Error
-**File:** `src/pages/category/[slug].astro`
-
-- Bug `Cannot read properties of undefined (reading 'toUpperCase')` — WooCommerce hanya mengembalikan `parent` sebagai ID. Kini parent di-resolve via fetch tambahan.
-
-### 4. Search Utama → Autocomplete Kategori
-**Files:** `src/layouts/Layout.astro`, `src/pages/api/search-categories.js`
-
-- Search hanya mencari **kategori/game** (bukan produk), dropdown suggestion dengan keyboard navigation, debounce 250ms, cache 60 detik.
-
-### 5. Struktur Kategori Multi-Level (itemku Model)
-Meniru itemku.com: Roblox → Game → Tipe; Growtopia → Tipe; breadcrumb bertingkat; parent menampilkan grid sub-kategori.
-
-### 6. Tab UI untuk Kategori Roblox
-Tab "🎮 PILIH GAME" (grid game) vs "💎 ROBUX & AKUN" (pills Robux/Gift Card/Akun).
-
-### 7. Import WooCommerce
-**1.223 kategori** berhasil diimport (0 error). Detail `scratch/import-results.json`.
+Yasui Game menggunakan sistem visual berstandar senior frontend engineer:
+- **Rasio Warna 90-8-2:**
+  - **90% Matte Carbon & Obsidian:** Canvas `#090A0F`, Card surface `#11131A`, Elevated surface `#161922`, Sub-panel `#0D0F15`.
+  - **8% Crisp Metallic & Alabaster:** Heading `#F8FAFC`, Secondary text `#94A3B8`, Muted `#64748B`, Border tegas `1px solid #222634`.
+  - **2% Surgical Cyber Blue:** Tombol CTA utama `#00E5FF` / `#38BDF8`, active states, dan badge `INSTANT DELIVERY`.
+- **Geometri & Tipografi RMT:**
+  - Sudut presisi `rounded-md` (6px) dan `rounded-lg` (8px). Dilarang sudut membulat gemuk `rounded-2xl`/`rounded-3xl`.
+  - **Wajib `font-mono tabular-nums`** untuk nominal harga, countdown timer, stok unit, dan Order ID.
+- **Clean DOM & Semantic Shortcuts:**
+  - Menggunakan shortcuts UnoCSS terpusat: `yg-shell`, `yg-card`, `yg-card-interactive`, `yg-panel`, `yg-input`, `yg-btn-primary`, `yg-product-card`.
+  - Dilarang membuat tag `<div>` kosong dekoratif untuk blur/glow (gunakan `.yg-glow-ambient` berbasis CSS pseudo-element).
 
 ---
 
 ## ⚙️ Variabel Lingkungan (.env)
 
+Salin `.env.example` ke `.env` lalu sesuaikan kredensial server:
+
 ```env
 # --- WOOCOMMERCE & WORDPRESS BACKEND ---
 WP_URL=https://admin.yasuigame.com
-WC_CONSUMER_KEY=ck_xxx
-WC_CONSUMER_SECRET=cs_xxx
-WP_APP_USER=xxx
-WP_APP_PASSWORD=xxxx xxxx xxxx xxxx xxxx xxxx   # utk upload media (foto produk SW)
+WC_CONSUMER_KEY=ck_your_consumer_key_here
+WC_CONSUMER_SECRET=cs_your_consumer_secret_here
 
-# --- DUITKU PAYMENT GATEWAY (HEADLESS) ---
-DUITKU_MERCHANT_CODE=DS27852
-DUITKU_API_KEY=xxx
+# --- WORDPRESS APPLICATION PASSWORD (MEDIA / ASSETS PROXY) ---
+WP_APP_USER=your_wp_username
+WP_APP_PASSWORD=your_application_password_here
+WP_USER=your_wp_username
+WP_PASS=your_application_password_here
+
+# --- DUITKU PAYMENT GATEWAY (HEADLESS DIRECT API) ---
+DUITKU_MERCHANT_CODE=DXXXX
+DUITKU_API_KEY=your_duitku_api_key_here
 DUITKU_ENV=sandbox
 
-# --- APP BASE URL ---
+# --- APPLICATION URL ---
 APP_URL=http://localhost:4321
 
-# --- SKYARENA (SUMMONERS WAR) ---
-SKYARENA_EMAIL=reseller@email.com
-SKYARENA_PASSWORD=xxx
-SW_USD_RATE=18500            # kurs USD → IDR utk harga produk SW
+# --- SKY ARENA STATION (AUTOMATION FULFILLMENT) ---
+SKYARENA_LOGIN_URL=https://visual.skyarenastation.com/login
+SKYARENA_EMAIL=your_skyarena_email@example.com
+SKYARENA_PASSWORD=your_skyarena_password_here
+SW_USD_RATE=18500
 ```
-
----
-
-## 💳 Arsitektur Headless Payment Gateway (Duitku)
-
-Seluruh alur checkout dan pembayaran **100% Headless**:
-
-1. **Pembuatan Pesanan (`/api/create-order`)**: Cart → WooCommerce Order → Duitku Inquiry → Return `/order-pay?id=X` + session token
-2. **Halaman Pembayaran (`/order-pay?id=...`)**: QRIS Dinamis, VA Interaktif, Kartu 3D-Secure, Timer 15 menit, Real-time polling setiap 4 detik, Auto-redirect ke `/order-success`
-3. **Metode Internasional**: Visa/MC/JCB aktif dengan 3D-Secure OTP. Crypto USDT/USDC (roadmap). PayPal sengaja ditiadakan (risiko chargeback RMT).
 
 ---
 
 ## 🚀 Perintah Menjalankan Proyek
 
+### Development & Build
+
 | Perintah | Deskripsi |
 | :--- | :--- |
-| `npm install` | Install seluruh dependensi |
-| `npm run dev` | Dev server di `http://localhost:4321` |
-| `npm run build` | Build produksi SSR untuk Vercel |
-| `npm run preview` | Preview lokal hasil build |
+| `npm install` | Menginstal seluruh dependensi proyek |
+| `npm run dev` | Menjalankan local dev server Astro di `http://localhost:4321` |
+| `npm run build` | Melakukan build produksi SSR untuk adapter Vercel / Node.js |
+| `npm run preview` | Menjalankan preview lokal dari bundle hasil build |
+
+### Tooling Maintenance & Otomasi (`scripts/maintenance/`)
+
+| Perintah | Deskripsi |
+| :--- | :--- |
+| `node --env-file=.env scripts/maintenance/skyarena-cli.mjs test-login` | Uji koneksi API SkyArena Station & periksa stok per server |
+| `node --env-file=.env scripts/maintenance/skyarena-cli.mjs monsters` | Daftar seluruh monster LD nat5 Summoners War |
+| `node --env-file=.env scripts/maintenance/skyarena-cli.mjs stock <Monster> <Region>` | Cek ketersediaan akun untuk monster tertentu di region (ASIA, GLOBAL, EUROPA) |
+| `node --env-file=.env scripts/maintenance/sync-sw-stock.mjs --once` | Sinkronisasi stok SW ke WooCommerce satu kali (cron-friendly) |
+| `node --env-file=.env scripts/maintenance/sync-sw-stock.mjs` | Worker daemon: Sinkronisasi real-time via SSE + full scan berkala 12 jam |
+| `node --env-file=.env scripts/maintenance/import-sw-products.mjs --dry-run` | Uji impor katalog produk Summoners War tanpa mengubah data |
+| `node --env-file=.env scripts/maintenance/fix-sw-images.mjs` | Audit & pasang foto produk SW yang belum memiliki gambar di WooCommerce |
+| `node --env-file=.env scripts/maintenance/icon-auto-updater.mjs --dry` | Audit perubahan ikon game terbaru di katalog kategori |
 
 ---
 
-## 🎨 Panduan Gaya Desain (Design System)
+## 📚 Dokumentasi Lanjutan
 
-1. **Aturan Wajib**: Hanya UnoCSS. Dilarang Tailwind.
-2. **Palet Warna**:
-   - Background: `#050505` + grid overlay `rgba(34, 211, 238, 0.05)`
-   - Aksen Primer: Neon Cyan (`#22d3ee` / `cyan-400`)
-   - Aksen Deal/Expired: Red (`#ef4444` / `red-500`)
-   - Kartu: `bg-gray-900/60` + `border-gray-800/80` + `hover:border-cyan-400`
-3. **Komponen Khas**:
-   - `.cyber-card`: Sudut terpotong diagonal (clip-path)
-   - Glow: `shadow-[0_0_15px_rgba(34,211,238,0.25)]`
-   - Monospace: `JetBrains Mono` untuk data, harga, nomor VA
-   - Tab pills: `skew-x-[-10deg]` dengan counter-skew pada child
-
----
-
-## 💡 Arsitektur Alur & State Management
-
-1. **Katalog & Data Flow**: WooCommerce REST API (`lib/wc.js`) SSR → `normalizeProduct()`
-2. **Keranjang**: `localStorage.yasui_cart`, sync badge via `storage` event
-3. **Auth**: Session 30 hari `localStorage.yasui_session` dengan HMAC-SHA256 token
-4. **Search**: Autocomplete kategori via `/api/search-categories` → redirect ke halaman kategori
-5. **Multi-Currency & i18n**: Server-side Geo-IP via Vercel header, auto-detect IDR/USD + ID/EN
-6. **Fulfillment SW**: Order completed (SKU `sw-*`) → pembeli isi form Set Account Hive ID → fulfillment otomatis ke SkyArena → status tampil di Riwayat Order
-
----
-
-## 📌 TODO Umum (Non-SW)
-
-- [ ] **Produk mapping** — assign produk existing ke sub-kategori yang benar
-- [ ] **Search produk per sub-kategori** — fitur pencarian produk di dalam halaman sub-kategori
-- [ ] **Filter & sorting** di halaman sub-kategori (harga, terbaru, terlaris)
-- [ ] **Upload icon/gambar** untuk setiap kategori baru di WordPress
-- [ ] **SEO** — meta description untuk setiap halaman kategori baru
-- [ ] **Sitemap update** — pastikan semua URL kategori baru ter-index
-- [ ] **Cleanup duplikat** — merge kategori lama `robux-gift-card` (id:48) ke `robux-game-card` (id:142)
-- [ ] **Search backend** — untuk katalog besar, pindahkan pencocokan katalog ke indeks pencarian backend
-
----
-
-## 📌 Catatan Khusus & Batasan Proyek
-
-* **Stabilitas Desain**: Banner promo carousel, kartu produk rekomendasi admin, dan flash sale adalah rancangan final.
-* **Fokus Optimasi**: Responsivitas mobile (360px - 440px), tombol tidak saling menutupi, bottom bar nyaman satu tangan.
-* **Pagination**: Sub-kategori di `[slug].astro` menggunakan pagination (per_page=100) untuk handle kategori dengan banyak children seperti Roblox (270+).
-* **Duplikat Kategori**: Ada kategori lama `robux-gift-card` (id:48, 3 produk) yang belum di-merge ke `robux-game-card` (id:142). Perlu dipindahkan manual di WordPress admin.
-* **Zero-Storage SW**: Sistem SW tidak menyimpan database akun SkyArena — hanya angka agregasi stok (`sw-sync-state.json` ±50 KB). Akun dicari real-time saat fulfillment.
-* **SkyArena Rate**: Server SAS lambat (4-7 dtk/request) — full scan hanya untuk import/sync awal; sync rutin via SSE.
+- [Peta Lengkap API SkyArena Station](file:///Users/unjustice/Market%20/yasui-game/docs/SKYARENA-API.md)
+- [Ikhtisar Sistem & Alur Bisnis Summoners War](file:///Users/unjustice/Market%20/yasui-game/docs/SW-SYSTEM-OVERVIEW.md)
+- [Panduan Operasional Sinkronisasi Stok SW](file:///Users/unjustice/Market%20/yasui-game/docs/SYNC-SW-STOCK.md)
+- [Arsitektur Filter & Normalisasi Roblox](file:///Users/unjustice/Market%20/yasui-game/docs/ROBLOX-FILTERS.md)
+- [Standar Keamanan & Arsitektur Sistem Yasui Game](file:///Users/unjustice/Market%20/yasui-game/GEMINI.md)
+- [Catatan Status & Estafet Sesi Pengembang](file:///Users/unjustice/Market%20/yasui-game/HANDOFF.md)

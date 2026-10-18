@@ -4,73 +4,98 @@ import { PROMO_SLIDES } from "../data/slides";
 const slides = PROMO_SLIDES;
 ---
 
-<div class="relative w-full h-[200px] md:h-[380px] overflow-hidden rounded-xl border border-gray-800 group shadow-2xl">
-    <div id="slider-track" class="flex transition-transform duration-700 ease-in-out h-full">
+<div class="relative w-full h-[220px] md:h-[340px] overflow-hidden rounded-lg border border-[#222634] bg-[#0D0F15] group">
+    <div id="slider-track" class="flex transition-transform duration-500 ease-out h-full">
         {slides.map((slide) => (
             <div class="w-full shrink-0 relative h-full">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105 group-hover:scale-110" style={`background-image: url('${slide.image}')`}></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
-                <div class="absolute bottom-0 left-0 p-6 md:p-10 w-full md:w-2/3">
-                    <span class={`inline-block px-2 py-0.5 mb-2 text-[8px] md:text-[10px] font-black text-white rounded bg-gradient-to-r ${slide.color}`}>
-                        FEATURED
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={`background-image: url('${slide.image}')`} />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#090A0F] via-[#090A0F]/70 to-transparent" />
+                <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-[#090A0F]/90 via-[#090A0F]/50 to-transparent" />
+                <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full md:w-3/5 z-10">
+                    <span class="yg-badge-instant mb-2 text-[10px] uppercase font-mono">
+                        PROMO UNGGULAN
                     </span>
-                    <h2 class="text-3xl md:text-5xl font-black text-white italic tracking-tighter leading-none mb-2 md:mb-4 drop-shadow-lg">
+                    <h2 class="text-xl md:text-3xl font-extrabold text-[#F8FAFC] tracking-tight leading-tight mb-1.5 md:mb-2">
                         {slide.title}
                     </h2>
-                    <p class="text-gray-300 text-[10px] md:text-sm max-w-[200px] md:max-w-lg drop-shadow-md leading-tight">
+                    <p class="text-[#94A3B8] text-xs md:text-sm max-w-sm md:max-w-md leading-relaxed line-clamp-2">
                         {slide.subtitle}
                     </p>
-                    <a href="/categories" class="inline-block mt-3 md:mt-6 bg-white text-black text-[10px] md:text-xs font-black px-4 py-2 md:px-6 md:py-3 rounded hover:scale-105 transition uppercase shadow-lg">
-                        Cek Sekarang
+                    <a href="/categories" class="yg-btn-primary mt-3 md:mt-4 text-xs">
+                        <span>Jelajahi Sekarang</span>
+                        <span class="i-lucide-arrow-right text-xs" aria-hidden="true" />
                     </a>
                 </div>
             </div>
         ))}
     </div>
 
-    <div class="absolute bottom-4 right-4 flex gap-1.5 z-20">
+    <div class="absolute bottom-3 right-3 md:bottom-4 md:right-4 flex items-center gap-1.5 z-20 bg-[#090A0F]/85 backdrop-blur-sm px-2 py-1 rounded border border-[#222634]">
         {slides.map((_, index) => (
-            <button class="slider-dot w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gray-600 hover:bg-white transition-all cursor-pointer" data-index={index} aria-label={`Slide ${index + 1}`}></button>
+            <button class="slider-dot h-1.5 w-2 rounded-full bg-[#262B3D] hover:bg-[#94A3B8] transition-all cursor-pointer" data-index={index} aria-label={`Slide ${index + 1}`} />
         ))}
     </div>
-    
-    <button id="prev-slide" class="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-cyan-400 hover:text-black transition backdrop-blur hidden md:block cursor-pointer" aria-label="Slide Sebelumnya">
-        <div class="i-lucide-chevron-left text-xl"></div>
+
+    <button id="prev-slide" class="yg-btn-icon absolute top-1/2 left-3 -translate-y-1/2 hidden md:flex z-20" aria-label="Slide Sebelumnya">
+        <span class="i-lucide-chevron-left text-base" aria-hidden="true" />
     </button>
-    <button id="next-slide" class="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-cyan-400 hover:text-black transition backdrop-blur hidden md:block cursor-pointer" aria-label="Slide Berikutnya">
-        <div class="i-lucide-chevron-right text-xl"></div>
+    <button id="next-slide" class="yg-btn-icon absolute top-1/2 right-3 -translate-y-1/2 hidden md:flex z-20" aria-label="Slide Berikutnya">
+        <span class="i-lucide-chevron-right text-base" aria-hidden="true" />
     </button>
 </div>
 
 <script>
-    let currentSlide = 0;
-    const track = document.getElementById('slider-track');
-    const dots = document.querySelectorAll('.slider-dot');
-    const totalSlides = dots.length;
+    function initHeroSlider() {
+        let currentSlide = 0;
+        const track = document.getElementById("slider-track");
+        const dots = document.querySelectorAll(".slider-dot");
+        const totalSlides = dots.length;
+        if (!track || totalSlides <= 1) return;
 
-    function updateSlider() {
-        if (!track) return;
-        track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        dots.forEach((dot, idx) => {
-            if (idx === currentSlide) {
-                dot.classList.add('bg-cyan-400', 'w-4', 'md:w-6');
-                dot.classList.remove('bg-gray-600', 'w-1.5', 'md:w-2');
-            } else {
-                dot.classList.remove('bg-cyan-400', 'w-4', 'md:w-6');
-                dot.classList.add('bg-gray-600', 'w-1.5', 'md:w-2');
-            }
+        function updateSlider() {
+            if (!track) return;
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, idx) => {
+                if (idx === currentSlide) {
+                    dot.classList.add("bg-[#00E5FF]", "w-5");
+                    dot.classList.remove("bg-[#262B3D]", "w-2");
+                } else {
+                    dot.classList.remove("bg-[#00E5FF]", "w-5");
+                    dot.classList.add("bg-[#262B3D]", "w-2");
+                }
+            });
+        }
+
+        let autoPlay = setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        }, 5000);
+
+        const nextBtn = document.getElementById("next-slide");
+        const prevBtn = document.getElementById("prev-slide");
+
+        nextBtn?.addEventListener("click", () => {
+            clearInterval(autoPlay);
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
         });
-    }
+        prevBtn?.addEventListener("click", () => {
+            clearInterval(autoPlay);
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        });
 
-    if (totalSlides > 1) {
-        let autoPlay = setInterval(() => { currentSlide = (currentSlide + 1) % totalSlides; updateSlider(); }, 5000);
-
-        const nextBtn = document.getElementById('next-slide');
-        const prevBtn = document.getElementById('prev-slide');
-
-        if (nextBtn) nextBtn.addEventListener('click', () => { clearInterval(autoPlay); currentSlide = (currentSlide + 1) % totalSlides; updateSlider(); });
-        if (prevBtn) prevBtn.addEventListener('click', () => { clearInterval(autoPlay); currentSlide = (currentSlide - 1 + totalSlides) % totalSlides; updateSlider(); });
+        dots.forEach((dot, idx) => {
+            dot.addEventListener("click", () => {
+                clearInterval(autoPlay);
+                currentSlide = idx;
+                updateSlider();
+            });
+        });
 
         updateSlider();
     }
+
+    initHeroSlider();
+    document.addEventListener("astro:page-load", initHeroSlider);
 </script>

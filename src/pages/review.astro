@@ -45,7 +45,7 @@ const fixImgUrl = (url) => {
 
 <Layout
     title={product ? `Review ${product.name} | Yasui Game` : "Review | Yasui Game"}
-    description="Berikan ulasan Anda."
+    description="Berikan ulasan dan testimoni pengalaman Anda berbelanja di Yasui Game."
 >
     <script is:inline>
         window.i18nData = {
@@ -55,7 +55,7 @@ const fixImgUrl = (url) => {
                 placeholderContent: "Ceritakan pengalaman Anda membeli akun ini...",
                 submitBtn: "Kirim Ulasan",
                 submitLoading: "MENGIRIM...",
-                ratingError: "Rating wajib diisi!",
+                ratingError: "Rating bintang wajib diisi!",
                 errorConnection: "Terjadi kesalahan koneksi.",
                 errorUnknown: "Gagal mengirim ulasan: "
             },
@@ -72,20 +72,20 @@ const fixImgUrl = (url) => {
         };
     </script>
 
-    <main class="max-w-2xl mx-auto px-4 pt-24 pb-20">
+    <main class="max-w-2xl mx-auto px-4 pt-4 md:pt-6 pb-20">
         <div class="flex justify-end mb-6">
-             <div class="flex bg-gray-900 border border-gray-800 rounded-lg p-1">
+            <div class="flex bg-[#11131A] border border-[#222634] rounded-lg p-1">
                 <button
                     id="btn-id"
-                    onclick="switchLang('id')"
-                    class="px-3 py-1 rounded text-[10px] font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+                    onclick="window.selectLanguage ? window.selectLanguage('id') : switchLang('id')"
+                    class="px-3 py-1 rounded text-[10px] font-mono font-bold transition-all bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/40 cursor-pointer"
                 >
                     ID
                 </button>
                 <button
                     id="btn-en"
-                    onclick="switchLang('en')"
-                    class="px-3 py-1 rounded text-[10px] font-bold text-gray-400 hover:text-white transition-all duration-300"
+                    onclick="window.selectLanguage ? window.selectLanguage('en') : switchLang('en')"
+                    class="px-3 py-1 rounded text-[10px] font-mono font-bold text-[#94A3B8] hover:text-white transition-all cursor-pointer border border-transparent"
                 >
                     EN
                 </button>
@@ -94,28 +94,28 @@ const fixImgUrl = (url) => {
 
         {
             !product ? (
-                <div class="text-center py-20 border border-gray-800 bg-gray-900/50 rounded-xl">
-                    <div class="i-lucide-alert-circle text-4xl text-red-500 mx-auto mb-4" />
-                    <h1 class="text-xl font-bold text-white mb-2">
+                <div class="text-center py-16 border border-[#222634] bg-[#11131A] rounded-lg p-6">
+                    <div class="i-lucide-alert-circle text-4xl text-red-400 mx-auto mb-4" />
+                    <h1 class="text-lg font-bold text-white mb-2 font-mono uppercase">
                         <span class="lang-id">Produk Tidak Ditemukan</span>
                         <span class="lang-en hidden">Product Not Found</span>
                     </h1>
-                    <p class="text-gray-400 text-sm mb-6">
+                    <p class="text-[#94A3B8] text-xs font-mono mb-6">
                         <span class="lang-id">{error || "Silakan hubungi Admin untuk mendapatkan link yang benar."}</span>
                         <span class="lang-en hidden">{error === "Link tidak valid (Slug tidak ditemukan)." ? "Invalid Link (Slug not found)." : "Please contact Admin to get the correct link."}</span>
                     </p>
                     <a
                         href="/"
-                        class="text-cyan-400 font-bold uppercase text-xs hover:underline"
+                        class="yg-btn-secondary inline-block text-xs"
                     >
                         <span class="lang-id">Kembali ke Beranda</span>
                         <span class="lang-en hidden">Back to Home</span>
                     </a>
                 </div>
             ) : (
-                <div class="animate-[fadeIn_0.5s_ease-out]">
-                    <div class="flex items-center gap-4 mb-8 bg-gray-900/30 border border-gray-800 p-4 rounded-xl">
-                        <div class="w-16 h-16 bg-black border border-gray-800 rounded-lg overflow-hidden shrink-0">
+                <div>
+                    <div class="flex items-center gap-4 mb-6 bg-[#11131A] border border-[#222634] p-4 rounded-lg">
+                        <div class="w-16 h-16 bg-[#0D0F15] border border-[#222634] rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
                             {product.image ? (
                                 <img
                                     src={fixImgUrl(product.image.sourceUrl)}
@@ -123,17 +123,17 @@ const fixImgUrl = (url) => {
                                     class="w-full h-full object-cover"
                                 />
                             ) : (
-                                <div class="w-full h-full flex items-center justify-center text-gray-700 text-[10px]">
+                                <div class="w-full h-full flex items-center justify-center text-[#64748B] text-[10px] font-mono">
                                     NO IMG
                                 </div>
                             )}
                         </div>
-                        <div>
-                            <h2 class="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">
+                        <div class="min-w-0 flex-1">
+                            <span class="text-[10px] text-[#00E5FF] font-bold uppercase tracking-wider font-mono mb-1 block">
                                 <span class="lang-id">Berikan Ulasan Untuk</span>
                                 <span class="lang-en hidden">Write Review For</span>
-                            </h2>
-                            <h1 class="text-lg font-bold text-white leading-tight">
+                            </span>
+                            <h1 class="text-base font-bold text-white leading-tight truncate">
                                 {product.name}
                             </h1>
                         </div>
@@ -146,8 +146,8 @@ const fixImgUrl = (url) => {
                             value={product.databaseId}
                         />
                         
-                        <div class="space-y-2 text-center">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest">
+                        <div class="bg-[#11131A] border border-[#222634] p-6 rounded-lg text-center space-y-3">
+                            <label class="text-xs font-bold text-[#F8FAFC] uppercase tracking-wider font-mono">
                                 <span class="lang-id">Beri Rating Bintang</span>
                                 <span class="lang-en hidden">Give Star Rating</span>
                             </label>
@@ -155,8 +155,9 @@ const fixImgUrl = (url) => {
                                 {[1, 2, 3, 4, 5].map((star) => (
                                     <button
                                         type="button"
-                                        class="star-btn text-gray-700 hover:text-amber-400 transition-all duration-200 transform hover:scale-110 p-1 cursor-pointer"
+                                        class="star-btn text-[#33394D] hover:text-amber-400 transition-colors p-1 cursor-pointer"
                                         data-value={star}
+                                        aria-label={`Bintang ${star}`}
                                     >
                                         <div class="i-lucide-star w-8 h-8 fill-current"></div>
                                     </button>
@@ -168,12 +169,12 @@ const fixImgUrl = (url) => {
                                 id="rating-input"
                                 required
                             />
-                            <div id="rating-error" class="text-red-500 text-xs hidden">Rating wajib diisi!</div>
+                            <div id="rating-error" class="text-red-400 text-xs font-mono hidden">Rating wajib diisi!</div>
                         </div>
 
-                        <div class="bg-gray-900/20 border border-gray-800 p-6 rounded-xl space-y-4">
-                             <div class="space-y-1">
-                                <label class="text-[10px] font-bold text-gray-500 uppercase">
+                        <div class="bg-[#11131A] border border-[#222634] p-6 rounded-lg space-y-4">
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-[#F8FAFC] uppercase font-mono tracking-wider">
                                     <span class="lang-id">Nama Anda (Opsional)</span>
                                     <span class="lang-en hidden">Your Name (Optional)</span>
                                 </label>
@@ -181,37 +182,37 @@ const fixImgUrl = (url) => {
                                     type="text"
                                     name="author"
                                     id="input-author"
-                                    class="w-full bg-black border border-gray-700 text-white p-3 rounded focus:border-cyan-400 focus:outline-none text-sm"
+                                    class="yg-input"
                                     placeholder="Nama Samaran / Asli"
                                 />
                             </div>
 
-                             <div class="space-y-1">
-                                <label class="text-[10px] font-bold text-gray-500 uppercase">
-                                    <span class="lang-id">Email (Wajib - Tidak Dipublikasikan)</span>
-                                    <span class="lang-en hidden">Email (Required - Not Published)</span>
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-[#F8FAFC] uppercase font-mono tracking-wider">
+                                    <span class="lang-id">Email (Wajib - Tidak Dipublikasikan) <span class="text-red-400">*</span></span>
+                                    <span class="lang-en hidden">Email (Required - Not Published) <span class="text-red-400">*</span></span>
                                 </label>
                                 <input
                                     type="email"
                                     name="email"
                                     id="input-email"
                                     required
-                                    class="w-full bg-black border border-gray-700 text-white p-3 rounded focus:border-cyan-400 focus:outline-none text-sm"
+                                    class="yg-input"
                                     placeholder="contoh@email.com"
                                 />
                             </div>
 
-                             <div class="space-y-1">
-                                <label class="text-[10px] font-bold text-gray-500 uppercase">
-                                    <span class="lang-id">Ulasan Anda</span>
-                                    <span class="lang-en hidden">Your Review</span>
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-[#F8FAFC] uppercase font-mono tracking-wider">
+                                    <span class="lang-id">Ulasan Pengalaman <span class="text-red-400">*</span></span>
+                                    <span class="lang-en hidden">Your Review Experience <span class="text-red-400">*</span></span>
                                 </label>
                                 <textarea
                                     name="content"
                                     id="input-content"
                                     rows="4"
                                     required
-                                    class="w-full bg-black border border-gray-700 text-white p-3 rounded focus:border-cyan-400 focus:outline-none text-sm"
+                                    class="yg-input resize-y"
                                     placeholder="Ceritakan pengalaman Anda membeli akun ini..."
                                 ></textarea>
                             </div>
@@ -220,24 +221,26 @@ const fixImgUrl = (url) => {
                         <button
                             type="submit"
                             id="submit-btn"
-                            class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-cyan-500/20 transition transform active:scale-95 uppercase tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                            class="yg-btn-primary w-full py-3.5 uppercase tracking-wider font-mono text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <span class="lang-id">Kirim Ulasan</span>
                             <span class="lang-en hidden">Submit Review</span>
                         </button>
                     </form>
 
-                    <div id="success-message" class="hidden text-center py-20 bg-gray-900/50 border border-green-500/30 rounded-xl">
-                        <div class="i-lucide-check-circle text-5xl text-green-500 mx-auto mb-4 animate-bounce"></div>
-                        <h2 class="text-2xl font-bold text-white mb-2 uppercase tracking-wider">
+                    <div id="success-message" class="hidden text-center py-16 bg-[#11131A] border border-emerald-500/40 rounded-lg p-6">
+                        <div class="w-16 h-16 bg-emerald-950/40 border border-emerald-500/40 rounded-lg flex items-center justify-center mx-auto mb-4 text-emerald-400">
+                            <div class="i-lucide-check-circle text-3xl"></div>
+                        </div>
+                        <h2 class="text-xl font-bold text-white mb-2 uppercase tracking-tight font-mono">
                             <span class="lang-id">Terima Kasih!</span>
                             <span class="lang-en hidden">Thank You!</span>
                         </h2>
-                        <p class="text-gray-400 text-sm">
-                            <span class="lang-id">Ulasan Anda telah kami terima dan akan segera tampil setelah dimoderasi.</span>
-                            <span class="lang-en hidden">Your review has been received and will appear after moderation.</span>
+                        <p class="text-[#94A3B8] text-xs font-mono max-w-sm mx-auto leading-relaxed">
+                            <span class="lang-id">Ulasan Anda telah kami terima dan akan segera tampil setelah diverifikasi sistem.</span>
+                            <span class="lang-en hidden">Your review has been received and will appear after system verification.</span>
                         </p>
-                         <a href="/" class="mt-6 inline-block text-cyan-400 text-xs font-bold uppercase border border-cyan-500/30 px-6 py-2 rounded-full hover:bg-cyan-900/20 transition">
+                        <a href="/" class="mt-6 yg-btn-secondary inline-block text-xs font-mono">
                             <span class="lang-id">Kembali ke Beranda</span>
                             <span class="lang-en hidden">Back to Home</span>
                         </a>
@@ -267,20 +270,18 @@ const fixImgUrl = (url) => {
                     document.querySelectorAll('.lang-id').forEach(el => el.classList.remove('hidden'));
                     document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
                     
-                    // Button Style
                     if(btnId) {
-                        btnId.className = "px-3 py-1 rounded text-[10px] font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
-                        btnEn.className = "px-3 py-1 rounded text-[10px] font-bold text-gray-400 hover:text-white transition-all duration-300";
+                        btnId.className = "px-3 py-1 rounded text-[10px] font-mono font-bold transition-all bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/40 cursor-pointer";
+                        btnEn.className = "px-3 py-1 rounded text-[10px] font-mono font-bold text-[#94A3B8] hover:text-white transition-all cursor-pointer border border-transparent";
                     }
                 } else {
                     document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
                     document.querySelectorAll('.lang-id').forEach(el => el.classList.add('hidden'));
 
-                    // Button Style
-                     if(btnEn) {
-                        btnEn.className = "px-3 py-1 rounded text-[10px] font-bold transition-all duration-300 bg-cyan-500 text-black shadow-[0_0_10px_rgba(6,182,212,0.5)]";
-                        btnId.className = "px-3 py-1 rounded text-[10px] font-bold text-gray-400 hover:text-white transition-all duration-300";
-                     }
+                    if(btnEn) {
+                        btnEn.className = "px-3 py-1 rounded text-[10px] font-mono font-bold transition-all bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/40 cursor-pointer";
+                        btnId.className = "px-3 py-1 rounded text-[10px] font-mono font-bold text-[#94A3B8] hover:text-white transition-all cursor-pointer border border-transparent";
+                    }
                 }
 
                 // 2. Update Placeholders
@@ -293,6 +294,12 @@ const fixImgUrl = (url) => {
                     errorMsg.innerText = data.ratingError;
                 }
             };
+
+            const initialLang = localStorage.getItem('yasui_lang') || 'id';
+            switchLang(initialLang);
+            window.addEventListener('yasui-lang-change', (e) => {
+                switchLang(e.detail?.lang || localStorage.getItem('yasui_lang') || 'id');
+            });
 
             // --- 2. FORM LOGIC ---
             const form = document.getElementById("review-form");
@@ -308,17 +315,17 @@ const fixImgUrl = (url) => {
                     btn.addEventListener("click", () => {
                         const val = btn.getAttribute("data-value");
                         ratingInput.value = val;
-                        if(errorMsg) errorMsg.classList.add('hidden'); // hide error
+                        if(errorMsg) errorMsg.classList.add('hidden');
 
                         // Visual Update
                         stars.forEach((s) => {
                             const sVal = s.getAttribute("data-value");
                             if (sVal <= val) {
-                                s.classList.remove("text-gray-700");
-                                s.classList.add("text-yellow-400");
+                                s.classList.remove("text-[#33394D]");
+                                s.classList.add("text-amber-400");
                             } else {
-                                s.classList.add("text-gray-700");
-                                s.classList.remove("text-yellow-400");
+                                s.classList.add("text-[#33394D]");
+                                s.classList.remove("text-amber-400");
                             }
                         });
                     });
@@ -334,9 +341,6 @@ const fixImgUrl = (url) => {
                             errorMsg.innerText = i18n.ratingError;
                             errorMsg.classList.remove('hidden');
                         }
-                        // Shake animation
-                        starContainer.classList.add('animate-[shake_0.5s]');
-                        setTimeout(() => starContainer.classList.remove('animate-[shake_0.5s]'), 500);
                         return;
                     }
 
@@ -368,10 +372,7 @@ const fixImgUrl = (url) => {
                         if (json.success) {
                             form.classList.add("hidden");
                             successMsg.classList.remove("hidden");
-                            successMsg.classList.add("animate-[fadeIn_0.5s]");
-                            // Check if current lang is EN to show thank you in EN
                             if(currentLang === 'en') {
-                                // Re-trigger layout update (hacky but safer)
                                 switchLang('en');
                             }
                         } else {
@@ -389,12 +390,4 @@ const fixImgUrl = (url) => {
             }
         });
     </script>
-
-    <style>
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-    </style>
 </Layout>

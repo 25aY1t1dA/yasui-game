@@ -32,18 +32,18 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
 ---
 
 <Layout title={pageTitle} showFooter={false}>
-    <main class="min-h-[80vh] flex items-center justify-center p-4">
-        <div class="max-w-md w-full relative yg-glow-ambient">
-            <div class="cyber-card bg-gray-900 border border-cyan-500/50 p-8 relative z-10 shadow-2xl">
+    <main class="min-h-[85vh] flex items-center justify-center p-4 py-12">
+        <div class="max-w-md w-full">
+            <div class="bg-[#11131A] border border-[#222634] rounded-lg p-6 sm:p-8">
                 {accessDenied ? (
                     <div class="text-center py-4">
-                        <div class="w-16 h-16 bg-red-950/60 border border-red-500/50 rounded-full flex items-center justify-center mx-auto mb-4 text-red-400">
-                            <div class="i-lucide-shield-alert text-3xl"></div>
+                        <div class="w-14 h-14 bg-red-950/40 border border-red-500/40 rounded-lg flex items-center justify-center mx-auto mb-4 text-red-400">
+                            <div class="i-lucide-shield-alert text-2xl"></div>
                         </div>
-                        <h1 class="text-xl font-black text-white uppercase tracking-wider mb-2">
+                        <h1 class="text-lg font-bold text-white uppercase tracking-wider mb-2 font-mono">
                             Akses Pesanan Dibatasi
                         </h1>
-                        <p class="text-xs text-gray-400 mb-6 font-mono leading-relaxed">
+                        <p class="text-xs text-[#94A3B8] mb-6 font-mono leading-relaxed">
                             Parameter otorisasi pesanan (key) tidak valid atau sesi Anda telah kedaluwarsa.
                             Untuk alasan keamanan, detail faktur dan kredensial akun dilindungi.
                         </p>
@@ -64,71 +64,73 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                     </div>
                 ) : (
                     <>
-                        <div class="text-center mb-8">
-                            <div
-                                class="w-20 h-20 bg-black border-2 border-cyan-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(34,211,238,0.4)]"
-                            >
-                                <div class="i-lucide-check text-5xl text-cyan-400">
-                                </div>
+                        <div class="text-center mb-6">
+                            <div class="w-16 h-16 bg-[#00E5FF]/10 border border-[#00E5FF]/40 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <div class="i-lucide-check text-3xl text-[#00E5FF]"></div>
                             </div>
-                            <h1 class="text-2xl font-black text-white uppercase tracking-widest italic mb-2">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 text-[10px] font-mono font-bold tracking-wider uppercase mb-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                <span data-i18n="order_success.verified">TRANSAKSI DIVERIFIKASI</span>
+                            </span>
+                            <h1 class="text-xl sm:text-2xl font-bold text-white uppercase tracking-tight mb-1" data-i18n="order_success.title">
                                 Pembayaran Diterima
                             </h1>
-                            <p class="text-xs text-gray-500 font-mono">
-                                ORDER ID: <span class="text-cyan-400 font-bold">#{order.id}</span>
+                            <p class="text-xs text-[#94A3B8] font-mono">
+                                <span data-i18n="order_success.order_id">ORDER ID:</span> <span class="text-[#00E5FF] font-bold">#{order.id}</span>
                             </p>
                         </div>
 
-                        <div class="space-y-4 mb-8">
+                        <div class="space-y-4 mb-6">
                             {order && (
-                                <div class="bg-black/60 border border-gray-800 p-4 rounded text-xs font-mono">
-                                    <div class="flex justify-between pb-2 border-b border-gray-800 text-gray-400">
-                                        <span>Status Pesanan:</span>
-                                        <span class="text-green-400 font-bold uppercase">LUNAS / {order.status}</span>
+                                <div class="bg-[#0D0F15] border border-[#222634] p-4 rounded-lg text-xs font-mono">
+                                    <div class="flex justify-between pb-2.5 border-b border-[#222634] text-[#94A3B8]">
+                                        <span data-i18n="order_success.status">Status Pesanan</span>
+                                        <span class="text-emerald-400 font-bold uppercase"><span data-i18n="order_success.paid">LUNAS</span> / {order.status}</span>
                                     </div>
-                                    <div class="py-2 space-y-1.5 border-b border-gray-800">
+                                    <div class="py-2.5 space-y-2 border-b border-[#222634]">
                                         {lineItems.map(item => (
-                                            <div class="flex justify-between text-gray-300">
-                                                <span class="truncate max-w-[200px]">{item.name} x{item.quantity}</span>
-                                                <span class="text-gray-400">Rp {Number(item.total).toLocaleString("id-ID")}</span>
+                                            <div class="flex justify-between text-[#F8FAFC]">
+                                                <span class="truncate max-w-[210px]">{item.name} x{item.quantity}</span>
+                                                <span class="text-[#94A3B8] tabular-nums yg-price" data-price-idr={Number(item.total)}>Rp {Number(item.total).toLocaleString("id-ID")}</span>
                                             </div>
                                         ))}
                                     </div>
-                                    <div class="flex justify-between pt-2 text-white font-bold">
-                                        <span>Total Dibayar:</span>
-                                        <span class="text-cyan-400">{formattedTotal}</span>
+                                    <div class="flex justify-between pt-2.5 text-white font-bold">
+                                        <span data-i18n="order_success.total_paid">Total Dibayar</span>
+                                        <span class="text-[#00E5FF] tabular-nums yg-price" data-price-idr={Number(order.total)}>{formattedTotal}</span>
                                     </div>
                                 </div>
                             )}
 
-                            <div class="bg-black/50 border-l-4 border-cyan-400 p-4">
-                                <h2 class="text-white font-bold text-sm mb-1 flex items-center gap-2">
-                                    <div class="i-lucide-mail text-cyan-400"></div> Cek Email & WhatsApp
+                            <div class="bg-[#0D0F15] border-l-2 border-[#00E5FF] border-y border-r border-[#222634] p-3.5 rounded-r-lg">
+                                <h2 class="text-white font-bold text-xs mb-1 flex items-center gap-2">
+                                    <div class="i-lucide-mail text-[#00E5FF] text-sm"></div>
+                                    <span data-i18n="order_success.check_email_title">Cek Email & WhatsApp</span>
                                 </h2>
-                                <p class="text-xs text-gray-400 leading-relaxed">
-                                    Detail akun game telah dikirim ke email <b>{order?.billing?.email || "Anda"}</b>. Jika tidak ada di inbox, cek folder <b>SPAM</b>.
+                                <p class="text-[11px] text-[#94A3B8] leading-relaxed" data-i18n="order_success.check_email_desc">
+                                    Detail akun game telah dikirim ke email <b class="text-white">{order?.billing?.email || "Anda"}</b>. Jika tidak ada di inbox utama, silakan periksa folder <b>SPAM</b>.
                                 </p>
                             </div>
 
-                            <div class="bg-black/50 border-l-4 border-green-500 p-4">
-                                <h2 class="text-white font-bold text-sm mb-1 flex items-center gap-2">
-                                    <div class="i-lucide-user-check text-green-500">
-                                    </div> Admin Yasui Game
+                            <div class="bg-[#0D0F15] border-l-2 border-emerald-500 border-y border-r border-[#222634] p-3.5 rounded-r-lg">
+                                <h2 class="text-white font-bold text-xs mb-1 flex items-center gap-2">
+                                    <div class="i-lucide-user-check text-emerald-400 text-sm"></div>
+                                    <span data-i18n="order_success.auto_dispatch_title">Pengiriman Otomatis & Support</span>
                                 </h2>
-                                <p class="text-xs text-gray-400 leading-relaxed">
-                                    Admin kami juga akan segera memproses pengiriman produk digital Anda secara tepat waktu.
+                                <p class="text-[11px] text-[#94A3B8] leading-relaxed" data-i18n="order_success.auto_dispatch_desc">
+                                    Admin Yasui Game memproses serah terima secara real-time. Jika pesanan Anda membutuhkan konfigurasi ID (seperti Summoners War), gunakan menu di dashboard pesanan.
                                 </p>
                             </div>
 
-                            <div id="quick-pwd-card" class="bg-gradient-to-b from-cyan-950/30 to-black border border-cyan-500/40 p-4 rounded-xl">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <div class="i-lucide-shield-check text-cyan-400 text-base"></div>
-                                    <h2 class="text-xs font-black text-white uppercase tracking-wider">
+                            <div id="quick-pwd-card" class="bg-[#0D0F15] border border-[#222634] p-4 rounded-lg">
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="i-lucide-shield-check text-[#00E5FF] text-sm"></div>
+                                    <h2 class="text-xs font-bold text-white uppercase tracking-wider font-mono" data-i18n="order_success.secure_account_title">
                                         Amankan Akun Anda
                                     </h2>
                                 </div>
-                                <p class="text-[11px] text-gray-400 mb-3 leading-relaxed">
-                                    Akun Anda telah otomatis dibuat. Pasang kata sandi sekarang agar bisa login cepat di masa depan.
+                                <p class="text-[11px] text-[#94A3B8] mb-3 leading-relaxed" data-i18n="order_success.secure_account_desc">
+                                    Akun Anda telah terdaftar otomatis. Pasang kata sandi sekarang untuk mengunci profil & mengakses kredensial kapan saja.
                                 </p>
                                 
                                 <div id="pwd-card-form" class="space-y-2.5">
@@ -136,32 +138,34 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                                         type="password"
                                         id="success-new-pwd"
                                         minlength="6"
-                                        placeholder="Buat kata sandi baru (min 6 karakter)"
+                                        placeholder="Buat kata sandi baru (min. 6 karakter)"
                                         class="yg-input"
                                     />
                                     <button
                                         id="btn-save-success-pwd"
-                                        class="yg-btn-primary w-full text-[11px] py-2.5"
+                                        class="yg-btn-primary w-full text-xs py-2.5"
+                                        data-i18n="order_success.btn_save_pwd"
                                     >
                                         Kunci & Simpan Kata Sandi
                                     </button>
                                 </div>
-                                <div id="pwd-card-msg" class="hidden text-[11px] font-mono mt-2 p-2 rounded"></div>
+                                <div id="pwd-card-msg" class="hidden text-[11px] font-mono mt-2 p-2.5 rounded-lg"></div>
                             </div>
                         </div>
 
-                        <div class="space-y-3">
+                        <div class="space-y-2.5">
                             <a
                                 href="/orders"
                                 class="yg-btn-primary block w-full text-center flex items-center justify-center gap-2"
                             >
-                                <div class="i-lucide-receipt text-sm"></div> Buka Dashboard Pesanan Saya
+                                <div class="i-lucide-receipt text-sm"></div>
+                                <span data-i18n="order_success.btn_dashboard">Buka Dashboard Pesanan Saya</span>
                             </a>
                             <a
                                 href="/"
                                 class="yg-btn-secondary block w-full text-center"
                             >
-                                Kembali ke Beranda
+                                <span data-i18n="order_success.btn_home">Kembali ke Beranda</span>
                             </a>
                         </div>
 
@@ -209,12 +213,12 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                                         }));
                                     }
 
-                                    msg.className = "text-[11px] font-mono mt-2 p-2 rounded bg-green-950/60 border border-green-500/50 text-green-400 block";
+                                    msg.className = "text-[11px] font-mono mt-2 p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 block";
                                     msg.innerText = "✓ Kata sandi berhasil dibuat! Akun Anda kini aktif & aman.";
                                     document.getElementById("pwd-card-form")?.classList.add("hidden");
                                 } catch (err) {
-                                    msg.className = "text-[11px] font-mono mt-2 p-2 rounded bg-red-950/60 border border-red-500/50 text-red-400 block";
-                                    msg.innerText = err.message || "Gagal menyimpan";
+                                    msg.className = "text-[11px] font-mono mt-2 p-2.5 rounded-lg bg-red-950/40 border border-red-500/40 text-red-400 block";
+                                    msg.innerText = err.message || "Gagal menyimpan kata sandi";
                                     btn.disabled = false;
                                     btn.innerText = "KUNCI & SIMPAN KATA SANDI";
                                 }
@@ -223,9 +227,10 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                     </>
                 )}
 
-                <div class="mt-6 pt-4 border-t border-gray-800 text-center">
-                    <p class="text-[10px] text-gray-600 font-mono">
-                        SECURE TRANSACTION ENCRYPTED
+                <div class="mt-6 pt-4 border-t border-[#222634] text-center">
+                    <p class="text-[10px] text-[#64748B] font-mono flex items-center justify-center gap-1.5 uppercase">
+                        <span class="i-lucide-lock text-xs text-[#00E5FF]"></span>
+                        <span>Transaksi Terenkripsi & Terverifikasi</span>
                     </p>
                 </div>
             </div>

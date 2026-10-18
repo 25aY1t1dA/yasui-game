@@ -1,15 +1,15 @@
 /**
  * Fix foto produk SW yang images-nya kosong.
  * Prioritas: screenshot lokal (public/assets/SW_Monster) → fallback swarfarm icon.
- * Jalankan: node --env-file=.env scratch/fix-sw-images.mjs
+ * Jalankan: node --env-file=.env scripts/maintenance/fix-sw-images.mjs
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { wcFetch, WP_URL } from "../src/lib/wc.js";
+import { wcFetch, WP_URL } from "../../src/lib/wc.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SHOT_DIR = path.join(__dirname, "../public/assets/SW_Monster");
+const SHOT_DIR = path.join(__dirname, "../../public/assets/SW_Monster");
 const norm = (s) => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, "");
 const SHOTS = fs.readdirSync(SHOT_DIR).filter(f => f.toLowerCase().endsWith(".png"));
 const ALIAS = {

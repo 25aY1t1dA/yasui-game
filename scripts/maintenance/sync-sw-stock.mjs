@@ -8,18 +8,18 @@
  *      re-scan region terkait (getAllAccounts per region ≈ 1-2 mnt) → recompute → update produk
  *   3. Loop harian: full scan ulang (jaring aman)
  *
- * Jalankan: node --env-file=.env scratch/sync-sw-stock.mjs [--once] [--no-sse] [--full-interval-min=720]
+ * Jalankan: node --env-file=.env scripts/maintenance/sync-sw-stock.mjs [--once] [--no-sse] [--full-interval-min=720]
  *   --once          : full scan sekali lalu keluar (tanpa SSE/loop)
  *   --no-sse        : tanpa SSE, hanya interval full scan
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import * as sky from "../src/lib/skyarena.js";
+import * as sky from "../../src/lib/skyarena.js";
 import {
     AGE_BANDS, ageBand, makeSku, setProductStock,
-} from "../src/lib/skyarena-stock.js";
-import { wcFetch } from "../src/lib/wc.js";
+} from "../../src/lib/skyarena-stock.js";
+import { wcFetch } from "../../src/lib/wc.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);

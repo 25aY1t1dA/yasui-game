@@ -3,7 +3,6 @@ import Layout from "../layouts/Layout.astro";
 import { parsePrice } from "../lib/price";
 import { getProducts, getCategories, normalizeProduct } from "../lib/wc";
 
-// Helper untuk fix image URL
 const fixImgUrl = (url: any) => {
     if (!url) return null;
     return `/img-proxy?src=${encodeURIComponent(url)}`;
@@ -19,13 +18,11 @@ try {
     const rawProducts = await getProducts({ per_page: 100 });
     const rawCategories = await getCategories({ per_page: 50, hide_empty: false });
 
-    // Normalize data agar lebih mudah diproses di Client Side
     products = (rawProducts || []).map((raw: any) => {
         const p = normalizeProduct(raw);
         const cats = p.categories?.map((c: any) => c.name) || [];
         const attrs = p.attributes?.nodes || [];
         
-        // Smart Type Detection
         let type = "other";
         if (cats.some((c: string) => c.toLowerCase().includes("akun"))) {
             type = "account";
@@ -35,7 +32,6 @@ try {
             type = "item";
         }
 
-        // Flatten attributes for filtering
         const flatAttrs: any = {};
         attrs.forEach((a: any) => {
             const name = a.name.toLowerCase();
@@ -56,7 +52,6 @@ try {
         };
     });
 
-    // --- EXTRACT SMART FILTERS (Server & Tier) ---
     const serverCounts: Record<string, number> = {};
     const tierCounts: Record<string, number> = {};
 
@@ -87,126 +82,101 @@ try {
     console.error("❌ SEARCH PAGE FETCH ERROR:", error.message);
 }
 
-// Default search query param
 const initialQuery = Astro.url.searchParams.get("q") || "";
 ---
 
-<Layout title="Search - Yasui Game">
-    <main class="pt-24 pb-32 min-h-screen container mx-auto px-4">
+<Layout title="Pencarian Katalog - Yasui Game" description="Cari dan filter katalog akun game, item, dan voucher terverifikasi.">
+    <main class="yg-shell pt-4 md:pt-6 pb-24 min-h-screen">
         <header class="mb-8">
-            <h1
-                class="text-2xl md:text-3xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-6"
-            >
-                SEARCH <span class="text-white">CATALOG</span>
+            <h1 class="text-xl md:text-3xl font-extrabold text-[#F8FAFC] tracking-tight uppercase mb-4" data-i18n="search.title">
+                Pencarian Katalog
             </h1>
-            <div class="relative group">
+            <div class="relative flex items-center">
+                <span class="i-lucide-search absolute left-3.5 text-[#64748B] text-base pointer-events-none" />
                 <input
                     type="text"
                     id="main-search"
-                    class="w-full bg-black/50 border-2 border-gray-800 text-white p-4 pl-12 text-lg font-mono focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(34,211,238,0.3)] outline-none transition-all clip-path-search"
-                    placeholder="Type game or item name..."
-                    data-i18n="search.placeholder"
+                    class="yg-input !h-12 !pl-11 !pr-4 !text-sm !bg-[#0D0F17]"
+                    placeholder="Ketik nama game, monster Summoners War, atau item Roblox..."
+                    data-i18n-placeholder="search.placeholder"
                     value={initialQuery}
                     autocomplete="off"
                 />
-                <div
-                    class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-cyan-400 transition"
-                >
-                    <div class="i-lucide-search text-xl"></div>
-                </div>
             </div>
         </header>
 
-        <div class="flex flex-col lg:flex-row gap-8 relative">
-            <aside class="hidden lg:block w-1/4 h-fit sticky top-24 space-y-6">
-                <div class="flex items-center justify-between">
-                    <h2
-                        class="text-xl font-black italic text-white flex items-center gap-2"
-                    >
-                        <div class="i-lucide-sliders-horizontal"></div>
-                        <span data-i18n="search.filter">FILTER</span>
+        <div class="flex flex-col lg:flex-row gap-6 relative items-start">
+            {/* Desktop Filter Sidebar */}
+            <aside class="hidden lg:block w-72 shrink-0 space-y-4 sticky top-24">
+                <div class="flex items-center justify-between pb-2 border-b border-[#222634]">
+                    <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#F8FAFC] flex items-center gap-2">
+                        <span class="i-lucide-sliders-horizontal text-[#00E5FF] text-xs"></span>
+                        <span data-i18n="search.filter">FILTER PRODUK</span>
                     </h2>
                     <button
                         id="reset-all-desktop"
-                        class="text-xs font-bold text-red-500 hover:text-red-400 hover:underline cursor-pointer"
+                        class="text-[11px] font-mono text-[#64748B] hover:text-[#00E5FF] underline cursor-pointer"
                         data-i18n="search.reset_all"
                     >
-                        RESET ALL
+                        Reset Semua
                     </button>
                 </div>
 
-                <div
-                    class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
-                >
-                    <h3
-                        class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider"
-                    >
-                        PRODUCT TYPE
+                {/* Filter Product Type */}
+                <div class="yg-card p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8] mb-2.5" data-i18n="search.product_type">
+                        Tipe Produk
                     </h3>
-                    <div class="flex flex-col gap-2">
-                        <label
-                            class="flex items-center gap-2 cursor-pointer group"
-                        >
+                    <div class="space-y-1.5 text-xs font-mono">
+                        <label class="flex items-center gap-2.5 cursor-pointer py-1 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
                             <input
                                 type="radio"
                                 name="filter-type"
                                 value="all"
                                 checked
-                                class="peer text-cyan-400 focus:ring-cyan-500 appearance-none bg-gray-800 border border-gray-700 rounded-full w-3 h-3 checked:bg-cyan-400 checked:border-cyan-400 transition"
+                                class="accent-[#00E5FF]"
                             />
-                            <span
-                                class="text-sm text-gray-400 group-hover:text-white peer-checked:text-cyan-400 transition font-mono"
-                                >ALL TYPES</span
-                            >
+                            <span data-i18n="search.type_all">Semua Tipe</span>
                         </label>
-                        <label
-                            class="flex items-center gap-2 cursor-pointer group"
-                        >
+                        <label class="flex items-center gap-2.5 cursor-pointer py-1 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
                             <input
                                 type="radio"
                                 name="filter-type"
                                 value="account"
-                                class="peer text-cyan-400 focus:ring-cyan-500 appearance-none bg-gray-800 border border-gray-700 rounded-full w-3 h-3 checked:bg-cyan-400 checked:border-cyan-400 transition"
+                                class="accent-[#00E5FF]"
                             />
-                            <span
-                                class="text-sm text-gray-400 group-hover:text-white peer-checked:text-cyan-400 transition font-mono"
-                                >ACCOUNTS ONLY</span
-                            >
+                            <span data-i18n="search.type_account">Hanya Akun</span>
                         </label>
-                        <label
-                            class="flex items-center gap-2 cursor-pointer group"
-                        >
+                        <label class="flex items-center gap-2.5 cursor-pointer py-1 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
                             <input
                                 type="radio"
                                 name="filter-type"
                                 value="item"
-                                class="peer text-cyan-400 focus:ring-cyan-500 appearance-none bg-gray-800 border border-gray-700 rounded-full w-3 h-3 checked:bg-cyan-400 checked:border-cyan-400 transition"
+                                class="accent-[#00E5FF]"
                             />
-                            <span
-                                class="text-sm text-gray-400 group-hover:text-white peer-checked:text-cyan-400 transition font-mono"
-                                >ITEMS / TOPUP</span
-                            >
+                            <span data-i18n="search.type_item">Item / Voucher / Robux</span>
                         </label>
                     </div>
                 </div>
 
+                {/* Server Filter */}
                 {serverOptions.length > 0 && (
-                    <div class="cyber-card p-5 bg-gray-900/50 border border-gray-800">
-                        <h3 class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider">
-                            SERVER
+                    <div class="yg-card p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+                        <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8] mb-2.5">
+                            Server
                         </h3>
-                        <div class="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
+                        <div class="space-y-1 max-h-36 overflow-y-auto pr-1 text-xs font-mono custom-scrollbar">
                             {serverOptions.map((opt) => (
-                                <label class="flex items-center gap-3 cursor-pointer group p-1 rounded hover:bg-white/5 transition">
-                                    <input
-                                        type="checkbox"
-                                        value={opt.value}
-                                        class="filter-server peer w-3 h-3 accent-cyan-400 bg-gray-800 border-gray-600 rounded"
-                                    />
-                                    <span class="text-sm text-gray-400 group-hover:text-white transition peer-checked:text-cyan-400 font-mono">
-                                        {opt.value}
-                                    </span>
-                                    <span class="ml-auto text-[10px] text-gray-600">
+                                <label class="flex items-center justify-between gap-2 cursor-pointer py-1 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
+                                    <div class="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            value={opt.value}
+                                            class="filter-server accent-[#00E5FF]"
+                                        />
+                                        <span>{opt.value}</span>
+                                    </div>
+                                    <span class="text-[10px] text-[#64748B] tabular-nums">
                                         {opt.count}
                                     </span>
                                 </label>
@@ -215,23 +185,24 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 )}
 
+                {/* Tier Filter */}
                 {tierOptions.length > 0 && (
-                    <div class="cyber-card p-5 bg-gray-900/50 border border-gray-800">
-                        <h3 class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider">
-                            TIER / RANK
+                    <div class="yg-card p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+                        <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8] mb-2.5">
+                            Tier / Rank
                         </h3>
-                        <div class="space-y-1 max-h-40 overflow-y-auto custom-scrollbar">
-                             {tierOptions.map((opt) => (
-                                <label class="flex items-center gap-3 cursor-pointer group p-1 rounded hover:bg-white/5 transition">
-                                    <input
-                                        type="checkbox"
-                                        value={opt.value}
-                                        class="filter-tier peer w-3 h-3 accent-cyan-400 bg-gray-800 border-gray-600 rounded"
-                                    />
-                                    <span class="text-sm text-gray-400 group-hover:text-white transition peer-checked:text-cyan-400 font-mono">
-                                        {opt.value}
-                                    </span>
-                                    <span class="ml-auto text-[10px] text-gray-600">
+                        <div class="space-y-1 max-h-36 overflow-y-auto pr-1 text-xs font-mono custom-scrollbar">
+                            {tierOptions.map((opt) => (
+                                <label class="flex items-center justify-between gap-2 cursor-pointer py-1 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors">
+                                    <div class="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            value={opt.value}
+                                            class="filter-tier accent-[#00E5FF]"
+                                        />
+                                        <span>{opt.value}</span>
+                                    </div>
+                                    <span class="text-[10px] text-[#64748B] tabular-nums">
                                         {opt.count}
                                     </span>
                                 </label>
@@ -240,394 +211,235 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
                     </div>
                 )}
 
-                <div
-                    class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
-                >
-                    <h3
-                        class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider"
-                        data-i18n="search.category"
-                    >
-                        CATEGORY
+                {/* Category Filter */}
+                <div class="yg-card p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8] mb-2.5" data-i18n="search.category">
+                        Kategori Game
                     </h3>
-
-                    <div class="relative mb-3">
+                    <div class="relative mb-2">
                         <input
                             type="text"
                             id="cat-search"
-                            placeholder="Search category..."
+                            placeholder="Cari kategori..."
                             data-i18n="search.category_placeholder"
-                            class="w-full bg-black border border-gray-700 rounded p-2 pl-8 text-xs text-white focus:border-cyan-400 outline-none"
+                            class="yg-input !h-9 !text-xs !bg-[#0D0F17]"
                         />
-                        <div
-                            class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500"
-                        >
-                            <div class="i-lucide-search text-xs"></div>
-                        </div>
                     </div>
-
-                    <div
-                        id="cat-list-desktop"
-                        class="space-y-1 max-h-60 overflow-y-auto pr-2 custom-scrollbar"
-                    >
-                        {
-                            allCategories.map((cat: any) => (
-                                <label class="flex items-center gap-3 cursor-pointer group hover:bg-white/5 p-2 rounded transition cat-item">
+                    <div id="cat-list-desktop" class="space-y-1 max-h-48 overflow-y-auto pr-1 text-xs font-mono custom-scrollbar">
+                        {allCategories.map((cat: any) => (
+                            <label class="flex items-center justify-between gap-2 cursor-pointer py-1 text-[#94A3B8] hover:text-[#F8FAFC] transition-colors cat-item">
+                                <div class="flex items-center gap-2 min-w-0">
                                     <input
                                         type="checkbox"
                                         value={cat.name}
-                                        class="filter-category peer w-4 h-4 accent-cyan-400 bg-gray-800 border-gray-600 rounded focus:ring-cyan-400 focus:ring-2"
+                                        class="filter-category accent-[#00E5FF] shrink-0"
                                     />
-                                    <span class="text-sm text-gray-400 group-hover:text-white transition peer-checked:text-cyan-400 font-mono cat-name">
-                                        {cat.name}
-                                    </span>
-                                    <span class="ml-auto text-[10px] text-gray-600">
-                                        {cat.count}
-                                    </span>
-                                </label>
-                            ))
-                        }
+                                    <span class="truncate cat-name">{cat.name}</span>
+                                </div>
+                                <span class="text-[10px] text-[#64748B] tabular-nums shrink-0">
+                                    {cat.count}
+                                </span>
+                            </label>
+                        ))}
                     </div>
                 </div>
 
-                <div
-                    class="cyber-card p-5 bg-gray-900/50 border border-gray-800"
-                >
-                    <h3
-                        class="text-cyan-400 font-bold mb-3 text-sm uppercase tracking-wider"
-                        data-i18n="search.price_range"
-                    >
-                        PRICE RANGE
+                {/* Price Range */}
+                <div class="yg-card p-4 rounded-lg bg-[#11131A] border border-[#222634]">
+                    <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8] mb-2.5" data-i18n="search.price_range">
+                        Rentang Harga (IDR)
                     </h3>
-                    <div class="flex flex-col gap-3">
-                        <div class="relative">
-                            <span
-                                class="absolute left-3 top-2.5 text-gray-500 text-xs"
-                                >Rp</span
-                            >
-                            <input
-                                type="number"
-                                id="filter-min"
-                                placeholder="Min"
-                                class="w-full bg-black border border-gray-700 p-2 pl-8 text-sm text-white focus:border-cyan-400 outline-none"
-                            />
-                        </div>
-                        <div class="relative">
-                            <span
-                                class="absolute left-3 top-2.5 text-gray-500 text-xs"
-                                >Rp</span
-                            >
-                            <input
-                                type="number"
-                                id="filter-max"
-                                placeholder="Max"
-                                class="w-full bg-black border border-gray-700 p-2 pl-8 text-sm text-white focus:border-cyan-400 outline-none"
-                            />
-                        </div>
+                    <div class="space-y-2">
+                        <input
+                            type="number"
+                            id="filter-min"
+                            placeholder="Harga Minimum"
+                            data-i18n-placeholder="search.price_min"
+                            class="yg-input !h-9 !text-xs !bg-[#0D0F17]"
+                        />
+                        <input
+                            type="number"
+                            id="filter-max"
+                            placeholder="Harga Maksimum"
+                            data-i18n-placeholder="search.price_max"
+                            class="yg-input !h-9 !text-xs !bg-[#0D0F17]"
+                        />
                     </div>
                 </div>
             </aside>
 
-            <div class="flex-1">
-                <div
-                    class="flex flex-col sm:flex-row justify-between items-center mb-6 pb-4 border-b border-gray-800 gap-4"
-                >
-                    <p class="text-gray-400 text-sm font-mono">
-                        <span data-i18n="search.showing_text">Showing</span>
-                        <span id="result-count" class="text-white font-bold"
-                            >{products.length}</span
-                        >
-                        <span data-i18n="search.product_text">products</span>
+            {/* Results Grid Area */}
+            <div class="flex-1 min-w-0">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-4 pb-3 border-b border-[#222634] gap-3">
+                    <p class="text-xs font-mono text-[#94A3B8]">
+                        <span data-i18n="search.showing_text">Menampilkan</span>
+                        <strong id="result-count" class="text-[#00E5FF] tabular-nums mx-1">{products.length}</strong>
+                        <span data-i18n="search.product_text">produk katalog</span>
                     </p>
                     <select
                         id="sort-select"
-                        class="hidden sm:block bg-black border border-gray-800 text-white text-sm p-2 outline-none focus:border-cyan-400 cursor-pointer min-w-[150px]"
+                        class="yg-select !h-10 !text-xs"
                     >
-                        <option value="newest" data-i18n="search.sort.newest"
-                            >Newest</option
-                        >
-                        <option
-                            value="cheapest"
-                            data-i18n="search.sort.cheapest"
-                            >Lowest Price</option
-                        >
-                        <option
-                            value="expensive"
-                            data-i18n="search.sort.expensive"
-                            >Highest Price</option
-                        >
+                        <option value="newest" data-i18n="search.sort.newest">Terbaru</option>
+                        <option value="cheapest" data-i18n="search.sort.cheapest">Harga Terendah</option>
+                        <option value="expensive" data-i18n="search.sort.expensive">Harga Tertinggi</option>
                     </select>
                 </div>
 
                 <div
                     id="product-grid"
-                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                    class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4"
                 >
                 </div>
 
                 <div
                     id="empty-state"
-                    class="hidden flex-col items-center justify-center py-20 text-center opacity-70"
+                    class="hidden flex-col items-center justify-center py-16 text-center border border-dashed border-[#222634] rounded-lg bg-[#0D0F15] my-6"
                 >
-                    <div class="w-24 h-24 mb-4 text-gray-800 relative">
-                        <div
-                            class="i-lucide-ghost text-6xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-bounce"
-                        >
-                        </div>
-                    </div>
-                    <h3
-                        class="text-xl font-bold text-gray-500"
-                        data-i18n="search.empty.title"
-                    >
-                        DATA NOT FOUND
+                    <div class="i-lucide-package-search text-3xl text-[#64748B] mb-2"></div>
+                    <h3 class="text-sm font-bold text-[#F8FAFC] uppercase tracking-wide" data-i18n="search.empty.title">
+                        Produk Tidak Ditemukan
                     </h3>
-                    <p
-                        class="text-gray-600 text-sm mt-2"
-                        data-i18n="search.empty.desc"
-                    >
-                        Try another keyword or reset filter.
+                    <p class="text-xs text-[#94A3B8] font-mono mt-1" data-i18n="search.empty.desc">
+                        Coba kata kunci lain atau sesuaikan filter Anda.
                     </p>
                 </div>
             </div>
         </div>
     </main>
 
-    <div
-        class="lg:hidden fixed bottom-24 left-0 right-0 z-40 flex justify-center pointer-events-none"
-    >
+    {/* Mobile Filter Floating CTA */}
+    <div class="lg:hidden fixed bottom-20 left-0 right-0 z-40 flex justify-center pointer-events-none px-4">
         <button
             id="mobile-filter-btn"
-            class="pointer-events-auto bg-black/80 backdrop-blur-md border border-cyan-500/50 text-cyan-400 font-bold px-6 py-3 rounded-full shadow-[0_0_20px_rgba(34,211,238,0.2)] flex items-center gap-3 hover:scale-105 active:scale-95 transition group"
+            class="pointer-events-auto yg-btn-primary !rounded-full px-5 py-2.5 shadow-2xl flex items-center gap-2 text-xs font-mono uppercase"
         >
-            <div
-                class="i-lucide-sliders-horizontal group-hover:rotate-180 transition duration-500"
-            >
-            </div>
-            <span
-                class="tracking-widest text-xs"
-                data-i18n="search.mobile.filter_sort">FILTER & SORT</span
-            >
+            <span class="i-lucide-sliders-horizontal text-sm"></span>
+            <span data-i18n="search.mobile.filter_sort">Filter & Urutkan</span>
         </button>
     </div>
 
+    {/* Mobile Filter Drawer */}
     <div id="mobile-filter-modal" class="fixed inset-0 z-[60] hidden">
         <div
-            class="absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity duration-300 opacity-0"
+            class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300 opacity-0"
             id="mobile-filter-overlay"
-        >
-        </div>
+        ></div>
         <div
-            class="absolute bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-cyan-500/30 rounded-t-3xl flex flex-col max-h-[85vh] transform transition-transform duration-300 translate-y-full shadow-[0_-10px_40px_rgba(0,0,0,0.8)]"
+            class="absolute bottom-0 left-0 right-0 bg-[#11131A] border-t border-[#222634] rounded-t-xl flex flex-col max-h-[85vh] transform transition-transform duration-300 translate-y-full shadow-2xl"
             id="mobile-filter-content"
         >
-            <div class="w-full flex justify-center pt-3 pb-1">
-                <div class="w-12 h-1.5 bg-gray-800 rounded-full"></div>
+            <div class="w-full flex justify-center pt-2.5 pb-1">
+                <div class="w-10 h-1 bg-[#222634] rounded-full"></div>
             </div>
 
-            <div
-                class="px-6 py-4 border-b border-gray-800/50 flex justify-between items-center"
-            >
+            <div class="px-5 py-3 border-b border-[#222634] flex justify-between items-center">
                 <div>
-                    <h3
-                        class="text-lg font-black text-white italic tracking-tighter"
-                        data-i18n="search.mobile.filter_catalog"
-                    >
-                        FILTER <span class="text-cyan-400">CATALOG</span>
+                    <h3 class="text-sm font-bold text-[#F8FAFC] uppercase tracking-wide" data-i18n="search.mobile.filter_sort">
+                        Filter & Pengurutan
                     </h3>
-                    <p
-                        class="text-[10px] text-gray-500 font-mono"
-                        data-i18n="search.mobile.customize"
-                    >
-                        Customize your search result
-                    </p>
                 </div>
                 <button
                     id="close-filter-mobile"
-                    class="w-8 h-8 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:border-cyan-400 transition"
+                    class="yg-btn-icon !w-8 !h-8 text-[#94A3B8] hover:text-[#F8FAFC]"
                 >
-                    <div class="i-lucide-x text-lg"></div>
+                    <span class="i-lucide-x text-sm"></span>
                 </button>
             </div>
 
-            <div class="overflow-y-auto p-6 space-y-8 pb-32">
-                <div class="space-y-3">
-                    <h4
-                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
+            <div class="overflow-y-auto p-5 space-y-5 pb-28">
+                <div class="space-y-2">
+                    <label class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8]" data-i18n="search.sort_by">
+                        Urutkan Berdasarkan
+                    </label>
+                    <select
+                        id="mobile-sort-select"
+                        class="yg-select w-full !h-11 !text-xs"
                     >
-                        <div class="i-lucide-arrow-up-down text-cyan-400"></div>
-                        <span data-i18n="search.sort">SORT</span>
-                    </h4>
-                    <div class="relative">
-                        <select
-                            id="mobile-sort-select"
-                            class="w-full appearance-none bg-black border border-gray-800 text-white p-4 rounded-xl outline-none focus:border-cyan-500 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] transition text-sm font-mono"
-                        >
-                            <option
-                                value="newest"
-                                data-i18n="search.sort.newest">Newest</option
-                            >
-                            <option
-                                value="cheapest"
-                                data-i18n="search.sort.cheapest"
-                                >Lowest Price</option
-                            >
-                            <option
-                                value="expensive"
-                                data-i18n="search.sort.expensive"
-                                >Highest Price</option
-                            >
-                        </select>
-                        <div
-                            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
-                        >
-                            <div class="i-lucide-chevron-down"></div>
-                        </div>
-                    </div>
+                        <option value="newest" data-i18n="search.sort.newest">Terbaru</option>
+                        <option value="cheapest" data-i18n="search.sort.cheapest">Harga Terendah</option>
+                        <option value="expensive" data-i18n="search.sort.expensive">Harga Tertinggi</option>
+                    </select>
                 </div>
 
-                <div class="space-y-3">
-                    <h4
-                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
-                    >
-                        <div class="i-lucide-layers text-cyan-400"></div>
-                        <span>PRODUCT TYPE</span>
-                    </h4>
+                <div class="space-y-2">
+                    <label class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8]" data-i18n="search.product_type">
+                        Tipe Produk
+                    </label>
                     <div class="grid grid-cols-3 gap-2">
                         <label class="cursor-pointer">
-                            <input
-                                type="radio"
-                                name="mobile-filter-type"
-                                value="all"
-                                checked
-                                class="peer sr-only"
-                            />
-                            <div
-                                class="text-center p-2 rounded-lg border border-gray-800 bg-gray-900/30 text-xs text-gray-400 peer-checked:bg-cyan-400/10 peer-checked:text-cyan-400 peer-checked:border-cyan-400 transition font-mono"
-                            >
-                                ALL
+                            <input type="radio" name="mobile-filter-type" value="all" checked class="peer sr-only" />
+                            <div class="text-center p-2 rounded-md border border-[#222634] bg-[#0D0F15] text-xs font-mono text-[#94A3B8] peer-checked:bg-[#00E5FF]/10 peer-checked:text-[#00E5FF] peer-checked:border-[#00E5FF] transition-colors" data-i18n="search.type_all">
+                                SEMUA
                             </div>
                         </label>
                         <label class="cursor-pointer">
-                            <input
-                                type="radio"
-                                name="mobile-filter-type"
-                                value="account"
-                                class="peer sr-only"
-                            />
-                            <div
-                                class="text-center p-2 rounded-lg border border-gray-800 bg-gray-900/30 text-xs text-gray-400 peer-checked:bg-cyan-400/10 peer-checked:text-cyan-400 peer-checked:border-cyan-400 transition font-mono"
-                            >
-                                ACCOUNTS
+                            <input type="radio" name="mobile-filter-type" value="account" class="peer sr-only" />
+                            <div class="text-center p-2 rounded-md border border-[#222634] bg-[#0D0F15] text-xs font-mono text-[#94A3B8] peer-checked:bg-[#00E5FF]/10 peer-checked:text-[#00E5FF] peer-checked:border-[#00E5FF] transition-colors" data-i18n="search.type_account">
+                                AKUN
                             </div>
                         </label>
                         <label class="cursor-pointer">
-                            <input
-                                type="radio"
-                                name="mobile-filter-type"
-                                value="item"
-                                class="peer sr-only"
-                            />
-                            <div
-                                class="text-center p-2 rounded-lg border border-gray-800 bg-gray-900/30 text-xs text-gray-400 peer-checked:bg-cyan-400/10 peer-checked:text-cyan-400 peer-checked:border-cyan-400 transition font-mono"
-                            >
-                                ITEMS
+                            <input type="radio" name="mobile-filter-type" value="item" class="peer sr-only" />
+                            <div class="text-center p-2 rounded-md border border-[#222634] bg-[#0D0F15] text-xs font-mono text-[#94A3B8] peer-checked:bg-[#00E5FF]/10 peer-checked:text-[#00E5FF] peer-checked:border-[#00E5FF] transition-colors" data-i18n="search.type_item">
+                                ITEM
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <div class="space-y-3">
-                    <h4
-                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
-                    >
-                        <div class="i-lucide-grid text-cyan-400"></div>
-                        <span data-i18n="search.category">CATEGORY</span>
-                    </h4>
-                    <div class="relative group">
-                        <input
-                            type="text"
-                            id="mobile-cat-search"
-                            placeholder="Search game..."
-                            data-i18n="search.category_placeholder"
-                            class="w-full bg-black border border-gray-800 rounded-xl p-3 pl-10 text-sm text-white focus:border-cyan-500 outline-none transition"
-                        />
-                        <div
-                            class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-cyan-400 transition"
-                        >
-                            <div class="i-lucide-search"></div>
-                        </div>
-                    </div>
-                    <div
-                        id="mobile-cat-list"
-                        class="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto custom-scrollbar pr-1"
-                    >
-                        {
-                            allCategories.map((cat: any) => (
-                                <label class="flex items-center gap-3 p-3 border border-gray-800/50 rounded-xl bg-gray-900/30 hover:bg-gray-800 transition cursor-pointer cat-item-mobile group">
-                                    <div class="relative flex items-center justify-center">
-                                        <input
-                                            type="checkbox"
-                                            value={cat.name}
-                                            class="filter-category-mobile peer appearance-none w-4 h-4 border border-gray-600 rounded bg-black checked:bg-cyan-400 checked:border-cyan-400 transition"
-                                        />
-                                        <div class="i-lucide-check text-black text-[10px] absolute opacity-0 peer-checked:opacity-100 transition" />
-                                    </div>
-                                    <span class="text-xs text-gray-400 group-hover:text-white transition cat-name-mobile line-clamp-1 font-mono">
-                                        {cat.name}
-                                    </span>
-                                </label>
-                            ))
-                        }
+                <div class="space-y-2">
+                    <label class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8]" data-i18n="search.price_range">
+                        Rentang Harga (IDR)
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="number" id="mobile-min" placeholder="Min" data-i18n-placeholder="search.price_min" class="yg-input !h-10 !text-xs !bg-[#0D0F17]" />
+                        <input type="number" id="mobile-max" placeholder="Max" data-i18n-placeholder="search.price_max" class="yg-input !h-10 !text-xs !bg-[#0D0F17]" />
                     </div>
                 </div>
 
-                <div class="space-y-3">
-                    <h4
-                        class="text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2"
-                    >
-                        <div class="i-lucide-coins text-cyan-400"></div>
-                        <span data-i18n="search.price_range">PRICE</span>
-                    </h4>
-                    <div class="flex gap-3">
-                        <div class="relative flex-1 group">
-                            <span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-xs group-focus-within:text-cyan-400 transition"
-                                >Min</span
-                            >
-                            <input
-                                type="number"
-                                id="mobile-min"
-                                class="w-full bg-black border border-gray-800 p-3 pl-10 text-white rounded-xl focus:border-cyan-500 outline-none font-mono text-sm"
-                            />
-                        </div>
-                        <div class="relative flex-1 group">
-                            <span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 text-xs group-focus-within:text-cyan-400 transition"
-                                >Max</span
-                            >
-                            <input
-                                type="number"
-                                id="mobile-max"
-                                class="w-full bg-black border border-gray-800 p-3 pl-10 text-white rounded-xl focus:border-cyan-500 outline-none font-mono text-sm"
-                            />
-                        </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-mono font-bold uppercase tracking-wider text-[#94A3B8]" data-i18n="search.category">
+                        Kategori Game
+                    </label>
+                    <input
+                        type="text"
+                        id="mobile-cat-search"
+                        placeholder="Cari kategori..."
+                        data-i18n-placeholder="search.category_placeholder"
+                        class="yg-input !h-9 !text-xs !bg-[#0D0F17] mb-2"
+                    />
+                    <div id="mobile-cat-list" class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
+                        {allCategories.map((cat: any) => (
+                            <label class="flex items-center gap-2 p-2 border border-[#222634] rounded-md bg-[#0D0F15] cursor-pointer cat-item-mobile">
+                                <input
+                                    type="checkbox"
+                                    value={cat.name}
+                                    class="filter-category-mobile accent-[#00E5FF]"
+                                />
+                                <span class="text-xs text-[#94A3B8] cat-name-mobile truncate font-mono">
+                                    {cat.name}
+                                </span>
+                            </label>
+                        ))}
                     </div>
                 </div>
             </div>
 
-            <div
-                class="absolute bottom-0 left-0 right-0 p-6 bg-[#0a0a0a]/95 backdrop-blur border-t border-gray-800 flex gap-4 z-10 pb-8"
-            >
+            <div class="absolute bottom-0 left-0 right-0 p-4 bg-[#11131A] border-t border-[#222634] flex gap-3 z-10">
                 <button
                     id="reset-filter-mobile"
-                    class="flex-1 py-4 border border-gray-700 text-gray-400 font-bold rounded-xl hover:bg-white/5 hover:text-white hover:border-white transition tracking-widest text-xs"
-                    data-i18n="search.reset">RESET</button
+                    class="yg-btn-secondary flex-1 py-2.5 text-xs"
+                    data-i18n="search.reset"
                 >
+                    RESET
+                </button>
                 <button
                     id="apply-filter-mobile"
-                    class="flex-[2] py-4 bg-cyan-400 text-black font-black rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] hover:scale-[1.02] active:scale-[0.98] transition tracking-widest text-xs flex items-center justify-center gap-2"
+                    class="yg-btn-primary flex-[2] py-2.5 text-xs"
+                    data-i18n="search.apply"
                 >
-                    <span data-i18n="search.apply">APPLY FILTER</span>
-                    <div class="i-lucide-arrow-right"></div>
+                    TERAPKAN
                 </button>
             </div>
         </div>
@@ -635,19 +447,16 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
 </Layout>
 
 <script is:inline define:vars={{ initialProducts: products }}>
-    // --- STATE MANAGEMENT ---
     let products = initialProducts;
     let filteredProducts = [...products];
     const USD_RATE = 16000;
 
-    // DOM Elements
     const grid = document.getElementById("product-grid");
     const emptyState = document.getElementById("empty-state");
     const searchInput = document.getElementById("main-search");
     const countEl = document.getElementById("result-count");
     const sortSelect = document.getElementById("sort-select");
 
-    // Desktop Filter Elements
     const catCheckboxes = document.querySelectorAll(".filter-category");
     const serverCheckboxes = document.querySelectorAll(".filter-server");
     const tierCheckboxes = document.querySelectorAll(".filter-tier");
@@ -656,28 +465,21 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
     const catSearchInput = document.getElementById("cat-search");
     const catListItems = document.querySelectorAll(".cat-item");
     const typeRadios = document.querySelectorAll('input[name="filter-type"]');
-    
-    // Add Event Listeners for new filters
+
     serverCheckboxes.forEach(cb => cb.addEventListener("change", applyFilter));
     tierCheckboxes.forEach(cb => cb.addEventListener("change", applyFilter));
 
-    // Mobile Elements
-    const mobileCatCheckboxes = document.querySelectorAll(
-        ".filter-category-mobile",
-    );
+    const mobileCatCheckboxes = document.querySelectorAll(".filter-category-mobile");
     const mobileMin = document.getElementById("mobile-min");
     const mobileMax = document.getElementById("mobile-max");
     const mobileSort = document.getElementById("mobile-sort-select");
     const mobileCatSearch = document.getElementById("mobile-cat-search");
     const mobileCatItems = document.querySelectorAll(".cat-item-mobile");
-    const mobileTypeRadios = document.querySelectorAll(
-        'input[name="mobile-filter-type"]',
-    );
+    const mobileTypeRadios = document.querySelectorAll('input[name="mobile-filter-type"]');
     const mobileModal = document.getElementById("mobile-filter-modal");
     const mobileContent = document.getElementById("mobile-filter-content");
     const mobileOverlay = document.getElementById("mobile-filter-overlay");
 
-    // --- CURRENCY HELPER ---
     function getCurrency() {
         return localStorage.getItem("yasui_currency") || "IDR";
     }
@@ -697,71 +499,75 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
         }).format(priceIdr);
     }
 
-    // --- RENDER LOGIC ---
     function render() {
+        if (!grid || !emptyState || !countEl) return;
+
         if (filteredProducts.length === 0) {
-            // Force hidden grid and show empty state using Display property to avoid class conflicts
             grid.style.display = "none";
             emptyState.style.display = "flex";
-            emptyState.classList.remove("hidden"); // Ensure CSS hidden class is removed
+            emptyState.classList.remove("hidden");
             countEl.innerText = "0";
             return;
         }
 
-        // Show grid
         grid.style.display = "grid";
-        grid.innerHTML = ""; // Clear first to prevent duplicates
-        emptyState.style.display = "none"; // Force hide empty state
-        countEl.innerText = filteredProducts.length;
+        grid.innerHTML = "";
+        emptyState.style.display = "none";
+        countEl.innerText = String(filteredProducts.length);
 
-        // Render Cards
-        const html = filteredProducts
-            .map(
-                (p) => `
-            <a href="/product/${p.slug}" class="cyber-card bg-gray-900/50 border border-gray-800 hover:border-cyan-400 transition-all duration-300 group block relative shadow-lg">
-                <div class="aspect-video bg-black relative overflow-hidden border-b border-gray-800">
-                    ${
-                        p.image
-                            ? `<img src="${p.image}" alt="${p.name}" loading="lazy" class="w-full h-full object-contain transition duration-500 filter brightness-90 group-hover:brightness-100" />`
-                            : `<div class="flex items-center justify-center h-full text-gray-700 text-xs">NO IMAGE</div>`
-                    }
-                    <div class="absolute top-0 left-0 bg-black/80 backdrop-blur px-2 py-1 border-r border-b border-gray-800">
-                        <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider">${p.categories[0] || "GAME"}</span>
+        const html = filteredProducts.map((p) => {
+            const isAccount = p.type === "account" || (p.name || "").toLowerCase().includes("akun");
+            const badgeClass = isAccount ? "yg-badge-instant" : "yg-badge-online";
+            const badgeKey = isAccount ? "home.instant_badge" : "home.online_badge";
+            const badgeLabel = isAccount ? "INSTANT" : "ONLINE";
+            const catLabel = p.categories[0] || "GAME";
+
+            return `
+                <a href="/product/${p.slug}" class="yg-product-card group flex flex-col justify-between">
+                    <div>
+                        <div class="aspect-video bg-[#090A0F] relative overflow-hidden border-b border-[#222634] flex items-center justify-center">
+                            ${p.image
+                                ? `<img src="${p.image}" alt="${p.name}" loading="lazy" class="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105" />`
+                                : `<div class="flex items-center justify-center h-full text-[#64748B] text-xs font-mono">NO VISUAL</div>`
+                            }
+                            <div class="absolute top-2 left-2">
+                                <span class="${badgeClass} text-[10px]" data-i18n="${badgeKey}">${badgeLabel}</span>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <span class="text-[10px] font-mono text-[#94A3B8] block truncate mb-1">${catLabel}</span>
+                            <h4 class="line-clamp-2 text-xs md:text-sm font-medium text-[#F8FAFC] leading-snug group-hover:text-[#00E5FF] transition-colors mb-2">
+                                ${p.name}
+                            </h4>
+                        </div>
                     </div>
-                </div>
-                <div class="p-4">
-                    <h4 class="text-xs md:text-sm font-bold text-gray-200 leading-snug mb-3 line-clamp-2 h-[2.5em] group-hover:text-cyan-400 transition">
-                        ${p.name}
-                    </h4>
-                    <div class="flex items-center justify-between border-t border-gray-800 pt-3">
-                        <span class="price-tag text-cyan-400 font-mono text-sm md:text-base font-bold" data-price-idr="${p.priceRaw}">
-                            ${formatPrice(p.priceRaw)}
-                        </span>
+                    <div class="p-3 pt-0 border-t border-[#222634]/60 mt-auto">
+                        <div class="flex items-center justify-between pt-2">
+                            <span class="yg-price text-xs sm:text-sm md:text-base text-[#00E5FF]" data-price-idr="${p.priceRaw}">
+                                ${formatPrice(p.priceRaw)}
+                            </span>
+                            <span class="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                <span data-i18n="badge.ready">Ready</span>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </a>
-        `,
-            )
-            .join("");
+                </a>
+            `;
+        }).join("");
 
         grid.innerHTML = html;
+        if (typeof window.applyTranslations === "function") window.applyTranslations();
     }
 
-    // --- FILTER LOGIC ---
     function applyFilter() {
-        const keyword = searchInput.value.toLowerCase();
+        const keyword = (searchInput?.value || "").toLowerCase();
 
-        // Get Categories (Checked checkboxes)
         const checkedCats = new Set([
-            ...Array.from(catCheckboxes)
-                .filter((c) => c.checked)
-                .map((c) => c.value),
-            ...Array.from(mobileCatCheckboxes)
-                .filter((c) => c.checked)
-                .map((c) => c.value),
+            ...Array.from(catCheckboxes).filter((c) => c.checked).map((c) => c.value),
+            ...Array.from(mobileCatCheckboxes).filter((c) => c.checked).map((c) => c.value),
         ]);
 
-        // Smart Filters (Server & Tier)
         const checkedServers = new Set(
             Array.from(serverCheckboxes).filter(c => c.checked).map(c => c.value)
         );
@@ -769,46 +575,28 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
             Array.from(tierCheckboxes).filter(c => c.checked).map(c => c.value)
         );
 
-        // Get Type
         let selectedType = "all";
-        const deskType = document.querySelector(
-            'input[name="filter-type"]:checked',
-        );
-        const mobType = document.querySelector(
-            'input[name="mobile-filter-type"]:checked',
-        );
+        const deskType = document.querySelector('input[name="filter-type"]:checked');
+        const mobType = document.querySelector('input[name="mobile-filter-type"]:checked');
 
-        // Use whichever is not default if possible
         if (deskType && deskType.value !== "all") selectedType = deskType.value;
         if (mobType && mobType.value !== "all") selectedType = mobType.value;
 
-        // Get Price
-        const min = parseInt(minInput.value) || parseInt(mobileMin.value) || 0;
-        const max =
-            parseInt(maxInput.value) || parseInt(mobileMax.value) || Infinity;
+        const min = parseInt(minInput?.value) || parseInt(mobileMin?.value) || 0;
+        const max = parseInt(maxInput?.value) || parseInt(mobileMax?.value) || Infinity;
 
         filteredProducts = products.filter((p) => {
-            if (keyword && !p.name.toLowerCase().includes(keyword))
-                return false;
+            if (keyword && !p.name.toLowerCase().includes(keyword)) return false;
 
-            // Type Filter
             if (selectedType !== "all") {
-                if (selectedType === "account" && p.type !== "account")
-                    return false;
+                if (selectedType === "account" && p.type !== "account") return false;
                 if (selectedType === "item" && p.type !== "item") return false;
             }
 
-            if (
-                checkedCats.size > 0 &&
-                !p.categories.some((c) => checkedCats.has(c))
-            )
-                return false;
+            if (checkedCats.size > 0 && !p.categories.some((c) => checkedCats.has(c))) return false;
 
-            // Attribute Filtering (AND between types, OR within type)
             if (checkedServers.size > 0) {
-                // If product has no server info, but user selected server filter -> hide
                 if (!p.attrs.server) return false;
-                // Check if product matches ANY selected server
                 if (!p.attrs.server.some(s => checkedServers.has(s))) return false;
             }
 
@@ -821,9 +609,7 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
             return true;
         });
 
-        // Sync Sort Selects
-        const sortVal = sortSelect.value || mobileSort.value;
-
+        const sortVal = sortSelect?.value || mobileSort?.value || "newest";
         if (sortVal === "cheapest") {
             filteredProducts.sort((a, b) => a.priceRaw - b.priceRaw);
         } else if (sortVal === "expensive") {
@@ -833,146 +619,92 @@ const initialQuery = Astro.url.searchParams.get("q") || "";
         render();
     }
 
-    // --- CATEGORY SEARCH LOGIC ---
     function filterCategories(inputEl, items) {
+        if (!inputEl) return;
         const query = inputEl.value.toLowerCase();
         items.forEach((item) => {
-            const name = item
-                .querySelector(
-                    inputEl.id === "cat-search"
-                        ? ".cat-name"
-                        : ".cat-name-mobile",
-                )
-                .innerText.toLowerCase();
-            if (name.includes(query)) {
-                item.style.display = "flex";
-            } else {
-                item.style.display = "none";
-            }
+            const nameEl = item.querySelector(inputEl.id === "cat-search" ? ".cat-name" : ".cat-name-mobile");
+            const name = (nameEl?.innerText || "").toLowerCase();
+            item.style.display = name.includes(query) ? "flex" : "none";
         });
     }
 
-    // --- RESET LOGIC ---
     function resetAll() {
-        searchInput.value = "";
-        minInput.value = "";
-        maxInput.value = "";
+        if (searchInput) searchInput.value = "";
+        if (minInput) minInput.value = "";
+        if (maxInput) maxInput.value = "";
         catCheckboxes.forEach((c) => (c.checked = false));
-        typeRadios.forEach((r) =>
-            r.value === "all" ? (r.checked = true) : (r.checked = false),
-        );
+        serverCheckboxes.forEach((c) => (c.checked = false));
+        tierCheckboxes.forEach((c) => (c.checked = false));
+        typeRadios.forEach((r) => { r.checked = r.value === "all"; });
 
-        // Reset Mobile Inputs too
-        mobileMin.value = "";
-        mobileMax.value = "";
+        if (mobileMin) mobileMin.value = "";
+        if (mobileMax) mobileMax.value = "";
         mobileCatCheckboxes.forEach((c) => (c.checked = false));
-        mobileTypeRadios.forEach((r) =>
-            r.value === "all" ? (r.checked = true) : (r.checked = false),
-        );
+        mobileTypeRadios.forEach((r) => { r.checked = r.value === "all"; });
 
-        // Reset Category Search
-        catSearchInput.value = "";
-        mobileCatSearch.value = "";
+        if (catSearchInput) catSearchInput.value = "";
+        if (mobileCatSearch) mobileCatSearch.value = "";
         filterCategories(catSearchInput, catListItems);
         filterCategories(mobileCatSearch, mobileCatItems);
 
         applyFilter();
     }
 
-    // --- LISTENERS ---
-    searchInput.addEventListener("input", applyFilter);
-    sortSelect.addEventListener("change", (e) => {
-        mobileSort.value = e.target.value; // sync
+    searchInput?.addEventListener("input", applyFilter);
+    sortSelect?.addEventListener("change", (e) => {
+        if (mobileSort) mobileSort.value = e.target.value;
         applyFilter();
     });
 
-    // Desktop Listeners
     catCheckboxes.forEach((c) => c.addEventListener("change", applyFilter));
     typeRadios.forEach((r) => r.addEventListener("change", applyFilter));
-    minInput.addEventListener("input", applyFilter);
-    maxInput.addEventListener("input", applyFilter);
-    document
-        .getElementById("reset-all-desktop")
-        .addEventListener("click", resetAll);
+    minInput?.addEventListener("input", applyFilter);
+    maxInput?.addEventListener("input", applyFilter);
+    document.getElementById("reset-all-desktop")?.addEventListener("click", resetAll);
 
-    // Category Search Listener
-    catSearchInput.addEventListener("input", () =>
-        filterCategories(catSearchInput, catListItems),
-    );
+    catSearchInput?.addEventListener("input", () => filterCategories(catSearchInput, catListItems));
 
-    // Mobile Listeners
-    mobileSort.addEventListener("change", (e) => {
-        sortSelect.value = e.target.value; // sync
+    mobileSort?.addEventListener("change", (e) => {
+        if (sortSelect) sortSelect.value = e.target.value;
         applyFilter();
     });
-    mobileCatSearch.addEventListener("input", () =>
-        filterCategories(mobileCatSearch, mobileCatItems),
-    );
+    mobileCatSearch?.addEventListener("input", () => filterCategories(mobileCatSearch, mobileCatItems));
     mobileTypeRadios.forEach((r) => r.addEventListener("change", applyFilter));
 
-    // Mobile Modal Logic
-    document
-        .getElementById("mobile-filter-btn")
-        .addEventListener("click", () => {
-            mobileModal.classList.remove("hidden");
-            // Animate In
-            setTimeout(() => {
-                mobileContent.classList.remove("translate-y-full");
-                mobileOverlay.classList.remove("opacity-0");
-            }, 10);
-        });
+    const mobileBtn = document.getElementById("mobile-filter-btn");
+    mobileBtn?.addEventListener("click", () => {
+        if (!mobileModal || !mobileContent || !mobileOverlay) return;
+        mobileModal.classList.remove("hidden");
+        setTimeout(() => {
+            mobileContent.classList.remove("translate-y-full");
+            mobileOverlay.classList.remove("opacity-0");
+        }, 10);
+    });
 
     const closeMobile = () => {
+        if (!mobileModal || !mobileContent || !mobileOverlay) return;
         mobileContent.classList.add("translate-y-full");
         mobileOverlay.classList.add("opacity-0");
         setTimeout(() => mobileModal.classList.add("hidden"), 300);
     };
 
-    document
-        .getElementById("close-filter-mobile")
-        .addEventListener("click", closeMobile);
-    mobileOverlay.addEventListener("click", closeMobile);
-
-    document
-        .getElementById("apply-filter-mobile")
-        .addEventListener("click", () => {
-            applyFilter();
-            closeMobile();
-        });
-
-    document
-        .getElementById("reset-filter-mobile")
-        .addEventListener("click", resetAll);
+    document.getElementById("close-filter-mobile")?.addEventListener("click", closeMobile);
+    mobileOverlay?.addEventListener("click", closeMobile);
+    document.getElementById("apply-filter-mobile")?.addEventListener("click", () => {
+        applyFilter();
+        closeMobile();
+    });
+    document.getElementById("reset-filter-mobile")?.addEventListener("click", resetAll);
 
     document.addEventListener("yasui-currency-change", render);
-
-    // Initial Trigger
+    document.addEventListener("yasui-lang-change", render);
     applyFilter();
 </script>
 
 <style>
-    /* Custom Scrollbar for sidebar */
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: #111;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #333;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #22d3ee;
-    }
-
-    /* Cyberpunk Search Input Clip Path */
-    .clip-path-search {
-        clip-path: polygon(
-            0 0,
-            100% 0,
-            100% calc(100% - 10px),
-            calc(100% - 10px) 100%,
-            0 100%
-        );
-    }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #0D0F15; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #222634; border-radius: 2px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #00E5FF; }
 </style>
