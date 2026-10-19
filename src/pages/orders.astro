@@ -31,9 +31,9 @@ import Layout from "../layouts/Layout.astro";
                         <div class="text-[10px] text-[#64748B] font-mono" id="user-orders-count">0 Pesanan</div>
                     </div>
                     <button
-                        onclick="logoutUser()"
+                        onclick="window.yasuiLogout ? window.yasuiLogout() : (window.logoutUser && window.logoutUser())"
                         title="Ganti Email / Keluar"
-                        class="p-2 text-[#94A3B8] hover:text-red-400 hover:bg-[#0D0F15] rounded-lg transition"
+                        class="p-2 text-[#94A3B8] hover:text-red-400 hover:bg-[#0D0F15] rounded-lg transition cursor-pointer"
                     >
                         <div class="i-lucide-log-out text-sm"></div>
                     </button>
@@ -310,7 +310,14 @@ import Layout from "../layouts/Layout.astro";
 
                 if (!res.ok || !data.success) {
                     if (res.status === 401) {
-                        localStorage.removeItem("yasui_session");
+                        if (typeof window.yasuiLogout === "function") {
+                            window.yasuiLogout();
+                        } else {
+                            localStorage.removeItem("yasui_session");
+                            localStorage.removeItem("yasui_buyer_email");
+                            if (typeof window.updateNavbarAuthUI === "function") window.updateNavbarAuthUI();
+                            window.dispatchEvent(new CustomEvent('yasui:auth-changed', { detail: { user: null } }));
+                        }
                         throw new Error(data.error || "Sesi telah berakhir. Silakan masuk kembali dengan kata sandi.");
                     }
                     throw new Error(data.error || "Gagal memuat pesanan");
@@ -595,7 +602,10 @@ import Layout from "../layouts/Layout.astro";
                 }));
                 localStorage.setItem("yasui_buyer_email", email);
 
-                if (typeof window.updateNavAuthUI === "function") window.updateNavAuthUI();
+                if (typeof window.updateNavbarAuthUI === "function") window.updateNavbarAuthUI();
+                else if (typeof window.updateNavAuthUI === "function") window.updateNavAuthUI();
+                window.dispatchEvent(new CustomEvent('yasui:auth-changed', { detail: { user: data.user } }));
+                document.dispatchEvent(new CustomEvent('yasui:auth-changed', { detail: { user: data.user } }));
                 document.dispatchEvent(new Event("yasui-auth-changed"));
 
                 fetchUserOrders(email, data.session?.token);
@@ -609,18 +619,27 @@ import Layout from "../layouts/Layout.astro";
         };
 
         window.logoutUser = () => {
-            if (confirm("Ingin keluar dari akun ini?")) {
+            if (typeof window.yasuiLogout === "function") {
+                window.yasuiLogout();
+            } else {
                 localStorage.removeItem("yasui_buyer_email");
                 localStorage.removeItem("yasui_session");
-                if (typeof window.updateNavAuthUI === "function") window.updateNavAuthUI();
+                if (typeof window.updateNavbarAuthUI === "function") window.updateNavbarAuthUI();
+                window.dispatchEvent(new CustomEvent('yasui:auth-changed', { detail: { user: null } }));
                 document.dispatchEvent(new Event("yasui-auth-changed"));
-                allOrdersData = [];
-                document.getElementById("dashboard-content").classList.add("hidden");
-                document.getElementById("user-profile-badge").classList.add("hidden");
-                document.getElementById("user-profile-badge").classList.remove("flex");
-                document.getElementById("auth-box").classList.remove("hidden");
             }
+            allOrdersData = [];
+            const dash = document.getElementById("dashboard-content");
+            if (dash) dash.classList.add("hidden");
+            const badge = document.getElementById("user-profile-badge");
+            if (badge) {
+                badge.classList.add("hidden");
+                badge.classList.remove("flex");
+            }
+            const authBox = document.getElementById("auth-box");
+            if (authBox) authBox.classList.remove("hidden");
         };
+        window.yasuiLogout = window.logoutUser;
 
         function checkAndLoadAuth() {
             let session = null;
@@ -628,7 +647,8 @@ import Layout from "../layouts/Layout.astro";
                 if (typeof window.getSession === "function") {
                     session = window.getSession();
                 } else {
-                    session = JSON.parse(localStorage.getItem("yasui_session") || "null");
+                    const raw = localStorage.getItem("yasui_session");
+                    if (raw) session = JSON.parse(raw);
                 }
             } catch(e) {}
 
@@ -636,6 +656,13 @@ import Layout from "../layouts/Layout.astro";
             if (session && session.email && session.token && (!session.expiresAt || session.expiresAt > Date.now())) {
                 fetchUserOrders(session.email, session.token);
             } else {
+                // Selaraskan Navbar agar tidak tertinggal dalam status login palsu
+                if (typeof window.updateNavbarAuthUI === "function") {
+                    window.updateNavbarAuthUI();
+                } else if (typeof window.updateNavAuthUI === "function") {
+                    window.updateNavAuthUI();
+                }
+
                 const savedEmail = localStorage.getItem("yasui_buyer_email") || (session?.email || "");
                 const emailInput = document.getElementById("orders-login-email");
                 if (emailInput && savedEmail && !emailInput.value) {
@@ -651,6 +678,8 @@ import Layout from "../layouts/Layout.astro";
 
         // AUTO-DETECT SAAT HALAMAN DIBUKA & SAAT STATUS LOGIN BERUBAH
         document.addEventListener("DOMContentLoaded", checkAndLoadAuth);
+        window.addEventListener("yasui:auth-changed", checkAndLoadAuth);
+        document.addEventListener("yasui:auth-changed", checkAndLoadAuth);
         document.addEventListener("yasui-auth-changed", checkAndLoadAuth);
         window.addEventListener("yasui-currency-change", () => {
             if (allOrdersData && allOrdersData.length > 0) renderOrders();

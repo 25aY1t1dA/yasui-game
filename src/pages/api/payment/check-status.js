@@ -70,8 +70,42 @@ export const ALL = async ({ request, url }) => {
             }), { status: 200 });
         }
 
-        // 5. Ambil Merchant Order ID Duitku dari Meta Data
+        // 5. Cek Metode Pembayaran (Crypto On-Chain vs Duitku)
         const metaList = order.meta_data || [];
+        const findMeta = (k) => metaList.find(m => m.key === k)?.value;
+
+        const isCrypto = Boolean(findMeta("_crypto_payment_channel") || order.payment_method === "crypto");
+        if (isCrypto) {
+            const cryptoStatus = findMeta("_crypto_status") || "PENDING_VERIFICATION";
+            const expiryTime = Number(findMeta("_crypto_expiry_time"));
+            const isExpired = expiryTime && Date.now() > expiryTime;
+
+            if (isExpired && (order.status === "pending" || order.status === "on-hold")) {
+                try {
+                    await updateOrder(order.id, { status: "cancelled" });
+                } catch (e) {}
+                return new Response(JSON.stringify({
+                    success: true,
+                    status: "expired",
+                    orderId: order.id,
+                    isCrypto: true
+                }), { status: 200 });
+            }
+
+            return new Response(JSON.stringify({
+                success: true,
+                status: "pending",
+                orderId: order.id,
+                orderStatus: order.status,
+                isCrypto: true,
+                cryptoStatus,
+                expectedAmount: findMeta("_crypto_expected_amount"),
+                tokenSymbol: findMeta("_crypto_token_symbol") || "USDT",
+                network: findMeta("_crypto_network")
+            }), { status: 200 });
+        }
+
+        // 6. Ambil Merchant Order ID Duitku dari Meta Data
         const merchantOrderMeta = metaList.find(m => m.key === "_duitku_merchant_order_id");
         const merchantOrderId = merchantOrderMeta ? merchantOrderMeta.value : null;
 

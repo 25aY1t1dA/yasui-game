@@ -40,3 +40,6 @@ public/assets/
 *.jpg
 *.jpeg
 *.webp
+
+# Internal Architecture Blueprint (Jangan diekspos ke GitHub publik)
+README.md

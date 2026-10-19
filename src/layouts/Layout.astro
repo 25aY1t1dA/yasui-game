@@ -320,7 +320,7 @@ const publicSupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 								<div class="border-t border-[#222634] my-1"></div>
 
 								<button
-									onclick="window.logoutUser && window.logoutUser()"
+									onclick="window.yasuiLogout ? window.yasuiLogout() : (window.logoutUser && window.logoutUser())"
 									class="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-400 hover:bg-red-950/30 rounded-md transition-colors text-left cursor-pointer"
 									data-i18n="nav.logout"
 								>
@@ -946,6 +946,80 @@ const publicSupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 				var modal = document.getElementById("global-auth-modal");
 				if (modal) { modal.classList.remove("flex"); modal.classList.add("hidden"); modal.setAttribute("aria-hidden", "true"); }
 			};
+			window.updateNavbarAuthUI = window.updateNavbarAuthUI || function () {
+				var session = null;
+				try {
+					var raw = localStorage.getItem("yasui_session");
+					if (raw) {
+						var s = JSON.parse(raw);
+						if (s && s.email && s.token && (!s.expiresAt || Date.now() <= s.expiresAt)) {
+							session = s;
+						}
+					}
+				} catch (e) {}
+				var loginBtn = document.getElementById("nav-login-btn");
+				var userDropdown = document.getElementById("nav-user-dropdown");
+				var userName = document.getElementById("nav-user-name");
+				var userInitial = document.getElementById("nav-user-initial");
+				var menuEmail = document.getElementById("nav-menu-email");
+				var mobileLabel = document.getElementById("mobile-nav-label");
+				var lang = localStorage.getItem("yasui_lang") || "id";
+
+				if (session && session.email && session.token) {
+					var currentEmail = session.email;
+					var displayName = session.name || currentEmail.split("@")[0];
+					if (loginBtn) {
+						loginBtn.style.setProperty("display", "none", "important");
+						loginBtn.classList.add("hidden");
+						loginBtn.classList.remove("flex");
+					}
+					if (userDropdown) {
+						userDropdown.style.setProperty("display", "block", "important");
+						userDropdown.classList.remove("hidden");
+						userDropdown.classList.add("block");
+					}
+					if (userName) userName.innerText = displayName;
+					if (userInitial) userInitial.innerText = displayName.charAt(0).toUpperCase();
+					if (menuEmail) menuEmail.innerText = currentEmail;
+					if (mobileLabel) mobileLabel.innerText = lang === "en" ? "ACCOUNT" : "AKUN";
+				} else {
+					if (loginBtn) {
+						loginBtn.style.setProperty("display", "flex", "important");
+						loginBtn.classList.remove("hidden");
+						loginBtn.classList.add("flex");
+					}
+					if (userDropdown) {
+						userDropdown.style.setProperty("display", "none", "important");
+						userDropdown.classList.add("hidden");
+						userDropdown.classList.remove("block");
+					}
+					var userMenu = document.getElementById("nav-user-menu");
+					if (userMenu) userMenu.classList.add("hidden");
+					if (mobileLabel) mobileLabel.innerText = lang === "en" ? "LOGIN" : "MASUK";
+				}
+			};
+			window.updateNavAuthUI = window.updateNavbarAuthUI;
+
+			window.yasuiLogout = window.yasuiLogout || function () {
+				try {
+					localStorage.removeItem("yasui_session");
+					localStorage.removeItem("yasui_buyer_email");
+					localStorage.removeItem("yasui_buyer_name");
+					localStorage.removeItem("yasui_token");
+					localStorage.removeItem("yasui_user");
+					localStorage.removeItem("yasui_auth");
+					sessionStorage.removeItem("yasui_session");
+					sessionStorage.removeItem("yasui_token");
+					sessionStorage.removeItem("yasui_auth");
+					document.cookie = "yasui_session_token=; path=/; max-age=0; SameSite=Lax";
+				} catch (e) {}
+				if (typeof window.updateNavbarAuthUI === "function") window.updateNavbarAuthUI();
+				window.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: null } }));
+				window.dispatchEvent(new CustomEvent("yasui-auth-changed", { detail: { user: null } }));
+				document.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: null } }));
+				document.dispatchEvent(new Event("yasui-auth-changed"));
+			};
+			window.logoutUser = window.yasuiLogout;
 		</script>
 		<script src="../scripts/app.ts"></script>
 	</body>

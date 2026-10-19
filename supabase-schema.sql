@@ -111,3 +111,54 @@ BEGIN
         ALTER PUBLICATION supabase_realtime ADD TABLE public.chat_sessions;
     END IF;
 END $$;
+
+-- ==============================================================================
+-- 5. TABEL PEMBAYARAN CRYPTO ON-CHAIN & ANTI-DOUBLE-SPEND (crypto_payments)
+-- ==============================================================================
+-- Tabel ini mencatat setiap transaksi blockchain yang berhasil diverifikasi.
+-- Kolom tx_hash memiliki constraint UNIQUE mutlak untuk mencegah replay attack / double spend.
+CREATE TABLE IF NOT EXISTS public.crypto_payments (
+    id TEXT PRIMARY KEY,
+    order_id BIGINT NOT NULL,
+    tx_hash TEXT NOT NULL UNIQUE,
+    network TEXT NOT NULL,
+    token_symbol TEXT NOT NULL,
+    amount NUMERIC(24, 8) NOT NULL,
+    sender_address TEXT,
+    recipient_address TEXT NOT NULL,
+    block_number BIGINT,
+    status TEXT NOT NULL DEFAULT 'CONFIRMED' CHECK (status IN ('CONFIRMED', 'FAILED')),
+    verified_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+-- Indeks unik untuk TxHash menjamin 1 TxHash tidak pernah bisa dipakai untuk 2 pesanan berbeda
+CREATE UNIQUE INDEX IF NOT EXISTS idx_crypto_payments_tx_hash ON public.crypto_payments(tx_hash);
+CREATE INDEX IF NOT EXISTS idx_crypto_payments_order_id ON public.crypto_payments(order_id);
+CREATE INDEX IF NOT EXISTS idx_crypto_payments_created_at ON public.crypto_payments(created_at DESC);
+
+-- Row Level Security untuk crypto_payments
+ALTER TABLE public.crypto_payments ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'crypto_payments' AND policyname = 'Allow service_role full crypto_payments'
+    ) THEN
+        CREATE POLICY "Allow service_role full crypto_payments"
+        ON public.crypto_payments FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'crypto_payments' AND policyname = 'Allow public select crypto_payments'
+    ) THEN
+        CREATE POLICY "Allow public select crypto_payments"
+        ON public.crypto_payments FOR SELECT
+        TO anon, authenticated
+        USING (true);
+    END IF;
+END $$;
+

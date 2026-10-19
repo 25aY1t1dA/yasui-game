@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import { parsePrice } from "../../lib/price";
 import { getProductBySlug, getProducts, normalizeProduct } from "../../lib/wc";
 import { sanitizeHtml } from "../../lib/sanitize";
+import TopupGamepassConsole from "../../components/TopupGamepassConsole.astro";
 
 const IS_PROD = import.meta.env.PROD;
 
@@ -61,6 +62,10 @@ const hasDiscount = pRegular > pPrice;
 const discountPercent = hasDiscount
     ? Math.round(((pRegular - pPrice) / pRegular) * 100)
     : 0;
+
+const stockQuantity = product.stockQuantity ?? (product.stock_quantity !== null && product.stock_quantity !== undefined ? Number(product.stock_quantity) : null);
+const stockMax = stockQuantity && stockQuantity > 0 ? Math.min(stockQuantity, 99) : 99;
+const isOutOfStock = product.stockStatus === "OUT_OF_STOCK" || (stockQuantity !== null && stockQuantity <= 0);
 
 const attributes = product.attributes?.nodes || [];
 
@@ -124,15 +129,77 @@ const allCategorySlugs = [
     ...(product.productCategories?.nodes || []).map((c: any) => c.slug || "")
 ].map((s: string) => s.toLowerCase());
 
+const allCategoryNames = [
+    ...(product.categories || []).map((c: any) => c.name || ""),
+    ...(product.productCategories?.nodes || []).map((c: any) => c.name || "")
+].map((s: string) => s.toLowerCase());
+
+const allCategoryTokens = [...allCategorySlugs, ...allCategoryNames];
 const prodNameLower = (product.name || "").toLowerCase();
 
-const isSummonersWar = allCategorySlugs.some((s: string) => s.includes("summoners-war")) || prodNameLower.includes("summoners war");
-const isRoblox = allCategorySlugs.some((s: string) => s.includes("roblox") || s.includes("robux")) || prodNameLower.includes("roblox") || prodNameLower.includes("robux");
-const isAccount = isSummonersWar || allCategorySlugs.some((s: string) => s.includes("akun")) || prodNameLower.includes("akun");
-const isItemOrTopup = allCategorySlugs.some((s: string) => s.includes("item") || s.includes("top-up") || s.includes("topup") || s.includes("robux") || s.includes("currency") || s.includes("diamond")) || prodNameLower.includes("top up") || prodNameLower.includes("top-up") || prodNameLower.includes("item");
+const subModeParam = Astro.url.searchParams.get("sub_mode")?.toLowerCase() || "";
 
-// Show Roblox / Player ID field ONLY if it is Roblox or Item/Top-up, and NOT an Account product (like Summoners War)
-const showPlayerIdField = (isRoblox || isItemOrTopup) && !isAccount;
+const isSummonersWar = allCategoryTokens.some((t) => t.includes("summoners-war") || t.includes("sky arena")) || prodNameLower.includes("summoners war");
+
+let isRobloxEcosystem = allCategoryTokens.some((t) =>
+    t.includes("roblox") || t.includes("robux") || t.includes("blox-fruits") || t.includes("fish-it") ||
+    t.includes("grow-a-garden") || t.includes("adopt-me") || t.includes("steal-a-brainrot") ||
+    t.includes("fisch") || t.includes("anime-defenders") || t.includes("99-nights")
+) || prodNameLower.includes("roblox") || prodNameLower.includes("blox fruits") || prodNameLower.includes("robux");
+
+if (subModeParam === "gamepass") {
+    isRobloxEcosystem = true;
+}
+
+const isGiftCategory = allCategoryTokens.some((t) =>
+    t.includes("gift charisma") || t.includes("gift-charisma") ||
+    t.includes("gift item") || t.includes("gift-item") ||
+    t.includes("gift skin") || t.includes("gift-skin") ||
+    t.includes("7 hari") || t.includes("7 days") || t.includes("7-hari")
+) || prodNameLower.includes("gift charisma") || prodNameLower.includes("gift skin") || prodNameLower.includes("gift item");
+
+const isGamepassCategory = allCategoryTokens.some((t) => t.includes("gamepass")) || prodNameLower.includes("gamepass");
+
+const isRobloxItem = isRobloxEcosystem && (
+    allCategoryTokens.some((t) =>
+        t.includes("fruit") || t.includes("pet") ||
+        t.includes("unit") || t.includes("fish") || t.includes("coins") ||
+        t.includes("money") || t.includes("lock") || (t.includes("item") && !t.includes("gift"))
+    ) || prodNameLower.includes("fruit") || prodNameLower.includes("pet") ||
+    prodNameLower.includes("kitsune") || prodNameLower.includes("dragon") || prodNameLower.includes("leopard") ||
+    prodNameLower.includes("buddha") || prodNameLower.includes("dough") || prodNameLower.includes("t-rex") ||
+    prodNameLower.includes("mammoth")
+) && !isGamepassCategory && !allCategoryTokens.some((t) => t.includes("akun") || t.includes("account"));
+
+const isTopupCategory = allCategoryTokens.some((t) =>
+    t.includes("top up") || t.includes("top-up") || t.includes("topup") ||
+    t.includes("diamond") || t.includes("voucher") || t.includes("game card") ||
+    t.includes("razer") || t.includes("garena") || t.includes("steam") ||
+    t.includes("robux via login") || t.includes("robux-via-login") ||
+    t.includes("robux via username") || t.includes("robux-via-username") ||
+    t.includes("robux 5 hari") || t.includes("robux-5-hari") ||
+    t.includes("gamepass")
+) || prodNameLower.includes("top up") || prodNameLower.includes("topup") || prodNameLower.includes("diamond") || isGamepassCategory;
+
+let mode: "account" | "roblox_item" | "game_gift" | "topup_gamepass" = "account";
+if (subModeParam) {
+    if (subModeParam === "roblox_item" || subModeParam === "fruit" || subModeParam === "item") mode = "roblox_item";
+    else if (subModeParam === "game_gift" || subModeParam === "gift") mode = "game_gift";
+    else if (subModeParam === "topup" || subModeParam === "gamepass") mode = "topup_gamepass";
+    else if (subModeParam === "account" || subModeParam === "akun") mode = "account";
+} else {
+    if (isGamepassCategory) mode = "topup_gamepass";
+    else if (isGiftCategory) mode = "game_gift";
+    else if (isRobloxItem) mode = "roblox_item";
+    else if (isTopupCategory && !allCategoryTokens.some((t) => t.includes("akun"))) mode = "topup_gamepass";
+    else mode = "account";
+}
+
+const is7DaysGift = mode === "game_gift" && (
+    allCategoryTokens.some((t) => t.includes("7 hari") || t.includes("7 days") || t.includes("7-hari") || t.includes("gift item") || t.includes("gift skin")) ||
+    prodNameLower.includes("7 hari") || prodNameLower.includes("7 days") || prodNameLower.includes("skin") ||
+    Astro.url.searchParams.get("gift_type") === "7days"
+);
 
 const schema = {
     "@context": "https://schema.org/",
@@ -145,7 +212,7 @@ const schema = {
         "@type": "Offer",
         priceCurrency: "IDR",
         price: product.rawPrice || 0,
-        availability: "https://schema.org/InStock",
+        availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
         url: Astro.url.href,
     },
 };
@@ -191,7 +258,7 @@ const schema = {
         </div>
     </div>
 
-    <main class="yg-shell pt-4 md:pt-6 pb-36 lg:pb-28" data-product-title={product.name} data-product-slug={product.slug}>
+    <main class="yg-shell pt-4 md:pt-6 pb-36 lg:pb-28" data-product-title={product.name} data-product-slug={product.slug} data-product-mode={mode}>
         <nav
             class="flex py-3 text-[#64748B] text-[10px] font-mono uppercase tracking-wider overflow-x-auto"
             aria-label="Breadcrumb"
@@ -209,10 +276,19 @@ const schema = {
             </ol>
         </nav>
 
-        {/* 2-Column Responsive Layout */}
+        {mode === "topup_gamepass" ? (
+            <TopupGamepassConsole
+                product={product}
+                relatedProducts={relatedProducts}
+                categoryName={categoryName}
+                categorySlug={categorySlug}
+                isRoblox={isRobloxEcosystem}
+            />
+        ) : (
+        /* 2-Column Responsive Layout */
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start mt-2">
             
-            {/* Kolom Kiri: Galeri + Tab Spesifikasi & Deskripsi */}
+            {/* Kolom Kiri: Galeri + Panduan/Spesifikasi + Deskripsi */}
             <div class="lg:col-span-7 w-full space-y-6">
                 <div class="space-y-3">
                     <div
@@ -304,73 +380,209 @@ const schema = {
                     )}
                 </div>
 
-                {/* Spesifikasi & Deskripsi Section */}
-                <div class="space-y-4 pt-2">
-                    {attributes.length > 0 && (
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5">
-                                    <span class="i-lucide-settings-2 text-xs"></span>
-                                    <span data-i18n="product.specs_title">Spesifikasi Akun / Item</span>
-                                </h2>
-                                <span class="text-[10px] font-mono text-[#64748B]" data-i18n="product.specs_verified">Terverifikasi</span>
-                            </div>
-                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                {attributes.map((attr: any) => {
-                                    const style = getAttributeStyle(attr);
-                                    return (
-                                        <div class={`p-3 rounded-md flex flex-col justify-between gap-1.5 border border-[#222634] bg-[#0D0F15]`}>
-                                            <div class="flex items-center gap-1.5 text-[#94A3B8]">
-                                                <span class={`${style.icon} text-xs text-[#00E5FF]`} />
-                                                <span class="text-[9px] font-mono font-bold uppercase tracking-wider">
-                                                    {style.label}
-                                                </span>
-                                            </div>
-                                            <div class={`text-xs md:text-sm font-mono font-bold ${style.valueClass} truncate`}>
-                                                {attr.options?.[0] || "-"}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )}
-
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h2
-                                class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5"
-                                data-i18n="product.description"
-                            >
-                                <span class="i-lucide-file-text text-xs"></span>
-                                <span>Deskripsi Produk</span>
+                {/* Polymorphic Left Column: Mode-Specific Guide / Specifications */}
+                {mode === "roblox_item" && (
+                    <div class="rounded-lg bg-[#11131A] border border-[#222634] p-4 md:p-5 space-y-4">
+                        <div class="flex items-center justify-between border-b border-[#222634] pb-3">
+                            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5" data-i18n="product.item_delivery_guide">
+                                <span class="i-lucide-package-check text-sm text-[#00E5FF]"></span>
+                                <span>Panduan & Spesifikasi Terima Item</span>
                             </h2>
-                            <span class="text-[10px] font-mono text-[#64748B]" data-i18n="product.official_guarantee">Garansi Resmi Yasui</span>
+                            <span class="yg-badge-overlay-online text-[10px]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span data-i18n="product.trade_ready">TRADE READY</span>
+                            </span>
                         </div>
 
-                        <div class="yg-card p-4 md:p-6 rounded-lg bg-[#11131A] border border-[#222634] relative">
-                            <div
-                                id="product-desc-content"
-                                class="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed max-h-56 md:max-h-none overflow-hidden transition-all duration-300 relative [&_p]:text-xs md:[&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-[#94A3B8] [&_p]:mb-3 [&_h1]:text-sm [&_h1]:font-bold [&_h1]:text-[#F8FAFC] [&_h1]:mb-2 [&_h2]:text-xs md:[&_h2]:text-sm [&_h2]:font-bold [&_h2]:text-[#00E5FF] [&_h2]:mb-2 [&_h3]:text-xs [&_h3]:font-bold [&_h3]:text-[#F8FAFC] [&_h3]:mb-1.5 [&_ul]:space-y-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:text-xs md:[&_li]:text-sm [&_li]:text-[#94A3B8] [&_a]:text-[#00E5FF] [&_a]:underline hover:[&_a]:text-[#33EBFF] [&_strong]:text-[#F8FAFC]"
-                                set:html={sanitizeHtml(
-                                    product.description || product.shortDescription,
-                                )}
-                            />
-
-                            <div
-                                id="desc-expand-wrapper"
-                                class="md:hidden pt-8 -mt-10 bg-gradient-to-t from-[#11131A] via-[#11131A]/90 to-transparent relative z-10 flex justify-center"
-                            >
-                                <button
-                                    type="button"
-                                    id="desc-expand-btn"
-                                    onclick="window.toggleDescription && window.toggleDescription()"
-                                    class="yg-btn-secondary text-[11px] py-1.5 px-3 rounded-full flex items-center gap-1"
-                                >
-                                    <span id="desc-btn-text" data-i18n="product.read_more">Baca Selengkapnya</span>
-                                    <span id="desc-btn-icon" class="i-lucide-chevron-down text-xs transition-transform duration-200"></span>
-                                </button>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="p-3 rounded-md bg-[#0D0F15] border border-[#222634] space-y-1">
+                                <span class="text-[10px] font-mono text-[#64748B] uppercase block" data-i18n="product.item_delivery_method">Metode Penyerahan</span>
+                                <div class="text-xs font-mono font-bold text-[#F8FAFC] flex items-center gap-1.5">
+                                    <span class="i-lucide-arrow-left-right text-[#00E5FF] text-xs"></span>
+                                    <span>In-Game Trade / Direct Gift</span>
+                                </div>
+                                <p class="text-[10px] text-[#94A3B8] font-mono" data-i18n="product.item_delivery_desc">In-Game Trade (Sea 2 / Sea 3 / Lobby) atau Direct In-Game Gift</p>
                             </div>
+                            <div class="p-3 rounded-md bg-[#0D0F15] border border-[#222634] space-y-1">
+                                <span class="text-[10px] font-mono text-[#64748B] uppercase block" data-i18n="product.item_est_time">Estimasi Waktu Kirim</span>
+                                <div class="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+                                    <span class="i-lucide-clock text-emerald-400 text-xs"></span>
+                                    <span data-i18n="product.item_est_desc">5 – 15 Menit (Seller Online & Trade Ready)</span>
+                                </div>
+                                <p class="text-[10px] text-[#94A3B8] font-mono">Seller online langsung kirim link Private Server</p>
+                            </div>
+                        </div>
+
+                        <div class="p-3.5 rounded-md bg-[#0D0F15] border border-[#222634] space-y-2">
+                            <span class="text-[11px] font-mono font-bold text-[#00E5FF] uppercase tracking-wider flex items-center gap-1.5" data-i18n="product.item_steps_title">
+                                <span class="i-lucide-list-ordered text-xs"></span>
+                                <span>3 Langkah Mudah Transaksi Item:</span>
+                            </span>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-[11px] font-mono">
+                                <div class="flex items-start gap-2">
+                                    <span class="w-5 h-5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 flex items-center justify-center text-[10px] font-bold shrink-0">1</span>
+                                    <span class="text-[#94A3B8]" data-i18n="product.item_step_1">Masukkan @Username Roblox asli & nomor WhatsApp/Discord aktif</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="w-5 h-5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 flex items-center justify-center text-[10px] font-bold shrink-0">2</span>
+                                    <span class="text-[#94A3B8]" data-i18n="product.item_step_2">Selesaikan pembayaran via QRIS, Virtual Account, atau E-Wallet</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="w-5 h-5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 flex items-center justify-center text-[10px] font-bold shrink-0">3</span>
+                                    <span class="text-[#94A3B8]" data-i18n="product.item_step_3">Seller mengirimkan link Private Server / Direct Gift langsung di dalam game</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {attributes.length > 0 && (
+                            <div class="pt-2 border-t border-[#222634]/60">
+                                <span class="text-[10px] font-mono text-[#64748B] uppercase block mb-2">Atribut Item Tambahan</span>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                    {attributes.map((attr: any) => {
+                                        const style = getAttributeStyle(attr);
+                                        return (
+                                            <div class="p-2 rounded bg-[#0D0F15] border border-[#222634] text-[11px] font-mono">
+                                                <span class="text-[9px] text-[#64748B] uppercase block">{attr.name}</span>
+                                                <strong class={`${style.valueClass} truncate block`}>{attr.options?.[0] || "-"}</strong>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {mode === "game_gift" && (
+                    <div class="space-y-3">
+                        {is7DaysGift ? (
+                            <div class="bg-amber-500/10 border border-amber-500/30 text-amber-300 rounded-lg p-3.5 text-xs font-mono space-y-1">
+                                <div class="font-bold flex items-center gap-1.5 uppercase tracking-wider" data-i18n="product.gift_7days_title">
+                                    <span class="i-lucide-clock text-amber-400 text-sm"></span>
+                                    <span>⏳ ATURAN GIFT 7 HARI</span>
+                                </div>
+                                <p class="text-[11px] text-amber-200/90 leading-relaxed" data-i18n="product.gift_7days_desc">
+                                    Sesuai kebijakan resmi game, akun Anda wajib berteman (Follow) dengan akun pengirim kami di dalam game selama 7 hari sebelum item/skin dapat dikirimkan. Admin akan mengirimkan ID akun pengirim setelah pembayaran terkonfirmasi.
+                                </p>
+                            </div>
+                        ) : (
+                            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 rounded-lg p-3.5 text-xs font-mono space-y-1">
+                                <div class="font-bold flex items-center gap-1.5 uppercase tracking-wider" data-i18n="product.gift_charisma_title">
+                                    <span class="i-lucide-zap text-emerald-400 text-sm"></span>
+                                    <span>⚡ GIFT CHARISMA INSTAN</span>
+                                </div>
+                                <p class="text-[11px] text-emerald-200/90 leading-relaxed" data-i18n="product.gift_charisma_desc">
+                                    Pengiriman charisma diproses langsung ke User ID & Server ID Anda tanpa perlu berteman 7 hari. Estimasi proses 5–15 menit pasca pembayaran terkonfirmasi.
+                                </p>
+                            </div>
+                        )}
+
+                        <div class="rounded-lg bg-[#11131A] border border-[#222634] p-4 md:p-5 space-y-3">
+                            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5" data-i18n="product.gift_delivery_guide">
+                                <span class="i-lucide-gift text-sm text-[#00E5FF]"></span>
+                                <span>Panduan Pengiriman Gift In-Game</span>
+                            </h2>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-[11px] font-mono">
+                                <div class="flex items-start gap-2">
+                                    <span class="w-5 h-5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 flex items-center justify-center text-[10px] font-bold shrink-0">1</span>
+                                    <span class="text-[#94A3B8]" data-i18n="product.gift_step_1">Masukkan User ID, Zone ID, & Nickname in-game akun tujuan</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="w-5 h-5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 flex items-center justify-center text-[10px] font-bold shrink-0">2</span>
+                                    <span class="text-[#94A3B8]" data-i18n="product.gift_step_2">Selesaikan pembayaran via kanal pembayaran otomatis</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="w-5 h-5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 flex items-center justify-center text-[10px] font-bold shrink-0">3</span>
+                                    <span class="text-[#94A3B8]" data-i18n="product.gift_step_3">Admin langsung memproses pengiriman gift sesuai aturan game</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {mode === "topup_gamepass" && (
+                    <div class="rounded-lg bg-[#11131A] border border-[#222634] p-4 md:p-5 space-y-3">
+                        <div class="flex items-center justify-between border-b border-[#222634] pb-3">
+                            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5">
+                                <span class="i-lucide-zap text-sm text-[#00E5FF]"></span>
+                                <span>PANDUAN TOP UP & GAMEPASS INSTAN</span>
+                            </h2>
+                            <span class="yg-badge-overlay-online text-[10px]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span>AUTO PROCESS</span>
+                            </span>
+                        </div>
+                        <p class="text-[11px] font-mono text-[#94A3B8] leading-relaxed">
+                            Nominal Robux, Diamond, atau Gamepass akan langsung diproses ke akun Anda sesuai data ID / Username yang dicantumkan. Pastikan tidak ada kesalahan pengetikan karakter ID.
+                        </p>
+                    </div>
+                )}
+
+                {mode === "account" && attributes.length > 0 && (
+                    <div class="space-y-4 pt-1">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5">
+                                <span class="i-lucide-settings-2 text-xs"></span>
+                                <span data-i18n="product.specs_title">Spesifikasi Akun / Item</span>
+                            </h2>
+                            <span class="text-[10px] font-mono text-[#64748B]" data-i18n="product.specs_verified">Terverifikasi</span>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            {attributes.map((attr: any) => {
+                                const style = getAttributeStyle(attr);
+                                return (
+                                    <div class="p-3 rounded-md flex flex-col justify-between gap-1.5 border border-[#222634] bg-[#0D0F15]">
+                                        <div class="flex items-center gap-1.5 text-[#94A3B8]">
+                                            <span class={`${style.icon} text-xs text-[#00E5FF]`} />
+                                            <span class="text-[9px] font-mono font-bold uppercase tracking-wider">
+                                                {style.label}
+                                            </span>
+                                        </div>
+                                        <div class={`text-xs md:text-sm font-mono font-bold ${style.valueClass} truncate`}>
+                                            {attr.options?.[0] || "-"}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+
+                {/* Deskripsi Produk */}
+                <div class="space-y-3 pt-2">
+                    <div class="flex items-center justify-between">
+                        <h2
+                            class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5"
+                            data-i18n="product.description"
+                        >
+                            <span class="i-lucide-file-text text-xs"></span>
+                            <span>Deskripsi Produk</span>
+                        </h2>
+                        <span class="text-[10px] font-mono text-[#64748B]" data-i18n="product.official_guarantee">Garansi Resmi Yasui</span>
+                    </div>
+
+                    <div class="yg-card p-4 md:p-6 rounded-lg bg-[#11131A] border border-[#222634] relative">
+                        <div
+                            id="product-desc-content"
+                            class="prose prose-invert prose-sm max-w-none text-[#94A3B8] leading-relaxed max-h-56 md:max-h-none overflow-hidden transition-all duration-300 relative [&_p]:text-xs md:[&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-[#94A3B8] [&_p]:mb-3 [&_h1]:text-sm [&_h1]:font-bold [&_h1]:text-[#F8FAFC] [&_h1]:mb-2 [&_h2]:text-xs md:[&_h2]:text-sm [&_h2]:font-bold [&_h2]:text-[#00E5FF] [&_h2]:mb-2 [&_h3]:text-xs [&_h3]:font-bold [&_h3]:text-[#F8FAFC] [&_h3]:mb-1.5 [&_ul]:space-y-1.5 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:text-xs md:[&_li]:text-sm [&_li]:text-[#94A3B8] [&_a]:text-[#00E5FF] [&_a]:underline hover:[&_a]:text-[#33EBFF] [&_strong]:text-[#F8FAFC]"
+                            set:html={sanitizeHtml(
+                                product.description || product.shortDescription,
+                            )}
+                        />
+
+                        <div
+                            id="desc-expand-wrapper"
+                            class="md:hidden pt-8 -mt-10 bg-gradient-to-t from-[#11131A] via-[#11131A]/90 to-transparent relative z-10 flex justify-center"
+                        >
+                            <button
+                                type="button"
+                                id="desc-expand-btn"
+                                onclick="window.toggleDescription && window.toggleDescription()"
+                                class="yg-btn-secondary text-[11px] py-1.5 px-3 rounded-full flex items-center gap-1"
+                            >
+                                <span id="desc-btn-text" data-i18n="product.read_more">Baca Selengkapnya</span>
+                                <span id="desc-btn-icon" class="i-lucide-chevron-down text-xs transition-transform duration-200"></span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -381,11 +593,28 @@ const schema = {
                 <div class="sticky top-24 yg-card p-5 md:p-6 rounded-lg bg-[#11131A] border border-[#222634] space-y-5 shadow-2xl">
                     <div>
                         <div class="flex items-center justify-between gap-2 mb-2">
-                            <span class={isAccount ? "yg-badge-instant" : "yg-badge-online"} data-i18n={isAccount ? "product.instant_delivery_badge" : "product.online_delivery_badge"}>
-                                {isAccount ? "INSTANT DELIVERY" : "ONLINE DELIVERY"}
-                            </span>
+                            {mode === "roblox_item" && (
+                                <span class="yg-badge-overlay-online text-[10px] px-2 py-0.5 rounded font-mono font-bold" data-i18n="product.seller_online">
+                                    🟢 SELLER ONLINE • ESTIMASI KIRIM 5–15 MENIT
+                                </span>
+                            )}
+                            {mode === "game_gift" && (
+                                <span class="yg-badge-overlay-online text-[10px] px-2 py-0.5 rounded font-mono font-bold" data-i18n="product.seller_online_gift">
+                                    🟢 SELLER ONLINE • ESTIMASI PROSES CEPAT
+                                </span>
+                            )}
+                            {mode === "topup_gamepass" && (
+                                <span class="yg-badge-instant text-[10px] px-2 py-0.5 rounded font-mono font-bold" data-i18n="product.topup_badge_online">
+                                    ⚡ TOP UP OTOMATIS • PROSES 1–5 MENIT
+                                </span>
+                            )}
+                            {mode === "account" && (
+                                <span class="yg-badge-instant text-[10px] px-2 py-0.5 rounded font-mono font-bold" data-i18n="product.instant_delivery_badge">
+                                    INSTANT DELIVERY
+                                </span>
+                            )}
                             <span class="text-[10px] font-mono text-[#64748B] uppercase">
-                                {categoryName}
+                                {mode === "roblox_item" ? "FRUIT / IN-GAME ITEM" : mode === "game_gift" ? "IN-GAME GIFT" : mode === "topup_gamepass" ? "TOP UP / GAMEPASS" : categoryName}
                             </span>
                         </div>
 
@@ -394,14 +623,18 @@ const schema = {
                         </h1>
 
                         <div class="flex items-center gap-2.5 mb-3 text-xs font-mono">
-                            <span class="yg-badge-emerald">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                                <span data-i18n="product.stock_ready">Stok Siap Kirim</span>
+                            <span class={isOutOfStock ? "yg-badge-red" : "yg-badge-emerald"}>
+                                <span class={`w-1.5 h-1.5 rounded-full ${isOutOfStock ? "bg-red-400" : "bg-emerald-400 animate-pulse"}`}></span>
+                                <span data-i18n={isOutOfStock ? "product.sold_out" : "product.stock_ready"}>
+                                    {isOutOfStock ? "Stok Habis" : "Stok Siap Kirim"}
+                                </span>
                             </span>
-                            <span class="text-[#94A3B8] text-[11px]" data-i18n="product.auto_process">Proses Otomatis 1–5 Menit</span>
+                            <span class="text-[#94A3B8] text-[11px]" data-i18n={mode === "account" ? "product.auto_process" : "product.item_est_desc"}>
+                                {mode === "account" ? "Proses Otomatis 1–5 Menit" : "Estimasi 5–15 Menit"}
+                            </span>
                         </div>
 
-                        {/* Price Tag */}
+                        {/* Price Tag with Real-time Multiplier */}
                         <div class="flex items-baseline gap-3 py-3 border-y border-[#222634]">
                             {hasDiscount && (
                                 <div class="flex flex-col items-start">
@@ -416,41 +649,95 @@ const schema = {
                                     </span>
                                 </div>
                             )}
-                            <span
-                                class="yg-price text-2xl md:text-3xl text-[#00E5FF] price-tag"
-                                data-price-idr={pPrice}
-                            >
-                                {product.price || "Rp 0"}
-                            </span>
+                            <div class="flex flex-col">
+                                <span
+                                    class="yg-price text-2xl md:text-3xl text-[#00E5FF] price-tag total-price-display"
+                                    data-price-idr={pPrice}
+                                >
+                                    {product.price || "Rp 0"}
+                                </span>
+                                {mode !== "account" && (
+                                    <span class="text-[10px] font-mono text-[#64748B]">
+                                        Unit Price: <span class="unit-price-label">{product.price || "Rp 0"}</span>
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
+
+                    {/* Stepper Kuantitas (Untuk mode non-account) */}
+                    {mode !== "account" && (
+                        <div class="p-3 rounded-lg bg-[#0D0F15] border border-[#222634] space-y-2">
+                            <div class="flex items-center justify-between text-[11px] font-mono font-bold text-[#94A3B8] uppercase">
+                                <span data-i18n="product.quantity_label">Jumlah Pembelian (Kuantitas)</span>
+                                <span class="text-[#64748B] text-[10px]"><span data-i18n="product.quantity_max">Maks</span>: {stockMax} item</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="inline-flex items-center bg-[#11131A] border border-[#222634] rounded-md overflow-hidden">
+                                    <button
+                                        type="button"
+                                        class="qty-btn-minus w-10 h-10 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] hover:bg-[#161922] transition-colors font-mono text-base font-bold cursor-pointer"
+                                        aria-label="Kurangi Jumlah"
+                                    >
+                                        -
+                                    </button>
+                                    <input
+                                        type="number"
+                                        id="order-qty-desktop"
+                                        name="quantity"
+                                        class="qty-input w-14 h-10 bg-transparent text-center font-mono font-bold text-sm text-[#F8FAFC] border-x border-[#222634] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        value="1"
+                                        min="1"
+                                        max={stockMax}
+                                    />
+                                    <button
+                                        type="button"
+                                        class="qty-btn-plus w-10 h-10 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] hover:bg-[#161922] transition-colors font-mono text-base font-bold cursor-pointer"
+                                        aria-label="Tambah Jumlah"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                                <div class="text-xs font-mono text-[#94A3B8] flex flex-col">
+                                    <span class="text-[10px] text-[#64748B] uppercase">Subtotal Item:</span>
+                                    <strong class="text-[#00E5FF] font-bold total-price-display tabular-nums">
+                                        {product.price || "Rp 0"}
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Trust Summary Cards */}
                     <div class="grid grid-cols-2 gap-2 text-xs font-mono">
                         <div class="p-2.5 rounded-md bg-[#0D0F15] border border-[#222634] flex items-center gap-2">
                             <span class="i-lucide-zap text-[#00E5FF] text-base shrink-0"></span>
                             <div>
-                                <span class="block text-[11px] font-bold text-[#F8FAFC]" data-i18n="product.instant_delivery">Instant Delivery</span>
-                                <span class="text-[9px] text-[#94A3B8]" data-i18n="product.auto_credentials">Kredensial Otomatis</span>
+                                <span class="block text-[11px] font-bold text-[#F8FAFC]" data-i18n={mode === "account" ? "product.instant_delivery" : "product.trade_ready"}>
+                                    {mode === "account" ? "Instant Delivery" : "Trade & Gift Ready"}
+                                </span>
+                                <span class="text-[9px] text-[#94A3B8]" data-i18n={mode === "account" ? "product.auto_credentials" : "product.auto_process"}>
+                                    {mode === "account" ? "Kredensial Otomatis" : "Proses 5–15 Menit"}
+                                </span>
                             </div>
                         </div>
                         <div class="p-2.5 rounded-md bg-[#0D0F15] border border-[#222634] flex items-center gap-2">
                             <span class="i-lucide-shield-check text-emerald-400 text-base shrink-0"></span>
                             <div>
-                                <span class="block text-[11px] font-bold text-[#F8FAFC]" data-i18n="product.warranty_30d">Garansi 30 Hari</span>
-                                <span class="text-[9px] text-[#94A3B8]" data-i18n="product.anti_hackback">100% Anti-Hackback</span>
+                                <span class="block text-[11px] font-bold text-[#F8FAFC]" data-i18n="product.warranty_30d">Garansi Resmi</span>
+                                <span class="text-[9px] text-[#94A3B8]" data-i18n="product.anti_hackback">100% Anti-Recall</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-2.5">
+                    <div class="mt-2">
                         <button
                             type="button"
                             onclick={`window.openLiveChatModal && window.openLiveChatModal(${JSON.stringify(product.name)})`}
                             class="w-full py-2 px-3 rounded-md bg-[#161922] hover:bg-[#1E2230] border border-[#222634] hover:border-[#00E5FF]/40 text-[#94A3B8] hover:text-[#00E5FF] text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                         >
                             <div class="i-lucide-headset text-xs text-[#00E5FF]"></div>
-                            <span data-i18n="product.ask_admin">Tanya Admin tentang Akun Ini</span>
+                            <span data-i18n="product.ask_admin">Tanya Admin tentang Produk Ini</span>
                         </button>
                     </div>
 
@@ -485,13 +772,142 @@ const schema = {
                         </div>
 
                         <div id="guest-user-view" class="space-y-3">
+                            
+                            {/* POLIMORFIK INPUT: MODE ROBLOX_ITEM */}
+                            {mode === "roblox_item" && (
+                                <div class="space-y-3 p-3 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                                    <div class="space-y-1">
+                                        <label for="roblox-username-input" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase flex justify-between">
+                                            <span data-i18n="product.roblox_username_label">USERNAME ROBLOX (@USERNAME) *</span>
+                                            <span class="text-[9px] text-[#94A3B8]">Wajib Asli</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input
+                                                type="text"
+                                                id="roblox-username-input"
+                                                name="roblox_username"
+                                                required
+                                                autocomplete="off"
+                                                class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                                placeholder="Contoh: @YasuiPlayer (Bukan Display Name)"
+                                                data-i18n-placeholder="product.roblox_username_placeholder"
+                                            />
+                                        </div>
+                                        <p class="text-[9px] font-mono text-[#64748B]" data-i18n="product.roblox_username_hint">
+                                            Pastikan username asli (awalan @) agar link private server / trade tidak salah kirim
+                                        </p>
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <span class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase block" data-i18n="product.delivery_method_label">
+                                            METODE PENGIRIMAN
+                                        </span>
+                                        <div class="grid grid-cols-2 gap-2" role="radiogroup">
+                                            <label class="delivery-method-pill flex items-center justify-center gap-1.5 p-2 rounded-md border text-[11px] font-mono cursor-pointer transition-colors border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] font-semibold">
+                                                <input type="radio" name="delivery_method" value="trade_private_server" checked class="sr-only" />
+                                                <span class="i-lucide-arrow-left-right text-xs"></span>
+                                                <span data-i18n="product.delivery_private_server">🤝 Trade di Private Server</span>
+                                            </label>
+                                            <label class="delivery-method-pill flex items-center justify-center gap-1.5 p-2 rounded-md border text-[11px] font-mono cursor-pointer transition-colors border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC]">
+                                                <input type="radio" name="delivery_method" value="direct_gift" class="sr-only" />
+                                                <span class="i-lucide-gift text-xs"></span>
+                                                <span data-i18n="product.delivery_direct_gift">🎁 Direct Gift In-Game</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* POLIMORFIK INPUT: MODE GAME_GIFT */}
+                            {mode === "game_gift" && (
+                                <div class="space-y-3 p-3 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                                    <div class="grid grid-cols-12 gap-2">
+                                        <div class="col-span-8 space-y-1">
+                                            <label for="gift-user-id" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase flex justify-between">
+                                                <span data-i18n="product.user_id_label">USER ID (UID) *</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="gift-user-id"
+                                                name="game_user_id"
+                                                required
+                                                autocomplete="off"
+                                                class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                                placeholder="Contoh: 12345678"
+                                                data-i18n-placeholder="product.user_id_placeholder"
+                                            />
+                                        </div>
+                                        <div class="col-span-4 space-y-1">
+                                            <label for="gift-zone-id" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase">
+                                                <span data-i18n="product.zone_id_label">ZONE ID *</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="gift-zone-id"
+                                                name="game_zone_id"
+                                                required
+                                                autocomplete="off"
+                                                class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                                placeholder="(1234)"
+                                                data-i18n-placeholder="product.zone_id_placeholder"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-1">
+                                        <label for="gift-nickname" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between">
+                                            <span data-i18n="product.nickname_label">NICKNAME IN-GAME *</span>
+                                            <span class="text-[9px] text-[#64748B]">Verifikasi ID</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="gift-nickname"
+                                            name="game_nickname"
+                                            required
+                                            autocomplete="off"
+                                            class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                            placeholder="Contoh: YasuiProGamer"
+                                            data-i18n-placeholder="product.nickname_placeholder"
+                                        />
+                                        <p class="text-[9px] font-mono text-[#64748B]" data-i18n="product.nickname_hint">
+                                            Verifikasi nickname agar pengiriman tepat sasaran
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* POLIMORFIK INPUT: MODE TOPUP_GAMEPASS */}
+                            {mode === "topup_gamepass" && (
+                                <div class="space-y-3 p-3 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                                    <div class="space-y-1">
+                                        <label for="topup-player-id" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase flex justify-between">
+                                            <span data-i18n="product.player_id_label">ID PEMAIN / USERNAME *</span>
+                                            <span class="text-[9px] text-[#94A3B8]">Tujuan Top Up</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="topup-player-id"
+                                            name="player_in_game_id"
+                                            required
+                                            autocomplete="off"
+                                            class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                            placeholder="Contoh: RobloxUsername atau ID MLBB (12345)"
+                                            data-i18n-placeholder="product.player_id_placeholder"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Field Kontak & Email Standar */}
                             <div class="space-y-1">
                                 <label
                                     for="user-email-input"
                                     class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between"
                                 >
                                     <span data-i18n="product.email_label">Email Penerima (Wajib)</span>
-                                    <span class="text-[9px] text-[#00E5FF]" data-i18n="product.email_purpose">Pengiriman Akun</span>
+                                    <span class="text-[9px] text-[#00E5FF]" data-i18n="product.email_purpose">
+                                        {mode === "account" ? "Kirim Kredensial" : "Kirim Invoice & Link"}
+                                    </span>
                                 </label>
                                 <input
                                     type="email"
@@ -537,27 +953,11 @@ const schema = {
                                 </div>
                             </div>
 
-                            {showPlayerIdField && (
-                                <div id="game-player-id-field" class="space-y-1">
-                                    <label for="player-id-input" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between">
-                                        <span data-i18n="product.player_id_label">Username Roblox / ID Pemain</span>
-                                        <span class="text-[9px] text-[#00E5FF] font-mono" data-i18n="product.player_id_purpose">(Item / Gift / Trade)</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="player-id-input"
-                                        name="player_in_game_id"
-                                        autocomplete="off"
-                                        class="yg-input !h-10 !text-xs !bg-[#0D0F17]"
-                                        placeholder="Contoh: RobloxUsername atau ID Akun"
-                                        data-i18n-placeholder="product.player_id_placeholder"
-                                    />
-                                </div>
-                            )}
-
                             <p class="text-[10px] font-mono text-[#94A3B8] leading-tight flex items-center gap-1.5 pt-0.5">
                                 <span class="i-lucide-shield-check text-[#00E5FF] text-xs shrink-0"></span>
-                                <span data-i18n="product.credentials_note">Kredensial login dikirim otomatis ke email di atas pasca konfirmasi bayar.</span>
+                                <span data-i18n={mode === "account" ? "product.credentials_note" : "product.cs_ready_note"}>
+                                    {mode === "account" ? "Kredensial login dikirim otomatis ke email di atas pasca konfirmasi bayar." : "Seller & CS siap koordinasi pengiriman instan via WhatsApp/Discord."}
+                                </span>
                             </p>
                         </div>
 
@@ -568,6 +968,7 @@ const schema = {
                                 id="btn-add-to-cart"
                                 onclick="window.submitOrderForm && window.submitOrderForm(false)"
                                 class="yg-btn-secondary py-3 text-xs"
+                                disabled={isOutOfStock}
                                 data-i18n="product.add_to_cart"
                             >
                                 + Keranjang
@@ -577,6 +978,7 @@ const schema = {
                                 id="btn-buy-now"
                                 onclick="window.submitOrderForm && window.submitOrderForm(true)"
                                 class="yg-btn-primary py-3 text-xs"
+                                disabled={isOutOfStock}
                                 data-i18n="product.buy_now"
                             >
                                 Beli Sekarang
@@ -598,6 +1000,7 @@ const schema = {
                 </div>
             </div>
         </div>
+        )}
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
@@ -613,8 +1016,8 @@ const schema = {
                     {relatedProducts.map((item) => {
                         const priceVal = parsePrice(item.price);
                         const regularVal = parsePrice(item.regularPrice);
-                        const hasDiscount = regularVal > priceVal;
-                        const discount = hasDiscount
+                        const hasDisc = regularVal > priceVal;
+                        const discount = hasDisc
                             ? Math.round(((regularVal - priceVal) / regularVal) * 100)
                             : 0;
 
@@ -647,7 +1050,7 @@ const schema = {
                                             </span>
                                         </div>
 
-                                        {hasDiscount && (
+                                        {hasDisc && (
                                             <div class="absolute top-2 right-2 bg-[#090A0F]/90 backdrop-blur-md border border-red-500/40 text-red-400 font-mono text-[10px] px-1.5 py-0.5 rounded font-bold shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
                                                 -{discount}%
                                             </div>
@@ -664,7 +1067,7 @@ const schema = {
                                 <div class="p-3 pt-0 border-t border-[#222634]/60 mt-auto">
                                     <div class="flex items-center justify-between pt-2">
                                         <div class="flex flex-col">
-                                            {hasDiscount && (
+                                            {hasDisc && (
                                                 <span
                                                     class="price-tag text-[10px] text-[#64748B] line-through font-mono tabular-nums leading-none mb-0.5"
                                                     data-price-idr={regularVal}
@@ -690,8 +1093,10 @@ const schema = {
         )}
     </main>
 
-    {/* Mobile Bottom Fixed Bar */}
-    <div class="lg:hidden fixed bottom-[52px] left-0 right-0 bg-[#090A0F]/95 backdrop-blur-md border-t border-[#222634] px-4 py-2.5 z-40">
+    {mode !== "topup_gamepass" && (
+        <>
+            {/* Mobile Bottom Fixed Bar */}
+            <div class="lg:hidden fixed bottom-[52px] left-0 right-0 bg-[#090A0F]/95 backdrop-blur-md border-t border-[#222634] px-4 py-2.5 z-40">
         <div class="flex items-center justify-between gap-3">
             <div class="flex flex-col min-w-0">
                 {hasDiscount && (
@@ -699,15 +1104,23 @@ const schema = {
                         {product.regularPrice}
                     </span>
                 )}
-                <span class="text-base font-mono font-bold text-[#00E5FF] leading-tight tabular-nums price-tag" data-price-idr={pPrice}>
-                    {product.price || "Rp 0"}
-                </span>
+                <div class="flex items-baseline gap-1.5">
+                    <span id="mobile-bottom-total-price" class="text-base font-mono font-bold text-[#00E5FF] leading-tight tabular-nums total-price-display price-tag" data-price-idr={pPrice}>
+                        {product.price || "Rp 0"}
+                    </span>
+                    {mode !== "account" && (
+                        <span id="mobile-bottom-qty-badge" class="text-[10px] font-mono text-[#94A3B8]">
+                            (1x)
+                        </span>
+                    )}
+                </div>
             </div>
             <div class="flex gap-2 flex-1 max-w-[240px]">
                 <button
                     type="button"
                     onclick="window.openMobileDrawer && window.openMobileDrawer(false)"
                     class="yg-btn-secondary flex-1 py-2 text-[10px]"
+                    disabled={isOutOfStock}
                     data-i18n="product.add_to_cart"
                 >
                     + Keranjang
@@ -716,6 +1129,7 @@ const schema = {
                     type="button"
                     onclick="window.openMobileDrawer && window.openMobileDrawer(true)"
                     class="yg-btn-primary flex-1 py-2 text-[10px]"
+                    disabled={isOutOfStock}
                     data-i18n="product.buy_now"
                 >
                     Beli Langsung
@@ -732,22 +1146,29 @@ const schema = {
     >
         <div
             id="mobile-drawer-sheet"
-            class="absolute bottom-0 left-0 right-0 max-h-[85vh] bg-[#11131A] border-t border-[#222634] rounded-t-2xl p-5 shadow-2xl flex flex-col transform translate-y-full transition-transform duration-300 ease-out overflow-y-auto"
+            class="absolute bottom-0 left-0 right-0 max-h-[88vh] bg-[#11131A] border-t border-[#222634] rounded-t-2xl p-5 shadow-2xl flex flex-col transform translate-y-full transition-transform duration-300 ease-out overflow-y-auto"
             onclick="event.stopPropagation()"
         >
             <div class="w-10 h-1 bg-[#222634] rounded-full mx-auto mb-3 shrink-0"></div>
 
             <div class="flex items-center justify-between pb-3 mb-4 border-b border-[#222634]">
                 <div class="min-w-0 pr-3">
-                    <span class="text-[10px] font-mono text-[#00E5FF] uppercase tracking-wider block" data-i18n={isAccount ? "product.drawer_account_delivery" : "product.drawer_digital_delivery"}>
-                        {isAccount ? "PENGIRIMAN AKUN" : "PENGIRIMAN DIGITAL"}
+                    <span class="text-[10px] font-mono text-[#00E5FF] uppercase tracking-wider block">
+                        {mode === "roblox_item" ? "ROBLOX ITEM / FRUIT" : mode === "game_gift" ? "GAME GIFT IN-GAME" : mode === "topup_gamepass" ? "TOP UP / GAMEPASS" : "PENGIRIMAN AKUN"}
                     </span>
                     <h3 class="text-sm font-bold text-[#F8FAFC] font-mono truncate">
                         {product.name}
                     </h3>
-                    <span class="yg-price text-sm text-[#00E5FF] tabular-nums mt-0.5 block" data-price-idr={pPrice}>
-                        {product.price || "Rp 0"}
-                    </span>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span id="drawer-total-price" class="yg-price text-sm text-[#00E5FF] tabular-nums total-price-display" data-price-idr={pPrice}>
+                            {product.price || "Rp 0"}
+                        </span>
+                        {mode !== "account" && (
+                            <span class="text-[10px] font-mono text-[#64748B]">
+                                (<span class="drawer-qty-summary">1</span>x @ <span class="unit-price-label">{product.price || "Rp 0"}</span>)
+                            </span>
+                        )}
+                    </div>
                 </div>
                 <button
                     type="button"
@@ -758,6 +1179,41 @@ const schema = {
                     <span class="i-lucide-x text-sm"></span>
                 </button>
             </div>
+
+            {/* Stepper Drawer Mobile */}
+            {mode !== "account" && (
+                <div class="p-3 mb-4 rounded-lg bg-[#0D0F15] border border-[#222634] flex items-center justify-between">
+                    <div>
+                        <span class="text-[11px] font-mono font-bold text-[#94A3B8] uppercase block" data-i18n="product.quantity_label">
+                            Jumlah Pembelian
+                        </span>
+                        <span class="text-[10px] font-mono text-[#64748B]"><span data-i18n="product.quantity_max">Maks</span>: {stockMax} item</span>
+                    </div>
+                    <div class="inline-flex items-center bg-[#11131A] border border-[#222634] rounded-md overflow-hidden">
+                        <button
+                            type="button"
+                            class="qty-btn-minus w-9 h-9 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] font-mono text-base font-bold cursor-pointer"
+                        >
+                            -
+                        </button>
+                        <input
+                            type="number"
+                            id="order-qty-drawer"
+                            name="quantity"
+                            class="qty-input w-12 h-9 bg-transparent text-center font-mono font-bold text-xs text-[#F8FAFC] border-x border-[#222634] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            value="1"
+                            min="1"
+                            max={stockMax}
+                        />
+                        <button
+                            type="button"
+                            class="qty-btn-plus w-9 h-9 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] font-mono text-base font-bold cursor-pointer"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <form id="mobile-drawer-form" class="space-y-4">
                 <div
@@ -789,13 +1245,127 @@ const schema = {
                 </div>
 
                 <div id="drawer-guest-user-view" class="space-y-3">
+                    
+                    {/* POLIMORFIK DRAWER: ROBLOX_ITEM */}
+                    {mode === "roblox_item" && (
+                        <div class="space-y-3 p-3 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                            <div class="space-y-1">
+                                <label for="drawer-roblox-username-input" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase flex justify-between">
+                                    <span data-i18n="product.roblox_username_label">USERNAME ROBLOX (@USERNAME) *</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="drawer-roblox-username-input"
+                                    name="roblox_username"
+                                    required
+                                    autocomplete="off"
+                                    class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                    placeholder="Contoh: @YasuiPlayer (Bukan Display Name)"
+                                    data-i18n-placeholder="product.roblox_username_placeholder"
+                                />
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <span class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase block" data-i18n="product.delivery_method_label">
+                                    METODE PENGIRIMAN
+                                </span>
+                                <div class="grid grid-cols-2 gap-2" role="radiogroup">
+                                    <label class="drawer-delivery-method-pill flex items-center justify-center gap-1 p-2 rounded-md border text-[10px] font-mono cursor-pointer transition-colors border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] font-semibold">
+                                        <input type="radio" name="delivery_method" value="trade_private_server" checked class="sr-only" />
+                                        <span data-i18n="product.delivery_private_server">🤝 Private Server Trade</span>
+                                    </label>
+                                    <label class="drawer-delivery-method-pill flex items-center justify-center gap-1 p-2 rounded-md border text-[10px] font-mono cursor-pointer transition-colors border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC]">
+                                        <input type="radio" name="delivery_method" value="direct_gift" class="sr-only" />
+                                        <span data-i18n="product.delivery_direct_gift">🎁 Direct In-Game Gift</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* POLIMORFIK DRAWER: GAME_GIFT */}
+                    {mode === "game_gift" && (
+                        <div class="space-y-3 p-3 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                            <div class="grid grid-cols-12 gap-2">
+                                <div class="col-span-8 space-y-1">
+                                    <label for="drawer-gift-user-id" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase">
+                                        <span data-i18n="product.user_id_label">USER ID (UID) *</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="drawer-gift-user-id"
+                                        name="game_user_id"
+                                        required
+                                        autocomplete="off"
+                                        class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                        placeholder="Contoh: 12345678"
+                                        data-i18n-placeholder="product.user_id_placeholder"
+                                    />
+                                </div>
+                                <div class="col-span-4 space-y-1">
+                                    <label for="drawer-gift-zone-id" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase">
+                                        <span data-i18n="product.zone_id_label">ZONE ID *</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="drawer-gift-zone-id"
+                                        name="game_zone_id"
+                                        required
+                                        autocomplete="off"
+                                        class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                        placeholder="(1234)"
+                                        data-i18n-placeholder="product.zone_id_placeholder"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label for="drawer-gift-nickname" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between">
+                                    <span data-i18n="product.nickname_label">NICKNAME IN-GAME *</span>
+                                    <span class="text-[9px] text-[#64748B]">Verifikasi</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="drawer-gift-nickname"
+                                    name="game_nickname"
+                                    required
+                                    autocomplete="off"
+                                    class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                    placeholder="Contoh: YasuiProGamer"
+                                    data-i18n-placeholder="product.nickname_placeholder"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* POLIMORFIK DRAWER: TOPUP_GAMEPASS */}
+                    {mode === "topup_gamepass" && (
+                        <div class="space-y-1 p-3 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                            <label for="drawer-topup-player-id" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase">
+                                <span data-i18n="product.player_id_label">ID PEMAIN / USERNAME *</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="drawer-topup-player-id"
+                                name="player_in_game_id"
+                                required
+                                autocomplete="off"
+                                class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                placeholder="Contoh: RobloxUsername atau ID MLBB (12345)"
+                                data-i18n-placeholder="product.player_id_placeholder"
+                            />
+                        </div>
+                    )}
+
                     <div class="space-y-1">
                         <label
                             for="drawer-email-input"
                             class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between"
                         >
                             <span data-i18n="product.email_label">Email Penerima (Wajib)</span>
-                            <span class="text-[9px] text-[#00E5FF]" data-i18n="product.email_purpose">Kirim Kredensial</span>
+                            <span class="text-[9px] text-[#00E5FF]" data-i18n="product.email_purpose">
+                                {mode === "account" ? "Kirim Kredensial" : "Kirim Invoice & Link"}
+                            </span>
                         </label>
                         <input
                             type="email"
@@ -841,27 +1411,11 @@ const schema = {
                         </div>
                     </div>
 
-                    {showPlayerIdField && (
-                        <div class="space-y-1">
-                            <label for="drawer-player-id-input" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between">
-                                <span data-i18n="product.player_id_label">Username Roblox / ID Pemain</span>
-                                <span class="text-[9px] text-[#00E5FF] font-mono" data-i18n="product.player_id_purpose">(Item / Gift / Trade)</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="drawer-player-id-input"
-                                name="player_in_game_id"
-                                autocomplete="off"
-                                class="yg-input !h-10 !text-xs !bg-[#0D0F17]"
-                                placeholder="Contoh: RobloxUsername atau ID Akun"
-                                data-i18n-placeholder="product.player_id_placeholder"
-                            />
-                        </div>
-                    )}
-
                     <p class="text-[10px] font-mono text-[#94A3B8] leading-tight flex items-center gap-1.5 pt-0.5">
                         <span class="i-lucide-shield-check text-[#00E5FF] text-xs shrink-0"></span>
-                        <span data-i18n="product.credentials_note">Kredensial login dikirim otomatis ke email di atas pasca pembayaran.</span>
+                        <span data-i18n={mode === "account" ? "product.credentials_note" : "product.cs_ready_note"}>
+                            {mode === "account" ? "Kredensial login dikirim otomatis ke email di atas pasca konfirmasi bayar." : "Seller & CS siap koordinasi pengiriman instan via WhatsApp/Discord."}
+                        </span>
                     </p>
                 </div>
 
@@ -870,6 +1424,7 @@ const schema = {
                         type="submit"
                         id="drawer-submit-btn"
                         class="w-full yg-btn-primary py-3 text-xs"
+                        disabled={isOutOfStock}
                         data-i18n="product.continue_checkout"
                     >
                         Lanjutkan Checkout
@@ -878,6 +1433,8 @@ const schema = {
             </form>
         </div>
     </div>
+    </>
+    )}
 
     <style>
         /* Ensure floating CS widget stays safely above mobile bottom action bar */
@@ -886,8 +1443,14 @@ const schema = {
         }
     </style>
 
-    <script is:inline define:vars={{ product, galleryImages, pPrice }}>
+    <script is:inline define:vars={{ product, galleryImages, pPrice, mode, stockMax }}>
         const clientGallery = galleryImages;
+        const baseUnitPrice = pPrice || 0;
+        const maxStockAvailable = stockMax || 99;
+        const currentMode = mode;
+
+        let currentQty = 1;
+
         const lightbox = document.getElementById("lightbox");
         const lbImg = document.getElementById("lightbox-img");
         const closeBtn = document.getElementById("close-lightbox");
@@ -957,6 +1520,98 @@ const schema = {
             }, 3500);
         }
 
+        // ==========================================
+        // QUANTITY STEPPER & REAL-TIME PRICE CALCULATION
+        // ==========================================
+        function formatMoney(amount) {
+            if (window.formatCurrency) {
+                return window.formatCurrency(amount);
+            }
+            return "Rp " + Number(amount).toLocaleString("id-ID");
+        }
+
+        window.setProductQuantity = (newQty) => {
+            const parsed = parseInt(newQty, 10);
+            const clamped = Math.max(1, Math.min(maxStockAvailable, isNaN(parsed) ? 1 : parsed));
+            currentQty = clamped;
+
+            // Sync all qty input elements
+            document.querySelectorAll(".qty-input").forEach((inp) => {
+                inp.value = clamped;
+            });
+
+            // Calculate total price
+            const calculatedTotal = baseUnitPrice * currentQty;
+
+            // Update all total price displays
+            document.querySelectorAll(".total-price-display").forEach((el) => {
+                el.innerText = formatMoney(calculatedTotal);
+                el.setAttribute("data-price-idr", String(calculatedTotal));
+            });
+
+            // Update mobile badges
+            const mobileBadge = document.getElementById("mobile-bottom-qty-badge");
+            if (mobileBadge) {
+                mobileBadge.innerText = `(${currentQty}x)`;
+            }
+
+            const drawerSummary = document.querySelector(".drawer-qty-summary");
+            if (drawerSummary) {
+                drawerSummary.innerText = String(currentQty);
+            }
+        };
+
+        // Wire stepper plus and minus buttons
+        document.querySelectorAll(".qty-btn-minus").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                window.setProductQuantity(currentQty - 1);
+            });
+        });
+
+        document.querySelectorAll(".qty-btn-plus").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                window.setProductQuantity(currentQty + 1);
+            });
+        });
+
+        document.querySelectorAll(".qty-input").forEach((inp) => {
+            inp.addEventListener("change", (e) => {
+                window.setProductQuantity(e.target.value);
+            });
+            inp.addEventListener("input", (e) => {
+                window.setProductQuantity(e.target.value);
+            });
+        });
+
+        // ==========================================
+        // DELIVERY METHOD PILL SELECTORS
+        // ==========================================
+        function initDeliveryPills(selector) {
+            document.querySelectorAll(selector).forEach((label) => {
+                label.addEventListener("click", () => {
+                    const radio = label.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                        // Unhighlight siblings
+                        const parent = label.closest('[role="radiogroup"]');
+                        if (parent) {
+                            parent.querySelectorAll(selector).forEach((sib) => {
+                                sib.classList.remove("border-[#00E5FF]", "bg-[#00E5FF]/10", "text-[#00E5FF]", "font-semibold");
+                                sib.classList.add("border-[#222634]", "bg-[#11131A]", "text-[#94A3B8]");
+                            });
+                        }
+                        label.classList.remove("border-[#222634]", "bg-[#11131A]", "text-[#94A3B8]");
+                        label.classList.add("border-[#00E5FF]", "bg-[#00E5FF]/10", "text-[#00E5FF]", "font-semibold");
+                    }
+                });
+            });
+        }
+        initDeliveryPills(".delivery-method-pill");
+        initDeliveryPills(".drawer-delivery-method-pill");
+
+        // ==========================================
+        // MOBILE DRAWER
+        // ==========================================
         let drawerDirectBuy = false;
 
         window.openMobileDrawer = (isDirectBuy) => {
@@ -997,6 +1652,9 @@ const schema = {
             });
         }
 
+        // ==========================================
+        // USER SESSION & CONTACT PREFERENCES
+        // ==========================================
         function checkUserSession() {
             const session = window.getSession ? window.getSession() : null;
             const savedEmail = session?.email || localStorage.getItem("yasui_buyer_email");
@@ -1111,6 +1769,9 @@ const schema = {
             document.dispatchEvent(new Event("yasui-cart-changed"));
         }
 
+        // ==========================================
+        // SUBMIT ORDER FORM (POLYMORPHIC DISPATCH)
+        // ==========================================
         window.submitOrderForm = (isDirectBuy, sourceForm) => {
             const form = sourceForm || document.getElementById("order-form");
             if (!form) return;
@@ -1125,8 +1786,23 @@ const schema = {
             const userEmail = formData.get("user_email") || "";
             const contactMethod = formData.get("contact_method") || "whatsapp";
             const contactValue = formData.get("contact_value") || "";
+
+            // Polymorphic specific fields
+            let robloxUsername = formData.get("roblox_username") || "";
+            if (robloxUsername && !robloxUsername.startsWith("@")) {
+                robloxUsername = `@${robloxUsername.trim()}`;
+            }
+
+            const deliveryMethod = formData.get("delivery_method") || "trade_private_server";
+            const gameUserId = formData.get("game_user_id") || "";
+            const gameZoneId = formData.get("game_zone_id") || "";
+            const gameNickname = formData.get("game_nickname") || "";
             const playerInGameId = formData.get("player_in_game_id") || "";
 
+            const quantity = currentQty || 1;
+            const totalPrice = baseUnitPrice * quantity;
+
+            // Save contact preferences for future visits
             if (userEmail) {
                 localStorage.setItem("yasui_buyer_email", userEmail);
             }
@@ -1136,18 +1812,47 @@ const schema = {
                 localStorage.setItem("yasui_buyer_discord", contactValue);
             }
 
+            // Consolidate in-game identifier representation
+            let formattedPlayerId = "";
+            if (currentMode === "roblox_item") {
+                formattedPlayerId = `${robloxUsername} [${deliveryMethod === "direct_gift" ? "Direct Gift" : "Private Server Trade"}]`;
+            } else if (currentMode === "game_gift") {
+                formattedPlayerId = `UID: ${gameUserId} (Zone: ${gameZoneId}) - Nick: ${gameNickname}`;
+            } else if (playerInGameId) {
+                formattedPlayerId = playerInGameId;
+            }
+
             const item = {
                 id: product.databaseId || (product.id ? parseInt(atob(product.id).split(":")[1]) : 0),
                 globalId: product.id,
                 name: product.name,
                 slug: product.slug,
-                price: pPrice || (product.rawPrice ? parseInt(product.rawPrice) : 0),
+                price: totalPrice,
+                unitPrice: baseUnitPrice,
+                quantity: quantity,
                 image: document.querySelector("#trigger-lightbox img")?.src || "",
                 email: userEmail,
                 contactMethod: contactMethod,
                 contactValue: contactValue,
-                playerInGameId: playerInGameId,
+                mode: currentMode,
+                robloxUsername: robloxUsername,
+                deliveryMethod: deliveryMethod,
+                gameUserId: gameUserId,
+                gameZoneId: gameZoneId,
+                gameNickname: gameNickname,
+                playerInGameId: formattedPlayerId,
                 wa: contactMethod === "whatsapp" ? contactValue : `[Discord] ${contactValue}`,
+                orderMeta: {
+                    subCategoryMode: currentMode,
+                    quantity: quantity,
+                    variantName: product.name,
+                    robloxUsername: robloxUsername,
+                    deliveryMethod: deliveryMethod,
+                    gameUid: gameUserId,
+                    gameZone: gameZoneId,
+                    inGameNickname: gameNickname,
+                    rawTargetInfo: formattedPlayerId
+                },
                 timestamp: Date.now(),
             };
 
@@ -1160,7 +1865,7 @@ const schema = {
             if (isDirectBuy) {
                 window.location.href = "/cart";
             } else {
-                showToast(`"${product.name}" ditambahkan ke keranjang!`);
+                showToast(`"${quantity}x ${product.name}" ditambahkan ke keranjang!`);
                 checkUserSession();
             }
         };

@@ -156,7 +156,7 @@ import { translations } from "../lib/translations";
                 <span class="text-[10px] text-[#64748B] font-mono">Duitku Direct API</span>
             </h2>
 
-            <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-4">
                 <button
                     type="button"
                     id="tab-qris"
@@ -167,11 +167,19 @@ import { translations } from "../lib/translations";
                 </button>
                 <button
                     type="button"
+                    id="tab-crypto"
+                    class="border border-[#222634] bg-[#11131A] p-3 rounded-lg flex items-center justify-center gap-2 transition-colors hover:border-[#2E3446] cursor-pointer text-[#94A3B8]"
+                >
+                    <div class="i-lucide-coins text-base text-amber-400"></div>
+                    <span class="text-xs font-semibold uppercase tracking-wider" data-i18n="checkout.crypto_tab">Crypto (0% Fee)</span>
+                </button>
+                <button
+                    type="button"
                     id="tab-global"
                     class="border border-[#222634] bg-[#11131A] p-3 rounded-lg flex items-center justify-center gap-2 transition-colors hover:border-[#2E3446] cursor-pointer text-[#94A3B8]"
                 >
                     <div class="i-lucide-credit-card text-base"></div>
-                    <span class="text-xs font-semibold uppercase tracking-wider" data-i18n="checkout.global_title">International Payment</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider" data-i18n="checkout.global_title">Credit Card</span>
                 </button>
             </div>
 
@@ -294,11 +302,95 @@ import { translations } from "../lib/translations";
                     </div>
                 </div>
 
+                <div id="info-crypto" class="payment-info hidden w-full space-y-4 text-left">
+                    <div class="flex items-center justify-between pb-3 border-b border-[#222634]">
+                        <div>
+                            <p class="text-[#F8FAFC] font-semibold text-xs uppercase tracking-wider">
+                                Crypto Instant (USDT / USDC — 0% Gateway Fee)
+                            </p>
+                            <p class="text-[11px] text-[#64748B] font-mono mt-0.5">
+                                Web3 Non-Custodial Direct Gateway. Terverifikasi on-chain otomatis 24/7 tanpa risiko blokir pihak ketiga.
+                            </p>
+                        </div>
+                        <span class="text-[10px] text-amber-400 font-mono bg-amber-500/10 border border-amber-500/25 px-2 py-0.5 rounded">
+                            0% FEE • ON-CHAIN
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-2.5">
+                        <div
+                            data-channel="CRYPTO_USDT_BEP20"
+                            class="channel-card border border-[#222634] bg-[#0D0F15] p-3.5 rounded-lg cursor-pointer transition-colors hover:border-[#00E5FF] flex items-center justify-between"
+                        >
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded bg-[#11131A] flex items-center justify-center text-amber-400 border border-[#222634] flex-shrink-0">
+                                    <div class="i-lucide-coins text-lg"></div>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-semibold text-[#F8FAFC] flex items-center gap-1.5 flex-wrap">
+                                        <span>USDT (BEP-20 / BNB Smart Chain)</span>
+                                        <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-1 py-0.2 rounded font-mono">REKOMENDASI</span>
+                                        <span class="text-[9px] bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/25 px-1 py-0.2 rounded font-mono">GAS FEE ~$0.01</span>
+                                    </div>
+                                    <div class="text-[10px] text-[#94A3B8] mt-1 font-mono">
+                                        Jaringan BNB Chain. Biaya transfer ultra-murah, konfirmasi cepat & stabil.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="channel-indicator w-4 h-4 rounded-full border-2 border-[#222634] flex items-center justify-center flex-shrink-0"></div>
+                        </div>
+
+                        <div
+                            data-channel="CRYPTO_USDC_POLYGON"
+                            class="channel-card border border-[#222634] bg-[#0D0F15] p-3.5 rounded-lg cursor-pointer transition-colors hover:border-[#00E5FF] flex items-center justify-between"
+                        >
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded bg-[#11131A] flex items-center justify-center text-purple-400 border border-[#222634] flex-shrink-0">
+                                    <div class="i-lucide-zap text-lg"></div>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-semibold text-[#F8FAFC] flex items-center gap-1.5 flex-wrap">
+                                        <span>USDC / USDT (Polygon POS Network)</span>
+                                        <span class="text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/25 px-1 py-0.2 rounded font-mono">INSTAN</span>
+                                        <span class="text-[9px] bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/25 px-1 py-0.2 rounded font-mono">GAS FEE &lt; $0.01</span>
+                                    </div>
+                                    <div class="text-[10px] text-[#94A3B8] mt-1 font-mono">
+                                        Jaringan Polygon POS. Finalitas blok instan dalam 2-5 detik, mendukung USDC & USDT.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="channel-indicator w-4 h-4 rounded-full border-2 border-[#222634] flex items-center justify-center flex-shrink-0"></div>
+                        </div>
+
+                        <div
+                            data-channel="CRYPTO_USDT_TRC20"
+                            class="channel-card border border-[#222634] bg-[#0D0F15] p-3.5 rounded-lg cursor-pointer transition-colors hover:border-[#00E5FF] flex items-center justify-between"
+                        >
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded bg-[#11131A] flex items-center justify-center text-red-400 border border-[#222634] flex-shrink-0">
+                                    <div class="i-lucide-shield-check text-lg"></div>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-semibold text-[#F8FAFC] flex items-center gap-1.5 flex-wrap">
+                                        <span>USDT (TRC-20 / TRON Network)</span>
+                                        <span class="text-[9px] bg-red-500/10 text-red-400 border border-red-500/25 px-1 py-0.2 rounded font-mono">POPULER</span>
+                                        <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-1 py-0.2 rounded font-mono">EXCHANGE READY</span>
+                                    </div>
+                                    <div class="text-[10px] text-[#94A3B8] mt-1 font-mono">
+                                        Jaringan TRON. Standar utama deposit/penarikan Binance, OKX, Bybit, Indodax, Tokocrypto.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="channel-indicator w-4 h-4 rounded-full border-2 border-[#222634] flex items-center justify-center flex-shrink-0"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="info-global" class="payment-info hidden w-full space-y-4 text-left">
                     <div class="flex items-center justify-between pb-3 border-b border-[#222634]">
                         <div>
                             <p class="text-[#F8FAFC] font-semibold text-xs uppercase tracking-wider">
-                                Pembayaran Internasional (Credit Card / Crypto)
+                                Pembayaran Internasional (Credit / Debit Card)
                             </p>
                             <p class="text-[11px] text-[#64748B] font-mono mt-0.5">
                                 Kartu debit/kredit global dengan enkripsi 3D-Secure & PCI-DSS.
@@ -339,7 +431,7 @@ import { translations } from "../lib/translations";
                         </div>
 
                         <div
-                            id="btn-crypto-notice"
+                            onclick="window.switchTabToCrypto && window.switchTabToCrypto()"
                             class="border border-[#222634] bg-[#0D0F15]/60 hover:bg-[#0D0F15] p-3.5 rounded-lg cursor-pointer transition-colors hover:border-amber-400/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
                         >
                             <div class="flex items-start sm:items-center gap-3">
@@ -347,19 +439,19 @@ import { translations } from "../lib/translations";
                                     <div class="i-lucide-coins text-lg"></div>
                                 </div>
                                 <div>
-                                    <div class="text-xs font-semibold text-[#94A3B8] flex items-center gap-1.5 flex-wrap">
-                                        <span>Crypto (USDT / USDC)</span>
-                                        <span class="text-[9px] bg-amber-500/10 text-amber-400 border border-amber-500/25 px-1.5 py-0.2 rounded font-mono">SEGERA HADIR</span>
-                                        <span class="text-[9px] bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/25 px-1 py-0.2 rounded font-mono">NON-CUSTODIAL</span>
+                                    <div class="text-xs font-semibold text-[#F8FAFC] flex items-center gap-1.5 flex-wrap">
+                                        <span>Crypto Instant (USDT / USDC)</span>
+                                        <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 px-1.5 py-0.2 rounded font-mono">0% FEE</span>
+                                        <span class="text-[9px] bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/25 px-1 py-0.2 rounded font-mono">ON-CHAIN</span>
                                     </div>
-                                    <p class="text-[10px] text-[#64748B] mt-1 font-mono">
-                                        Pembayaran Web3 terdesentralisasi anti-chargeback (TRC-20, Polygon, BEP-20).
+                                    <p class="text-[10px] text-[#94A3B8] mt-1 font-mono">
+                                        Dukungan BSC BEP-20, Polygon POS, & TRON TRC-20 aktif. Klik untuk memilih jaringan crypto.
                                     </p>
                                 </div>
                             </div>
                             <div class="flex items-center self-end sm:self-center">
-                                <span class="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-1 rounded font-mono flex items-center gap-1">
-                                    <div class="i-lucide-info text-xs"></div> DETAIL
+                                <span class="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-1 rounded font-mono flex items-center gap-1 group-hover:bg-amber-500/20 transition-colors">
+                                    <div class="i-lucide-arrow-right text-xs"></div> PILIH CRYPTO
                                 </span>
                             </div>
                         </div>
@@ -478,19 +570,72 @@ import { translations } from "../lib/translations";
 
             const container = document.getElementById("order-items");
             let total = 0;
+            const currentLang = localStorage.getItem("yasui_lang") || lang || "id";
 
             if (container) {
                 container.innerHTML = cartItems
                     .map((item) => {
-                        total += parsePrice(item.price);
+                        const qty = Math.max(1, parseInt(item.quantity || (item.orderMeta && item.orderMeta.quantity) || 1, 10));
+                        const rawPrice = parsePrice(item.price);
+                        const unitPrice = item.unitPrice ? parsePrice(item.unitPrice) : Math.round(rawPrice / qty);
+                        const lineTotal = rawPrice > 0 ? rawPrice : (unitPrice * qty);
+                        total += lineTotal;
+
+                        // Format Target Information
+                        let targetDisplay = "";
+                        if (typeof window.formatOrderTargetInfo === "function") {
+                            targetDisplay = window.formatOrderTargetInfo(item, currentLang);
+                        } else {
+                            const meta = item.orderMeta || {};
+                            const robloxUser = meta.robloxUsername || item.robloxUsername || "";
+                            const deliveryMethod = meta.deliveryMethod || item.deliveryMethod || "";
+                            const gameUid = meta.gameUid || item.gameUserId || "";
+                            const gameZone = meta.gameZone || item.gameZoneId || "";
+                            const gameNick = meta.inGameNickname || item.gameNickname || "";
+                            const itemMode = meta.subCategoryMode || item.mode || "account";
+
+                            if (itemMode === "roblox_item") {
+                                targetDisplay = `Target: ${robloxUser || "@User"} • Metode: ${deliveryMethod === "direct_gift" ? "Direct Gift" : "Private Server Trade"} • Qty: ${qty}x`;
+                            } else if (itemMode === "topup_gamepass") {
+                                if (robloxUser) {
+                                    const taxPart = meta.gamepassTaxCalc?.requiredGamepassPrice ? ` (Set ${meta.gamepassTaxCalc.requiredGamepassPrice} R$)` : "";
+                                    targetDisplay = `Target: ${robloxUser} • Metode: ${deliveryMethod === "via_gamepass_link" ? "Link Gamepass" : "Gift In-Game"}${taxPart} • Qty: ${qty}x`;
+                                } else if (gameUid) {
+                                    targetDisplay = `UID: ${gameUid}${gameZone ? ` (${gameZone})` : ""}${gameNick ? ` • Nick: ${gameNick}` : ""} • Qty: ${qty}x`;
+                                }
+                            } else if (itemMode === "game_gift" || (gameUid && gameZone)) {
+                                targetDisplay = `UID: ${gameUid || "-"}${gameZone ? ` (${gameZone})` : ""}${gameNick ? ` • Nick: ${gameNick}` : ""} • Qty: ${qty}x`;
+                            } else if (item.playerInGameId) {
+                                targetDisplay = `${item.playerInGameId} • Qty: ${qty}x`;
+                            } else {
+                                targetDisplay = `Kredensial Login via Email • Qty: ${qty}x`;
+                            }
+                        }
+
+                        const variantName = item.orderMeta?.variantName || item.variant || "";
+
                         return `
-                    <div class="flex gap-3 items-center bg-[#11131A] p-3 rounded-lg border border-[#222634]">
-                        <img src="${item.image}" class="w-10 h-10 rounded-md object-cover bg-[#0D0F15] border border-[#222634]">
+                    <div class="flex gap-3 items-start bg-[#11131A] p-3 rounded-lg border border-[#222634]">
+                        <img src="${item.image || "/favicon.svg"}" class="w-11 h-11 rounded-md object-cover bg-[#0D0F15] border border-[#222634] shrink-0 mt-0.5">
                         <div class="flex-1 min-w-0">
-                            <h4 class="text-xs font-semibold text-[#F8FAFC] truncate">${item.name}</h4>
-                            <p class="text-[10px] text-[#64748B] font-mono">${item.email}</p>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <h4 class="text-xs font-semibold text-[#F8FAFC] truncate">${item.name}</h4>
+                                ${variantName ? `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 font-semibold uppercase">${variantName}</span>` : ""}
+                            </div>
+                            
+                            ${targetDisplay ? `
+                            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#0D0F15] border border-[#222634] text-[10px] text-[#00E5FF] font-mono my-1 max-w-full">
+                                <div class="i-lucide-crosshair text-xs shrink-0 text-[#00E5FF]"></div>
+                                <span class="truncate">${targetDisplay}</span>
+                            </div>
+                            ` : ""}
+                            
+                            <p class="text-[10px] text-[#64748B] font-mono">${item.email || "guest@yasuigame.com"}</p>
                         </div>
-                        <div class="text-[#00E5FF] font-mono text-xs font-bold tabular-nums">${formatMoney(item.price)}</div>
+                        <div class="text-right shrink-0">
+                            <div class="text-[#00E5FF] font-mono text-xs font-bold tabular-nums">${formatMoney(lineTotal)}</div>
+                            ${qty > 1 ? `<div class="text-[9px] text-[#64748B] font-mono">(${qty}x @ ${formatMoney(unitPrice)})</div>` : ""}
+                        </div>
                     </div>
                 `;
                     })
@@ -565,12 +710,18 @@ import { translations } from "../lib/translations";
 
             if (id === "global") {
                 selectChannel("credit_card");
+            } else if (id === "crypto") {
+                const activeCryptoEl = document.querySelector("#info-crypto .channel-card.border-\\[\\#00E5FF\\]");
+                const selectedCrypto = activeCryptoEl ? activeCryptoEl.getAttribute("data-channel") : "CRYPTO_USDT_BEP20";
+                selectChannel(selectedCrypto);
             } else {
                 const activeChannelEl = document.querySelector("#channel-list .channel-card.border-\\[\\#00E5FF\\]") || document.querySelector("#channel-list .channel-card.active-channel");
                 const selected = activeChannelEl ? activeChannelEl.getAttribute("data-channel") : "qris";
                 selectChannel(selected);
             }
         }
+
+        window.switchTabToCrypto = () => switchTab("crypto");
 
         let modalCloseCallback = null;
         let targetPaymentUrl = null;
@@ -671,11 +822,29 @@ import { translations } from "../lib/translations";
             loader?.classList.add("flex");
 
             try {
+                const normalizedCartItems = cartItems.map(item => {
+                    const qty = Math.max(1, parseInt(item.quantity || (item.orderMeta && item.orderMeta.quantity) || 1, 10));
+                    return {
+                        ...item,
+                        quantity: qty,
+                        orderMeta: item.orderMeta || {
+                            subCategoryMode: item.mode || "account",
+                            quantity: qty,
+                            variantName: item.variant || "",
+                            robloxUsername: item.robloxUsername || "",
+                            deliveryMethod: item.deliveryMethod || "",
+                            gameUid: item.gameUserId || "",
+                            gameZone: item.gameZoneId || "",
+                            inGameNickname: item.gameNickname || ""
+                        }
+                    };
+                });
+
                 const response = await fetch("/api/create-order", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        cartItems: cartItems,
+                        cartItems: normalizedCartItems,
                         customerInfo: {
                             email: emailVal,
                             wa: waVal || "-",
@@ -756,19 +925,10 @@ import { translations } from "../lib/translations";
         }
 
         document.getElementById("tab-qris")?.addEventListener("click", () => switchTab("qris"));
+        document.getElementById("tab-crypto")?.addEventListener("click", () => switchTab("crypto"));
         document.getElementById("tab-global")?.addEventListener("click", () => switchTab("global"));
         document.getElementById("modal-btn")?.addEventListener("click", closeModal);
         document.getElementById("pay-btn")?.addEventListener("click", processPayment);
-        document.getElementById("btn-crypto-notice")?.addEventListener("click", () => {
-            showCyberModal(
-                "crypto",
-                "CRYPTO GATEWAY (SEGERA HADIR)",
-                "Dukungan pembayaran Web3 Crypto (USDT & USDC) di jaringan TRC-20, Polygon, dan BEP-20 saat ini sedang dalam proses audit smart contract kami.\n\nUntuk pesanan Anda saat ini, silakan gunakan metode Visa / Mastercard / JCB yang telah aktif dan terhubung ke gateway Duitku.",
-                () => {
-                    selectChannel("credit_card");
-                }
-            );
-        });
 
         document.querySelectorAll(".channel-card").forEach((card) => {
             card.addEventListener("click", () => {

@@ -105,7 +105,8 @@ export async function wcFetch(endpoint, {
     body = null,
     bypassCache = false,
     ttlMs = DEFAULT_CACHE_TTL,
-    retries = 1
+    retries = 1,
+    timeoutMs = 8000
 } = {}) {
     assertWcCredentials();
 
@@ -152,7 +153,7 @@ export async function wcFetch(endpoint, {
     const fetchOptions = {
         method,
         headers,
-        signal: AbortSignal.timeout(8000) // Timeout tegas 8 detik agar SSR tidak menggantung
+        signal: AbortSignal.timeout(timeoutMs) // Timeout default 8 detik (bisa diatur untuk batch maintenance)
     };
 
     if (body && (method === "POST" || method === "PUT" || method === "PATCH")) {
@@ -397,6 +398,8 @@ export function normalizeProduct(p) {
         regularPrice: formattedRegular,
         rawRegularPrice: p.regular_price || "",
         stockStatus: p.stock_status === "instock" ? "IN_STOCK" : "OUT_OF_STOCK",
+        stockQuantity: p.stock_quantity !== null && p.stock_quantity !== undefined ? Number(p.stock_quantity) : null,
+        manageStock: Boolean(p.manage_stock),
         image: mainImg ? { sourceUrl: mainImg } : null,
         images: p.images || [],
         galleryImages: {

@@ -1,5 +1,6 @@
 import { createOrder, updateOrder, findOrCreateCustomer, generateSessionToken, getProductById } from '../../lib/wc';
 import { createDuitkuInquiry, PAYMENT_CHANNELS } from '../../lib/duitku';
+import { isCryptoChannel, getCryptoChannelConfig, calculateCryptoAmount } from '../../lib/crypto-payment.server';
 import { isValidEmail, sanitizeText } from '../../lib/sanitize';
 import QRCode from 'qrcode';
 
@@ -30,6 +31,9 @@ export const POST = async ({ request }) => {
 
         // 2. Sanitasi & Validasi Line Items serta Verifikasi Ketersediaan Stok Real-Time
         const lineItems = [];
+        const orderTargetSummaries = [];
+        const structuredOrderTargets = [];
+
         for (const item of cartItems) {
             const productId = parseInt(item.id, 10);
             const quantity = Math.max(1, Math.min(99, parseInt(item.quantity || 1, 10)));
@@ -57,9 +61,61 @@ export const POST = async ({ request }) => {
                 }), { status: 400 });
             }
 
+            // Ekstraksi Metadata Target Pemesanan
+            const meta = item.orderMeta || {};
+            const subCategoryMode = sanitizeText(meta.subCategoryMode || item.mode || "account", 30);
+            const variantName = sanitizeText(meta.variantName || item.variant || "", 100);
+            const robloxUsername = sanitizeText(meta.robloxUsername || item.robloxUsername || "", 50);
+            const deliveryMethod = sanitizeText(meta.deliveryMethod || item.deliveryMethod || "", 50);
+            const gameUid = sanitizeText(meta.gameUid || item.gameUserId || "", 50);
+            const gameZone = sanitizeText(meta.gameZone || item.gameZoneId || "", 30);
+            const inGameNickname = sanitizeText(meta.inGameNickname || item.gameNickname || "", 50);
+            const gamepassTaxCalc = meta.gamepassTaxCalc || null;
+
+            const lineItemMeta = [
+                { key: "Sub Kategori", value: subCategoryMode },
+                { key: "Kuantitas", value: String(quantity) }
+            ];
+
+            if (variantName) lineItemMeta.push({ key: "Varian", value: variantName });
+            if (robloxUsername) lineItemMeta.push({ key: "Roblox Username", value: robloxUsername });
+            if (deliveryMethod) lineItemMeta.push({ key: "Metode Pengiriman", value: deliveryMethod });
+            if (gameUid) lineItemMeta.push({ key: "UID Game", value: gameUid });
+            if (gameZone) lineItemMeta.push({ key: "Zone / Server ID", value: gameZone });
+            if (inGameNickname) lineItemMeta.push({ key: "In-Game Nickname", value: inGameNickname });
+            if (gamepassTaxCalc && gamepassTaxCalc.requiredGamepassPrice) {
+                lineItemMeta.push({ key: "Set Gamepass Price (Pajak 30%)", value: `${gamepassTaxCalc.requiredGamepassPrice} Robux` });
+            }
+
             lineItems.push({
                 product_id: productId,
-                quantity: quantity
+                quantity: quantity,
+                meta_data: lineItemMeta
+            });
+
+            // Target note summary per product
+            let targetNote = "";
+            if (subCategoryMode === "roblox_item" || robloxUsername) {
+                targetNote = `Roblox: ${robloxUsername || '@User'} (Metode: ${deliveryMethod || 'In-Game'})`;
+            } else if (gameUid) {
+                targetNote = `UID: ${gameUid}${gameZone ? ` (${gameZone})` : ''}${inGameNickname ? ` [Nick: ${inGameNickname}]` : ''}`;
+            } else {
+                targetNote = `Pengiriman Akun ke ${cleanEmail}`;
+            }
+
+            orderTargetSummaries.push(`• ${product.name || `Item #${productId}`}${variantName ? ` [${variantName}]` : ''} (${quantity}x) -> ${targetNote}`);
+            structuredOrderTargets.push({
+                productId,
+                productName: product.name,
+                quantity,
+                subCategoryMode,
+                variantName,
+                robloxUsername,
+                deliveryMethod,
+                gameUid,
+                gameZone,
+                inGameNickname,
+                gamepassTaxCalc
             });
         }
 
@@ -78,15 +134,38 @@ export const POST = async ({ request }) => {
             console.warn("Lanjut sebagai guest karena pembuatan customer gagal:", e.message);
         }
 
-        // Tentukan Nama Metode Pembayaran
-        const selectedChannel = PAYMENT_CHANNELS[paymentCategory] || PAYMENT_CHANNELS["qris"];
-        const methodCode = selectedChannel.code || "SP";
-        const methodName = selectedChannel.name || "QRIS";
+        // Tentukan Nama Metode Pembayaran (Crypto vs Duitku)
+        const isCrypto = isCryptoChannel(paymentCategory);
+        let methodCode = "SP";
+        let methodName = "QRIS";
+        let paymentMethodId = "duitku";
+        let paymentMethodTitle = "Duitku - QRIS";
+        let cryptoConfig = null;
+
+        if (isCrypto) {
+            cryptoConfig = getCryptoChannelConfig(paymentCategory);
+            methodCode = cryptoConfig.id;
+            methodName = cryptoConfig.name;
+            paymentMethodId = "crypto";
+            paymentMethodTitle = `Crypto - ${cryptoConfig.name}`;
+        } else {
+            const selectedChannel = PAYMENT_CHANNELS[paymentCategory] || PAYMENT_CHANNELS["qris"];
+            methodCode = selectedChannel.code || "SP";
+            methodName = selectedChannel.name || "QRIS";
+            paymentMethodId = "duitku";
+            paymentMethodTitle = `Duitku - ${methodName}`;
+        }
 
         // 4. Payload Order untuk WooCommerce REST API
+        const customerNote = [
+            `Kontak: WA: ${cleanWa || '-'} | Email: ${cleanEmail} | Discord: ${cleanDiscord || '-'}`,
+            `Metode Bayar: ${methodName} (${methodCode})`,
+            `Target Pengiriman:\n${orderTargetSummaries.join("\n")}`
+        ].join("\n");
+
         const orderPayload = {
-            payment_method: 'duitku',
-            payment_method_title: `Duitku - ${methodName}`,
+            payment_method: paymentMethodId,
+            payment_method_title: paymentMethodTitle,
             set_paid: false,
             customer_id: customerId,
             billing: {
@@ -100,59 +179,132 @@ export const POST = async ({ request }) => {
                 country: "ID",
             },
             line_items: lineItems,
-            customer_note: `WA: ${cleanWa || '-'} | Email: ${cleanEmail} | Discord: ${cleanDiscord || '-'} | Method: ${methodName} (${methodCode})`
+            customer_note: customerNote,
+            meta_data: [
+                { key: "_order_target_details", value: JSON.stringify(structuredOrderTargets) },
+                { key: "_buyer_wa", value: cleanWa },
+                { key: "_buyer_discord", value: cleanDiscord }
+            ]
         };
 
         const order = await createOrder(orderPayload);
         const orderTotal = Math.round(Number(order.total) || 0);
 
-        // 5. Request Duitku Inquiry (Headless)
-        const merchantOrderId = `YG-${order.id}-${Math.floor(1000 + Math.random() * 9000)}`;
-        const productSummary = cartItems
-            .map(i => sanitizeText(i.name || "Item", 30))
-            .join(", ")
-            .slice(0, 100);
+        // 5. Inisialisasi Gateway (Crypto On-Chain Terminal vs Duitku Inquiry)
+        let merchantOrderId = null;
+        let paymentDetails = null;
 
-        let duitkuRes = null;
-        let qrDataUrl = null;
+        if (isCrypto && cryptoConfig) {
+            // === ALUR CRYPTO GATEWAY (SELF-HOSTED ON-CHAIN) ===
+            const cryptoCalc = calculateCryptoAmount(orderTotal, order.id);
+            const expectedAmount = cryptoCalc.expectedAmount;
+            const cryptoExpiryTime = Date.now() + 60 * 60 * 1000; // 60 Menit batas waktu transfer crypto
 
-        try {
-            duitkuRes = await createDuitkuInquiry({
-                merchantOrderId,
-                paymentAmount: orderTotal,
-                paymentMethod: methodCode,
-                productDetails: productSummary || "Yasui Game Digital Account",
-                email: cleanEmail,
-                phoneNumber: cleanWa && cleanWa !== "-" ? cleanWa : "08123456789",
-                customerVaName: cleanName || "Yasui Buyer",
-                expiryPeriod: 15 // 15 Menit
-            });
-
-            // Jika QRIS, generate Data URL QR Code
-            if (duitkuRes.qrString) {
-                qrDataUrl = await QRCode.toDataURL(duitkuRes.qrString, {
+            let cryptoQrDataUrl = null;
+            try {
+                cryptoQrDataUrl = await QRCode.toDataURL(cryptoConfig.walletAddress, {
                     width: 320,
                     margin: 2,
                     color: { dark: "#000000", light: "#ffffff" }
                 });
+            } catch (qrErr) {
+                console.warn("[Crypto QR Error]", qrErr.message);
             }
 
-            // Simpan metadata Duitku ke Order WooCommerce
+            // Simpan detail tagihan crypto ke meta_data WooCommerce
             await updateOrder(order.id, {
                 meta_data: [
-                    { key: "_duitku_merchant_order_id", value: merchantOrderId },
-                    { key: "_duitku_reference", value: duitkuRes.reference || "" },
-                    { key: "_duitku_payment_method", value: methodCode },
-                    { key: "_duitku_payment_method_name", value: methodName },
-                    { key: "_duitku_va_number", value: duitkuRes.vaNumber || "" },
-                    { key: "_duitku_qr_string", value: duitkuRes.qrString || "" },
-                    { key: "_duitku_payment_url", value: duitkuRes.paymentUrl || "" },
-                    { key: "_duitku_expiry_time", value: String(Date.now() + 15 * 60 * 1000) }
+                    { key: "_crypto_payment_channel", value: cryptoConfig.id },
+                    { key: "_crypto_token_symbol", value: cryptoConfig.token },
+                    { key: "_crypto_network", value: cryptoConfig.network },
+                    { key: "_crypto_network_name", value: cryptoConfig.name },
+                    { key: "_crypto_expected_amount", value: String(expectedAmount) },
+                    { key: "_crypto_wallet_address", value: cryptoConfig.walletAddress },
+                    { key: "_crypto_contract_address", value: cryptoConfig.contractAddress },
+                    { key: "_crypto_contract_display", value: cryptoConfig.contractDisplay },
+                    { key: "_crypto_expiry_time", value: String(cryptoExpiryTime) },
+                    { key: "_crypto_status", value: "PENDING_VERIFICATION" }
                 ]
             });
-        } catch (duitkuError) {
-            console.error("Duitku Inquiry Failed:", duitkuError.message);
-            throw new Error(`Gagal menghubungi gateway pembayaran Duitku: ${duitkuError.message}`);
+
+            merchantOrderId = `CRYPTO-${order.id}`;
+            paymentDetails = {
+                method: cryptoConfig.id,
+                methodName: cryptoConfig.name,
+                isCrypto: true,
+                crypto: {
+                    expectedAmount,
+                    expectedAmountStr: cryptoCalc.expectedAmountStr,
+                    tokenSymbol: cryptoConfig.token,
+                    network: cryptoConfig.network,
+                    networkName: cryptoConfig.name,
+                    walletAddress: cryptoConfig.walletAddress,
+                    contractAddress: cryptoConfig.contractAddress,
+                    contractDisplay: cryptoConfig.contractDisplay,
+                    qrDataUrl: cryptoQrDataUrl,
+                    expiryTime: cryptoExpiryTime
+                }
+            };
+        } else {
+            // === ALUR DUITKU GATEWAY (HEADLESS DIRECT API) ===
+            merchantOrderId = `YG-${order.id}-${Math.floor(1000 + Math.random() * 9000)}`;
+            const productSummary = cartItems
+                .map(i => sanitizeText(i.name || "Item", 30))
+                .join(", ")
+                .slice(0, 100);
+
+            let duitkuRes = null;
+            let qrDataUrl = null;
+
+            try {
+                duitkuRes = await createDuitkuInquiry({
+                    merchantOrderId,
+                    paymentAmount: orderTotal,
+                    paymentMethod: methodCode,
+                    productDetails: productSummary || "Yasui Game Digital Account",
+                    email: cleanEmail,
+                    phoneNumber: cleanWa && cleanWa !== "-" ? cleanWa : "08123456789",
+                    customerVaName: cleanName || "Yasui Buyer",
+                    expiryPeriod: 15 // 15 Menit
+                });
+
+                // Jika QRIS, generate Data URL QR Code
+                if (duitkuRes.qrString) {
+                    qrDataUrl = await QRCode.toDataURL(duitkuRes.qrString, {
+                        width: 320,
+                        margin: 2,
+                        color: { dark: "#000000", light: "#ffffff" }
+                    });
+                }
+
+                // Simpan metadata Duitku ke Order WooCommerce
+                await updateOrder(order.id, {
+                    meta_data: [
+                        { key: "_duitku_merchant_order_id", value: merchantOrderId },
+                        { key: "_duitku_reference", value: duitkuRes.reference || "" },
+                        { key: "_duitku_payment_method", value: methodCode },
+                        { key: "_duitku_payment_method_name", value: methodName },
+                        { key: "_duitku_va_number", value: duitkuRes.vaNumber || "" },
+                        { key: "_duitku_qr_string", value: duitkuRes.qrString || "" },
+                        { key: "_duitku_payment_url", value: duitkuRes.paymentUrl || "" },
+                        { key: "_duitku_expiry_time", value: String(Date.now() + 15 * 60 * 1000) }
+                    ]
+                });
+
+                paymentDetails = {
+                    method: methodCode,
+                    methodName: methodName,
+                    isCrypto: false,
+                    reference: duitkuRes.reference,
+                    vaNumber: duitkuRes.vaNumber || null,
+                    qrString: duitkuRes.qrString || null,
+                    qrDataUrl: qrDataUrl,
+                    paymentUrl: duitkuRes.paymentUrl || null
+                };
+            } catch (duitkuError) {
+                console.error("Duitku Inquiry Failed:", duitkuError.message);
+                throw new Error(`Gagal menghubungi gateway pembayaran Duitku: ${duitkuError.message}`);
+            }
         }
 
         // 6. Headless Order Pay URL dengan Proteksi Order Key
@@ -178,15 +330,7 @@ export const POST = async ({ request }) => {
                 email: cleanEmail,
                 name: cleanName
             },
-            payment: {
-                method: methodCode,
-                methodName: methodName,
-                reference: duitkuRes.reference,
-                vaNumber: duitkuRes.vaNumber || null,
-                qrString: duitkuRes.qrString || null,
-                qrDataUrl: qrDataUrl,
-                paymentUrl: duitkuRes.paymentUrl || null
-            },
+            payment: paymentDetails,
             paymentUrl: paymentPayUrl
         }), { status: 200 });
 

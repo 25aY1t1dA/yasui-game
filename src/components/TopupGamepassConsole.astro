@@ -1,0 +1,1035 @@
+---
+// src/components/TopupGamepassConsole.astro
+// Tactical Split-Pane Console (Eldorado / Itemku 2.0 Style) for Top Up & Gamepass
+import { parsePrice } from "../lib/price";
+
+interface Props {
+    product: any;
+    relatedProducts?: any[];
+    categoryName?: string;
+    categorySlug?: string;
+    isRoblox?: boolean;
+}
+
+const {
+    product,
+    relatedProducts = [],
+    categoryName = "Game",
+    categorySlug = "category",
+    isRoblox = false,
+} = Astro.props;
+
+const prodPrice = parsePrice(product.price) || 0;
+const prodRegular = parsePrice(product.regularPrice) || prodPrice;
+const prodImage = product.images?.[0]?.src || product.image?.sourceUrl || "/favicon.svg";
+
+// Build Bento packages list
+// 1. Primary selected product
+const primaryBentoItem = {
+    id: product.databaseId || (product.id ? parseInt(String(product.id).replace(/\D/g, "")) : 101),
+    name: product.name,
+    slug: product.slug,
+    price: prodPrice,
+    regularPrice: prodRegular,
+    image: prodImage,
+    nominal: parseInt(product.name.replace(/\D/g, "")) || 500,
+    badge: "INSTANT",
+    isPrimary: true
+};
+
+// 2. Curated supplementary packages if related products are sparse
+const lowerCat = `${categoryName} ${categorySlug} ${product.name}`.toLowerCase();
+let fallbackPackages: any[] = [];
+
+if (isRoblox || lowerCat.includes("roblox") || lowerCat.includes("blox") || lowerCat.includes("robux")) {
+    fallbackPackages = [
+        { name: "Fast Boats Gamepass", price: 55000, nominal: 350, badge: "POPULAR" },
+        { name: "2x Mastery Gamepass", price: 65000, nominal: 450, badge: "INSTANT" },
+        { name: "2x Money Gamepass", price: 65000, nominal: 450, badge: "INSTANT" },
+        { name: "Fruit Storage (+1)", price: 60000, nominal: 400, badge: "HOT" },
+        { name: "Dark Blade (Yoru)", price: 175000, nominal: 1200, badge: "LEGEND" },
+        { name: "Permanent Buddha Fruit", price: 225000, nominal: 1650, badge: "BESTSELLER" },
+        { name: "Permanent Portal Fruit", price: 280000, nominal: 2000, badge: "INSTANT" },
+        { name: "500 Robux (Clean & Instant)", price: 60000, nominal: 500, badge: "ROBUX" },
+        { name: "1,000 Robux (Clean & Instant)", price: 118000, nominal: 1000, badge: "ROBUX" }
+    ];
+} else if (lowerCat.includes("mobile legends") || lowerCat.includes("mlbb")) {
+    fallbackPackages = [
+        { name: "Weekly Diamond Pass", price: 28500, nominal: 210, badge: "HEMAT 60%" },
+        { name: "86 Diamonds", price: 20000, nominal: 86, badge: "INSTANT" },
+        { name: "172 Diamonds", price: 39500, nominal: 172, badge: "INSTANT" },
+        { name: "257 Diamonds", price: 58000, nominal: 257, badge: "POPULAR" },
+        { name: "706 Diamonds", price: 155000, nominal: 706, badge: "HOT" },
+        { name: "2195 Diamonds", price: 470000, nominal: 2195, badge: "SULTAN" }
+    ];
+} else {
+    fallbackPackages = [
+        { name: "Paket Starter / Blessing", price: 65000, nominal: 60, badge: "STARTER" },
+        { name: "Nominal 300 Crystals / Poin", price: 65000, nominal: 300, badge: "INSTANT" },
+        { name: "Nominal 980 Crystals / Poin", price: 195000, nominal: 980, badge: "POPULAR" },
+        { name: "Nominal 1980 Crystals / Poin", price: 390000, nominal: 1980, badge: "HOT" },
+        { name: "Nominal 3280 Crystals / Poin", price: 640000, nominal: 3280, badge: "SULTAN" }
+    ];
+}
+
+// Merge related products from WC
+const relatedBento = (relatedProducts || []).map((rp, idx) => ({
+    id: rp.databaseId || (rp.id ? parseInt(String(rp.id).replace(/\D/g, "")) : 200 + idx),
+    name: rp.name,
+    slug: rp.slug,
+    price: parsePrice(rp.price) || (prodPrice + (idx + 1) * 20000),
+    regularPrice: parsePrice(rp.regularPrice) || parsePrice(rp.price) || 0,
+    image: rp.images?.[0]?.src || rp.image?.sourceUrl || prodImage,
+    nominal: parseInt(rp.name.replace(/\D/g, "")) || ((idx + 1) * 250),
+    badge: "INSTANT",
+    isPrimary: false
+}));
+
+// Combine with fallback to ensure at least 6 bento options
+let allBentoItems = [primaryBentoItem, ...relatedBento];
+if (allBentoItems.length < 6) {
+    const existingNames = new Set(allBentoItems.map((i) => i.name.toLowerCase()));
+    for (const fb of fallbackPackages) {
+        if (!existingNames.has(fb.name.toLowerCase())) {
+            allBentoItems.push({
+                id: product.databaseId ? product.databaseId + allBentoItems.length + 10 : 300 + allBentoItems.length,
+                name: fb.name,
+                slug: product.slug,
+                price: fb.price,
+                regularPrice: Math.round(fb.price * 1.15),
+                image: prodImage,
+                nominal: fb.nominal,
+                badge: fb.badge,
+                isPrimary: false
+            });
+            existingNames.add(fb.name.toLowerCase());
+            if (allBentoItems.length >= 8) break;
+        }
+    }
+}
+---
+
+<div class="topup-gamepass-console-root space-y-6">
+    {/* Tactical Cyber Toast */}
+    <div
+        id="topup-toast"
+        class="fixed top-20 right-4 z-[100] translate-x-[150%] transition-transform duration-300 flex items-center gap-3 bg-[#11131A] border border-[#00E5FF] p-3.5 rounded-md shadow-2xl max-w-xs md:max-w-md pointer-events-none"
+    >
+        <div class="w-7 h-7 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20 flex items-center justify-center shrink-0">
+            <span class="i-lucide-check text-base"></span>
+        </div>
+        <div class="min-w-0">
+            <h4 class="text-xs font-mono font-bold text-[#F8FAFC] uppercase tracking-wider" data-i18n="topup.package_selected">Item Ditambahkan</h4>
+            <p id="topup-toast-message" class="text-[11px] text-[#94A3B8] font-mono truncate" data-i18n="topup.added_toast">Pesanan masuk ke keranjang belanja.</p>
+        </div>
+    </div>
+
+    {/* Header Console Banner */}
+    <div class="p-4 rounded-lg bg-[#11131A] border border-[#222634] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-md bg-[#0D0F15] border border-[#222634] flex items-center justify-center shrink-0">
+                <span class={isRoblox ? "i-lucide-gamepad text-[#00E5FF] text-xl" : "i-lucide-zap text-[#00E5FF] text-xl"}></span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[#F8FAFC] font-bold text-sm uppercase tracking-wider">
+                        {isRoblox ? "ROBLOX GAMEPASS & ROBUX INSTANT ORDER" : `${categoryName.toUpperCase()} INSTANT TOP UP CONSOLE`}
+                    </span>
+                    <span class="yg-badge-overlay-online text-[9px] px-1.5 py-0.2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        ONLINE 24/7
+                    </span>
+                </div>
+                <p class="text-[11px] text-[#94A3B8] mt-0.5" data-i18n="topup.bento_subtitle">
+                    Pilih paket atau nominal di bawah untuk memperbarui konsol pesanan secara instan.
+                </p>
+            </div>
+        </div>
+        <div class="text-[10px] text-[#64748B] flex items-center gap-2">
+            <span class="i-lucide-shield-check text-emerald-400 text-xs"></span>
+            <span data-i18n="topup.warranty_note">100% Legal & Bergaransi Resmi Yasui Game</span>
+        </div>
+    </div>
+
+    {/* Split-Pane 2 Kolom Layout */}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+        
+        {/* Kolom Kiri: Bento Grid Pilihan Produk / Nominal */}
+        <div class="lg:col-span-7 w-full space-y-6">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[#00E5FF] flex items-center gap-1.5">
+                        <span class="i-lucide-layout-grid text-sm"></span>
+                        <span data-i18n={isRoblox ? "topup.bento_gamepass_title" : "topup.bento_title"}>
+                            {isRoblox ? "PILIH GAMEPASS & ROBUX RESMI" : "PILIH PAKET / NOMINAL TOP UP"}
+                        </span>
+                    </h2>
+                    <span class="text-[10px] font-mono text-[#64748B] tabular-nums">
+                        {allBentoItems.length} Pilihan Tersedia
+                    </span>
+                </div>
+
+                {/* Bento Grid: 2 kolom di mobile, 3 kolom di desktop */}
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-3" id="bento-packages-grid">
+                    {allBentoItems.map((item, idx) => {
+                        const isDefault = idx === 0;
+                        return (
+                            <button
+                                type="button"
+                                class={`bento-card text-left p-3 sm:p-3.5 rounded-lg border transition-all duration-150 flex flex-col justify-between gap-3 relative cursor-pointer group ${
+                                    isDefault
+                                        ? "active-bento border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] ring-1 ring-[#00E5FF] shadow-[0_0_15px_rgba(0,229,255,0.12)]"
+                                        : "border-[#222634] bg-[#11131A] text-[#94A3B8] hover:border-[#2E3446] hover:bg-[#151821]"
+                                }`}
+                                data-bento-id={item.id}
+                                data-bento-name={item.name}
+                                data-bento-price={item.price}
+                                data-bento-nominal={item.nominal}
+                                data-bento-image={item.image}
+                                data-bento-slug={item.slug}
+                            >
+                                <div class="flex items-start justify-between gap-2 w-full">
+                                    <div class="w-8 h-8 rounded bg-[#0D0F15] border border-[#222634] p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                                        <img
+                                            src={item.image}
+                                            alt={item.name}
+                                            class="w-full h-full object-contain"
+                                            loading="lazy"
+                                        />
+                                    </div>
+                                    <span class="bento-badge yg-badge-overlay text-[9px] px-1.5 py-0.2 font-mono font-bold shrink-0">
+                                        {item.badge}
+                                    </span>
+                                </div>
+
+                                <div class="min-w-0 w-full space-y-0.5">
+                                    <h3 class="bento-title text-xs font-semibold text-[#F8FAFC] leading-snug line-clamp-2 transition-colors">
+                                        {item.name}
+                                    </h3>
+                                    <span class="text-[10px] font-mono text-[#64748B] block truncate">
+                                        {isRoblox ? `Nominal ~${item.nominal} R$` : "Proses Kilat 1–5 Menit"}
+                                    </span>
+                                </div>
+
+                                <div class="w-full pt-2 border-t border-[#222634]/60 flex items-center justify-between mt-auto">
+                                    <span
+                                        class="bento-price yg-price text-xs sm:text-sm font-mono font-bold tabular-nums text-[#00E5FF]"
+                                        data-price-idr={item.price}
+                                    >
+                                        Rp {item.price.toLocaleString("id-ID")}
+                                    </span>
+                                    <div class={`bento-radio-dot w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-colors ${
+                                        isDefault ? "border-[#00E5FF] bg-[#00E5FF]" : "border-[#222634] bg-transparent"
+                                    }`}>
+                                        {isDefault && <div class="w-1.5 h-1.5 rounded-full bg-[#090A0F]"></div>}
+                                    </div>
+                                </div>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            {/* Tactical Explainer & Security Box */}
+            <div class="p-4 rounded-lg bg-[#11131A] border border-[#222634] space-y-3 font-mono text-xs">
+                <div class="flex items-center justify-between border-b border-[#222634] pb-2">
+                    <span class="text-[#00E5FF] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="i-lucide-info text-sm"></span>
+                        <span>INFORMASI PENGIRIMAN DIGITAL</span>
+                    </span>
+                    <span class="text-[10px] text-[#64748B]">Auto-Dispatch System</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
+                    <div class="p-2.5 rounded bg-[#0D0F15] border border-[#222634] space-y-1">
+                        <span class="text-[10px] text-[#64748B] uppercase block">Durasi Pengerjaan:</span>
+                        <div class="text-[#F8FAFC] font-bold flex items-center gap-1">
+                            <span class="i-lucide-clock text-emerald-400 text-xs"></span>
+                            <span>1 – 5 Menit (Otomatis 24/7)</span>
+                        </div>
+                    </div>
+                    <div class="p-2.5 rounded bg-[#0D0F15] border border-[#222634] space-y-1">
+                        <span class="text-[10px] text-[#64748B] uppercase block">Garansi Layanan:</span>
+                        <div class="text-[#F8FAFC] font-bold flex items-center gap-1">
+                            <span class="i-lucide-shield-check text-[#00E5FF] text-xs"></span>
+                            <span>100% Anti-Recall & Terverifikasi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {/* Kolom Kanan: Sticky Order Console */}
+        <div class="lg:col-span-5 w-full relative">
+            <div class="sticky top-24 yg-card p-5 md:p-6 rounded-lg bg-[#11131A] border border-[#222634] space-y-5 shadow-2xl">
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-2">
+                        <span class="yg-badge-overlay-online text-[10px] px-2 py-0.5 rounded font-mono font-bold" data-i18n="topup.topup_badge_online">
+                            ⚡ {isRoblox ? "ROBLOX GAMEPASS CONSOLE" : "TOP UP INSTANT ORDER"}
+                        </span>
+                        <span class="text-[10px] font-mono text-[#64748B] uppercase">
+                            {isRoblox ? "ROBLOX ECOSYSTEM" : categoryName}
+                        </span>
+                    </div>
+
+                    <h1 id="console-item-name" class="text-base md:text-xl font-bold text-[#F8FAFC] font-mono tracking-tight leading-snug">
+                        {primaryBentoItem.name}
+                    </h1>
+
+                    {/* Price and Stepper Summary */}
+                    <div class="flex items-baseline justify-between py-3 my-2 border-y border-[#222634]">
+                        <div>
+                            <span class="text-[10px] font-mono text-[#64748B] uppercase block" data-i18n="topup.total_price">
+                                Total Tagihan:
+                            </span>
+                            <span
+                                id="console-total-price"
+                                class="yg-price text-2xl md:text-3xl text-[#00E5FF] tabular-nums"
+                                data-price-idr={primaryBentoItem.price}
+                            >
+                                Rp {primaryBentoItem.price.toLocaleString("id-ID")}
+                            </span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-mono text-[#64748B] block" data-i18n="topup.unit_price">
+                                Harga Satuan:
+                            </span>
+                            <span id="console-unit-price" class="text-xs font-mono font-bold text-[#94A3B8] tabular-nums">
+                                Rp {primaryBentoItem.price.toLocaleString("id-ID")}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Stepper Kuantitas */}
+                <div class="p-3 rounded-lg bg-[#0D0F15] border border-[#222634] flex items-center justify-between">
+                    <div>
+                        <span class="text-[11px] font-mono font-bold text-[#94A3B8] uppercase block" data-i18n="product.quantity_label">
+                            Jumlah Pembelian
+                        </span>
+                        <span class="text-[10px] font-mono text-[#64748B]">Maks: 99 paket</span>
+                    </div>
+                    <div class="inline-flex items-center bg-[#11131A] border border-[#222634] rounded-md overflow-hidden">
+                        <button
+                            type="button"
+                            id="topup-qty-minus"
+                            class="w-10 h-10 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] hover:bg-[#161922] transition-colors font-mono text-base font-bold cursor-pointer"
+                            aria-label="Kurangi Jumlah"
+                        >
+                            -
+                        </button>
+                        <input
+                            type="number"
+                            id="topup-qty-input"
+                            class="w-14 h-10 bg-transparent text-center font-mono font-bold text-sm text-[#F8FAFC] border-x border-[#222634] focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            value="1"
+                            min="1"
+                            max="99"
+                        />
+                        <button
+                            type="button"
+                            id="topup-qty-plus"
+                            class="w-10 h-10 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] hover:bg-[#161922] transition-colors font-mono text-base font-bold cursor-pointer"
+                            aria-label="Tambah Jumlah"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                {/* Order Form (Desktop & Main Console) */}
+                <form id="topup-console-form" class="space-y-4">
+                    
+                    {/* VARIAN A — GAMEPASS ROBLOX */}
+                    {isRoblox && (
+                        <div class="space-y-3.5 p-3.5 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                            <div class="space-y-1">
+                                <label for="topup-roblox-username" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase flex justify-between">
+                                    <span data-i18n="topup.roblox_username_label">USERNAME ROBLOX (@USERNAME) *</span>
+                                    <span class="text-[9px] text-[#94A3B8]">Wajib Akun Asli</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="topup-roblox-username"
+                                    name="roblox_username"
+                                    required
+                                    autocomplete="off"
+                                    class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                    placeholder="Contoh: @YasuiPlayer (Bukan Display Name)"
+                                    data-i18n-placeholder="topup.roblox_username_placeholder"
+                                />
+                                <p class="text-[9px] font-mono text-[#64748B]" data-i18n="topup.roblox_username_hint">
+                                    Pastikan username akun Roblox asli (awalan @, bukan Display Name)
+                                </p>
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <span class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase block" data-i18n="topup.delivery_method_label">
+                                    METODE PENGIRIMAN GAMEPASS
+                                </span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" role="radiogroup">
+                                    <label class="topup-delivery-pill flex items-center justify-center gap-1.5 p-2 rounded-md border text-[10px] font-mono cursor-pointer transition-colors border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] font-semibold text-center">
+                                        <input type="radio" name="topup_delivery_method" value="gift_in_game" checked class="sr-only" />
+                                        <span>🎁 Gift In-Game (Direct)</span>
+                                    </label>
+                                    <label class="topup-delivery-pill flex items-center justify-center gap-1.5 p-2 rounded-md border text-[10px] font-mono cursor-pointer transition-colors border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC] text-center">
+                                        <input type="radio" name="topup_delivery_method" value="via_gamepass_link" class="sr-only" />
+                                        <span>🎟️ Via Link Gamepass (Pajak 30%)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {/* KALKULATOR PAJAK ROBLOX 30% (Muncul saat via_gamepass_link dipilih) */}
+                            <div id="gamepass-tax-calculator-box" class="hidden p-3 rounded-md bg-[#161922] border border-amber-500/40 text-amber-300 font-mono text-xs space-y-2">
+                                <div class="flex items-center justify-between border-b border-amber-500/30 pb-1.5">
+                                    <span class="font-bold flex items-center gap-1.5 text-[11px] text-amber-400">
+                                        <span class="i-lucide-calculator text-xs"></span>
+                                        <span data-i18n="topup.tax_calc_title">⚡ KALKULATOR PAJAK ROBLOX 30%</span>
+                                    </span>
+                                    <span class="text-[9px] bg-amber-500/15 px-1.5 py-0.2 rounded font-bold">PAJAK 30%</span>
+                                </div>
+                                <p class="text-[10px] text-amber-200/90 leading-relaxed" data-i18n="topup.tax_calc_desc">
+                                    Roblox mengenakan potongan marketplace 30%. Agar Anda menerima nominal bersih di bawah, setel harga gamepass di Creator Dashboard persis angka yang tertera:
+                                </p>
+                                <div class="space-y-1 bg-[#0D0F15] p-2.5 rounded border border-[#222634] text-[11px]">
+                                    <div class="flex justify-between">
+                                        <span class="text-[#94A3B8]" data-i18n="topup.tax_nominal_clean">Nominal Bersih yang Anda Terima:</span>
+                                        <strong id="calc-clean-nominal" class="text-emerald-400 font-bold tabular-nums">500 R$</strong>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-[#64748B]" data-i18n="topup.tax_cut">Potongan Pajak Roblox (30%):</span>
+                                        <span id="calc-tax-deduction" class="text-amber-400 tabular-nums">~215 R$</span>
+                                    </div>
+                                    <div class="flex justify-between pt-1.5 border-t border-[#222634] items-baseline">
+                                        <span class="text-[#F8FAFC] font-bold text-[10px] uppercase" data-i18n="topup.tax_required_price">HARGA GAMEPASS YANG HARUS DISETEL:</span>
+                                        <strong id="calc-required-gamepass-price" class="text-[#00E5FF] text-base font-bold tabular-nums">715 R$</strong>
+                                    </div>
+                                </div>
+                                <div class="space-y-1 pt-1">
+                                    <label for="topup-gamepass-url" class="text-[9px] text-[#94A3B8] uppercase block" data-i18n="topup.gamepass_link_label">
+                                        LINK GAMEPASS ANDA (OPSIONAL)
+                                    </label>
+                                    <input
+                                        type="url"
+                                        id="topup-gamepass-url"
+                                        name="gamepass_url"
+                                        class="yg-input !h-8 !text-[11px] !bg-[#0D0F15]"
+                                        placeholder="https://www.roblox.com/game-pass/..."
+                                        data-i18n-placeholder="topup.gamepass_link_placeholder"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* VARIAN B — NON-ROBLOX TOP UP (UID + ZONE) */}
+                    {!isRoblox && (
+                        <div class="space-y-3 p-3.5 rounded-lg bg-[#0D0F15] border border-[#222634]">
+                            <div class="grid grid-cols-12 gap-2">
+                                <div class="col-span-8 space-y-1">
+                                    <label for="topup-user-id" class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase flex justify-between">
+                                        <span data-i18n="topup.uid_label">USER ID (UID) *</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="topup-user-id"
+                                        name="game_user_id"
+                                        required
+                                        autocomplete="off"
+                                        class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                        placeholder="Contoh: 12345678"
+                                        data-i18n-placeholder="topup.uid_placeholder"
+                                    />
+                                </div>
+                                <div class="col-span-4 space-y-1">
+                                    <label for="topup-zone-id" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase">
+                                        <span data-i18n="topup.zone_label">ZONE ID *</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="topup-zone-id"
+                                        name="game_zone_id"
+                                        required
+                                        autocomplete="off"
+                                        class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                        placeholder="(1234)"
+                                        data-i18n-placeholder="topup.zone_placeholder"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label for="topup-nickname" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between">
+                                    <span data-i18n="topup.nickname_label">NICKNAME IN-GAME (OPSIONAL)</span>
+                                    <span class="text-[9px] text-[#64748B]">Verifikasi Akun</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="topup-nickname"
+                                    name="game_nickname"
+                                    autocomplete="off"
+                                    class="yg-input !h-10 !text-xs !bg-[#11131A] font-mono"
+                                    placeholder="Contoh: YasuiProGamer"
+                                    data-i18n-placeholder="topup.nickname_placeholder"
+                                />
+                                <p class="text-[9px] font-mono text-[#64748B]" data-i18n="topup.nickname_hint">
+                                    Opsional untuk verifikasi kesesuaian akun tujuan agar tidak salah kirim
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Standard Contact and Email Inputs */}
+                    <div class="space-y-3">
+                        <div class="space-y-1">
+                            <label for="topup-email-input" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase flex justify-between">
+                                <span data-i18n="topup.email_label">EMAIL BUKTI TRANSAKSI *</span>
+                                <span class="text-[9px] text-[#00E5FF]">Kirim Invoice</span>
+                            </label>
+                            <input
+                                type="email"
+                                id="topup-email-input"
+                                name="user_email"
+                                required
+                                autocomplete="email"
+                                class="yg-input !h-10 !text-xs !bg-[#0D0F15]"
+                                placeholder="nama@email.com"
+                                data-i18n-placeholder="topup.email_placeholder"
+                            />
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="col-span-1 space-y-1">
+                                <label for="topup-contact-method" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase" data-i18n="topup.contact_method_label">
+                                    Metode
+                                </label>
+                                <select
+                                    id="topup-contact-method"
+                                    name="contact_method"
+                                    class="yg-select w-full !h-10 !text-xs"
+                                >
+                                    <option value="whatsapp">WhatsApp</option>
+                                    <option value="discord">Discord</option>
+                                </select>
+                            </div>
+                            <div class="col-span-2 space-y-1">
+                                <label for="topup-contact-value" class="text-[10px] font-mono font-bold text-[#94A3B8] uppercase" data-i18n="topup.contact_label">
+                                    Nomor WA / Discord ID
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="topup-contact-value"
+                                    name="contact_value"
+                                    required
+                                    autocomplete="tel"
+                                    class="yg-input !h-10 !text-xs !bg-[#0D0F15]"
+                                    placeholder="0812-3456-xxxx"
+                                    pattern="^08[0-9]{8,13}$"
+                                    title="Nomor WhatsApp harus diawali 08 dan terdiri dari 10-15 angka"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* CTA Buttons */}
+                    <div class="grid grid-cols-2 gap-2.5 pt-2">
+                        <button
+                            type="button"
+                            id="topup-btn-cart"
+                            class="yg-btn-secondary py-3 text-xs"
+                            data-i18n="topup.add_to_cart"
+                        >
+                            + Keranjang
+                        </button>
+                        <button
+                            type="button"
+                            id="topup-btn-buy"
+                            class="yg-btn-primary py-3 text-xs"
+                            data-i18n="topup.buy_now"
+                        >
+                            Beli Langsung
+                        </button>
+                    </div>
+
+                    <button
+                        type="button"
+                        onclick={`window.openLiveChatModal && window.openLiveChatModal(${JSON.stringify(primaryBentoItem.name)})`}
+                        class="w-full py-2 px-3 rounded-md bg-[#161922] hover:bg-[#1E2230] border border-[#222634] hover:border-[#00E5FF]/40 text-[#94A3B8] hover:text-[#00E5FF] text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer mt-1"
+                    >
+                        <div class="i-lucide-headset text-xs text-[#00E5FF]"></div>
+                        <span data-i18n="topup.ask_admin">Tanya Admin tentang Paket Ini</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {/* Mobile Fixed Bottom Bar */}
+    <div class="lg:hidden fixed bottom-[52px] left-0 right-0 bg-[#090A0F]/95 backdrop-blur-md border-t border-[#222634] px-4 py-2.5 z-40">
+        <div class="flex items-center justify-between gap-3">
+            <div class="flex flex-col min-w-0">
+                <span id="mobile-topup-item-title" class="text-[10px] text-[#94A3B8] font-mono truncate max-w-[130px]">
+                    {primaryBentoItem.name}
+                </span>
+                <div class="flex items-baseline gap-1">
+                    <span id="mobile-topup-bottom-price" class="text-base font-mono font-bold text-[#00E5FF] leading-tight tabular-nums" data-price-idr={primaryBentoItem.price}>
+                        Rp {primaryBentoItem.price.toLocaleString("id-ID")}
+                    </span>
+                    <span id="mobile-topup-qty-badge" class="text-[10px] font-mono text-[#64748B]">(1x)</span>
+                </div>
+            </div>
+            <div class="flex gap-2 flex-1 max-w-[240px]">
+                <button
+                    type="button"
+                    id="mobile-trigger-cart"
+                    class="yg-btn-secondary flex-1 py-2 text-[10px]"
+                    data-i18n="topup.add_to_cart"
+                >
+                    + Keranjang
+                </button>
+                <button
+                    type="button"
+                    id="mobile-trigger-buy"
+                    class="yg-btn-primary flex-1 py-2 text-[10px]"
+                    data-i18n="topup.buy_now"
+                >
+                    Beli Langsung
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {/* Mobile Slide-Up Drawer Backdrop & Sheet */}
+    <div
+        id="topup-mobile-drawer-backdrop"
+        class="lg:hidden fixed inset-0 z-[120] bg-[#090A0F]/80 backdrop-blur-xs transition-opacity duration-300 opacity-0 pointer-events-none"
+        aria-hidden="true"
+    >
+        <div
+            id="topup-mobile-drawer-sheet"
+            class="absolute bottom-0 left-0 right-0 max-h-[88vh] bg-[#11131A] border-t border-[#222634] rounded-t-2xl p-5 shadow-2xl flex flex-col transform translate-y-full transition-transform duration-300 ease-out overflow-y-auto"
+            onclick="event.stopPropagation()"
+        >
+            <div class="w-10 h-1 bg-[#222634] rounded-full mx-auto mb-3 shrink-0"></div>
+
+            <div class="flex items-center justify-between pb-3 mb-4 border-b border-[#222634]">
+                <div class="min-w-0 pr-3">
+                    <span class="text-[10px] font-mono text-[#00E5FF] uppercase tracking-wider block">
+                        {isRoblox ? "ROBLOX GAMEPASS ORDER" : "TOP UP INSTANT"}
+                    </span>
+                    <h3 id="drawer-topup-title" class="text-sm font-bold text-[#F8FAFC] font-mono truncate">
+                        {primaryBentoItem.name}
+                    </h3>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span id="drawer-topup-price" class="yg-price text-sm text-[#00E5FF] tabular-nums" data-price-idr={primaryBentoItem.price}>
+                            Rp {primaryBentoItem.price.toLocaleString("id-ID")}
+                        </span>
+                        <span id="drawer-topup-qty-desc" class="text-[10px] font-mono text-[#64748B]">
+                            (1x paket)
+                        </span>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    id="topup-close-drawer-btn"
+                    class="yg-btn-icon shrink-0"
+                    aria-label="Tutup Form Pembelian"
+                >
+                    <span class="i-lucide-x text-sm"></span>
+                </button>
+            </div>
+
+            {/* Form in Mobile Drawer uses same inputs or clones on submit */}
+            <div id="drawer-form-content" class="space-y-4">
+                {/* Submit button in drawer */}
+                <button
+                    type="button"
+                    id="drawer-topup-submit-btn"
+                    class="w-full yg-btn-primary py-3 text-xs"
+                    data-i18n="topup.direct_checkout"
+                >
+                    Lanjutkan Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script is:inline define:vars={{ allBentoItems, isRoblox, categoryName }}>
+    (function initTopupConsole() {
+        const items = allBentoItems || [];
+        let selectedItem = items[0] || { id: 0, name: "Top Up", price: 0, nominal: 500 };
+        let currentQty = 1;
+        let isDirectCheckout = false;
+
+        function formatMoney(amount) {
+            if (window.formatCurrency) {
+                return window.formatCurrency(amount);
+            }
+            return "Rp " + Number(amount).toLocaleString("id-ID");
+        }
+
+        // ==========================================
+        // BENTO CARD SELECTION & REACTIVITY
+        // ==========================================
+        const bentoCards = document.querySelectorAll(".bento-card");
+        const consoleTitle = document.getElementById("console-item-name");
+        const consolePrice = document.getElementById("console-total-price");
+        const consoleUnitPrice = document.getElementById("console-unit-price");
+        const mobileTitle = document.getElementById("mobile-topup-item-title");
+        const mobilePrice = document.getElementById("mobile-topup-bottom-price");
+        const drawerTitle = document.getElementById("drawer-topup-title");
+        const drawerPrice = document.getElementById("drawer-topup-price");
+
+        function updateTaxCalculator() {
+            if (!isRoblox) return;
+            const nominal = selectedItem.nominal || parseInt(selectedItem.name.replace(/\D/g, "")) || 500;
+            const requiredPrice = Math.ceil(nominal / 0.7);
+            const taxCut = requiredPrice - nominal;
+
+            const cleanEl = document.getElementById("calc-clean-nominal");
+            const taxCutEl = document.getElementById("calc-tax-deduction");
+            const reqPriceEl = document.getElementById("calc-required-gamepass-price");
+
+            if (cleanEl) cleanEl.innerText = `${nominal} R$`;
+            if (taxCutEl) taxCutEl.innerText = `~${taxCut} R$`;
+            if (reqPriceEl) reqPriceEl.innerText = `${requiredPrice} R$`;
+        }
+
+        function updateAllPriceDisplays() {
+            const total = (selectedItem.price || 0) * currentQty;
+            const unit = selectedItem.price || 0;
+
+            if (consoleTitle) consoleTitle.innerText = selectedItem.name;
+            if (consolePrice) {
+                consolePrice.innerText = formatMoney(total);
+                consolePrice.setAttribute("data-price-idr", String(total));
+            }
+            if (consoleUnitPrice) consoleUnitPrice.innerText = formatMoney(unit);
+
+            if (mobileTitle) mobileTitle.innerText = selectedItem.name;
+            if (mobilePrice) {
+                mobilePrice.innerText = formatMoney(total);
+                mobilePrice.setAttribute("data-price-idr", String(total));
+            }
+            const mobileQtyBadge = document.getElementById("mobile-topup-qty-badge");
+            if (mobileQtyBadge) mobileQtyBadge.innerText = `(${currentQty}x)`;
+
+            if (drawerTitle) drawerTitle.innerText = selectedItem.name;
+            if (drawerPrice) {
+                drawerPrice.innerText = formatMoney(total);
+                drawerPrice.setAttribute("data-price-idr", String(total));
+            }
+            const drawerQtyDesc = document.getElementById("drawer-topup-qty-desc");
+            if (drawerQtyDesc) drawerQtyDesc.innerText = `(${currentQty}x @ ${formatMoney(unit)})`;
+
+            updateTaxCalculator();
+        }
+
+        bentoCards.forEach((card) => {
+            card.addEventListener("click", () => {
+                const itemId = parseInt(card.getAttribute("data-bento-id") || "0", 10);
+                const item = items.find((i) => i.id === itemId);
+                if (!item) return;
+
+                selectedItem = item;
+
+                // Update visual active state
+                bentoCards.forEach((c) => {
+                    c.classList.remove("border-[#00E5FF]", "bg-[#00E5FF]/10", "text-[#00E5FF]", "ring-1", "ring-[#00E5FF]", "shadow-[0_0_15px_rgba(0,229,255,0.12)]");
+                    c.classList.add("border-[#222634]", "bg-[#11131A]", "text-[#94A3B8]");
+                    const dot = c.querySelector(".bento-radio-dot");
+                    if (dot) {
+                        dot.className = "bento-radio-dot w-3.5 h-3.5 rounded-full border border-[#222634] bg-transparent flex items-center justify-center transition-colors";
+                        dot.innerHTML = "";
+                    }
+                });
+
+                card.classList.remove("border-[#222634]", "bg-[#11131A]", "text-[#94A3B8]");
+                card.classList.add("border-[#00E5FF]", "bg-[#00E5FF]/10", "text-[#00E5FF]", "ring-1", "ring-[#00E5FF]", "shadow-[0_0_15px_rgba(0,229,255,0.12)]");
+                const activeDot = card.querySelector(".bento-radio-dot");
+                if (activeDot) {
+                    activeDot.className = "bento-radio-dot w-3.5 h-3.5 rounded-full border border-[#00E5FF] bg-[#00E5FF] flex items-center justify-center transition-colors";
+                    activeDot.innerHTML = '<div class="w-1.5 h-1.5 rounded-full bg-[#090A0F]"></div>';
+                }
+
+                updateAllPriceDisplays();
+            });
+        });
+
+        // ==========================================
+        // STEPPER QUANTITY
+        // ==========================================
+        const qtyInput = document.getElementById("topup-qty-input");
+        const qtyMinus = document.getElementById("topup-qty-minus");
+        const qtyPlus = document.getElementById("topup-qty-plus");
+
+        function setQuantity(val) {
+            const parsed = parseInt(val, 10);
+            currentQty = Math.max(1, Math.min(99, isNaN(parsed) ? 1 : parsed));
+            if (qtyInput) qtyInput.value = currentQty;
+            updateAllPriceDisplays();
+        }
+
+        if (qtyMinus) qtyMinus.addEventListener("click", () => setQuantity(currentQty - 1));
+        if (qtyPlus) qtyPlus.addEventListener("click", () => setQuantity(currentQty + 1));
+        if (qtyInput) {
+            qtyInput.addEventListener("change", (e) => setQuantity(e.target.value));
+            qtyInput.addEventListener("input", (e) => setQuantity(e.target.value));
+        }
+
+        // ==========================================
+        // DELIVERY METHOD PILLS & TAX CALCULATOR
+        // ==========================================
+        const deliveryPills = document.querySelectorAll(".topup-delivery-pill");
+        const taxBox = document.getElementById("gamepass-tax-calculator-box");
+
+        deliveryPills.forEach((pill) => {
+            pill.addEventListener("click", () => {
+                const radio = pill.querySelector('input[type="radio"]');
+                if (!radio) return;
+                radio.checked = true;
+
+                deliveryPills.forEach((p) => {
+                    p.classList.remove("border-[#00E5FF]", "bg-[#00E5FF]/10", "text-[#00E5FF]", "font-semibold");
+                    p.classList.add("border-[#222634]", "bg-[#11131A]", "text-[#94A3B8]");
+                });
+
+                pill.classList.remove("border-[#222634]", "bg-[#11131A]", "text-[#94A3B8]");
+                pill.classList.add("border-[#00E5FF]", "bg-[#00E5FF]/10", "text-[#00E5FF]", "font-semibold");
+
+                if (taxBox) {
+                    if (radio.value === "via_gamepass_link") {
+                        taxBox.classList.remove("hidden");
+                        updateTaxCalculator();
+                    } else {
+                        taxBox.classList.add("hidden");
+                    }
+                }
+            });
+        });
+
+        // Contact method toggle placeholder
+        const methodSelect = document.getElementById("topup-contact-method");
+        const contactValueInput = document.getElementById("topup-contact-value");
+        if (methodSelect && contactValueInput) {
+            methodSelect.addEventListener("change", () => {
+                if (methodSelect.value === "whatsapp") {
+                    contactValueInput.type = "tel";
+                    contactValueInput.placeholder = "0812-3456-xxxx";
+                    contactValueInput.pattern = "^08[0-9]{8,13}$";
+                } else {
+                    contactValueInput.type = "text";
+                    contactValueInput.placeholder = "Username#1234 atau ID";
+                    contactValueInput.removeAttribute("pattern");
+                }
+            });
+        }
+
+        // ==========================================
+        // AUTO-FILL USER PREFERENCES
+        // ==========================================
+        function autoFillPreferences() {
+            const session = window.getSession ? window.getSession() : null;
+            const savedEmail = session?.email || localStorage.getItem("yasui_buyer_email") || "";
+            const savedWa = localStorage.getItem("yasui_buyer_wa") || "";
+            const savedDiscord = localStorage.getItem("yasui_buyer_discord") || "";
+
+            const emailInput = document.getElementById("topup-email-input");
+            if (emailInput && savedEmail && !emailInput.value) {
+                emailInput.value = savedEmail;
+            }
+
+            if (contactValueInput && !contactValueInput.value) {
+                if (savedWa) {
+                    if (methodSelect) methodSelect.value = "whatsapp";
+                    contactValueInput.value = savedWa;
+                } else if (savedDiscord) {
+                    if (methodSelect) methodSelect.value = "discord";
+                    contactValueInput.value = savedDiscord;
+                }
+            }
+        }
+        autoFillPreferences();
+
+        // ==========================================
+        // TOAST NOTIFIER
+        // ==========================================
+        function showTopupToast(msg) {
+            const toast = document.getElementById("topup-toast");
+            const msgEl = document.getElementById("topup-toast-message");
+            if (!toast || !msgEl) return;
+            msgEl.innerText = msg;
+            toast.classList.remove("translate-x-[150%]");
+            toast.classList.add("translate-x-0");
+            setTimeout(() => {
+                toast.classList.remove("translate-x-0");
+                toast.classList.add("translate-x-[150%]");
+            }, 3500);
+        }
+
+        // ==========================================
+        // SUBMIT ORDER TO CART (WITH COMPLETE ORDERMETA)
+        // ==========================================
+        function executeOrder(directCheckout) {
+            const form = document.getElementById("topup-console-form");
+            if (!form) return;
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                form.scrollIntoView({ behavior: "smooth", block: "center" });
+                return;
+            }
+
+            const formData = new FormData(form);
+            const userEmail = (formData.get("user_email") || "").trim().toLowerCase();
+            const contactMethod = formData.get("contact_method") || "whatsapp";
+            const contactValue = (formData.get("contact_value") || "").trim();
+
+            let robloxUser = (formData.get("roblox_username") || "").trim();
+            if (robloxUser && !robloxUser.startsWith("@")) {
+                robloxUser = `@${robloxUser}`;
+            }
+
+            const deliveryMethod = formData.get("topup_delivery_method") || "gift_in_game";
+            const gamepassUrl = (formData.get("gamepass_url") || "").trim();
+            const gameUid = (formData.get("game_user_id") || "").trim();
+            const gameZone = (formData.get("game_zone_id") || "").trim();
+            const inGameNickname = (formData.get("game_nickname") || "").trim();
+
+            const nominal = selectedItem.nominal || parseInt(selectedItem.name.replace(/\D/g, "")) || 500;
+            const requiredGamepassPrice = Math.ceil(nominal / 0.7);
+
+            // Persist contact preferences
+            if (userEmail) localStorage.setItem("yasui_buyer_email", userEmail);
+            if (contactMethod === "whatsapp" && contactValue) {
+                localStorage.setItem("yasui_buyer_wa", contactValue);
+            } else if (contactMethod === "discord" && contactValue) {
+                localStorage.setItem("yasui_buyer_discord", contactValue);
+            }
+
+            const unitPrice = selectedItem.price || 0;
+            const quantity = currentQty || 1;
+            const totalPrice = unitPrice * quantity;
+
+            // Target information formatting
+            let targetSummary = "";
+            if (isRoblox) {
+                targetSummary = `${robloxUser} [${deliveryMethod === "via_gamepass_link" ? `Link Gamepass (Set ${requiredGamepassPrice} R$)` : "Gift In-Game"}]`;
+            } else {
+                targetSummary = `UID: ${gameUid} (${gameZone})${inGameNickname ? ` - Nick: ${inGameNickname}` : ""}`;
+            }
+
+            const cartItem = {
+                id: selectedItem.id,
+                globalId: selectedItem.slug ? btoa(`Product:${selectedItem.id}`) : undefined,
+                name: selectedItem.name,
+                slug: selectedItem.slug || "topup",
+                price: totalPrice,
+                unitPrice: unitPrice,
+                quantity: quantity,
+                image: selectedItem.image || "/favicon.svg",
+                email: userEmail,
+                wa: contactMethod === "whatsapp" ? contactValue : `[Discord] ${contactValue}`,
+                contactMethod: contactMethod,
+                contactValue: contactValue,
+                mode: "topup_gamepass",
+                orderMeta: {
+                    subCategoryMode: "topup_gamepass",
+                    quantity: quantity,
+                    variantName: selectedItem.name,
+                    robloxUsername: robloxUser,
+                    deliveryMethod: deliveryMethod,
+                    gameUid: gameUid,
+                    gameZone: gameZone,
+                    inGameNickname: inGameNickname,
+                    gamepassTaxCalc: isRoblox && deliveryMethod === "via_gamepass_link" ? {
+                        nominalRobux: nominal,
+                        requiredGamepassPrice: requiredGamepassPrice
+                    } : undefined,
+                    rawTargetInfo: targetSummary
+                },
+                // Legacy fields for backward compatibility
+                robloxUsername: robloxUser,
+                deliveryMethod: deliveryMethod,
+                gameUserId: gameUid,
+                gameZoneId: gameZone,
+                gameNickname: inGameNickname,
+                playerInGameId: targetSummary,
+                selected: true,
+                timestamp: Date.now()
+            };
+
+            // Retrieve and save cart
+            let cart = [];
+            try {
+                cart = JSON.parse(localStorage.getItem("yasui_cart") || "[]");
+            } catch {
+                cart = [];
+            }
+            cart.push(cartItem);
+            localStorage.setItem("yasui_cart", JSON.stringify(cart));
+            window.dispatchEvent(new Event("storage"));
+            document.dispatchEvent(new CustomEvent("yasui-cart-changed", { detail: { cart } }));
+
+            closeTopupDrawer();
+
+            if (directCheckout) {
+                window.location.href = "/cart";
+            } else {
+                showTopupToast(`"${quantity}x ${selectedItem.name}" berhasil masuk ke keranjang!`);
+            }
+        }
+
+        // Button Listeners
+        const btnCart = document.getElementById("topup-btn-cart");
+        const btnBuy = document.getElementById("topup-btn-buy");
+        if (btnCart) btnCart.addEventListener("click", () => executeOrder(false));
+        if (btnBuy) btnBuy.addEventListener("click", () => executeOrder(true));
+
+        // ==========================================
+        // MOBILE DRAWER LOGIC
+        // ==========================================
+        const drawerBackdrop = document.getElementById("topup-mobile-drawer-backdrop");
+        const drawerSheet = document.getElementById("topup-mobile-drawer-sheet");
+        const drawerCloseBtn = document.getElementById("topup-close-drawer-btn");
+        const mobileTriggerCart = document.getElementById("mobile-trigger-cart");
+        const mobileTriggerBuy = document.getElementById("mobile-trigger-buy");
+        const drawerSubmitBtn = document.getElementById("drawer-topup-submit-btn");
+
+        function openTopupDrawer(directBuy) {
+            isDirectCheckout = directBuy;
+            if (drawerSubmitBtn) {
+                drawerSubmitBtn.innerText = directBuy ? "Lanjutkan Checkout" : "Lanjutkan ke Keranjang";
+            }
+            if (drawerBackdrop && drawerSheet) {
+                drawerBackdrop.classList.remove("opacity-0", "pointer-events-none");
+                drawerBackdrop.classList.add("opacity-100", "pointer-events-auto");
+                drawerBackdrop.setAttribute("aria-hidden", "false");
+                drawerSheet.classList.remove("translate-y-full");
+                drawerSheet.classList.add("translate-y-0");
+            }
+        }
+
+        function closeTopupDrawer() {
+            if (drawerBackdrop && drawerSheet) {
+                drawerSheet.classList.add("translate-y-full");
+                drawerSheet.classList.remove("translate-y-0");
+                drawerBackdrop.classList.add("opacity-0", "pointer-events-none");
+                drawerBackdrop.classList.remove("opacity-100", "pointer-events-auto");
+                drawerBackdrop.setAttribute("aria-hidden", "true");
+            }
+        }
+
+        if (mobileTriggerCart) mobileTriggerCart.addEventListener("click", () => openTopupDrawer(false));
+        if (mobileTriggerBuy) mobileTriggerBuy.addEventListener("click", () => openTopupDrawer(true));
+        if (drawerCloseBtn) drawerCloseBtn.addEventListener("click", closeTopupDrawer);
+        if (drawerBackdrop) {
+            drawerBackdrop.addEventListener("click", closeTopupDrawer);
+        }
+        if (drawerSubmitBtn) {
+            drawerSubmitBtn.addEventListener("click", () => executeOrder(isDirectCheckout));
+        }
+
+        updateAllPriceDisplays();
+    })();
+</script>

@@ -5,21 +5,11 @@ export function getSession(): UserSession | null {
         const raw = localStorage.getItem("yasui_session");
         if (raw) {
             const session: UserSession = JSON.parse(raw);
-            if (!session.expiresAt || Date.now() <= session.expiresAt) {
+            if (session && session.email && session.token && (!session.expiresAt || Date.now() <= session.expiresAt)) {
                 return session;
             }
+            // Hapus sesi kedaluwarsa atau tanpa token otentikasi valid
             localStorage.removeItem("yasui_session");
-        }
-        const savedEmail = localStorage.getItem("yasui_buyer_email");
-        if (savedEmail) {
-            const autoSession: UserSession = {
-                email: savedEmail,
-                name: savedEmail.split("@")[0],
-                isGuestBuyer: true,
-                expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000
-            };
-            localStorage.setItem("yasui_session", JSON.stringify(autoSession));
-            return autoSession;
         }
         return null;
     } catch {
@@ -27,7 +17,7 @@ export function getSession(): UserSession | null {
     }
 }
 
-export function updateNavAuthUI(): void {
+export function updateNavbarAuthUI(): void {
     const session = getSession();
     const loginBtn = document.getElementById("nav-login-btn");
     const userDropdown = document.getElementById("nav-user-dropdown");
@@ -35,10 +25,11 @@ export function updateNavAuthUI(): void {
     const userInitial = document.getElementById("nav-user-initial");
     const menuEmail = document.getElementById("nav-menu-email");
     const mobileLabel = document.getElementById("mobile-nav-label");
+    const userMenu = document.getElementById("nav-user-menu");
 
     const lang = localStorage.getItem("yasui_lang") || "id";
 
-    if (session && session.email) {
+    if (session && session.email && session.token) {
         const currentEmail = session.email;
         const displayName = session.name || currentEmail.split("@")[0];
 
@@ -67,9 +58,13 @@ export function updateNavAuthUI(): void {
             userDropdown.classList.add("hidden");
             userDropdown.classList.remove("block");
         }
+        if (userMenu) {
+            userMenu.classList.add("hidden");
+        }
         if (mobileLabel) mobileLabel.innerText = lang === "en" ? "LOGIN" : "MASUK";
     }
 }
+export const updateNavAuthUI = updateNavbarAuthUI;
 
 export function openAuthModal(mode = "login"): void {
     const modal = document.getElementById("global-auth-modal");
@@ -136,18 +131,21 @@ export async function handleAuthLogin(e: Event): Promise<void> {
             throw new Error(data.error || "Email atau kata sandi tidak cocok.");
         }
 
-        localStorage.setItem("yasui_session", JSON.stringify({
+        const userObj = {
             ...(data.user || {}),
             email,
             token: data.session?.token,
             expiresAt: data.session?.expiresAt || (Date.now() + 30 * 24 * 60 * 60 * 1000)
-        }));
+        };
+        localStorage.setItem("yasui_session", JSON.stringify(userObj));
         localStorage.setItem("yasui_buyer_email", email);
 
         alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-green-950/60 border border-green-500/50 text-green-400 block";
         alert.innerText = "Login berhasil! Memuat dashboard...";
 
-        updateNavAuthUI();
+        updateNavbarAuthUI();
+        window.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: userObj } }));
+        document.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: userObj } }));
         document.dispatchEvent(new Event("yasui-auth-changed"));
 
         setTimeout(() => {
@@ -232,14 +230,17 @@ export async function handleSetPassword(e: Event): Promise<void> {
         }
 
         if (data.session?.token && email) {
-            localStorage.setItem("yasui_session", JSON.stringify({
+            const userObj = {
                 ...(data.user || {}),
                 email,
                 token: data.session.token,
                 expiresAt: data.session.expiresAt || (Date.now() + 30 * 24 * 60 * 60 * 1000)
-            }));
+            };
+            localStorage.setItem("yasui_session", JSON.stringify(userObj));
             localStorage.setItem("yasui_buyer_email", email);
-            updateNavAuthUI();
+            updateNavbarAuthUI();
+            window.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: userObj } }));
+            document.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: userObj } }));
             document.dispatchEvent(new Event("yasui-auth-changed"));
         }
 
@@ -262,21 +263,48 @@ export async function handleSetPassword(e: Event): Promise<void> {
     }
 }
 
-export function logoutUser(): void {
-    localStorage.removeItem("yasui_session");
-    localStorage.removeItem("yasui_buyer_email");
-    updateNavAuthUI();
+export function yasuiLogout(): void {
+    try {
+        localStorage.removeItem("yasui_session");
+        localStorage.removeItem("yasui_buyer_email");
+        localStorage.removeItem("yasui_buyer_name");
+        localStorage.removeItem("yasui_token");
+        localStorage.removeItem("yasui_user");
+        localStorage.removeItem("yasui_auth");
+        sessionStorage.removeItem("yasui_session");
+        sessionStorage.removeItem("yasui_token");
+        sessionStorage.removeItem("yasui_auth");
+        document.cookie = "yasui_session_token=; path=/; max-age=0; SameSite=Lax";
+    } catch (e) {
+        console.warn("[Auth] Storage clear error:", e);
+    }
+
+    updateNavbarAuthUI();
+
+    window.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: null } }));
+    window.dispatchEvent(new CustomEvent("yasui-auth-changed", { detail: { user: null } }));
+    document.dispatchEvent(new CustomEvent("yasui:auth-changed", { detail: { user: null } }));
     document.dispatchEvent(new Event("yasui-auth-changed"));
 
     if (window.location.pathname.includes("/orders")) {
-        window.location.reload();
+        const dash = document.getElementById("dashboard-content");
+        if (dash) dash.classList.add("hidden");
+        const badge = document.getElementById("user-profile-badge");
+        if (badge) {
+            badge.classList.add("hidden");
+            badge.classList.remove("flex");
+        }
+        const authBox = document.getElementById("auth-box");
+        if (authBox) authBox.classList.remove("hidden");
     }
 }
+export const logoutUser = yasuiLogout;
 
 export function initAuth(): void {
     // Expose helpers for template inline handlers & external pages
     (window as any).getSession = getSession;
-    (window as any).updateNavAuthUI = updateNavAuthUI;
+    (window as any).updateNavbarAuthUI = updateNavbarAuthUI;
+    (window as any).updateNavAuthUI = updateNavbarAuthUI;
     (window as any).openAuthModal = openAuthModal;
     (window as any).closeAuthModal = closeAuthModal;
     (window as any).toggleUserMenu = toggleUserMenu;
@@ -285,7 +313,8 @@ export function initAuth(): void {
     (window as any).openSetPasswordModal = openSetPasswordModal;
     (window as any).closeSetPasswordModal = closeSetPasswordModal;
     (window as any).handleSetPassword = handleSetPassword;
-    (window as any).logoutUser = logoutUser;
+    (window as any).yasuiLogout = yasuiLogout;
+    (window as any).logoutUser = yasuiLogout;
 
     document.addEventListener("click", (e) => {
         const container = document.getElementById("nav-user-dropdown");
@@ -329,15 +358,18 @@ export function initAuth(): void {
 
     closeAuthModal();
     closeSetPasswordModal();
-    updateNavAuthUI();
-    window.addEventListener("storage", updateNavAuthUI);
-    document.addEventListener("yasui-auth-changed", updateNavAuthUI);
+    updateNavbarAuthUI();
+    window.addEventListener("storage", updateNavbarAuthUI);
+    window.addEventListener("yasui:auth-changed", updateNavbarAuthUI);
+    document.addEventListener("yasui:auth-changed", updateNavbarAuthUI);
+    document.addEventListener("yasui-auth-changed", updateNavbarAuthUI);
 }
 
 // Global attachment on initial module load
 if (typeof window !== "undefined") {
     (window as any).getSession = getSession;
-    (window as any).updateNavAuthUI = updateNavAuthUI;
+    (window as any).updateNavbarAuthUI = updateNavbarAuthUI;
+    (window as any).updateNavAuthUI = updateNavbarAuthUI;
     (window as any).openAuthModal = openAuthModal;
     (window as any).closeAuthModal = closeAuthModal;
     (window as any).toggleUserMenu = toggleUserMenu;
@@ -346,6 +378,7 @@ if (typeof window !== "undefined") {
     (window as any).openSetPasswordModal = openSetPasswordModal;
     (window as any).closeSetPasswordModal = closeSetPasswordModal;
     (window as any).handleSetPassword = handleSetPassword;
-    (window as any).logoutUser = logoutUser;
+    (window as any).yasuiLogout = yasuiLogout;
+    (window as any).logoutUser = yasuiLogout;
 }
 

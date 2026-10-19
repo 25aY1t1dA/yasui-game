@@ -1,134 +1,218 @@
 ---
-import { ROBLOX_SERVICE_GROUPS, ROBLOX_FEATURED_SLUGS } from "../data/roblox";
+// src/components/RobloxHub.astro
+import { ROBLOX_SERVICE_GROUPS } from "../data/roblox";
+import { ROBLOX_SPOTLIGHT_GAMES, ROBLOX_QUICK_SERVICES } from "../data/catalog";
 
 const { categories = [], failed = false } = Astro.props;
 const serviceGroups = ROBLOX_SERVICE_GROUPS;
 const serviceSlugs = new Set(serviceGroups.flatMap((group) => group.slugs));
 const games = categories.filter((item: any) => !serviceSlugs.has(item.slug)).sort((a: any, b: any) => a.name.localeCompare(b.name, "id", { numeric: true }));
-const featured = ROBLOX_FEATURED_SLUGS.map((slug) => games.find((item: any) => item.slug === slug)).filter(Boolean).slice(0, 4);
+
 const imageUrl = (item: any) => item.image?.sourceUrl ? `/img-proxy?src=${encodeURIComponent(item.image.sourceUrl)}` : null;
+
+// Map category images to spotlight
+const categoryMap = new Map<string, any>();
+categories.forEach((c: any) => categoryMap.set(c.slug, c));
+
+const spotlight = ROBLOX_SPOTLIGHT_GAMES.map((spot) => {
+    const live = categoryMap.get(spot.slug);
+    return {
+        ...spot,
+        image: live?.image?.sourceUrl ? `/img-proxy?src=${encodeURIComponent(live.image.sourceUrl)}` : spot.image,
+        count: live?.count ?? null
+    };
+});
 ---
 
-<div id="roblox-hub">
-    <section aria-labelledby="services-title" class="mb-8">
-        <h2 id="services-title" class="text-xs font-mono font-bold uppercase tracking-widest text-[#94A3B8] mb-3" data-i18n="roblox.services_title">
-            Layanan Roblox
-        </h2>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 md:gap-3">
-            {serviceGroups.map((group) => (
-                <a href={`#service-${group.key}`} class="group yg-card-interactive p-3.5 md:p-4 flex items-center gap-3">
-                    <span class="w-9 h-9 rounded-md bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20 flex items-center justify-center shrink-0">
-                        <span class={`${group.icon} text-lg`} />
-                    </span>
-                    <span class="min-w-0 flex-1">
-                        <span class="block text-xs md:text-sm font-semibold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors">{group.name}</span>
-                        <span class="text-[11px] text-[#94A3B8] truncate block mt-0.5">{group.detail}</span>
-                    </span>
-                    <span class="i-lucide-chevron-right text-[#64748B] group-hover:text-[#00E5FF] text-sm shrink-0 transition-colors" />
-                </a>
-            ))}
-        </div>
-        {serviceGroups.map((group) => (
-            <section id={`service-${group.key}`} class="service-panel mt-3 p-4 md:p-5 border border-[#222634] rounded-lg bg-[#0D0F15]" aria-label={group.name}>
-                <div class="flex justify-between gap-3 items-center mb-3 pb-2 border-b border-[#222634]">
-                    <h3 class="text-xs md:text-sm font-bold text-[#F8FAFC] uppercase tracking-wide">
-                        {group.name === "Robux" ? "Pilih Metode Pembelian Robux" : group.name}
-                    </h3>
-                    <a href="#services-title" aria-label="Tutup pilihan layanan" class="text-xs font-mono text-[#94A3B8] hover:text-[#00E5FF] flex items-center gap-1">
-                        <span data-i18n="roblox.close">TUTUP</span>
-                        <span class="i-lucide-x text-sm" />
-                    </a>
-                </div>
-                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                    {categories.filter((item: any) => group.slugs.includes(item.slug)).map((item: any) => (
-                        <a href={`/category/${item.slug}`} class="flex items-center justify-between gap-3 p-3 rounded-md border border-[#222634] bg-[#11131A] text-xs font-medium text-[#F8FAFC] hover:border-[#00E5FF]/40 hover:text-[#00E5FF] transition-colors">
-                            <span>{item.name}</span>
-                            <span class="i-lucide-arrow-right text-[#64748B] text-xs shrink-0" />
-                        </a>
-                    ))}
-                    {!categories.some((item: any) => group.slugs.includes(item.slug)) && (
-                        <p class="text-xs text-[#94A3B8] font-mono py-2" data-i18n="roblox.service_empty">Layanan ini belum tersedia.</p>
-                    )}
-                </div>
-                {group.key === "account" && (
-                    <p class="text-[11px] text-[#94A3B8] font-mono mt-3" data-i18n="roblox.account_hint">Mencari akun dengan progres game tertentu? Pilih gamenya di direktori bawah.</p>
-                )}
-            </section>
-        ))}
-    </section>
-
-    <section aria-labelledby="directory-title">
-        <div class="flex items-end justify-between gap-3 mb-4">
+<div id="roblox-hub" class="space-y-8">
+    <!-- HERO SPOTLIGHT: ROBLOX GAMES AREA -->
+    <section
+        id="roblox-spotlight-area"
+        class="bg-[#11131A] border border-[#00E5FF]/35 rounded-xl p-5 md:p-6 relative"
+        aria-labelledby="roblox-hub-spotlight-title"
+    >
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-5 pb-4 border-b border-[#222634]">
             <div>
-                <h2 id="directory-title" class="text-base md:text-xl font-bold text-[#F8FAFC] tracking-tight" data-i18n="roblox.browse_by_game">
-                    Belanja Berdasarkan Game
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="yg-badge-overlay text-[10px] font-mono tracking-wider">
+                        ⚡ ROBLOX ECOSYSTEM HUB
+                    </span>
+                    <span class="text-emerald-400 font-mono text-[11px] flex items-center gap-1.5 ml-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span data-i18n="roblox_area.trade_ready">Trade & Gift Ready</span>
+                    </span>
+                </div>
+                <h2
+                    id="roblox-hub-spotlight-title"
+                    class="text-base sm:text-lg md:text-xl font-extrabold text-[#F8FAFC] tracking-tight uppercase"
+                    data-i18n="roblox_area.title"
+                >
+                    ROBLOX GAMES AREA — POPULER & VIRAL
                 </h2>
-                <p class="text-xs text-[#94A3B8] mt-1" data-i18n="roblox.browse_desc">
-                    Temukan item, currency, dan gamepass resmi untuk game Roblox pilihan.
+                <p class="text-xs text-[#94A3B8] mt-0.5" data-i18n="roblox_area.subtitle">
+                    Pusat transaksi akun, fruit, gamepass, item, dan mata uang game Roblox terverifikasi.
                 </p>
             </div>
-            <span class="hidden sm:inline-block text-xs font-mono text-[#64748B] whitespace-nowrap">
-                {games.length} game terdaftar
+
+            <div class="flex items-center gap-2 text-xs font-mono text-[#94A3B8]">
+                <span>Total Game Terindeks:</span>
+                <strong class="text-[#00E5FF] tabular-nums">{games.length > 0 ? games.length : "260+"}</strong>
+            </div>
+        </div>
+
+        <!-- Quick Platform & Robux Services Bar -->
+        <div class="mb-5 pb-4 border-b border-[#222634]/60">
+            <span class="block text-[10px] font-mono uppercase tracking-wider text-[#64748B] mb-2" data-i18n="roblox_area.quick_services">
+                Layanan Robux & Platform:
+            </span>
+            <div class="flex flex-wrap gap-2">
+                {ROBLOX_QUICK_SERVICES.map((srv) => (
+                    <a
+                        href={`/category/${srv.slug}`}
+                        class="group inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#0D0F15] border border-[#222634] hover:border-[#00E5FF]/40 text-xs font-mono text-[#F8FAFC] hover:text-[#00E5FF] transition-colors"
+                    >
+                        <span class={`${srv.icon} text-[#00E5FF] text-xs`} />
+                        <span>{srv.name}</span>
+                        {srv.badge && (
+                            <span class="text-[9px] px-1 py-0.2 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20 font-bold">
+                                {srv.badge}
+                            </span>
+                        )}
+                    </a>
+                ))}
+            </div>
+        </div>
+
+        <!-- Featured Games Grid with Killer UX Quick Subcategory Pills -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            {spotlight.map((game) => (
+                <article class="yg-card-interactive group p-3.5 flex flex-col justify-between gap-3 relative rounded-lg">
+                    <div>
+                        <div class="aspect-video bg-[#0D0F15] rounded border border-[#222634] relative overflow-hidden flex items-center justify-center mb-2.5">
+                            {game.image ? (
+                                <img
+                                    src={game.image}
+                                    alt={game.name}
+                                    loading="lazy"
+                                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                />
+                            ) : (
+                                <span class="text-base font-mono font-bold text-[#00E5FF]/60">
+                                    {game.name.slice(0, 2).toUpperCase()}
+                                </span>
+                            )}
+
+                            <div class="absolute top-1.5 left-1.5">
+                                <span class="yg-badge-overlay-online text-[9px] px-1.5 py-0.2">
+                                    ROBLOX
+                                </span>
+                            </div>
+
+                            {game.badge && (
+                                <div class="absolute top-1.5 right-1.5">
+                                    <span class="yg-badge-overlay text-[9px] px-1.5 py-0.2">
+                                        {game.badge}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                        <a
+                            href={`/category/${game.slug}`}
+                            class="text-sm font-bold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors leading-snug line-clamp-1 block uppercase tracking-tight"
+                        >
+                            {game.name}
+                        </a>
+
+                        <span class="block text-[10px] font-mono text-[#64748B] uppercase tracking-wider mt-1 mb-2" data-i18n="roblox_area.sub_label">
+                            Subkategori:
+                        </span>
+
+                        <div class="flex flex-wrap gap-1.5">
+                            {game.subCategories.map((sub) => (
+                                <a
+                                    href={`/category/${sub.slug}`}
+                                    class:list={[
+                                        "px-2 py-0.8 rounded text-[10px] font-mono font-medium transition-colors whitespace-nowrap",
+                                        sub.isHot
+                                            ? "bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/40 hover:bg-[#00E5FF]/20"
+                                            : "bg-[#0D0F15] text-[#94A3B8] border border-[#222634] hover:border-[#00E5FF]/50 hover:text-[#00E5FF] hover:bg-[#161922]"
+                                    ]}
+                                    title={`Buka subkategori ${sub.name} di ${game.name}`}
+                                >
+                                    {sub.name}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div class="pt-2.5 border-t border-[#222634]/60 flex items-center justify-between mt-auto">
+                        <span class="text-[10px] font-mono text-[#64748B]">
+                            {game.count !== null && game.count > 0 ? (
+                                <span><strong class="text-[#00E5FF] tabular-nums">{game.count}</strong> Produk</span>
+                            ) : (
+                                <span>Katalog Siap</span>
+                            )}
+                        </span>
+                        <a
+                            href={`/category/${game.slug}`}
+                            class="text-[11px] font-mono text-[#00E5FF] hover:underline inline-flex items-center gap-1"
+                        >
+                            <span data-i18n="categories.view_game">Buka Game</span>
+                            <span class="i-lucide-arrow-right text-xs" />
+                        </a>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </section>
+
+    <!-- ROBLOX DIRECTORY: BROWSE ALL 260+ GAMES -->
+    <section aria-labelledby="directory-title" class="pt-2">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4 pb-3 border-b border-[#222634]">
+            <div>
+                <h3 id="directory-title" class="text-base md:text-lg font-bold text-[#F8FAFC] tracking-tight uppercase" data-i18n="roblox.browse_by_game">
+                    Direktori Seluruh Game Roblox
+                </h3>
+                <p class="text-xs text-[#94A3B8] mt-0.5" data-i18n="roblox.browse_desc">
+                    Temukan item, currency, dan gamepass resmi untuk ratusan game Roblox terdaftar.
+                </p>
+            </div>
+            <span class="text-xs font-mono text-[#64748B] whitespace-nowrap tabular-nums">
+                {games.length} game terdaftar · A–Z
             </span>
         </div>
 
+        <!-- Search input for all games -->
         <div class="relative mb-5">
             <span class="i-lucide-search absolute left-3.5 top-1/2 -translate-y-1/2 text-[#64748B] text-sm pointer-events-none" />
             <label for="roblox-game-search" class="sr-only">Cari game di Roblox</label>
             <input
                 id="roblox-game-search"
                 type="search"
-                placeholder="Ketik nama game Roblox (Blox Fruits, Pet Simulator, Blade Ball)..."
+                placeholder="Ketik nama game Roblox (Blox Fruits, Fish It, Adopt Me, Blade Ball)..."
                 data-i18n-placeholder="roblox.search_placeholder"
                 autocomplete="off"
                 class="yg-input !h-11 !pl-10 !pr-4 !text-xs !bg-[#0D0F15]"
             />
         </div>
 
-        {featured.length > 0 && (
-            <section id="featured-games" class="mb-6" aria-labelledby="featured-title">
-                <div class="flex items-center justify-between mb-2.5">
-                    <h3 id="featured-title" class="text-xs font-mono uppercase tracking-widest text-[#94A3B8] font-bold" data-i18n="roblox.featured_games">
-                        Game Unggulan
-                    </h3>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 md:gap-3">
-                    {featured.map((item: any) => (
-                        <a href={`/category/${item.slug}`} class="group yg-card-interactive p-2.5 flex flex-col gap-2">
-                            <div class="aspect-video bg-[#0D0F15] rounded border border-[#222634] flex items-center justify-center overflow-hidden relative">
-                                {imageUrl(item) ? (
-                                    <img src={imageUrl(item)} alt={item.name} loading="lazy" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-                                ) : (
-                                    <span class="text-lg font-mono font-bold text-[#00E5FF]/60" aria-hidden="true">
-                                        {item.name.split(/\s+/).map((word: string) => word[0]).slice(0, 2).join("")}
-                                    </span>
-                                )}
-                                <span class="yg-badge-overlay-online absolute top-1.5 left-1.5 text-[10px]">
-                                    ROBLOX
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center gap-1.5 px-0.5">
-                                <span class="text-xs font-medium text-[#F8FAFC] truncate group-hover:text-[#00E5FF] transition-colors">{item.name}</span>
-                                <span class="i-lucide-arrow-up-right text-xs text-[#64748B] group-hover:text-[#00E5FF] shrink-0" />
-                            </div>
-                        </a>
-                    ))}
-                </div>
-            </section>
-        )}
-
         <div class="flex justify-between items-center mb-3">
-            <h3 id="all-games-title" class="text-xs font-mono uppercase tracking-widest text-[#94A3B8] font-bold" data-i18n="roblox.all_games">
+            <span id="all-games-title" class="text-xs font-mono uppercase tracking-widest text-[#94A3B8] font-bold" data-i18n="roblox.all_games">
                 Semua Game
-            </h3>
-            <span id="game-result-count" role="status" aria-live="polite" class="text-xs font-mono text-[#64748B]">
+            </span>
+            <span id="game-result-count" role="status" aria-live="polite" class="text-xs font-mono text-[#64748B] tabular-nums">
                 {games.length} game · A–Z
             </span>
         </div>
 
-        <div id="all-roblox-games" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-3" aria-labelledby="all-games-title">
+        <div id="all-roblox-games" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3" aria-labelledby="all-games-title">
             {games.map((item: any) => (
-                <a data-game-name={item.name} href={`/category/${item.slug}`} class="directory-card group yg-card-interactive p-2.5 flex items-center gap-2.5">
+                <a
+                    data-game-name={item.name}
+                    href={`/category/${item.slug}`}
+                    class="directory-card group yg-card-interactive p-2.5 flex items-center gap-2.5 rounded-lg"
+                >
                     <span class="w-10 h-10 md:w-11 md:h-11 rounded-md bg-[#0D0F15] border border-[#222634] shrink-0 flex items-center justify-center overflow-hidden">
                         {imageUrl(item) ? (
                             <img src={imageUrl(item)} alt="" loading="lazy" class="w-full h-full object-cover" />
@@ -168,9 +252,6 @@ const imageUrl = (item: any) => item.image?.sourceUrl ? `/img-proxy?src=${encode
 </div>
 
 <style>
-    .service-panel { display: none; scroll-margin-top: 100px; }
-    .service-panel:target { display: block; }
-    #services-title { scroll-margin-top: 100px; }
     [hidden] { display: none !important; }
 </style>
 
@@ -180,19 +261,18 @@ const imageUrl = (item: any) => item.image?.sourceUrl ? `/img-proxy?src=${encode
         if (!input || input.dataset.ready) return;
         input.dataset.ready = "true";
         const cards = Array.from(document.querySelectorAll<HTMLAnchorElement>("[data-game-name]"));
-        const more = document.querySelector<HTMLButtonElement>("#load-more-games")!;
-        const count = document.querySelector("#game-result-count")!;
-        const empty = document.querySelector<HTMLElement>("#no-games")!;
-        const featured = document.querySelector<HTMLElement>("#featured-games");
-        const title = document.querySelector("#all-games-title")!;
+        const more = document.querySelector<HTMLButtonElement>("#load-more-games");
+        const count = document.querySelector("#game-result-count");
+        const empty = document.querySelector<HTMLElement>("#no-games");
+        const title = document.querySelector("#all-games-title");
         const normalize = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLocaleLowerCase("id").trim();
-        let visible = 24;
+        let visible = 32;
         const key = "yasui_roblox_directory";
         try {
             const state = JSON.parse(sessionStorage.getItem(key) || "null");
             if (state) {
                 input.value = typeof state.query === "string" ? state.query : "";
-                visible = Math.max(24, Number(state.visible) || 24);
+                visible = Math.max(32, Number(state.visible) || 32);
             }
         } catch {}
 
@@ -203,23 +283,22 @@ const imageUrl = (item: any) => item.image?.sourceUrl ? `/img-proxy?src=${encode
             matches.slice(0, visible).forEach((card) => { card.hidden = false; });
             if (more) more.hidden = matches.length <= visible;
             if (empty) empty.hidden = matches.length > 0;
-            if (featured) featured.hidden = !!query;
             if (title) title.textContent = query ? "Hasil Pencarian" : "Semua Game";
             if (count) count.textContent = `${matches.length} game${query ? "" : " · A–Z"}`;
             try { sessionStorage.setItem(key, JSON.stringify({ query: input!.value, visible })); } catch {}
         }
 
-        input.addEventListener("input", () => { visible = 24; render(); });
+        input.addEventListener("input", () => { visible = 32; render(); });
         more?.addEventListener("click", () => {
             const previous = visible;
-            visible += 24;
+            visible += 32;
             render();
             const matches = cards.filter((card) => !card.hidden);
             matches[previous]?.focus({ preventScroll: true });
         });
         document.querySelector("#reset-game-search")?.addEventListener("click", () => {
             input.value = "";
-            visible = 24;
+            visible = 32;
             render();
             input.focus();
         });

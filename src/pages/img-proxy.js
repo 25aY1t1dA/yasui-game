@@ -47,7 +47,10 @@ export async function GET({ request }) {
         hostname === "admin.yasuigame.com" || 
         hostname.endsWith(".yasuigame.com") ||
         hostname.includes("wp.com") ||
-        hostname.includes("gravatar.com");
+        hostname.includes("gravatar.com") ||
+        hostname.endsWith("rbxcdn.com") ||
+        hostname.endsWith("googleusercontent.com") ||
+        hostname.endsWith("mzstatic.com");
 
     if (!isAllowedHost) {
         return new Response("Unauthorized image domain.", { status: 403 });

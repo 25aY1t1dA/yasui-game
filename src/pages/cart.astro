@@ -486,6 +486,31 @@ import { translations } from "../lib/translations";
             window.location.href = "/checkout";
         };
 
+        window.updateCartQuantity = (index, delta) => {
+            let cart = getCart();
+            if (!cart[index]) return;
+            const item = cart[index];
+            const curQty = Math.max(1, parseInt(item.quantity || (item.orderMeta && item.orderMeta.quantity) || 1, 10));
+            const newQty = Math.max(1, Math.min(99, curQty + delta));
+            if (newQty === curQty) return;
+
+            const rawPrice = parsePrice(item.price);
+            const unit = item.unitPrice ? parsePrice(item.unitPrice) : Math.round(rawPrice / curQty);
+
+            item.quantity = newQty;
+            item.unitPrice = unit;
+            item.price = unit * newQty;
+            if (!item.orderMeta) {
+                item.orderMeta = {
+                    subCategoryMode: item.mode || "account",
+                    quantity: newQty
+                };
+            } else {
+                item.orderMeta.quantity = newQty;
+            }
+            saveCart(cart);
+        };
+
         function renderCart() {
             const cart = getCart();
             const container = document.getElementById("cart-content");
@@ -516,16 +541,56 @@ import { translations } from "../lib/translations";
             let total = 0;
             let selectedCount = 0;
             let allSelected = true;
+            const currentLang = localStorage.getItem("yasui_lang") || "id";
 
             container.innerHTML = cart
                 .map((item, index) => {
-                    const price = parsePrice(item.price);
+                    const qty = Math.max(1, parseInt(item.quantity || (item.orderMeta && item.orderMeta.quantity) || 1, 10));
+                    const rawLinePrice = parsePrice(item.price);
+                    const unitPrice = item.unitPrice ? parsePrice(item.unitPrice) : Math.round(rawLinePrice / qty);
+                    const lineTotal = rawLinePrice > 0 ? rawLinePrice : (unitPrice * qty);
+
                     if (item.selected) {
-                        total += price;
+                        total += lineTotal;
                         selectedCount++;
                     } else {
                         allSelected = false;
                     }
+
+                    // Format Target Info
+                    let targetDisplay = "";
+                    if (typeof window.formatOrderTargetInfo === "function") {
+                        targetDisplay = window.formatOrderTargetInfo(item, currentLang);
+                    } else {
+                        const meta = item.orderMeta || {};
+                        const robloxUser = meta.robloxUsername || item.robloxUsername || "";
+                        const deliveryMethod = meta.deliveryMethod || item.deliveryMethod || "";
+                        const gameUid = meta.gameUid || item.gameUserId || "";
+                        const gameZone = meta.gameZone || item.gameZoneId || "";
+                        const gameNick = meta.inGameNickname || item.gameNickname || "";
+                        const itemMode = meta.subCategoryMode || item.mode || "account";
+
+                        if (itemMode === "roblox_item") {
+                            targetDisplay = `Target: ${robloxUser || "@User"} • Metode: ${deliveryMethod === "direct_gift" ? "Direct Gift" : "Private Server Trade"} • Qty: ${qty}x`;
+                        } else if (itemMode === "topup_gamepass") {
+                            if (robloxUser) {
+                                const taxPart = meta.gamepassTaxCalc?.requiredGamepassPrice ? ` (Set ${meta.gamepassTaxCalc.requiredGamepassPrice} R$)` : "";
+                                targetDisplay = `Target: ${robloxUser} • Metode: ${deliveryMethod === "via_gamepass_link" ? "Link Gamepass" : "Gift In-Game"}${taxPart} • Qty: ${qty}x`;
+                            } else if (gameUid) {
+                                targetDisplay = `UID: ${gameUid}${gameZone ? ` (${gameZone})` : ""}${gameNick ? ` • Nick: ${gameNick}` : ""} • Qty: ${qty}x`;
+                            }
+                        } else if (itemMode === "game_gift" || (gameUid && gameZone)) {
+                            targetDisplay = `UID: ${gameUid || "-"}${gameZone ? ` (${gameZone})` : ""}${gameNick ? ` • Nick: ${gameNick}` : ""} • Qty: ${qty}x`;
+                        } else if (item.playerInGameId) {
+                            targetDisplay = `${item.playerInGameId} • Qty: ${qty}x`;
+                        } else {
+                            targetDisplay = `Kredensial Login via Email • Qty: ${qty}x`;
+                        }
+                    }
+
+                    const variantName = item.orderMeta?.variantName || item.variant || "";
+                    const itemMode = item.orderMeta?.subCategoryMode || item.mode || "account";
+                    const isAccount = itemMode === "account";
 
                     return `
                     <div class="bg-[#11131A] border ${item.selected ? "border-[#00E5FF] bg-[#00E5FF]/5" : "border-[#222634]"} rounded-lg p-3 sm:p-4 flex gap-3 sm:gap-4 items-start relative group transition-colors">
@@ -539,9 +604,34 @@ import { translations } from "../lib/translations";
                             <img src="${item.image || "/favicon.svg"}" alt="${item.name || "Produk"}" class="w-full h-full object-cover ${item.selected ? "opacity-100" : "opacity-60"}">
                         </div>
                         <div class="flex-1 min-w-0 pr-8">
-                            <h3 class="text-xs sm:text-sm font-semibold ${item.selected ? "text-[#F8FAFC]" : "text-[#94A3B8]"} truncate transition-colors">${item.name}</h3>
-                            <div class="${item.selected ? "text-[#00E5FF]" : "text-[#64748B]"} font-mono font-bold text-xs sm:text-sm my-1 tabular-nums transition-colors">${formatMoney(price)}</div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <h3 class="text-xs sm:text-sm font-semibold ${item.selected ? "text-[#F8FAFC]" : "text-[#94A3B8]"} truncate transition-colors">${item.name}</h3>
+                                ${variantName ? `<span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 font-semibold uppercase">${variantName}</span>` : ""}
+                            </div>
+
+                            ${targetDisplay ? `
+                            <div class="flex items-center gap-1.5 px-2 py-1 rounded bg-[#0D0F15] border border-[#222634] text-[10px] text-[#00E5FF] font-mono my-1.5 max-w-full">
+                                <div class="i-lucide-crosshair text-xs shrink-0 text-[#00E5FF]"></div>
+                                <span class="truncate">${targetDisplay}</span>
+                            </div>
+                            ` : ""}
                             
+                            <div class="flex items-center justify-between gap-2 mt-2 pt-1.5 border-t border-[#222634]/60">
+                                <div class="flex items-baseline gap-1.5">
+                                    <span class="${item.selected ? "text-[#00E5FF]" : "text-[#64748B]"} font-mono font-bold text-xs sm:text-sm tabular-nums transition-colors">${formatMoney(lineTotal)}</span>
+                                    ${qty > 1 ? `<span class="text-[10px] text-[#64748B] font-mono font-normal">(${qty}x @ ${formatMoney(unitPrice)})</span>` : ""}
+                                </div>
+                                ${!isAccount ? `
+                                <div class="flex items-center border border-[#222634] rounded bg-[#0D0F15] overflow-hidden">
+                                    <button onclick="updateCartQuantity(${index}, -1)" class="w-6 h-6 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] hover:bg-[#161922] transition-colors cursor-pointer text-xs font-mono font-bold" title="Kurangi">−</button>
+                                    <span class="w-7 text-center font-mono text-xs font-bold text-[#F8FAFC] tabular-nums">${qty}</span>
+                                    <button onclick="updateCartQuantity(${index}, 1)" class="w-6 h-6 flex items-center justify-center text-[#94A3B8] hover:text-[#00E5FF] hover:bg-[#161922] transition-colors cursor-pointer text-xs font-mono font-bold" title="Tambah">+</button>
+                                </div>
+                                ` : `
+                                <span class="text-[10px] font-mono text-[#64748B]">Qty: 1</span>
+                                `}
+                            </div>
+
                             ${item.email || item.wa ? `
                             <div class="text-[10px] text-[#64748B] font-mono mt-1 flex flex-wrap gap-2">
                                 ${item.email ? `<span><span class="text-[#475569]">Email:</span> <span class="text-[#94A3B8]">${item.email}</span></span>` : ""}

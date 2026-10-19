@@ -157,17 +157,23 @@ const getBadges = (product: any) => {
         const lowerVal = val.toLowerCase();
 
         let colorClass = "yg-badge-gray";
+        let i18nKey = "";
         if (lowerVal.includes("fresh") || lowerVal.includes("new")) {
             colorClass = "yg-badge-emerald";
+            i18nKey = "badge.fresh";
         } else if (lowerVal.includes("mid")) {
             colorClass = "yg-badge-cyan";
         } else if (lowerVal.includes("end") || lowerVal.includes("high")) {
             colorClass = "yg-badge-yellow";
+        } else if (lowerVal.includes("old") || lowerVal.includes("tua")) {
+            colorClass = "yg-badge-gray";
+            i18nKey = "badge.old";
         }
 
         badges.push({
             label: val.toUpperCase(),
             class: colorClass,
+            i18nKey: i18nKey || undefined
         });
     }
 
@@ -211,7 +217,13 @@ const getBadges = (product: any) => {
                     {category.name}
                 </h1>
                 <p class="text-[11px] md:text-xs text-[#94A3B8] font-mono mt-0.5">
-                    {isRobloxCategory ? "Robux, akun, dan kebutuhan game Roblox" : isRobloxDescendant ? `Katalog ${category.name} Resmi Yasui Game` : `Marketplace & Akun ${category.name}`}
+                    {isRobloxCategory ? (
+                        <span data-i18n="category.roblox_subtitle">Robux, akun, dan kebutuhan game Roblox</span>
+                    ) : isRobloxDescendant ? (
+                        <span><span data-i18n="category.official_catalog_prefix">Katalog</span> {category.name} <span data-i18n="category.official_catalog_suffix">Resmi Yasui Game</span></span>
+                    ) : (
+                        <span><span data-i18n="category.marketplace_prefix">Marketplace & Akun</span> {category.name}</span>
+                    )}
                 </p>
             </div>
         </header>
@@ -240,13 +252,14 @@ const getBadges = (product: any) => {
                 <form class="flex flex-col sm:flex-row gap-2.5" method="get">
                     <div class="flex-1 relative flex items-center">
                         <span class="i-lucide-search text-[#64748B] text-xs absolute left-3 pointer-events-none" aria-hidden="true" />
-                        <label for="catalog-search-q" class="sr-only">Cari produk {catalogRoot.name}</label>
+                        <label for="catalog-search-q" class="sr-only"><span data-i18n="catalog.search_label">Cari produk</span> {catalogRoot.name}</label>
                         <input
                             id="catalog-search-q"
                             type="search"
                             name="q"
                             value={query}
                             placeholder={`Cari produk di ${catalogRoot.name}...`}
+                            data-i18n-placeholder="catalog.search_placeholder"
                             class="yg-input !h-11 !pl-9 !pr-3 !bg-[#0D0F17]"
                         />
                     </div>
@@ -284,7 +297,7 @@ const getBadges = (product: any) => {
                             </span>
                             {sub.count !== null && (
                                 <span class="text-[10px] font-mono text-[#64748B]">
-                                    {sub.count} Item
+                                    {sub.count} <span data-i18n="catalog.item_suffix">Item</span>
                                 </span>
                             )}
                         </a>
@@ -342,11 +355,21 @@ const getBadges = (product: any) => {
                 <div class="py-12 px-4 text-center border border-dashed border-[#222634] rounded-lg bg-[#0D0F15]">
                     <div class="i-lucide-package-open text-2xl text-[#64748B] mx-auto mb-2" />
                     <p class="text-xs text-[#F8FAFC]">
-                        {loadFailed ? "Katalog belum berhasil dimuat. Silakan muat ulang halaman." : query ? `Tidak ada produk yang cocok dengan "${query}".` : `Belum ada produk untuk kategori ${category.name}.`}
+                        {loadFailed ? (
+                            <span data-i18n="catalog.load_failed">Katalog belum berhasil dimuat. Silakan muat ulang halaman.</span>
+                        ) : query ? (
+                            <span><span data-i18n="catalog.no_match_prefix">Tidak ada produk yang cocok dengan</span> "{query}".</span>
+                        ) : (
+                            <span><span data-i18n="catalog.no_products_prefix">Belum ada produk untuk kategori</span> {category.name}.</span>
+                        )}
                     </p>
                     {isRobloxDescendant && (
                         <a href={query ? `/category/${slug}` : "/category/roblox"} class="inline-block mt-3 text-xs font-mono text-[#00E5FF] hover:underline">
-                            {query ? "Hapus filter pencarian" : "Lihat game Roblox lainnya"}
+                            {query ? (
+                                <span data-i18n="catalog.clear_search">Hapus filter pencarian</span>
+                            ) : (
+                                <span data-i18n="catalog.view_other_roblox">Lihat game Roblox lainnya</span>
+                            )}
                         </a>
                     )}
                 </div>
@@ -358,13 +381,62 @@ const getBadges = (product: any) => {
                     const swServer = swAttrs.find((a: any) => a.name.toLowerCase() === "server")?.options?.join("|") || "";
                     const swAge = swAttrs.find((a: any) => /age|umur|fresh|band/i.test(a.name))?.options?.join("|") || "";
                     const isOutOfStock = item.stockStatus === "OUT_OF_STOCK" || item.stockStatus === "outofstock";
-                    const isAccount = isSummonersWar || (item.name || "").toLowerCase().includes("akun") || (item.categories || []).some((c: any) => c.slug?.includes("akun"));
+                    
+                    const itemCategories = [
+                        ...(item.categories || []).map((c: any) => c.slug || ""),
+                        ...(item.productCategories?.nodes || []).map((c: any) => c.slug || "")
+                    ].map((s: string) => s.toLowerCase());
+
+                    const currentCatSlug = (slug || "").toLowerCase();
+                    const prodName = (item.name || "").toLowerCase();
+
+                    let itemSubMode = "";
+                    if (currentCatSlug.includes("gamepass") || itemCategories.some(c => c.includes("gamepass")) || prodName.includes("gamepass")) {
+                        itemSubMode = "gamepass";
+                    } else if (currentCatSlug.includes("top-up") || currentCatSlug.includes("topup") || itemCategories.some(c => c.includes("top-up") || c.includes("topup")) || prodName.includes("top up") || prodName.includes("topup") || prodName.includes("diamond")) {
+                        itemSubMode = "topup";
+                    } else if (currentCatSlug.includes("gift-charisma") || currentCatSlug.includes("gift-item") || currentCatSlug.includes("7-hari") || itemCategories.some(c => c.includes("gift") || c.includes("7-hari")) || prodName.includes("gift charisma") || prodName.includes("gift item") || prodName.includes("gift skin")) {
+                        itemSubMode = "game_gift";
+                    } else if (currentCatSlug.includes("fruit") || currentCatSlug.includes("pet") || itemCategories.some(c => c.includes("fruit") || c.includes("pet")) || prodName.includes("fruit") || prodName.includes("pet")) {
+                        itemSubMode = "roblox_item";
+                    } else if (currentCatSlug.includes("akun") || itemCategories.some(c => c.includes("akun")) || prodName.includes("akun")) {
+                        itemSubMode = "account";
+                    }
+
+                    const isAccount = itemSubMode === "account" || isSummonersWar || (!itemSubMode && (prodName.includes("akun") || itemCategories.some(c => c.includes("akun"))));
+                    const productHref = itemSubMode ? `/product/${item.slug}?sub_mode=${itemSubMode}` : `/product/${item.slug}`;
+
+                    let overlayBadgeText = isAccount ? "INSTANT" : "ONLINE";
+                    let overlayBadgeKey = isAccount ? "badge.instant" : "badge.online";
+                    let overlayBadgeClass = isAccount ? "yg-badge-overlay" : "yg-badge-overlay-online";
+                    if (itemSubMode === "gamepass") {
+                        overlayBadgeText = "GAMEPASS";
+                        overlayBadgeKey = "badge.gamepass";
+                        overlayBadgeClass = "yg-badge-overlay";
+                    } else if (itemSubMode === "topup") {
+                        overlayBadgeText = "TOP UP";
+                        overlayBadgeKey = "badge.topup";
+                        overlayBadgeClass = "yg-badge-overlay";
+                    } else if (itemSubMode === "game_gift") {
+                        overlayBadgeText = "GIFT";
+                        overlayBadgeKey = "badge.gift";
+                        overlayBadgeClass = "yg-badge-overlay";
+                    } else if (itemSubMode === "roblox_item") {
+                        overlayBadgeText = "ITEM";
+                        overlayBadgeKey = "badge.item";
+                        overlayBadgeClass = "yg-badge-overlay-online";
+                    } else if (itemSubMode === "account") {
+                        overlayBadgeText = "AKUN";
+                        overlayBadgeKey = "badge.account";
+                        overlayBadgeClass = "yg-badge-overlay";
+                    }
 
                     return (
                         <a
-                            href={`/product/${item.slug}`}
+                            href={productHref}
                             data-sw-server={swServer}
                             data-sw-age={swAge}
+                            data-sub-mode={itemSubMode}
                             class="yg-product-card group flex flex-col justify-between"
                         >
                             <div>
@@ -377,14 +449,14 @@ const getBadges = (product: any) => {
                                             loading="lazy"
                                         />
                                     ) : (
-                                        <div class="flex items-center justify-center h-full text-[#64748B] text-xs font-mono">
+                                        <div class="flex items-center justify-center h-full text-[#64748B] text-xs font-mono" data-i18n="badge.no_visual">
                                             NO VISUAL
                                         </div>
                                     )}
 
                                     <div class="absolute top-2 left-2">
-                                        <span class={isAccount ? "yg-badge-overlay" : "yg-badge-overlay-online"} data-i18n={isAccount ? "badge.instant" : "badge.online"}>
-                                            {isAccount ? "INSTANT" : "ONLINE"}
+                                        <span class={overlayBadgeClass} data-i18n={overlayBadgeKey}>
+                                            {overlayBadgeText}
                                         </span>
                                     </div>
 
@@ -402,7 +474,7 @@ const getBadges = (product: any) => {
                                         </span>
                                         <div class="flex flex-wrap gap-1">
                                             {getBadges(item).slice(0, 1).map((badge) => (
-                                                <span class={badge.class}>
+                                                <span class={badge.class} data-i18n={badge.i18nKey || undefined}>
                                                     {badge.label}
                                                 </span>
                                             ))}

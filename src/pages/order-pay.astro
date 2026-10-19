@@ -22,6 +22,16 @@ let expiryTime = null;
 let merchantOrderId = null;
 let isExpired = false;
 
+let isCrypto = false;
+let cryptoExpectedAmount = null;
+let cryptoTokenSymbol = "USDT";
+let cryptoNetwork = null;
+let cryptoNetworkName = null;
+let cryptoWalletAddress = null;
+let cryptoContractAddress = null;
+let cryptoContractDisplay = null;
+let cryptoQrDataUrl = null;
+
 try {
     order = await getOrder(orderId);
 
@@ -36,23 +46,71 @@ try {
         const meta = order.meta_data || [];
         const findMeta = (k) => meta.find(m => m.key === k)?.value;
 
-        merchantOrderId = findMeta("_duitku_merchant_order_id");
-        paymentMethod = findMeta("_duitku_payment_method") || "SP";
-        paymentMethodName = findMeta("_duitku_payment_method_name") || "QRIS";
-        vaNumber = findMeta("_duitku_va_number");
-        const qrString = findMeta("_duitku_qr_string");
-        paymentUrl = findMeta("_duitku_payment_url");
-
+        const isCryptoOrder = Boolean(findMeta("_crypto_payment_channel") || order.payment_method === "crypto");
         const orderCreatedMs = new Date(order.date_created).getTime();
-        const defaultExpiryMs = orderCreatedMs + 15 * 60 * 1000;
-        expiryTime = findMeta("_duitku_expiry_time")
-            ? Number(findMeta("_duitku_expiry_time"))
-            : defaultExpiryMs;
 
-        isExpired =
-            Date.now() >= expiryTime ||
-            order.status === "cancelled" ||
-            order.status === "failed";
+        if (isCryptoOrder) {
+            isCrypto = true;
+            paymentMethod = findMeta("_crypto_payment_channel") || "CRYPTO_USDT_BEP20";
+            cryptoExpectedAmount = findMeta("_crypto_expected_amount");
+            cryptoTokenSymbol = findMeta("_crypto_token_symbol") || "USDT";
+            cryptoNetwork = findMeta("_crypto_network");
+            cryptoNetworkName = findMeta("_crypto_network_name") || "Crypto Direct";
+            cryptoWalletAddress = findMeta("_crypto_wallet_address");
+            cryptoContractAddress = findMeta("_crypto_contract_address");
+            cryptoContractDisplay = findMeta("_crypto_contract_display");
+            paymentMethodName = cryptoNetworkName;
+            merchantOrderId = `CRYPTO-${order.id}`;
+
+            const defaultCryptoExpiry = orderCreatedMs + 60 * 60 * 1000;
+            expiryTime = findMeta("_crypto_expiry_time")
+                ? Number(findMeta("_crypto_expiry_time"))
+                : defaultCryptoExpiry;
+
+            isExpired =
+                Date.now() >= expiryTime ||
+                order.status === "cancelled" ||
+                order.status === "failed";
+
+            if (cryptoWalletAddress && !isExpired) {
+                cryptoQrDataUrl = await QRCode.toDataURL(cryptoWalletAddress, {
+                    width: 320,
+                    margin: 2,
+                    color: {
+                        dark: "#000000",
+                        light: "#ffffff"
+                    }
+                });
+            }
+        } else {
+            merchantOrderId = findMeta("_duitku_merchant_order_id");
+            paymentMethod = findMeta("_duitku_payment_method") || "SP";
+            paymentMethodName = findMeta("_duitku_payment_method_name") || "QRIS";
+            vaNumber = findMeta("_duitku_va_number");
+            const qrString = findMeta("_duitku_qr_string");
+            paymentUrl = findMeta("_duitku_payment_url");
+
+            const defaultExpiryMs = orderCreatedMs + 15 * 60 * 1000;
+            expiryTime = findMeta("_duitku_expiry_time")
+                ? Number(findMeta("_duitku_expiry_time"))
+                : defaultExpiryMs;
+
+            isExpired =
+                Date.now() >= expiryTime ||
+                order.status === "cancelled" ||
+                order.status === "failed";
+
+            if (qrString && !isExpired) {
+                qrDataUrl = await QRCode.toDataURL(qrString, {
+                    width: 320,
+                    margin: 2,
+                    color: {
+                        dark: "#000000",
+                        light: "#ffffff"
+                    }
+                });
+            }
+        }
 
         if (isExpired && (order.status === "pending" || order.status === "on-hold")) {
             try {
@@ -62,17 +120,6 @@ try {
                 console.warn("Auto cancel expired order warning:", updateErr.message);
             }
         }
-
-        if (qrString && !isExpired) {
-            qrDataUrl = await QRCode.toDataURL(qrString, {
-                width: 320,
-                margin: 2,
-                color: {
-                    dark: "#000000",
-                    light: "#ffffff"
-                }
-            });
-        }
     }
 } catch (e) {
     console.error("Order Pay Error:", e);
@@ -80,9 +127,9 @@ try {
 }
 
 const formattedTotal = order ? `Rp ${Number(order.total).toLocaleString("id-ID")}` : "Rp 0";
-const isCard = paymentMethod === "VC" || paymentMethod === "credit_card" || paymentMethodName?.toLowerCase().includes("card") || paymentMethodName?.toLowerCase().includes("visa");
-const isQris = !isCard && (!!qrDataUrl || paymentMethod === "SP" || paymentMethod === "LQ" || paymentMethod === "GQ");
-const isVa = !isCard && !!vaNumber;
+const isCard = !isCrypto && (paymentMethod === "VC" || paymentMethod === "credit_card" || paymentMethodName?.toLowerCase().includes("card") || paymentMethodName?.toLowerCase().includes("visa"));
+const isQris = !isCrypto && !isCard && (!!qrDataUrl || paymentMethod === "SP" || paymentMethod === "LQ" || paymentMethod === "GQ");
+const isVa = !isCrypto && !isCard && !!vaNumber;
 const lineItems = order?.line_items || [];
 const firstItemName = lineItems[0]?.name || "Akun Game / Voucher";
 const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : `Pembayaran Pesanan #${orderId} - Yasui Game`;
@@ -97,8 +144,8 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                         YASUI<span class="text-[#00E5FF]">GAME</span>
                     </span>
                 </a>
-                <span id="header-status-badge" class={`text-[10px] px-2 py-0.5 font-mono font-medium uppercase tracking-wider rounded border ${isExpired ? 'bg-red-500/10 text-red-400 border-red-500/25' : 'bg-[#00E5FF]/10 text-[#00E5FF] border-[#00E5FF]/25'}`}>
-                    {isExpired ? 'GATEWAY EXPIRED' : 'HEADLESS GATEWAY'}
+                <span id="header-status-badge" class={`text-[10px] px-2 py-0.5 font-mono font-medium uppercase tracking-wider rounded border ${isExpired ? 'bg-red-500/10 text-red-400 border-red-500/25' : (isCrypto ? 'bg-amber-500/10 text-amber-400 border-amber-500/25' : 'bg-[#00E5FF]/10 text-[#00E5FF] border-[#00E5FF]/25')}`}>
+                    {isExpired ? 'GATEWAY EXPIRED' : (isCrypto ? 'CRYPTO ON-CHAIN TERMINAL' : 'HEADLESS GATEWAY')}
                 </span>
             </div>
             <div class="text-right">
@@ -144,7 +191,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                 Waktu Pembayaran Telah Habis
                             </h1>
                             <p class="text-xs text-[#94A3B8] max-w-md mx-auto leading-relaxed mb-6 font-mono">
-                                Sesi pembayaran untuk Pesanan <span class="text-red-400 font-bold">#{order.id}</span> telah melewati batas waktu. Kode QRIS / Nomor VA ini telah dinonaktifkan secara otomatis oleh gateway pembayaran.
+                                Sesi pembayaran untuk Pesanan <span class="text-red-400 font-bold">#{order.id}</span> telah melewati batas waktu. Tagihan ini telah dinonaktifkan secara otomatis.
                             </p>
 
                             <div class="bg-[#0D0F15] border-l-2 border-red-500 p-4 text-left max-w-md mx-auto mb-6 text-xs font-mono space-y-1 rounded-r">
@@ -152,14 +199,18 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                     <div class="i-lucide-shield-alert text-sm"></div> Peringatan Gateway:
                                 </div>
                                 <p class="text-[#94A3B8] text-[11px] leading-relaxed">
-                                    Jangan melakukan transfer ke kode ini lagi. Dana yang ditransfer ke kode yang sudah kedaluwarsa tidak dapat diverifikasi otomatis.
+                                    Jangan melakukan transfer ke kode atau alamat ini lagi. Dana yang ditransfer ke pesanan kedaluwarsa tidak dapat diverifikasi otomatis.
                                 </p>
                             </div>
 
                             <div class="bg-[#0D0F15] border border-[#222634] p-3.5 rounded-lg max-w-md mx-auto mb-6 text-xs font-mono flex justify-between items-center">
                                 <div class="text-left">
                                     <span class="text-[#64748B] block text-[10px]" data-i18n="order_pay.total_bill">TOTAL TAGIHAN</span>
-                                    <span class="text-[#F8FAFC] font-bold tabular-nums yg-price" data-price-idr={order ? Number(order.total) : 0}>{formattedTotal}</span>
+                                    {isCrypto ? (
+                                        <span class="text-[#F8FAFC] font-bold tabular-nums font-mono">{cryptoExpectedAmount} {cryptoTokenSymbol}</span>
+                                    ) : (
+                                        <span class="text-[#F8FAFC] font-bold tabular-nums yg-price" data-price-idr={order ? Number(order.total) : 0}>{formattedTotal}</span>
+                                    )}
                                 </div>
                                 <div class="text-right">
                                     <span class="text-[#64748B] block text-[10px]" data-i18n="order_pay.product">PRODUK</span>
@@ -219,13 +270,183 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                             </div>
                             <div class="text-right">
                                 <span class="text-[10px] text-[#64748B] uppercase font-mono block" data-i18n="order_pay.total_bill">Total Tagihan</span>
-                                <span class="text-base md:text-lg font-mono font-bold text-[#00E5FF] tabular-nums yg-price" data-price-idr={order ? Number(order.total) : 0}>
-                                    {formattedTotal}
-                                </span>
+                                {isCrypto ? (
+                                    <div class="flex flex-col items-end">
+                                        <span class="text-base md:text-xl font-mono font-black text-[#00E5FF] tabular-nums">
+                                            {cryptoExpectedAmount} {cryptoTokenSymbol}
+                                        </span>
+                                        <span class="text-[10px] text-[#64748B] font-mono">
+                                            (≈ {formattedTotal})
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <span class="text-base md:text-lg font-mono font-bold text-[#00E5FF] tabular-nums yg-price" data-price-idr={order ? Number(order.total) : 0}>
+                                        {formattedTotal}
+                                    </span>
+                                )}
                             </div>
                         </div>
 
                         <div class="bg-[#11131A] border border-[#222634] p-6 md:p-8 rounded-lg relative">
+                            {isCrypto && (
+                                <div class="space-y-6 text-left">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#222634]">
+                                        <div class="flex items-center gap-2.5">
+                                            <div class="w-9 h-9 rounded-lg bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF] shrink-0">
+                                                <div class="i-lucide-coins text-lg"></div>
+                                            </div>
+                                            <div>
+                                                <div class="text-xs font-bold text-[#F8FAFC] tracking-wider uppercase font-mono flex items-center gap-1.5 flex-wrap">
+                                                    <span>{cryptoNetworkName}</span>
+                                                    <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded font-mono">ON-CHAIN</span>
+                                                </div>
+                                                <p class="text-[10px] text-[#64748B] font-mono mt-0.5">
+                                                    Non-Custodial Direct Gateway • 0% Biaya Gateway
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-[10px] bg-[#00E5FF]/10 border border-[#00E5FF]/25 text-[#00E5FF] px-2.5 py-1 rounded font-mono font-semibold">
+                                                VERIFIKASI OTOMATIS
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-[#0D0F15] border border-[#00E5FF]/40 rounded-xl p-4 sm:p-5 space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider flex items-center gap-1.5">
+                                                <div class="i-lucide-calculator text-[#00E5FF] text-xs"></div> Nominal Wajib Ditransfer Tepat:
+                                            </span>
+                                            <span class="text-[10px] font-mono text-[#00E5FF] bg-[#00E5FF]/10 px-2 py-0.5 rounded border border-[#00E5FF]/25 font-semibold">
+                                                MICRO-DECIMAL MATCH
+                                            </span>
+                                        </div>
+
+                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                                            <div class="flex items-baseline gap-2">
+                                                <span id="crypto-exact-amount" class="text-3xl sm:text-4xl font-mono font-black text-[#00E5FF] tracking-wider tabular-nums select-all">
+                                                    {cryptoExpectedAmount}
+                                                </span>
+                                                <span class="text-lg font-mono font-bold text-[#F8FAFC]">
+                                                    {cryptoTokenSymbol}
+                                                </span>
+                                                <span class="text-xs text-[#64748B] font-mono ml-1">
+                                                    (≈ {formattedTotal})
+                                                </span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                id="btn-copy-amount"
+                                                class="yg-btn-primary text-xs px-4 py-2.5 flex items-center justify-center gap-1.5 shrink-0 font-mono tracking-wider"
+                                            >
+                                                <div class="i-lucide-copy text-sm"></div>
+                                                <span id="copy-amount-label">Salin Nominal</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="bg-amber-500/10 border-l-2 border-amber-500 p-3 rounded-r text-xs font-mono text-amber-300 flex items-start gap-2.5 mt-2">
+                                            <div class="i-lucide-alert-triangle text-base shrink-0 mt-0.5 text-amber-400"></div>
+                                            <div class="leading-relaxed text-[11px]">
+                                                <strong>PENTING:</strong> Transfer tepat <strong>{cryptoExpectedAmount} {cryptoTokenSymbol}</strong> hingga 3 angka di belakang koma. Jangan dibulatkan agar mesin scanner on-chain otomatis mencocokkan pembayaran pesanan #{order.id} Anda!
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-center bg-[#0D0F15] border border-[#222634] p-5 rounded-xl">
+                                        <div class="md:col-span-4 flex flex-col items-center text-center">
+                                            <div class="bg-white p-2.5 rounded-lg border border-[#222634] inline-block shadow-lg">
+                                                {cryptoQrDataUrl ? (
+                                                    <img
+                                                        src={cryptoQrDataUrl}
+                                                        alt="Wallet Address QR"
+                                                        class="w-44 h-44 sm:w-48 sm:h-48 object-contain"
+                                                    />
+                                                ) : (
+                                                    <div class="w-44 h-44 flex items-center justify-center text-[#64748B] font-mono text-xs">
+                                                        QR Dompet
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <p class="text-[10px] text-[#64748B] font-mono mt-2 text-center">
+                                                Pindai via Binance / TrustWallet / OKX
+                                            </p>
+                                        </div>
+
+                                        <div class="md:col-span-8 space-y-3">
+                                            <div>
+                                                <label class="block text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono">
+                                                    Alamat Dompet Penerima Resmi ({cryptoTokenSymbol} {cryptoNetwork || ''}):
+                                                </label>
+                                                <div class="bg-[#11131A] border border-[#222634] p-3 rounded-lg flex items-center justify-between gap-2.5">
+                                                    <span id="crypto-wallet-address" class="text-xs font-mono text-[#00E5FF] break-all select-all font-semibold">
+                                                        {cryptoWalletAddress}
+                                                    </span>
+                                                    <button
+                                                        type="button"
+                                                        id="btn-copy-wallet"
+                                                        class="yg-btn-secondary text-xs px-3.5 py-2 shrink-0 flex items-center gap-1 font-mono"
+                                                    >
+                                                        <div class="i-lucide-copy text-xs text-[#00E5FF]"></div>
+                                                        <span id="copy-wallet-label">Salin Alamat</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {cryptoContractAddress && (
+                                                <div class="bg-[#11131A]/60 border border-[#222634]/60 p-2.5 rounded text-[11px] font-mono flex items-center justify-between gap-2">
+                                                    <span class="text-[#64748B]">Kontrak Resmi Token:</span>
+                                                    <span class="text-[#94A3B8] font-mono font-medium truncate max-w-[220px]" title={cryptoContractAddress}>
+                                                        {cryptoContractDisplay || cryptoContractAddress}
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            <div class="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded">
+                                                <div class="i-lucide-shield-check text-xs text-emerald-400"></div>
+                                                <span>Zero-Trust: Smart contract diverifikasi on-chain mencegah token palsu.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-[#0D0F15] border border-[#00E5FF]/40 p-5 rounded-xl space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <label for="tx-hash-input" class="text-xs font-bold text-[#F8FAFC] uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                                                <div class="i-lucide-hash text-[#00E5FF]"></div>
+                                                <span>Masukkan Transaction Hash (TxID / TxHash)</span>
+                                            </label>
+                                            <span class="text-[10px] text-[#00E5FF] font-mono bg-[#00E5FF]/10 px-2 py-0.5 rounded border border-[#00E5FF]/25 font-semibold">
+                                                VERIFIKASI REAL-TIME
+                                            </span>
+                                        </div>
+
+                                        <p class="text-[11px] text-[#94A3B8] font-mono leading-relaxed">
+                                            Setelah Anda melakukan transfer dari wallet (TrustWallet, MetaMask) atau exchange (Binance, Indodax, Tokocrypto, Bybit), salin dan tempelkan <strong>TxHash / TxID</strong> di bawah ini:
+                                        </p>
+
+                                        <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+                                            <input
+                                                type="text"
+                                                id="tx-hash-input"
+                                                placeholder={cryptoNetwork === "TRON_TRC20" ? "Contoh: 4a2b1c... (TxID 64-karakter)" : "Contoh: 0x1a2b3c... (TxHash 64-karakter)"}
+                                                class="yg-input flex-1 font-mono text-xs text-[#00E5FF] tracking-wider"
+                                                autocomplete="off"
+                                                spellcheck="false"
+                                            />
+                                            <button
+                                                type="button"
+                                                id="btn-verify-crypto"
+                                                class="yg-btn-primary px-5 py-3 text-xs font-mono font-bold tracking-wider shrink-0 flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.2)]"
+                                            >
+                                                <div id="verify-spinner" class="i-lucide-zap text-sm"></div>
+                                                <span id="verify-btn-label">⚡ Verifikasi Pembayaran On-Chain</span>
+                                            </button>
+                                        </div>
+
+                                        <div id="crypto-verify-feedback" class="hidden text-xs font-mono p-3 rounded-lg border transition-all"></div>
+                                    </div>
+                                </div>
+                            )}
+
                             {isQris && (
                                 <div class="flex flex-col items-center text-center">
                                     <div class="inline-flex items-center gap-2 bg-[#00E5FF]/10 border border-[#00E5FF]/25 px-3 py-1 rounded-full mb-4">
@@ -485,7 +706,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
         image: item.image?.src || null
     })))}></script>
 
-    <script is:inline define:vars={{ orderId, orderKey, expiryTime, isExpired }}>
+    <script is:inline define:vars={{ orderId, orderKey, expiryTime, isExpired, isCrypto, cryptoExpectedAmount, cryptoWalletAddress }}>
         let isChecking = false;
         let checkInterval = null;
 
@@ -519,6 +740,111 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                     btnEl?.classList.remove("bg-green-400");
                 }, 2500);
             });
+        }
+
+        function copyCryptoAmount() {
+            const btnEl = document.getElementById("btn-copy-amount");
+            const labelEl = document.getElementById("copy-amount-label");
+            const textToCopy = String(cryptoExpectedAmount || document.getElementById("crypto-exact-amount")?.innerText || "").trim();
+            if (!textToCopy) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                if (labelEl) labelEl.innerText = "TERSALIN!";
+                btnEl?.classList.remove("yg-btn-primary");
+                btnEl?.classList.add("bg-emerald-500", "text-black");
+                setTimeout(() => {
+                    if (labelEl) labelEl.innerText = "Salin Nominal";
+                    btnEl?.classList.remove("bg-emerald-500", "text-black");
+                    btnEl?.classList.add("yg-btn-primary");
+                }, 2500);
+            });
+        }
+
+        function copyCryptoWallet() {
+            const btnEl = document.getElementById("btn-copy-wallet");
+            const labelEl = document.getElementById("copy-wallet-label");
+            const textToCopy = String(cryptoWalletAddress || document.getElementById("crypto-wallet-address")?.innerText || "").trim();
+            if (!textToCopy) return;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                if (labelEl) labelEl.innerText = "TERSALIN!";
+                btnEl?.classList.remove("yg-btn-secondary");
+                btnEl?.classList.add("bg-emerald-500", "text-black");
+                setTimeout(() => {
+                    if (labelEl) labelEl.innerText = "Salin Alamat";
+                    btnEl?.classList.remove("bg-emerald-500", "text-black");
+                    btnEl?.classList.add("yg-btn-secondary");
+                }, 2500);
+            });
+        }
+
+        async function verifyCryptoOnChain() {
+            const txInput = document.getElementById("tx-hash-input");
+            const feedbackEl = document.getElementById("crypto-verify-feedback");
+            const verifyBtn = document.getElementById("btn-verify-crypto");
+            const btnLabel = document.getElementById("verify-btn-label");
+            const spinner = document.getElementById("verify-spinner");
+
+            if (!txInput) return;
+            const txHash = txInput.value.trim();
+
+            if (!txHash) {
+                if (feedbackEl) {
+                    feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-rose-950/80 border-rose-500/50 text-rose-300 block";
+                    feedbackEl.innerText = "⚠️ Harap masukkan Transaction Hash (TxID / TxHash) Anda terlebih dahulu.";
+                }
+                txInput.focus();
+                return;
+            }
+
+            if (verifyBtn) verifyBtn.setAttribute("disabled", "true");
+            if (spinner) spinner.className = "i-lucide-loader-2 text-sm animate-spin";
+            if (btnLabel) btnLabel.innerText = "Memverifikasi di Blockchain...";
+            if (feedbackEl) {
+                feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-cyan-950/80 border-[#00E5FF]/40 text-[#00E5FF] block";
+                feedbackEl.innerText = "⏳ Sedang menghubungi node blockchain & memvalidasi bukti transfer...";
+            }
+
+            try {
+                const res = await fetch("/api/payment/verify-crypto", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        orderId: orderId,
+                        orderKey: orderKey,
+                        txHash: txHash
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (feedbackEl) {
+                        feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-emerald-950/80 border-emerald-500/50 text-emerald-300 block";
+                        feedbackEl.innerText = `✅ SUKSES! ${data.message || "Pembayaran on-chain berhasil diverifikasi!"}. Mengalihkan...`;
+                    }
+                    try { localStorage.removeItem("yasui_cart"); } catch (e) {}
+                    setTimeout(() => {
+                        window.location.href = data.redirectUrl || `/order-success?id=${orderId}&key=${encodeURIComponent(orderKey)}`;
+                    }, 1200);
+                } else {
+                    if (feedbackEl) {
+                        feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-rose-950/80 border-rose-500/50 text-rose-300 block";
+                        feedbackEl.innerText = `❌ Verifikasi Gagal: ${data.error || "Transaksi tidak valid atau belum terkonfirmasi."}`;
+                    }
+                    if (verifyBtn) verifyBtn.removeAttribute("disabled");
+                    if (spinner) spinner.className = "i-lucide-zap text-sm";
+                    if (btnLabel) btnLabel.innerText = "⚡ Verifikasi Pembayaran On-Chain";
+                }
+            } catch (err) {
+                console.error("Crypto verification error:", err);
+                if (feedbackEl) {
+                    feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-rose-950/80 border-rose-500/50 text-rose-300 block";
+                    feedbackEl.innerText = "❌ Terjadi gangguan jaringan saat memverifikasi on-chain. Silakan coba lagi.";
+                }
+                if (verifyBtn) verifyBtn.removeAttribute("disabled");
+                if (spinner) spinner.className = "i-lucide-zap text-sm";
+                if (btnLabel) btnLabel.innerText = "⚡ Verifikasi Pembayaran On-Chain";
+            }
         }
 
         function reorderThisOrder() {
@@ -618,7 +944,9 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
             const pollingLabel = document.getElementById("polling-label");
 
             if (checkIcon) checkIcon.classList.add("animate-spin");
-            if (isManual && pollingLabel) pollingLabel.innerText = "Memeriksa status ke Duitku...";
+            if (isManual && pollingLabel) {
+                pollingLabel.innerText = isCrypto ? "Memeriksa status mutasi on-chain..." : "Memeriksa status ke Duitku...";
+            }
 
             try {
                 const res = await fetch(`/api/payment/check-status?id=${orderId}&key=${encodeURIComponent(orderKey)}`);
@@ -652,6 +980,15 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
         }
 
         document.getElementById("btn-copy-va")?.addEventListener("click", copyVaNumber);
+        document.getElementById("btn-copy-amount")?.addEventListener("click", copyCryptoAmount);
+        document.getElementById("btn-copy-wallet")?.addEventListener("click", copyCryptoWallet);
+        document.getElementById("btn-verify-crypto")?.addEventListener("click", verifyCryptoOnChain);
+        document.getElementById("tx-hash-input")?.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                verifyCryptoOnChain();
+            }
+        });
         document.getElementById("btn-reorder")?.addEventListener("click", reorderThisOrder);
         document.getElementById("btn-manual-check")?.addEventListener("click", () => checkPaymentStatus(true));
 

@@ -4,6 +4,7 @@ import FlashSaleTimer from "../components/FlashSaleTimer.astro";
 import HeroSlider from "../components/HeroSlider.astro";
 import { parsePrice } from "../lib/price";
 import { getProducts, getCategories, getCategoryBySlug, getBanners, normalizeProduct } from "../lib/wc";
+import { ROBLOX_SPOTLIGHT_GAMES, ROBLOX_QUICK_SERVICES } from "../data/catalog";
 
 const fixImgUrl = (url: string | null) => {
     if (!url) return null;
@@ -291,6 +292,114 @@ const getBadges = (product: any) => {
                 </div>
             </section>
         )}
+
+        <!-- ROBLOX GAMES AREA HERO SPOTLIGHT SHOWCASE -->
+        <section aria-labelledby="home-roblox-spotlight-title" class="mb-10">
+            <div class="bg-[#11131A] border border-[#00E5FF]/35 rounded-xl p-4 md:p-5 relative">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-[#222634]">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="yg-badge-overlay text-[9px] font-mono tracking-wider">
+                                ⚡ ROBLOX ECOSYSTEM HUB
+                            </span>
+                            <span class="text-emerald-400 font-mono text-[10px] flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span data-i18n="roblox_area.trade_ready">Trade & Gift Ready</span>
+                            </span>
+                        </div>
+                        <h2
+                            id="home-roblox-spotlight-title"
+                            class="text-sm md:text-base font-extrabold text-[#F8FAFC] tracking-tight uppercase"
+                            data-i18n="roblox_area.title"
+                        >
+                            ROBLOX GAMES AREA — POPULER & VIRAL
+                        </h2>
+                    </div>
+
+                    <a
+                        href="/categories"
+                        class="text-xs font-mono text-[#00E5FF] hover:underline inline-flex items-center gap-1 transition-colors shrink-0"
+                    >
+                        <span data-i18n="roblox_area.view_all_hub">Semua Game Roblox</span>
+                        <span class="i-lucide-arrow-right text-xs" />
+                    </a>
+                </div>
+
+                <!-- Quick Services Bar -->
+                <div class="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-[#222634]/60">
+                    {ROBLOX_QUICK_SERVICES.map((srv) => (
+                        <a
+                            href={`/category/${srv.slug}`}
+                            class="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0D0F15] border border-[#222634] hover:border-[#00E5FF]/40 text-[11px] font-mono text-[#F8FAFC] hover:text-[#00E5FF] transition-colors"
+                        >
+                            <span class={`${srv.icon} text-[#00E5FF] text-[11px]`} />
+                            <span>{srv.name}</span>
+                        </a>
+                    ))}
+                </div>
+
+                <!-- Top 4 Popular Roblox Games with Subcategory Pills -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {ROBLOX_SPOTLIGHT_GAMES.slice(0, 4).map((game) => (
+                        <article class="yg-card-interactive group p-3 flex flex-col justify-between gap-2.5 rounded-lg">
+                            <div>
+                                <div class="aspect-video bg-[#0D0F15] rounded border border-[#222634] relative overflow-hidden flex items-center justify-center mb-2">
+                                    <img
+                                        src={game.image}
+                                        alt={game.name}
+                                        loading="lazy"
+                                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    />
+                                    <div class="absolute top-1 left-1">
+                                        <span class="yg-badge-overlay-online text-[8px] px-1 py-0.1">
+                                            ROBLOX
+                                        </span>
+                                    </div>
+                                    {game.badge && (
+                                        <div class="absolute top-1 right-1">
+                                            <span class="yg-badge-overlay text-[8px] px-1 py-0.1">
+                                                {game.badge}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <a
+                                    href={`/category/${game.slug}`}
+                                    class="text-xs font-bold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors line-clamp-1 block uppercase tracking-tight"
+                                >
+                                    {game.name}
+                                </a>
+
+                                <div class="flex flex-wrap gap-1 mt-2">
+                                    {game.subCategories.map((sub) => (
+                                        <a
+                                            href={`/category/${sub.slug}`}
+                                            class:list={[
+                                                "px-1.5 py-0.5 rounded text-[9px] font-mono font-medium transition-colors whitespace-nowrap",
+                                                sub.isHot
+                                                    ? "bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/40 hover:bg-[#00E5FF]/20"
+                                                    : "bg-[#0D0F15] text-[#94A3B8] border border-[#222634] hover:border-[#00E5FF]/50 hover:text-[#00E5FF]"
+                                            ]}
+                                        >
+                                            {sub.name}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <a
+                                href={`/category/${game.slug}`}
+                                class="text-[10px] font-mono text-[#00E5FF] hover:underline inline-flex items-center justify-between pt-2 border-t border-[#222634]/60"
+                            >
+                                <span data-i18n="categories.view_game">Buka Game</span>
+                                <span class="i-lucide-arrow-right text-[10px]" />
+                            </a>
+                        </article>
+                    ))}
+                </div>
+            </div>
+        </section>
 
         <section aria-labelledby="catalog-recommendation-title">
             <div class="flex items-center justify-between mb-4">
