@@ -709,6 +709,17 @@ import { translations } from "../lib/translations";
                             expiresAt: Date.now() + (30 * 24 * 60 * 60 * 1000)
                         }));
                     }
+                    if (result.order?.id) {
+                        try {
+                            const rec = JSON.parse(localStorage.getItem("yasui_recent_orders") || "[]");
+                            const cleanId = String(result.order.id).trim();
+                            if (!rec.includes(cleanId)) {
+                                rec.unshift(cleanId);
+                                localStorage.setItem("yasui_recent_orders", JSON.stringify(rec.slice(0, 10)));
+                            }
+                        } catch (e) {}
+                    }
+
                     try {
                         document.dispatchEvent(new Event("yasui-auth-changed"));
                     } catch (e) {}

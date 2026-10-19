@@ -533,12 +533,48 @@ export async function getBanners() {
     const cached = getFromCache(cacheKey);
     if (cached) return cached;
 
+    const fallbackBanners = [
+        {
+            title: "Main Banner",
+            link: "#",
+            featuredImage: {
+                node: {
+                    sourceUrl: "https://admin.yasuigame.com/wp-content/uploads/2026/01/Gaming-Global-Market-scaled.png",
+                    altText: "Yasui Game - Global Market"
+                }
+            }
+        },
+        {
+            title: "Right Up",
+            link: "#",
+            featuredImage: {
+                node: {
+                    sourceUrl: "https://admin.yasuigame.com/wp-content/uploads/2026/01/right-up-scaled.png",
+                    altText: "Right Up"
+                }
+            }
+        },
+        {
+            title: "Right Down",
+            link: "#",
+            featuredImage: {
+                node: {
+                    sourceUrl: "https://admin.yasuigame.com/wp-content/uploads/2026/01/right-down-scaled.png",
+                    altText: "Right Down"
+                }
+            }
+        }
+    ];
+
     try {
         const cleanUrl = WP_URL.replace(/\/+$/, "");
         const res = await fetch(`${cleanUrl}/wp-json/wp/v2/posts?per_page=5&_embed=1`, {
             signal: AbortSignal.timeout(8000)
         });
-        if (!res.ok) return [];
+        if (!res.ok) {
+            setToCache(cacheKey, fallbackBanners, 30 * 1000);
+            return fallbackBanners;
+        }
         const posts = await res.json();
         
         const banners = posts
@@ -557,10 +593,12 @@ export async function getBanners() {
                 };
             });
 
-        setToCache(cacheKey, banners, 60 * 1000);
-        return banners;
+        const finalBanners = banners.length > 0 ? banners : fallbackBanners;
+        setToCache(cacheKey, finalBanners, 60 * 1000);
+        return finalBanners;
     } catch (e) {
-        console.warn("Failed to fetch banners:", e.message);
-        return [];
+        console.warn("Failed to fetch banners, using official fallback:", e.message);
+        setToCache(cacheKey, fallbackBanners, 30 * 1000);
+        return fallbackBanners;
     }
 }

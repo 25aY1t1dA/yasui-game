@@ -306,6 +306,14 @@ export function initAuth(): void {
         });
     }
 
+    const navLoginBtn = document.getElementById("nav-login-btn");
+    if (navLoginBtn) {
+        navLoginBtn.onclick = (e) => {
+            e.preventDefault();
+            openAuthModal("login");
+        };
+    }
+
     const authModal = document.getElementById("global-auth-modal");
     if (authModal) {
         authModal.addEventListener("click", (e) => {
@@ -325,3 +333,19 @@ export function initAuth(): void {
     window.addEventListener("storage", updateNavAuthUI);
     document.addEventListener("yasui-auth-changed", updateNavAuthUI);
 }
+
+// Global attachment on initial module load
+if (typeof window !== "undefined") {
+    (window as any).getSession = getSession;
+    (window as any).updateNavAuthUI = updateNavAuthUI;
+    (window as any).openAuthModal = openAuthModal;
+    (window as any).closeAuthModal = closeAuthModal;
+    (window as any).toggleUserMenu = toggleUserMenu;
+    (window as any).togglePasswordVisibility = togglePasswordVisibility;
+    (window as any).handleAuthLogin = handleAuthLogin;
+    (window as any).openSetPasswordModal = openSetPasswordModal;
+    (window as any).closeSetPasswordModal = closeSetPasswordModal;
+    (window as any).handleSetPassword = handleSetPassword;
+    (window as any).logoutUser = logoutUser;
+}
+

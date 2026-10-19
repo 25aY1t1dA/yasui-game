@@ -1,4 +1,5 @@
 ---
+// src/components/FloatingWA.astro
 import Icon from "./ui/Icon.astro";
 
 const pathname = Astro.url.pathname || "";
@@ -6,139 +7,202 @@ const isProductPage = pathname.startsWith("/product/");
 const isCartPage = pathname.startsWith("/cart");
 const isCheckoutPage = pathname.startsWith("/checkout");
 
-// Hide entirely on checkout to avoid distraction and layout blockage
+// Hide on checkout to avoid distraction and layout blockage
 const shouldHide = isCheckoutPage;
 const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-28" : "bottom-20";
 ---
 
 {!shouldHide && (
-<aside aria-label="Customer Support Speed Dial">
-    <a
-        href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
-        target="_blank"
-        rel="noopener noreferrer"
-        class="hidden md:flex items-center gap-2.5 fixed bottom-6 right-6 z-[90] bg-[#11131A] hover:bg-[#161922] text-[#F8FAFC] border border-[#222634] hover:border-emerald-500/40 px-3.5 py-2.5 rounded-lg shadow-lg transition-colors group cursor-pointer"
-        aria-label="Chat WhatsApp Admin"
+<aside aria-label="Customer Support Launcher">
+    <!-- Unified Floating Group (Desktop & Mobile) -->
+    <div
+        id="unified-cs-container"
+        class={`fixed ${mobileBottomClass} md:bottom-6 right-3 md:right-6 z-40 transition-all duration-200`}
     >
-        <div class="w-7 h-7 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 group-hover:bg-emerald-900/60 transition-colors">
-            <Icon name="whatsapp" width={16} height={16} />
-        </div>
-        <div class="flex flex-col text-left pr-1">
-            <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-emerald-400 transition-colors leading-tight" data-i18n="cs.wa_title">
-                WhatsApp CS
-            </span>
-            <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1 leading-tight mt-0.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span data-i18n="badge.online">Online</span>
-            </span>
-        </div>
-    </a>
-
-    <div class={`block md:hidden fixed ${mobileBottomClass} right-3 z-40 transition-all duration-200`} id="mobile-cs-container">
+        <!-- Popover Speed-Dial Menu (Mobile menu & options) -->
         <div
-            id="mobile-cs-menu"
-            class="absolute bottom-12 right-0 w-60 bg-[#11131A] border border-[#222634] rounded-lg p-2 shadow-2xl transition-all duration-150 transform origin-bottom-right scale-95 opacity-0 pointer-events-none"
+            id="unified-cs-menu"
+            class="absolute bottom-14 right-0 w-64 bg-[#11131A] border border-[#222634] rounded-xl p-2.5 shadow-[0_12px_36px_rgba(0,0,0,0.8)] transition-all duration-200 transform origin-bottom-right scale-95 opacity-0 pointer-events-none"
         >
-            <div class="px-2 py-1.5 border-b border-[#222634] mb-1.5 flex items-center justify-between">
-                <span class="text-[10px] font-mono font-semibold text-[#00E5FF] uppercase tracking-wider flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <div class="px-2 py-1.5 border-b border-[#222634] mb-2 flex items-center justify-between">
+                <span class="text-[10px] font-mono font-bold text-[#00E5FF] uppercase tracking-wider flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span data-i18n="cs.title">BANTUAN & CS</span>
                 </span>
                 <span class="text-[9px] text-[#64748B] font-mono" data-i18n="cs.24h">24 JAM</span>
             </div>
 
+            <!-- Priority #1: Live Web Chat (AI + Admin) -->
+            <button
+                type="button"
+                id="cs-menu-livechat-btn"
+                class="w-full flex items-center gap-2.5 p-2.5 rounded-lg bg-[#00E5FF]/10 hover:bg-[#00E5FF]/20 border border-[#00E5FF]/40 text-[#F8FAFC] transition-all mb-2 group cursor-pointer text-left"
+            >
+                <div class="w-8 h-8 rounded-md bg-[#00E5FF]/20 border border-[#00E5FF]/50 text-[#00E5FF] flex items-center justify-center shrink-0">
+                    <div class="i-lucide-headset text-base"></div>
+                </div>
+                <div class="flex flex-col text-left flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-1">
+                        <span class="text-xs font-bold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors leading-tight" data-i18n="cs.livechat_title">
+                            Live Chat Web
+                        </span>
+                        <span class="text-[8px] font-mono font-bold px-1 py-0.2 rounded bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/30">
+                            UTAMA
+                        </span>
+                    </div>
+                    <span class="text-[9.5px] text-[#00E5FF] font-mono leading-tight mt-0.5" data-i18n="cs.livechat_desc">
+                        ⚡ AI Guard • Respon Instan 24/7
+                    </span>
+                </div>
+            </button>
+
+            <!-- WhatsApp (Indonesia) -->
             <a
                 href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-2.5 p-2 rounded-md bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-emerald-500/40 text-[#F8FAFC] transition-colors mb-1.5 group"
+                class="flex items-center gap-2.5 p-2 rounded-lg bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-emerald-500/40 text-[#F8FAFC] transition-colors mb-1.5 group"
             >
                 <div class="w-7 h-7 rounded-md bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
                     <Icon name="whatsapp" width={15} height={15} />
                 </div>
                 <div class="flex flex-col text-left">
-                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-emerald-400 transition-colors leading-tight" data-i18n="cs.wa_title">WhatsApp CS</span>
-                    <span class="text-[9px] text-[#94A3B8] font-mono leading-tight" data-i18n="cs.wa_desc">Respon Cepat & Order</span>
+                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-emerald-400 transition-colors leading-tight" data-i18n="cs.wa_title">
+                        WhatsApp CS
+                    </span>
+                    <span class="text-[9px] text-[#94A3B8] font-mono leading-tight" data-i18n="cs.wa_desc">
+                        Indonesia • Respon Cepat & Order
+                    </span>
                 </div>
             </a>
 
+            <!-- Discord (Global) -->
             <a
                 href="https://discord.com/users/1312253061800001541"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center gap-2.5 p-2 rounded-md bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-indigo-500/40 text-[#F8FAFC] transition-colors mb-1.5 group"
+                class="flex items-center gap-2.5 p-2 rounded-lg bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-indigo-500/40 text-[#F8FAFC] transition-colors group"
             >
                 <div class="w-7 h-7 rounded-md bg-indigo-950/60 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
                     <Icon name="discord" width={15} height={15} />
                 </div>
                 <div class="flex flex-col text-left">
-                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-indigo-400 transition-colors leading-tight" data-i18n="cs.discord_title">Discord Server</span>
-                    <span class="text-[9px] text-[#94A3B8] font-mono leading-tight" data-i18n="cs.discord_desc">Komunitas & Tiket</span>
+                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-indigo-400 transition-colors leading-tight" data-i18n="cs.discord_title">
+                        Discord Official
+                    </span>
+                    <span class="text-[9px] text-[#94A3B8] font-mono leading-tight" data-i18n="cs.discord_desc">
+                        Global • Community & Support
+                    </span>
                 </div>
             </a>
-
-            <button
-                type="button"
-                id="mobile-cs-livechat-btn"
-                class="w-full flex items-center gap-2.5 p-2 rounded-md bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-[#00E5FF]/40 text-[#F8FAFC] transition-colors group cursor-pointer text-left"
-            >
-                <div class="w-7 h-7 rounded-md bg-[#00E5FF]/10 border border-[#00E5FF]/20 text-[#00E5FF] flex items-center justify-center shrink-0">
-                    <div class="i-lucide-messages-square text-sm"></div>
-                </div>
-                <div class="flex flex-col text-left">
-                    <span class="text-xs font-semibold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors leading-tight" data-i18n="cs.livechat_title">Live Chat Web</span>
-                    <span class="text-[9px] text-[#00E5FF] font-mono leading-tight" data-i18n="cs.livechat_desc">Online &bull; Siap Bantu</span>
-                </div>
-            </button>
         </div>
 
-        <button
-            id="mobile-cs-trigger"
-            type="button"
-            class="w-10 h-10 rounded-md bg-[#11131A] hover:bg-[#161922] border border-[#222634] hover:border-[#00E5FF]/40 text-[#00E5FF] flex items-center justify-center shadow-lg transition-colors cursor-pointer relative"
-            aria-label="Bantuan Layanan Pelanggan"
-            data-i18n-title="cs.speed_dial_aria"
-        >
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400"></span>
-            <div id="cs-icon-headset" class="i-lucide-headset text-base"></div>
-            <div id="cs-icon-close" class="i-lucide-x text-base hidden"></div>
-        </button>
+        <!-- Desktop Compound Launcher Bar (md:flex) -->
+        <div class="hidden md:flex items-center gap-1.5 bg-[#11131A] border border-[#262B3D] hover:border-[#00E5FF]/40 p-1.5 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.7)] transition-all">
+            <!-- Primary Live Chat Action -->
+            <button
+                type="button"
+                id="desktop-cs-livechat-btn"
+                class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#00E5FF]/10 hover:bg-[#00E5FF]/20 text-[#F8FAFC] border border-[#00E5FF]/30 hover:border-[#00E5FF] transition-all cursor-pointer group"
+                title="Buka Live Chat Yasui AI & Admin"
+            >
+                <div class="w-6 h-6 rounded bg-[#00E5FF] text-[#090A0F] flex items-center justify-center font-bold relative shrink-0">
+                    <div class="i-lucide-headset text-sm"></div>
+                    <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full border border-[#090A0F]"></span>
+                </div>
+                <div class="flex flex-col text-left pr-1">
+                    <span class="text-xs font-bold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors leading-tight">
+                        Live Chat
+                    </span>
+                    <span class="text-[9px] text-emerald-400 font-mono flex items-center gap-1 leading-tight mt-0.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Online • 24/7</span>
+                    </span>
+                </div>
+            </button>
+
+            <!-- Secondary Pill: WhatsApp (Indonesia) -->
+            <a
+                href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-9 h-9 rounded-lg bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-emerald-500/40 text-emerald-400 flex items-center justify-center transition-colors cursor-pointer"
+                title="WhatsApp CS (Indonesia)"
+                aria-label="WhatsApp CS"
+            >
+                <Icon name="whatsapp" width={16} height={16} />
+            </a>
+
+            <!-- Secondary Pill: Discord (Global) -->
+            <a
+                href="https://discord.com/users/1312253061800001541"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-9 h-9 rounded-lg bg-[#161922] hover:bg-[#1C202C] border border-[#222634] hover:border-indigo-500/40 text-indigo-400 flex items-center justify-center transition-colors cursor-pointer"
+                title="Discord Support (Global)"
+                aria-label="Discord Support"
+            >
+                <Icon name="discord" width={16} height={16} />
+            </a>
+        </div>
+
+        <!-- Mobile Floating Trigger Button (< md) -->
+        <div class="block md:hidden">
+            <button
+                id="mobile-cs-trigger"
+                type="button"
+                class="w-11 h-11 rounded-xl bg-[#11131A] hover:bg-[#161922] border border-[#00E5FF]/40 text-[#00E5FF] flex items-center justify-center shadow-[0_6px_20px_rgba(0,0,0,0.6)] transition-all cursor-pointer relative"
+                aria-label="Bantuan Layanan Pelanggan"
+                data-i18n-title="cs.speed_dial_aria"
+            >
+                <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <div id="cs-icon-headset" class="i-lucide-headset text-lg"></div>
+                <div id="cs-icon-close" class="i-lucide-x text-lg hidden"></div>
+            </button>
+        </div>
     </div>
 </aside>
 )}
 
 <script>
-    function initMobileCS() {
+    function initFloatingSupport() {
         const trigger = document.getElementById("mobile-cs-trigger");
-        const menu = document.getElementById("mobile-cs-menu");
+        const menu = document.getElementById("unified-cs-menu");
         const iconHeadset = document.getElementById("cs-icon-headset");
         const iconClose = document.getElementById("cs-icon-close");
-        const livechatBtn = document.getElementById("mobile-cs-livechat-btn");
-        if (!trigger || !menu) return;
+        const menuLivechatBtn = document.getElementById("cs-menu-livechat-btn");
+        const desktopLivechatBtn = document.getElementById("desktop-cs-livechat-btn");
 
-        let isOpen = false;
+        let isMenuOpen = false;
 
         function toggleMenu(show?: boolean) {
-            isOpen = typeof show === "boolean" ? show : !isOpen;
-            if (isOpen) {
-                menu!.classList.remove("scale-95", "opacity-0", "pointer-events-none");
-                menu!.classList.add("scale-100", "opacity-100", "pointer-events-auto");
+            isMenuOpen = typeof show === "boolean" ? show : !isMenuOpen;
+            if (isMenuOpen) {
+                menu?.classList.remove("scale-95", "opacity-0", "pointer-events-none");
+                menu?.classList.add("scale-100", "opacity-100", "pointer-events-auto");
                 iconHeadset?.classList.add("hidden");
                 iconClose?.classList.remove("hidden");
             } else {
-                menu!.classList.add("scale-95", "opacity-0", "pointer-events-none");
-                menu!.classList.remove("scale-100", "opacity-100", "pointer-events-auto");
+                menu?.classList.add("scale-95", "opacity-0", "pointer-events-none");
+                menu?.classList.remove("scale-100", "opacity-100", "pointer-events-auto");
                 iconHeadset?.classList.remove("hidden");
                 iconClose?.classList.add("hidden");
             }
         }
 
-        trigger.addEventListener("click", (e) => {
+        trigger?.addEventListener("click", (e) => {
             e.stopPropagation();
             toggleMenu();
         });
 
-        livechatBtn?.addEventListener("click", () => {
+        menuLivechatBtn?.addEventListener("click", () => {
+            toggleMenu(false);
+            if ((window as any).openLiveChatModal) {
+                (window as any).openLiveChatModal();
+            }
+        });
+
+        desktopLivechatBtn?.addEventListener("click", () => {
             toggleMenu(false);
             if ((window as any).openLiveChatModal) {
                 (window as any).openLiveChatModal();
@@ -146,15 +210,15 @@ const mobileBottomClass = (isProductPage || isCartPage) ? "bottom-28" : "bottom-
         });
 
         document.addEventListener("click", (e) => {
-            if (isOpen && !menu.contains(e.target as Node) && !trigger.contains(e.target as Node)) {
+            if (isMenuOpen && menu && trigger && !menu.contains(e.target as Node) && !trigger.contains(e.target as Node)) {
                 toggleMenu(false);
             }
         });
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initMobileCS);
+        document.addEventListener("DOMContentLoaded", initFloatingSupport);
     } else {
-        initMobileCS();
+        initFloatingSupport();
     }
 </script>

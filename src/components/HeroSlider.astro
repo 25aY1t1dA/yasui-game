@@ -4,44 +4,45 @@ import { PROMO_SLIDES } from "../data/slides";
 const slides = PROMO_SLIDES;
 ---
 
-<div class="relative w-full h-[220px] md:h-[340px] overflow-hidden rounded-lg border border-[#222634] bg-[#0D0F15] group">
-    <div id="slider-track" class="flex transition-transform duration-500 ease-out h-full">
-        {slides.map((slide) => (
-            <div class="w-full shrink-0 relative h-full">
-                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={`background-image: url('${slide.image}')`} />
-                <div class="absolute inset-0 bg-gradient-to-t from-[#090A0F] via-[#090A0F]/70 to-transparent" />
-                <div class="hidden md:block absolute inset-0 bg-gradient-to-r from-[#090A0F]/90 via-[#090A0F]/50 to-transparent" />
-                <div class="absolute bottom-0 left-0 p-5 md:p-8 w-full md:w-3/5 z-10">
-                    <span class="yg-badge-instant mb-2 text-[10px] uppercase font-mono">
-                        PROMO UNGGULAN
-                    </span>
-                    <h2 class="text-xl md:text-3xl font-extrabold text-[#F8FAFC] tracking-tight leading-tight mb-1.5 md:mb-2">
-                        {slide.title}
-                    </h2>
-                    <p class="text-[#94A3B8] text-xs md:text-sm max-w-sm md:max-w-md leading-relaxed line-clamp-2">
-                        {slide.subtitle}
-                    </p>
-                    <a href="/categories" class="yg-btn-primary mt-3 md:mt-4 text-xs">
-                        <span>Jelajahi Sekarang</span>
-                        <span class="i-lucide-arrow-right text-xs" aria-hidden="true" />
-                    </a>
-                </div>
+<div class="relative w-full h-[150px] sm:h-[200px] md:h-[260px] lg:h-[300px] rounded-lg overflow-hidden border border-[#222634] bg-[#0D0F15] group">
+    <div id="slider-track" class="flex w-full h-full transition-transform duration-500 ease-out" style="transform: translateX(0%);">
+        {slides.map((slide, index) => (
+            <div class="w-full h-full shrink-0 relative">
+                <img
+                    src={`/img-proxy?src=${encodeURIComponent(slide.image)}`}
+                    alt={slide.title || "Promo Banner"}
+                    class="w-full h-full object-cover object-center select-none"
+                    loading={index === 0 ? "eager" : "lazy"}
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#090A0F] via-transparent to-transparent pointer-events-none"></div>
             </div>
         ))}
     </div>
 
-    <div class="absolute bottom-3 right-3 md:bottom-4 md:right-4 flex items-center gap-1.5 z-20 bg-[#090A0F]/85 backdrop-blur-sm px-2 py-1 rounded border border-[#222634]">
-        {slides.map((_, index) => (
-            <button class="slider-dot h-1.5 w-2 rounded-full bg-[#262B3D] hover:bg-[#94A3B8] transition-all cursor-pointer" data-index={index} aria-label={`Slide ${index + 1}`} />
-        ))}
-    </div>
-
-    <button id="prev-slide" class="yg-btn-icon absolute top-1/2 left-3 -translate-y-1/2 hidden md:flex z-20" aria-label="Slide Sebelumnya">
+    <button
+        id="prev-slide"
+        aria-label="Previous Slide"
+        class="yg-btn-icon absolute left-3 top-1/2 -translate-y-1/2 hidden md:flex opacity-0 group-hover:opacity-100 z-20"
+    >
         <span class="i-lucide-chevron-left text-base" aria-hidden="true" />
     </button>
-    <button id="next-slide" class="yg-btn-icon absolute top-1/2 right-3 -translate-y-1/2 hidden md:flex z-20" aria-label="Slide Berikutnya">
+    <button
+        id="next-slide"
+        aria-label="Next Slide"
+        class="yg-btn-icon absolute right-3 top-1/2 -translate-y-1/2 hidden md:flex opacity-0 group-hover:opacity-100 z-20"
+    >
         <span class="i-lucide-chevron-right text-base" aria-hidden="true" />
     </button>
+
+    <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20 bg-[#090A0F]/85 backdrop-blur-sm px-2.5 py-1 rounded border border-[#222634]">
+        {slides.map((_, index) => (
+            <button
+                class={`slider-dot h-1.5 rounded-full transition-all duration-300 cursor-pointer ${index === 0 ? "w-5 bg-[#00E5FF]" : "w-2 bg-[#262B3D] hover:bg-[#64748B]"}`}
+                data-index={index}
+                aria-label={`Slide ${index + 1}`}
+            />
+        ))}
+    </div>
 </div>
 
 <script>
@@ -49,51 +50,62 @@ const slides = PROMO_SLIDES;
         let currentSlide = 0;
         const track = document.getElementById("slider-track");
         const dots = document.querySelectorAll(".slider-dot");
+        const prevBtn = document.getElementById("prev-slide");
+        const nextBtn = document.getElementById("next-slide");
         const totalSlides = dots.length;
         if (!track || totalSlides <= 1) return;
 
-        function updateSlider() {
+        let isHovered = false;
+        let autoPlay: any = null;
+
+        function updateSlider(idx: number) {
+            currentSlide = (idx + totalSlides) % totalSlides;
             if (!track) return;
             track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, idx) => {
-                if (idx === currentSlide) {
-                    dot.classList.add("bg-[#00E5FF]", "w-5");
-                    dot.classList.remove("bg-[#262B3D]", "w-2");
+            dots.forEach((dot, i) => {
+                if (i === currentSlide) {
+                    dot.className = "slider-dot h-1.5 rounded-full transition-all duration-300 w-5 bg-[#00E5FF]";
                 } else {
-                    dot.classList.remove("bg-[#00E5FF]", "w-5");
-                    dot.classList.add("bg-[#262B3D]", "w-2");
+                    dot.className = "slider-dot h-1.5 rounded-full transition-all duration-300 w-2 bg-[#262B3D] hover:bg-[#64748B]";
                 }
             });
         }
 
-        let autoPlay = setInterval(() => {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateSlider();
-        }, 5000);
+        function startAutoPlay() {
+            stopAutoPlay();
+            autoPlay = setInterval(() => {
+                if (!isHovered) updateSlider(currentSlide + 1);
+            }, 5000);
+        }
 
-        const nextBtn = document.getElementById("next-slide");
-        const prevBtn = document.getElementById("prev-slide");
+        function stopAutoPlay() {
+            if (autoPlay) clearInterval(autoPlay);
+        }
+
+        prevBtn?.addEventListener("click", () => {
+            updateSlider(currentSlide - 1);
+            startAutoPlay();
+        });
 
         nextBtn?.addEventListener("click", () => {
-            clearInterval(autoPlay);
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateSlider();
-        });
-        prevBtn?.addEventListener("click", () => {
-            clearInterval(autoPlay);
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            updateSlider();
+            updateSlider(currentSlide + 1);
+            startAutoPlay();
         });
 
         dots.forEach((dot, idx) => {
             dot.addEventListener("click", () => {
-                clearInterval(autoPlay);
-                currentSlide = idx;
-                updateSlider();
+                updateSlider(idx);
+                startAutoPlay();
             });
         });
 
-        updateSlider();
+        const container = track.parentElement;
+        if (container) {
+            container.addEventListener("mouseenter", () => { isHovered = true; });
+            container.addEventListener("mouseleave", () => { isHovered = false; });
+        }
+
+        startAutoPlay();
     }
 
     initHeroSlider();

@@ -318,6 +318,17 @@ import Layout from "../layouts/Layout.astro";
 
                 allOrdersData = data.orders || [];
 
+                // Sync recent orders to localStorage for contextual chat thread selector
+                try {
+                    const existingRecent = JSON.parse(localStorage.getItem("yasui_recent_orders") || "[]");
+                    const orderIds = allOrdersData.map(o => String(o.id).trim()).filter(Boolean);
+                    const merged = Array.from(new Set([...orderIds, ...existingRecent])).slice(0, 10);
+                    localStorage.setItem("yasui_recent_orders", JSON.stringify(merged));
+                    if (window.renderThreadSelector) {
+                        window.renderThreadSelector();
+                    }
+                } catch (e) {}
+
                 // Simpan email di localStorage
                 localStorage.setItem("yasui_buyer_email", email);
                 document.dispatchEvent(new Event("yasui-auth-changed"));
@@ -488,6 +499,11 @@ import Layout from "../layouts/Layout.astro";
                                     <span>${swButtonLabel(order.swFulfillStatus)}</span>
                                 </button>
                             ` : ''}
+
+                            <button onclick="window.openLiveChatModal && window.openLiveChatModal('Pesanan #${order.id}', '${order.id}')" class="yg-btn-secondary text-xs py-2 px-3 flex items-center gap-1.5 cursor-pointer border-[#00E5FF]/30 hover:border-[#00E5FF] text-[#F8FAFC] hover:text-[#00E5FF]" title="${isEn ? 'Chat Admin regarding Order #' + order.id : 'Chat Admin terkait Order #' + order.id}">
+                                <div class="i-lucide-headset text-xs text-[#00E5FF]"></div>
+                                <span>${isEn ? 'Order Chat #' + order.id : 'Chat Admin #' + order.id}</span>
+                            </button>
 
                             <a href="${waSupportUrl}" target="_blank" rel="noopener noreferrer" class="yg-btn-secondary text-xs py-2 px-3 flex items-center gap-1.5">
                                 <div class="i-lucide-message-circle text-xs text-emerald-400"></div>

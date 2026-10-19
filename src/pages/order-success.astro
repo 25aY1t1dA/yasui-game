@@ -161,6 +161,14 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                                 <div class="i-lucide-receipt text-sm"></div>
                                 <span data-i18n="order_success.btn_dashboard">Buka Dashboard Pesanan Saya</span>
                             </a>
+                            <button
+                                type="button"
+                                onclick={`window.openLiveChatModal && window.openLiveChatModal('Pesanan #${order?.id}', '${order?.id}')`}
+                                class="w-full yg-btn-secondary text-xs py-2.5 flex items-center justify-center gap-2 font-mono cursor-pointer border-[#00E5FF]/40 text-[#00E5FF] hover:bg-[#00E5FF]/10"
+                            >
+                                <div class="i-lucide-headset text-sm text-[#00E5FF]"></div>
+                                <span data-i18n="chat.order_help_btn">Butuh Bantuan untuk Order Ini? Chat Admin</span>
+                            </button>
                             <a
                                 href="/"
                                 class="yg-btn-secondary block w-full text-center"
@@ -170,6 +178,18 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                         </div>
 
                         <script is:inline define:vars={{ orderId: order?.id, orderKey: order?.order_key, orderEmail: order?.billing?.email }}>
+                            // Auto-register order to recent orders for contextual chat
+                            try {
+                                if (orderId) {
+                                    const rec = JSON.parse(localStorage.getItem("yasui_recent_orders") || "[]");
+                                    const cleanId = String(orderId).trim();
+                                    if (!rec.includes(cleanId)) {
+                                        rec.unshift(cleanId);
+                                        localStorage.setItem("yasui_recent_orders", JSON.stringify(rec.slice(0, 10)));
+                                    }
+                                }
+                            } catch (e) {}
+
                             const btn = document.getElementById("btn-save-success-pwd");
                             btn?.addEventListener("click", async () => {
                                 const pwd = document.getElementById("success-new-pwd")?.value;

@@ -191,7 +191,7 @@ const schema = {
         </div>
     </div>
 
-    <main class="yg-shell pt-4 md:pt-6 pb-36 lg:pb-28">
+    <main class="yg-shell pt-4 md:pt-6 pb-36 lg:pb-28" data-product-title={product.name} data-product-slug={product.slug}>
         <nav
             class="flex py-3 text-[#64748B] text-[10px] font-mono uppercase tracking-wider overflow-x-auto"
             aria-label="Breadcrumb"
@@ -441,6 +441,17 @@ const schema = {
                                 <span class="text-[9px] text-[#94A3B8]" data-i18n="product.anti_hackback">100% Anti-Hackback</span>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="mt-2.5">
+                        <button
+                            type="button"
+                            onclick={`window.openLiveChatModal && window.openLiveChatModal(${JSON.stringify(product.name)})`}
+                            class="w-full py-2 px-3 rounded-md bg-[#161922] hover:bg-[#1E2230] border border-[#222634] hover:border-[#00E5FF]/40 text-[#94A3B8] hover:text-[#00E5FF] text-[11px] font-mono transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                            <div class="i-lucide-headset text-xs text-[#00E5FF]"></div>
+                            <span data-i18n="product.ask_admin">Tanya Admin tentang Akun Ini</span>
+                        </button>
                     </div>
 
                     {/* Desktop Single Purchase Form (Hidden on Mobile < lg) */}

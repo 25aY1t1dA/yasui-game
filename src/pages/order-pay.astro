@@ -191,6 +191,15 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                         <div class="i-lucide-home text-xs"></div> <span data-i18n="nav.home">Beranda</span>
                                     </a>
                                 </div>
+
+                                <button
+                                    type="button"
+                                    onclick={`window.openLiveChatModal && window.openLiveChatModal('Pesanan #${order?.id}', '${order?.id}')`}
+                                    class="w-full yg-btn-secondary text-xs py-2.5 flex items-center justify-center gap-1.5 font-mono cursor-pointer border-[#00E5FF]/40 text-[#00E5FF] hover:bg-[#00E5FF]/10"
+                                >
+                                    <div class="i-lucide-headset text-xs text-[#00E5FF]"></div>
+                                    <span data-i18n="chat.order_help_btn">Butuh Bantuan untuk Order Ini? Chat Admin</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -434,6 +443,21 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                     <span>Cek Status Sekarang</span>
                                 </button>
                             </div>
+
+                            <div class="mt-4 pt-4 border-t border-[#222634]/70 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0D0F15] p-3 rounded-lg border border-[#222634]">
+                                <div class="flex items-center gap-2 text-xs text-[#94A3B8] font-mono text-center sm:text-left">
+                                    <div class="i-lucide-shield-question text-base text-[#00E5FF] shrink-0"></div>
+                                    <span>Kendala pembayaran atau ingin konfirmasi manual?</span>
+                                </div>
+                                <button
+                                    type="button"
+                                    onclick={`window.openLiveChatModal && window.openLiveChatModal('Pesanan #${order?.id}', '${order?.id}')`}
+                                    class="w-full sm:w-auto yg-btn-secondary text-xs py-2 px-3.5 flex items-center justify-center gap-1.5 font-mono cursor-pointer shrink-0 border-[#00E5FF]/40 text-[#00E5FF] hover:bg-[#00E5FF]/10"
+                                >
+                                    <div class="i-lucide-headset text-xs text-[#00E5FF]"></div>
+                                    <span data-i18n="chat.order_help_btn">Butuh Bantuan untuk Order Ini? Chat Admin</span>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between text-xs text-[#64748B] px-1 font-mono">
@@ -464,6 +488,18 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
     <script is:inline define:vars={{ orderId, orderKey, expiryTime, isExpired }}>
         let isChecking = false;
         let checkInterval = null;
+
+        // Auto-register order to recent orders for contextual chat
+        try {
+            if (orderId) {
+                const rec = JSON.parse(localStorage.getItem("yasui_recent_orders") || "[]");
+                const cleanId = String(orderId).trim();
+                if (!rec.includes(cleanId)) {
+                    rec.unshift(cleanId);
+                    localStorage.setItem("yasui_recent_orders", JSON.stringify(rec.slice(0, 10)));
+                }
+            }
+        } catch (e) {}
 
         function copyVaNumber() {
             const vaEl = document.getElementById("va-number");

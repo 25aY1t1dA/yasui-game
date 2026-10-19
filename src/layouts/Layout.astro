@@ -36,6 +36,9 @@ const isCart = pathname.startsWith("/cart");
 const isCheckout = pathname.startsWith("/checkout");
 
 const shouldShowFooter = showFooter && !isCart && !isCheckout;
+
+const publicSupabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
+const publicSupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 ---
 
 <!doctype html>
@@ -530,56 +533,120 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 		<div
 			id="global-livechat-modal"
-			class="fixed inset-0 z-[110] bg-[#090A0F]/80 backdrop-blur-xs items-end sm:items-center justify-center p-0 sm:p-4 hidden"
+			class="fixed inset-0 z-[110] hidden items-end md:items-stretch md:inset-auto md:bottom-20 md:right-5 md:z-50 md:w-[390px] md:h-[580px] md:max-h-[calc(100vh-110px)]"
 			aria-hidden="true"
 		>
-			<div class="relative w-full max-w-md bg-[#11131A] border border-[#222634] rounded-t-lg sm:rounded-lg p-4 shadow-2xl flex flex-col h-[85vh] sm:h-[580px] max-h-[85vh]">
-				<div class="flex items-center justify-between border-b border-[#222634] pb-3 mb-3">
-					<div class="flex items-center gap-3">
-						<div class="w-9 h-9 rounded-md bg-[#161922] border border-[#222634] flex items-center justify-center text-[#00E5FF] relative">
-							<div class="i-lucide-headset text-lg"></div>
-							<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border border-[#090A0F]"></span>
+			<div
+				id="livechat-backdrop"
+				class="fixed inset-0 bg-[#090A0F]/70 backdrop-blur-xs md:hidden"
+				onclick="window.closeLiveChatModal && window.closeLiveChatModal()"
+				aria-hidden="true"
+			></div>
+
+			<div
+				id="livechat-window"
+				class="relative z-10 w-full h-[85vh] rounded-t-xl bg-[#11131A] border-t border-[#262B3D] flex flex-col shadow-2xl overflow-hidden md:h-full md:w-full md:rounded-xl md:border md:border-[#262B3D] md:shadow-[0_12px_40px_rgba(0,0,0,0.75)]"
+			>
+				{/* Header Chat Mode Indicator */}
+				<div class="flex items-center justify-between border-b border-[#222634] p-3 shrink-0 bg-[#0F1118]">
+					<div class="flex items-center gap-2.5 min-w-0">
+						<div id="livechat-avatar" class="w-9 h-9 rounded-md bg-[#161922] border border-[#222634] flex items-center justify-center text-[#00E5FF] relative shrink-0 transition-colors">
+							<div id="livechat-avatar-icon" class="i-lucide-bot text-lg"></div>
+							<span id="livechat-avatar-status" class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border border-[#090A0F]"></span>
 						</div>
-						<div class="flex flex-col">
-							<div class="flex items-center gap-2">
-								<span class="text-xs font-bold text-[#F8FAFC] uppercase tracking-tight" data-i18n="chat.admin_name">Admin Yasui Game</span>
-								<span class="yg-badge-cyan" data-i18n="chat.official">OFFICIAL</span>
+						<div class="flex flex-col min-w-0">
+							<div class="flex items-center gap-1.5 flex-wrap">
+								<span id="livechat-header-title" class="text-xs font-bold text-[#F8FAFC] uppercase tracking-tight truncate" data-i18n="chat.mode_ai_title">Yasui AI Assistant</span>
+								<span id="livechat-header-badge" class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 font-semibold" data-i18n="chat.badge_ai">⚡ YASUI AI</span>
 							</div>
-							<span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1" data-i18n="chat.status_online">
-								<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Online &bull; Respon &lt; 2 menit
+							<span id="livechat-header-status" class="text-[10px] text-emerald-400 font-mono flex items-center gap-1 mt-0.5 truncate">
+								<span id="livechat-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span>
+								<span id="livechat-status-text" data-i18n="chat.mode_ai_status">⚡ AI Instant Guard • Respon 24/7</span>
 							</span>
 						</div>
 					</div>
-					<button
-						type="button"
-						onclick="window.closeLiveChatModal && window.closeLiveChatModal()"
-						class="text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] p-1.5 rounded-md transition-colors cursor-pointer"
-						aria-label="Tutup Live Chat"
-					>
-						<div class="i-lucide-x text-base"></div>
-					</button>
+					<div class="flex items-center gap-1 shrink-0 ml-2">
+						<button
+							type="button"
+							id="livechat-request-human-btn"
+							onclick="window.requestHumanAdmin && window.requestHumanAdmin()"
+							class="text-[10px] font-mono text-[#94A3B8] hover:text-[#00E5FF] bg-[#161922] hover:bg-[#1E2230] border border-[#222634] hover:border-[#00E5FF]/40 px-2 py-1 rounded transition-colors cursor-pointer flex items-center gap-1 shrink-0"
+							title="Minta Bantuan Admin Manusia"
+						>
+							<div class="i-lucide-user-check text-xs text-emerald-400"></div>
+							<span class="hidden sm:inline" data-i18n="chat.request_human_btn">Minta Admin</span>
+						</button>
+						<button
+							type="button"
+							onclick="window.closeLiveChatModal && window.closeLiveChatModal()"
+							class="text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-[#161922] p-1.5 rounded-md transition-colors cursor-pointer"
+							aria-label="Tutup Live Chat"
+						>
+							<div class="i-lucide-x text-base"></div>
+						</button>
+					</div>
 				</div>
 
-				<div id="livechat-messages" class="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-none text-xs">
-					<div class="flex items-start gap-2 max-w-[85%]">
-						<div class="w-6 h-6 rounded bg-[#161922] border border-[#222634] text-[#00E5FF] flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold font-mono">
-							Y
+				{/* Context Bar / Thread Selector & Order Session Banner */}
+				<div id="livechat-context-wrapper" class="border-b border-[#222634] bg-[#0D0F15] px-3 py-2 space-y-1.5 shrink-0">
+					<div class="flex items-center justify-between gap-2">
+						<div class="flex items-center gap-1.5 min-w-0 flex-1">
+							<span class="text-[9px] font-mono font-semibold text-[#64748B] uppercase shrink-0" data-i18n="chat.thread_select_label">Konteks:</span>
+							<select
+								id="livechat-thread-selector"
+								onchange="window.handleChatThreadChange && window.handleChatThreadChange(this.value)"
+								class="bg-[#11131A] border border-[#222634] hover:border-[#00E5FF]/40 text-[#F8FAFC] text-[10px] font-mono rounded px-2 py-1 outline-none transition-colors w-full truncate cursor-pointer"
+							>
+								<option value="general" data-i18n="chat.thread_general">💬 Pertanyaan Umum / Produk</option>
+							</select>
 						</div>
-						<div class="bg-[#161922] border border-[#222634] rounded-lg rounded-tl-none p-3 text-[#F8FAFC] leading-relaxed" data-i18n="chat.welcome_msg">
-							Halo Gamers! Selamat datang di <strong>Yasui Game</strong>. Ada akun game atau item yang ingin ditanyakan ketersediaannya?
+						<div id="livechat-product-chip" class="hidden items-center gap-1 bg-[#161922] border border-[#00E5FF]/30 px-1.5 py-0.5 rounded text-[9px] font-mono text-[#00E5FF] truncate max-w-[130px]">
+							<span class="truncate" id="livechat-product-name">...</span>
+							<button type="button" onclick="window.clearChatProductContext && window.clearChatProductContext()" class="text-[#64748B] hover:text-red-400 cursor-pointer shrink-0" title="Hapus konteks">
+								<div class="i-lucide-x text-[10px]"></div>
+							</button>
 						</div>
 					</div>
 
-					<div class="flex items-start gap-2 max-w-[85%]">
+					<div id="livechat-order-banner" class="hidden items-center gap-1.5 bg-[#00E5FF]/5 border border-[#00E5FF]/30 text-[#00E5FF] px-2.5 py-1.5 rounded text-[10px] font-mono leading-relaxed">
+						<div class="i-lucide-shield-check text-xs shrink-0 text-[#00E5FF]"></div>
+						<span id="livechat-order-banner-text" class="text-[9.5px]">
+							🔒 Sesi Khusus Order #<span id="livechat-order-banner-id">-</span> — Riwayat percakapan ini tercatat resmi untuk jaminan garansi & bantuan pesanan.
+						</span>
+					</div>
+				</div>
+
+				{/* Messages Area */}
+				<div id="livechat-messages" class="flex-1 overflow-y-auto space-y-3 p-3 scrollbar-none text-xs">
+					<div class="flex items-start gap-2 max-w-[85%]" data-msg-id="welcome-1">
 						<div class="w-6 h-6 rounded bg-[#161922] border border-[#222634] text-[#00E5FF] flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold font-mono">
-							Y
+							⚡
 						</div>
-						<div class="bg-[#161922] border border-[#222634] rounded-lg rounded-tl-none p-3 text-[#F8FAFC] leading-relaxed" data-i18n="chat.guarantee_msg">
-							Semua transaksi diproses aman dengan garansi 100% anti hackback. Silakan ketik pertanyaan Anda.
+						<div class="bg-[#161922] border border-[#222634] rounded-lg rounded-tl-none p-3 text-[#F8FAFC] leading-relaxed shadow-xs text-left">
+							<div class="flex items-center gap-1 font-mono text-[9px] text-[#00E5FF] font-semibold mb-1">
+								<span>⚡ YASUI AI</span>
+							</div>
+							<div data-i18n="chat.welcome_msg">
+								Halo Gamers! Selamat datang di <strong>Yasui Game</strong>. Ada akun game atau item yang ingin ditanyakan ketersediaannya?
+							</div>
 						</div>
 					</div>
 
-					<div class="pt-2">
+					<div class="flex items-start gap-2 max-w-[85%]" data-msg-id="welcome-2">
+						<div class="w-6 h-6 rounded bg-[#161922] border border-[#222634] text-[#00E5FF] flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold font-mono">
+							⚡
+						</div>
+						<div class="bg-[#161922] border border-[#222634] rounded-lg rounded-tl-none p-3 text-[#F8FAFC] leading-relaxed shadow-xs text-left">
+							<div class="flex items-center gap-1 font-mono text-[9px] text-[#00E5FF] font-semibold mb-1">
+								<span>⚡ YASUI AI</span>
+							</div>
+							<div data-i18n="chat.guarantee_msg">
+								Semua transaksi diproses aman dengan garansi 100% anti hackback. Silakan ketik pertanyaan Anda.
+							</div>
+						</div>
+					</div>
+
+					<div class="pt-2 border-t border-[#222634]/60" id="livechat-quick-actions">
 						<div class="text-[9px] font-mono text-[#64748B] uppercase tracking-wider mb-1.5" data-i18n="chat.quick_questions">Pertanyaan Cepat:</div>
 						<div class="flex flex-wrap gap-1.5">
 							<button type="button" onclick="window.sendQuickChatMessage && window.sendQuickChatMessage('Berapa lama proses pengiriman akun?')" class="text-[10px] bg-[#161922] hover:bg-[#1E2230] border border-[#222634] text-[#F8FAFC] px-2.5 py-1 rounded transition-colors cursor-pointer flex items-center gap-1 font-mono" data-i18n="chat.quick_q1">
@@ -594,48 +661,77 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 								<div class="i-lucide-credit-card w-3 h-3 text-amber-400"></div>
 								<span>Metode Pembayaran</span>
 							</button>
+							<button type="button" onclick="window.requestHumanAdmin && window.requestHumanAdmin()" class="text-[10px] bg-[#161922] hover:bg-[#1E2230] border border-emerald-500/40 text-emerald-400 px-2.5 py-1 rounded transition-colors cursor-pointer flex items-center gap-1 font-mono" data-i18n="chat.request_human_btn">
+								<div class="i-lucide-headset w-3 h-3 text-emerald-400"></div>
+								<span>Minta Bantuan Admin</span>
+							</button>
 						</div>
 					</div>
 				</div>
 
-				<div id="livechat-typing" class="hidden items-center gap-1.5 py-1.5 text-[10px] text-[#94A3B8] font-mono">
+				{/* Typing Indicator */}
+				<div id="livechat-typing" class="hidden items-center gap-1.5 px-3 py-1 text-[10px] text-[#94A3B8] font-mono">
 					<span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-bounce"></span>
 					<span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-bounce [animation-delay:0.2s]"></span>
 					<span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-bounce [animation-delay:0.4s]"></span>
-					<span class="ml-1" data-i18n="chat.typing">Admin sedang mengetik...</span>
+					<span class="ml-1" data-i18n="chat.typing">Sedang mengetik...</span>
 				</div>
 
-				<div class="pt-3 border-t border-[#222634]">
-					<form id="livechat-form" onsubmit="window.handleLiveChatSubmit && window.handleLiveChatSubmit(event)" class="flex items-center gap-2">
-						<input
-							type="text"
-							id="livechat-input"
-							placeholder="Ketik pesan untuk Admin..."
-							data-i18n-placeholder="chat.input_placeholder"
-							class="flex-1 bg-[#0D0F17] border border-[#222634] focus:border-[#00E5FF] rounded-md px-3 py-2 text-xs text-[#F8FAFC] placeholder-[#64748B] outline-none font-mono transition-colors"
-							autocomplete="off"
-						/>
-						<button
-							type="submit"
-							class="w-8.5 h-8.5 rounded-md bg-[#00E5FF] hover:bg-[#33EBFF] text-[#090A0F] flex items-center justify-center font-bold transition-colors cursor-pointer shrink-0"
-							title="Kirim Pesan"
-						>
-							<div class="i-lucide-send text-xs"></div>
-						</button>
+				{/* Input Controls */}
+				<div class="p-3 border-t border-[#222634] bg-[#0E1017] shrink-0">
+					<form id="livechat-form" onsubmit="event.preventDefault(); window.handleLiveChatSubmit && window.handleLiveChatSubmit(event); return false;" class="space-y-1.5">
+						<div class="relative flex items-end gap-2">
+							<textarea
+								id="chat-input"
+								rows="1"
+								maxlength="400"
+								placeholder="Ketik pesan untuk Admin / AI... (Shift+Enter baris baru)"
+								data-i18n-placeholder="chat.input_placeholder"
+								class="w-full resize-none overflow-y-auto min-h-[40px] max-h-[112px] py-2.5 px-3 leading-relaxed break-words whitespace-pre-wrap yg-input text-xs"
+							></textarea>
+							<button
+								type="submit"
+								id="livechat-send-btn"
+								class="w-9 h-9 rounded-md bg-[#00E5FF] hover:bg-[#33EBFF] text-[#090A0F] flex items-center justify-center font-bold transition-colors cursor-pointer shrink-0 mb-0.5"
+								title="Kirim Pesan"
+								aria-label="Kirim Pesan"
+							>
+								<div class="i-lucide-send text-xs"></div>
+							</button>
+						</div>
+
+						<div class="flex items-center justify-between text-[10px] font-mono px-0.5">
+							<span class="text-[#64748B] text-[9.5px]" data-i18n="chat.char_hint">Shift + Enter baris baru</span>
+							<span id="chat-char-counter" class="text-[#64748B] tabular-nums">0 / 400</span>
+						</div>
 					</form>
 
-					<div class="mt-2.5 flex items-center justify-between text-[10px] font-mono">
-						<span class="text-[#64748B]" data-i18n="chat.need_instant">Butuh respon instan?</span>
-						<a
-							href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya%20stok%20akun..."
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-semibold transition-colors"
-							data-i18n="chat.continue_wa"
-						>
-							<div class="i-lucide-external-link text-xs"></div>
-							Lanjut ke WhatsApp &rarr;
-						</a>
+					{/* Bottom Alternative Channels */}
+					<div class="mt-2 pt-2 border-t border-[#222634]/70 flex items-center justify-between text-[10px] font-mono">
+						<span class="text-[#64748B] text-[9px] uppercase tracking-wider shrink-0" data-i18n="chat.alt_channels">Bantuan Alternatif:</span>
+						<div class="flex items-center gap-3">
+							<a
+								href="https://discord.com/users/1312253061800001541"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 transition-colors"
+								data-i18n="chat.discord_support"
+							>
+								<Icon name="discord" width={12} height={12} />
+								<span>Discord Support</span>
+							</a>
+							<span class="text-[#222634]">•</span>
+							<a
+								href="https://wa.me/628989685098?text=Halo%20Admin%20Yasui,%20saya%20mau%20tanya..."
+								target="_blank"
+								rel="noopener noreferrer"
+								class="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-semibold transition-colors"
+								data-i18n="chat.wa_cs"
+							>
+								<Icon name="whatsapp" width={12} height={12} />
+								<span>WhatsApp CS</span>
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -820,11 +916,35 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 		<FloatingWA />
 
-		<script is:inline define:vars={{ serverDefaultCurr, serverDefaultLang, detectedCountry }}>
+		<script is:inline define:vars={{ serverDefaultCurr, serverDefaultLang, detectedCountry, publicSupabaseUrl, publicSupabaseAnonKey }}>
 			window.__YASUI_CONFIG__ = {
 				curr: window.__YASUI_INITIAL_CURR__ || serverDefaultCurr,
 				lang: window.__YASUI_INITIAL_LANG__ || serverDefaultLang,
-				country: detectedCountry
+				country: detectedCountry,
+				supabaseUrl: publicSupabaseUrl,
+				supabaseAnonKey: publicSupabaseAnonKey
+			};
+
+			// Immediate zero-delay fallbacks to guarantee navbar buttons respond instantly without waiting for async bundles
+			window.openLiveChatModal = window.openLiveChatModal || function () {
+				var modal = document.getElementById("global-livechat-modal");
+				if (modal) { modal.classList.remove("hidden"); modal.classList.add("flex"); modal.setAttribute("aria-hidden", "false"); }
+			};
+			window.closeLiveChatModal = window.closeLiveChatModal || function () {
+				var modal = document.getElementById("global-livechat-modal");
+				if (modal) { modal.classList.remove("flex"); modal.classList.add("hidden"); modal.setAttribute("aria-hidden", "true"); }
+			};
+			window.toggleRegionalMenu = window.toggleRegionalMenu || function () {
+				var menu = document.getElementById("header-regional-menu");
+				if (menu) menu.classList.toggle("hidden");
+			};
+			window.openAuthModal = window.openAuthModal || function () {
+				var modal = document.getElementById("global-auth-modal");
+				if (modal) { modal.classList.remove("hidden"); modal.classList.add("flex"); modal.setAttribute("aria-hidden", "false"); }
+			};
+			window.closeAuthModal = window.closeAuthModal || function () {
+				var modal = document.getElementById("global-auth-modal");
+				if (modal) { modal.classList.remove("flex"); modal.classList.add("hidden"); modal.setAttribute("aria-hidden", "true"); }
 			};
 		</script>
 		<script src="../scripts/app.ts"></script>

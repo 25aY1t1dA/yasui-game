@@ -181,6 +181,15 @@ export function initCurrencyAndLang(serverDefaultCurr = "IDR", serverDefaultLang
         return (customCurr || curr) === "USD" ? formatUSD(num / USD_RATE) : formatRupiah(num);
     };
 
+    const headerRegBtn = document.getElementById("header-regional-btn");
+    if (headerRegBtn) {
+        headerRegBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleRegionalMenu();
+        };
+    }
+
     document.getElementById("currency-btn")?.addEventListener("click", () => {
         selectCurrency(curr === "IDR" ? "USD" : "IDR");
     });
