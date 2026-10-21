@@ -1,0 +1,13 @@
+# Robots.txt for Yasui Game (https://yasuigame.com)
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /checkout
+Disallow: /order-pay
+Disallow: /order-success
+Disallow: /orders
+Disallow: /cart
+Disallow: /img-proxy
+
+# Dynamic XML Sitemap
+Sitemap: https://yasuigame.com/sitemap.xml

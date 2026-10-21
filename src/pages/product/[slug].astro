@@ -201,26 +201,90 @@ const is7DaysGift = mode === "game_gift" && (
     Astro.url.searchParams.get("gift_type") === "7days"
 );
 
-const schema = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    name: product.name,
-    description: product.shortDescription,
-    sku: product.slug,
-    image: product.image?.sourceUrl,
-    offers: {
-        "@type": "Offer",
-        priceCurrency: "IDR",
-        price: product.rawPrice || 0,
-        availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-        url: Astro.url.href,
+const prodCleanDesc = (product.shortDescription || product.description || `${product.name} - Yasui Game Marketplace RMT`)
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const prodImageUrl = prodMainSrc
+    ? (prodMainSrc.startsWith("http") ? prodMainSrc : `https://yasuigame.com${prodMainSrc.startsWith("/") ? "" : "/"}${prodMainSrc}`)
+    : "https://admin.yasuigame.com/wp-content/uploads/2026/01/Gaming-Global-Market-scaled.png";
+
+const primaryCategory = product.categories?.[0] || null;
+
+const breadcrumbElements: any[] = [
+    {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://yasuigame.com"
     },
-};
+    {
+        "@type": "ListItem",
+        position: 2,
+        name: "Catalog",
+        item: "https://yasuigame.com/categories"
+    }
+];
+
+if (primaryCategory) {
+    breadcrumbElements.push({
+        "@type": "ListItem",
+        position: 3,
+        name: primaryCategory.name,
+        item: `https://yasuigame.com/category/${primaryCategory.slug}`
+    });
+}
+
+breadcrumbElements.push({
+    "@type": "ListItem",
+    position: breadcrumbElements.length + 1,
+    name: product.name,
+    item: `https://yasuigame.com/product/${slug}`
+});
+
+const productJsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.name,
+        description: prodCleanDesc,
+        sku: product.sku || product.slug || `YG-${product.id}`,
+        image: prodImageUrl,
+        brand: {
+            "@type": "Brand",
+            name: primaryCategory?.name || "Yasui Game"
+        },
+        offers: {
+            "@type": "Offer",
+            url: `https://yasuigame.com/product/${slug}`,
+            priceCurrency: "IDR",
+            price: String(pPrice.amount || product.rawPrice || 0),
+            priceValidUntil: "2027-12-31",
+            itemCondition: "https://schema.org/NewCondition",
+            availability: isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+            seller: {
+                "@type": "Organization",
+                name: "Yasui Game",
+                url: "https://yasuigame.com"
+            }
+        }
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: breadcrumbElements
+    }
+];
 ---
 
-<Layout title={`${product.name} - Yasui Game`} description={product.shortDescription}>
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-
+<Layout
+    title={`${product.name} - Yasui Game`}
+    description={prodCleanDesc}
+    ogType="product"
+    ogImage={prodImageUrl}
+    jsonLd={productJsonLd}
+>
     {/* Tactical Cyber Toast */}
     <div
         id="cyber-toast"

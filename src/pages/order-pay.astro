@@ -2,6 +2,8 @@
 // src/pages/order-pay.astro
 import Layout from "../layouts/Layout.astro";
 import { getOrder, updateOrder } from "../lib/wc";
+import { IDR_TO_USD_RATE } from "../lib/price";
+import { translations } from "../lib/translations";
 import QRCode from "qrcode";
 
 const orderId = Astro.url.searchParams.get("id");
@@ -135,7 +137,7 @@ const firstItemName = lineItems[0]?.name || "Akun Game / Voucher";
 const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : `Pembayaran Pesanan #${orderId} - Yasui Game`;
 ---
 
-<Layout title={pageTitle} showFooter={false}>
+<Layout title={pageTitle} showFooter={false} noindex={true}>
     <div class="max-w-2xl w-full mx-auto p-4 md:p-8 space-y-6">
         <header class="flex items-center justify-between pb-6 border-b border-[#222634]">
             <div class="flex items-center gap-3">
@@ -144,7 +146,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                         YASUI<span class="text-[#00E5FF]">GAME</span>
                     </span>
                 </a>
-                <span id="header-status-badge" class={`text-[10px] px-2 py-0.5 font-mono font-medium uppercase tracking-wider rounded border ${isExpired ? 'bg-red-500/10 text-red-400 border-red-500/25' : (isCrypto ? 'bg-amber-500/10 text-amber-400 border-amber-500/25' : 'bg-[#00E5FF]/10 text-[#00E5FF] border-[#00E5FF]/25')}`}>
+                <span id="header-status-badge" class={`text-[10px] px-2 py-0.5 font-mono font-medium uppercase tracking-wider rounded border ${isExpired ? 'bg-red-500/10 text-red-400 border-red-500/25' : (isCrypto ? 'bg-amber-500/10 text-amber-400 border-amber-500/25' : 'bg-[#00E5FF]/10 text-[#00E5FF] border-[#00E5FF]/25')}`} data-i18n={isExpired ? 'order_pay.gateway_expired' : (isCrypto ? 'order_pay.terminal_title' : 'order_pay.gateway_title')}>
                     {isExpired ? 'GATEWAY EXPIRED' : (isCrypto ? 'CRYPTO ON-CHAIN TERMINAL' : 'HEADLESS GATEWAY')}
                 </span>
             </div>
@@ -152,7 +154,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                 <span class="text-[10px] text-[#64748B] uppercase block font-mono font-semibold" data-i18n="order_pay.deadline">Batas Waktu Bayar</span>
                 <div id="countdown-timer" class="text-sm font-bold flex items-center justify-end gap-1.5 font-mono tabular-nums">
                     <div class={`i-lucide-clock text-xs ${isExpired ? 'text-red-400' : 'text-[#00E5FF] animate-pulse'}`}></div>
-                    <span id="timer-text" class={isExpired ? 'text-red-400' : 'text-[#00E5FF]'}>
+                    <span id="timer-text" class={isExpired ? 'text-red-400' : 'text-[#00E5FF]'} data-i18n={isExpired ? 'order_pay.expired_status' : undefined}>
                         {isExpired ? 'KADALUARSA' : '15:00'}
                     </span>
                 </div>
@@ -170,6 +172,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                     <a
                         href="/cart"
                         class="yg-btn-danger text-xs px-6 py-2.5"
+                        data-i18n="checkout.back_to_cart"
                     >
                         Kembali ke Keranjang
                     </a>
@@ -184,10 +187,10 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
 
                             <div class="inline-flex items-center gap-1.5 bg-red-500/10 border border-red-500/25 px-2.5 py-1 rounded text-[10px] font-mono font-medium text-red-400 uppercase tracking-widest mb-3">
                                 <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
-                                TRANSAKSI KADALUARSA
+                                <span data-i18n="order_pay.tx_expired_badge">TRANSAKSI KADALUARSA</span>
                             </div>
 
-                            <h1 class="text-lg md:text-xl font-bold text-[#F8FAFC] uppercase tracking-wider mb-2">
+                            <h1 class="text-lg md:text-xl font-bold text-[#F8FAFC] uppercase tracking-wider mb-2" data-i18n="order_pay.time_up_title">
                                 Waktu Pembayaran Telah Habis
                             </h1>
                             <p class="text-xs text-[#94A3B8] max-w-md mx-auto leading-relaxed mb-6 font-mono">
@@ -196,9 +199,9 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
 
                             <div class="bg-[#0D0F15] border-l-2 border-red-500 p-4 text-left max-w-md mx-auto mb-6 text-xs font-mono space-y-1 rounded-r">
                                 <div class="text-red-400 font-semibold flex items-center gap-1.5">
-                                    <div class="i-lucide-shield-alert text-sm"></div> Peringatan Gateway:
+                                    <div class="i-lucide-shield-alert text-sm"></div> <span data-i18n="order_pay.gateway_warning">Peringatan Gateway:</span>
                                 </div>
-                                <p class="text-[#94A3B8] text-[11px] leading-relaxed">
+                                <p class="text-[#94A3B8] text-[11px] leading-relaxed" data-i18n="order_pay.warning_expired_text">
                                     Jangan melakukan transfer ke kode atau alamat ini lagi. Dana yang ditransfer ke pesanan kedaluwarsa tidak dapat diverifikasi otomatis.
                                 </p>
                             </div>
@@ -300,13 +303,13 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                     <span>{cryptoNetworkName}</span>
                                                     <span class="text-[9px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded font-mono">ON-CHAIN</span>
                                                 </div>
-                                                <p class="text-[10px] text-[#64748B] font-mono mt-0.5">
+                                                <p class="text-[10px] text-[#64748B] font-mono mt-0.5" data-i18n="order_pay.crypto_sub">
                                                     Non-Custodial Direct Gateway • 0% Biaya Gateway
                                                 </p>
                                             </div>
                                         </div>
                                         <div class="text-right">
-                                            <span class="text-[10px] bg-[#00E5FF]/10 border border-[#00E5FF]/25 text-[#00E5FF] px-2.5 py-1 rounded font-mono font-semibold">
+                                            <span class="text-[10px] bg-[#00E5FF]/10 border border-[#00E5FF]/25 text-[#00E5FF] px-2.5 py-1 rounded font-mono font-semibold" data-i18n="order_pay.auto_verify">
                                                 VERIFIKASI OTOMATIS
                                             </span>
                                         </div>
@@ -315,9 +318,9 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                     <div class="bg-[#0D0F15] border border-[#00E5FF]/40 rounded-xl p-4 sm:p-5 space-y-3">
                                         <div class="flex items-center justify-between">
                                             <span class="text-[11px] font-mono font-bold text-[#94A3B8] uppercase tracking-wider flex items-center gap-1.5">
-                                                <div class="i-lucide-calculator text-[#00E5FF] text-xs"></div> Nominal Wajib Ditransfer Tepat:
+                                                <div class="i-lucide-calculator text-[#00E5FF] text-xs"></div> <span data-i18n="order_pay.exact_amount_label">Nominal Wajib Ditransfer Tepat:</span>
                                             </span>
-                                            <span class="text-[10px] font-mono text-[#00E5FF] bg-[#00E5FF]/10 px-2 py-0.5 rounded border border-[#00E5FF]/25 font-semibold">
+                                            <span class="text-[10px] font-mono text-[#00E5FF] bg-[#00E5FF]/10 px-2 py-0.5 rounded border border-[#00E5FF]/25 font-semibold" data-i18n="order_pay.micro_decimal_tag">
                                                 MICRO-DECIMAL MATCH
                                             </span>
                                         </div>
@@ -340,14 +343,14 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                 class="yg-btn-primary text-xs px-4 py-2.5 flex items-center justify-center gap-1.5 shrink-0 font-mono tracking-wider"
                                             >
                                                 <div class="i-lucide-copy text-sm"></div>
-                                                <span id="copy-amount-label">Salin Nominal</span>
+                                                <span id="copy-amount-label" data-i18n="order_pay.copy_amount">Salin Nominal</span>
                                             </button>
                                         </div>
 
                                         <div class="bg-amber-500/10 border-l-2 border-amber-500 p-3 rounded-r text-xs font-mono text-amber-300 flex items-start gap-2.5 mt-2">
                                             <div class="i-lucide-alert-triangle text-base shrink-0 mt-0.5 text-amber-400"></div>
                                             <div class="leading-relaxed text-[11px]">
-                                                <strong>PENTING:</strong> Transfer tepat <strong>{cryptoExpectedAmount} {cryptoTokenSymbol}</strong> hingga 3 angka di belakang koma. Jangan dibulatkan agar mesin scanner on-chain otomatis mencocokkan pembayaran pesanan #{order.id} Anda!
+                                                <strong data-i18n="order_pay.crypto_important_prefix">PENTING:</strong> Transfer tepat <strong>{cryptoExpectedAmount} {cryptoTokenSymbol}</strong> hingga 3 angka di belakang koma. Jangan dibulatkan agar mesin scanner on-chain otomatis mencocokkan pembayaran pesanan #{order.id} Anda!
                                             </div>
                                         </div>
                                     </div>
@@ -367,7 +370,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                     </div>
                                                 )}
                                             </div>
-                                            <p class="text-[10px] text-[#64748B] font-mono mt-2 text-center">
+                                            <p class="text-[10px] text-[#64748B] font-mono mt-2 text-center" data-i18n="order_pay.scan_wallets">
                                                 Pindai via Binance / TrustWallet / OKX
                                             </p>
                                         </div>
@@ -375,7 +378,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                         <div class="md:col-span-8 space-y-3">
                                             <div>
                                                 <label class="block text-xs font-semibold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono">
-                                                    Alamat Dompet Penerima Resmi ({cryptoTokenSymbol} {cryptoNetwork || ''}):
+                                                    <span data-i18n="order_pay.official_wallet_label">Alamat Dompet Penerima Resmi</span> ({cryptoTokenSymbol} {cryptoNetwork || ''}):
                                                 </label>
                                                 <div class="bg-[#11131A] border border-[#222634] p-3 rounded-lg flex items-center justify-between gap-2.5">
                                                     <span id="crypto-wallet-address" class="text-xs font-mono text-[#00E5FF] break-all select-all font-semibold">
@@ -387,14 +390,14 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                         class="yg-btn-secondary text-xs px-3.5 py-2 shrink-0 flex items-center gap-1 font-mono"
                                                     >
                                                         <div class="i-lucide-copy text-xs text-[#00E5FF]"></div>
-                                                        <span id="copy-wallet-label">Salin Alamat</span>
+                                                        <span id="copy-wallet-label" data-i18n="order_pay.copy_wallet">Salin Alamat</span>
                                                     </button>
                                                 </div>
                                             </div>
 
                                             {cryptoContractAddress && (
                                                 <div class="bg-[#11131A]/60 border border-[#222634]/60 p-2.5 rounded text-[11px] font-mono flex items-center justify-between gap-2">
-                                                    <span class="text-[#64748B]">Kontrak Resmi Token:</span>
+                                                    <span class="text-[#64748B]" data-i18n="order_pay.official_contract">Kontrak Resmi Token:</span>
                                                     <span class="text-[#94A3B8] font-mono font-medium truncate max-w-[220px]" title={cryptoContractAddress}>
                                                         {cryptoContractDisplay || cryptoContractAddress}
                                                     </span>
@@ -403,7 +406,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
 
                                             <div class="text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded">
                                                 <div class="i-lucide-shield-check text-xs text-emerald-400"></div>
-                                                <span>Zero-Trust: Smart contract diverifikasi on-chain mencegah token palsu.</span>
+                                                <span data-i18n="order_pay.zero_trust_contract">Zero-Trust: Smart contract diverifikasi on-chain mencegah token palsu.</span>
                                             </div>
                                         </div>
                                     </div>
@@ -412,14 +415,14 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                         <div class="flex items-center justify-between">
                                             <label for="tx-hash-input" class="text-xs font-bold text-[#F8FAFC] uppercase tracking-wider flex items-center gap-1.5 font-mono">
                                                 <div class="i-lucide-hash text-[#00E5FF]"></div>
-                                                <span>Masukkan Transaction Hash (TxID / TxHash)</span>
+                                                <span data-i18n="order_pay.tx_hash_label">Masukkan Transaction Hash (TxID / TxHash)</span>
                                             </label>
-                                            <span class="text-[10px] text-[#00E5FF] font-mono bg-[#00E5FF]/10 px-2 py-0.5 rounded border border-[#00E5FF]/25 font-semibold">
+                                            <span class="text-[10px] text-[#00E5FF] font-mono bg-[#00E5FF]/10 px-2 py-0.5 rounded border border-[#00E5FF]/25 font-semibold" data-i18n="order_pay.realtime_verify_tag">
                                                 VERIFIKASI REAL-TIME
                                             </span>
                                         </div>
 
-                                        <p class="text-[11px] text-[#94A3B8] font-mono leading-relaxed">
+                                        <p class="text-[11px] text-[#94A3B8] font-mono leading-relaxed" data-i18n="order_pay.tx_hash_help">
                                             Setelah Anda melakukan transfer dari wallet (TrustWallet, MetaMask) atau exchange (Binance, Indodax, Tokocrypto, Bybit), salin dan tempelkan <strong>TxHash / TxID</strong> di bawah ini:
                                         </p>
 
@@ -438,7 +441,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                 class="yg-btn-primary px-5 py-3 text-xs font-mono font-bold tracking-wider shrink-0 flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(0,229,255,0.2)]"
                                             >
                                                 <div id="verify-spinner" class="i-lucide-zap text-sm"></div>
-                                                <span id="verify-btn-label">⚡ Verifikasi Pembayaran On-Chain</span>
+                                                <span id="verify-btn-label" data-i18n="order_pay.verify_btn_idle">⚡ Verifikasi Pembayaran On-Chain</span>
                                             </button>
                                         </div>
 
@@ -451,7 +454,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                 <div class="flex flex-col items-center text-center">
                                     <div class="inline-flex items-center gap-2 bg-[#00E5FF]/10 border border-[#00E5FF]/25 px-3 py-1 rounded-full mb-4">
                                         <div class="i-lucide-qr-code text-[#00E5FF] text-xs"></div>
-                                        <span class="text-[10px] text-[#00E5FF] font-mono font-semibold uppercase tracking-wider" data-i18n="order_pay.scan_qris">
+                                        <span class="text-[10px] text-[#00E5FF] font-mono font-semibold uppercase tracking-wider" data-i18n="order_pay.scan_qris_badge">
                                             Scan QRIS • Bebas Biaya Layanan
                                         </span>
                                     </div>
@@ -478,14 +481,14 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                 download={`QRIS-YASUI-${order.id}.png`}
                                                 class="yg-btn-secondary w-full text-xs py-2 px-4 flex items-center justify-center gap-2 font-mono"
                                             >
-                                                <div class="i-lucide-download text-sm text-[#00E5FF]"></div> Simpan Gambar QR
+                                                <div class="i-lucide-download text-sm text-[#00E5FF]"></div> <span data-i18n="order_pay.save_qr_btn">Simpan Gambar QR</span>
                                             </a>
                                         )}
                                     </div>
 
                                     <div class="mt-6 pt-6 border-t border-[#222634] w-full text-left">
                                         <p class="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                                            <div class="i-lucide-smartphone text-[#00E5FF]"></div> Mendukung Seluruh Pembayaran Digital:
+                                            <div class="i-lucide-smartphone text-[#00E5FF]"></div> <span data-i18n="order_pay.supported_apps">Mendukung Seluruh Pembayaran Digital:</span>
                                         </p>
                                         <div class="flex flex-wrap gap-1.5">
                                             {["BCA Mobile", "GoPay", "OVO", "DANA", "ShopeePay", "Livin Mandiri", "BRImo", "BNI Mobile", "LinkAja"].map((app) => (
@@ -502,9 +505,9 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                 <div class="space-y-6">
                                     <div class="text-center">
                                         <span class="text-xs text-[#94A3B8] uppercase tracking-wider font-semibold block mb-1">
-                                            Nomor Virtual Account {paymentMethodName}
+                                            <span data-i18n="order_pay.va_number_label">Nomor Virtual Account</span> {paymentMethodName}
                                         </span>
-                                        <p class="text-xs text-[#64748B] font-mono mb-4">
+                                        <p class="text-xs text-[#64748B] font-mono mb-4" data-i18n="order_pay.va_instruction">
                                             Transfer tepat sesuai nominal tagihan agar sistem otomatis memverifikasi pesanan Anda.
                                         </p>
 
@@ -518,7 +521,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                 class="yg-btn-primary text-xs px-3.5 py-2 flex items-center gap-1.5 flex-shrink-0"
                                             >
                                                 <div class="i-lucide-copy text-sm"></div>
-                                                <span id="copy-text">Salin</span>
+                                                <span id="copy-text" data-i18n="order_pay.copy_va">Salin</span>
                                             </button>
                                         </div>
                                     </div>
@@ -529,7 +532,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                             <span class="text-[#F8FAFC] font-semibold">YASUI GAME / DUITKU</span>
                                         </div>
                                         <div class="flex justify-between py-1 border-b border-[#222634]/60">
-                                            <span class="text-[#64748B]">Total Pembayaran:</span>
+                                            <span class="text-[#64748B]" data-i18n="order_pay.total_bill">Total Pembayaran:</span>
                                             <span class="text-[#00E5FF] font-bold tabular-nums">{formattedTotal}</span>
                                         </div>
                                         <div class="flex justify-between py-1">
@@ -539,7 +542,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                     </div>
 
                                     <div class="border-t border-[#222634] pt-4 text-xs text-[#94A3B8] space-y-2">
-                                        <p class="font-semibold text-[#F8FAFC] uppercase tracking-wider text-[11px]">
+                                        <p class="font-semibold text-[#F8FAFC] uppercase tracking-wider text-[11px]" data-i18n="order_pay.how_to_pay">
                                             Panduan Pembayaran Virtual Account:
                                         </p>
                                         <ol class="list-decimal list-inside space-y-1 text-[11px] leading-relaxed font-mono text-[#94A3B8]">
@@ -562,10 +565,10 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                                 3D-SECURE 2.0 PROTECTED GATEWAY
                                             </span>
                                         </div>
-                                        <h2 class="text-sm md:text-base font-bold text-[#F8FAFC] uppercase tracking-wider">
+                                        <h2 class="text-sm md:text-base font-bold text-[#F8FAFC] uppercase tracking-wider" data-i18n="checkout.card_headline">
                                             Pembayaran Kartu Kredit / Debit Global
                                         </h2>
-                                        <p class="text-xs text-[#94A3B8] max-w-md mx-auto font-mono mt-1 leading-relaxed">
+                                        <p class="text-xs text-[#94A3B8] max-w-md mx-auto font-mono mt-1 leading-relaxed" data-i18n="checkout.card_headline_desc">
                                             Mendukung kartu Visa, Mastercard, dan JCB dari seluruh dunia dengan standar enkripsi PCI-DSS Level 1.
                                         </p>
                                     </div>
@@ -591,13 +594,13 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                             <span class="text-[#F8FAFC] font-semibold">#{order.id}</span>
                                         </div>
                                         <div class="flex justify-between py-1 border-b border-[#222634]/60">
-                                            <span class="text-[#64748B]">Total Tagihan (IDR):</span>
+                                            <span class="text-[#64748B]" data-i18n="order_pay.total_bill">Total Tagihan (IDR):</span>
                                             <span class="text-[#00E5FF] font-bold tabular-nums">{formattedTotal}</span>
                                         </div>
                                         <div class="flex justify-between py-1 border-b border-[#222634]/60">
                                             <span class="text-[#64748B]">Estimasi Valuta Asing:</span>
                                             <span class="text-[#94A3B8] tabular-nums">
-                                                ≈ ${(Number(order.total) / 16000).toFixed(2)} USD
+                                                ≈ ${(Number(order.total) / IDR_TO_USD_RATE).toFixed(2)} USD
                                             </span>
                                         </div>
                                         <div class="flex justify-between py-1">
@@ -652,7 +655,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                             <div class="mt-8 pt-6 border-t border-[#222634] flex flex-col md:flex-row items-center justify-between gap-4">
                                 <div class="flex items-center gap-2 text-xs text-[#94A3B8] font-mono">
                                     <div class="w-2 h-2 rounded-full bg-[#00E5FF] animate-ping"></div>
-                                    <span id="polling-label">Mendeteksi transaksi masuk secara otomatis...</span>
+                                    <span id="polling-label" data-i18n="order_pay.polling_detecting">Mendeteksi transaksi masuk secara otomatis...</span>
                                 </div>
 
                                 <button
@@ -661,14 +664,14 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                                     class="w-full md:w-auto yg-btn-secondary text-[11px] px-4 py-2 flex items-center justify-center gap-2 font-mono"
                                 >
                                     <div id="check-icon" class="i-lucide-refresh-cw text-xs text-[#00E5FF]"></div>
-                                    <span>Cek Status Sekarang</span>
+                                    <span data-i18n="order_pay.check_status_btn">Cek Status Sekarang</span>
                                 </button>
                             </div>
 
                             <div class="mt-4 pt-4 border-t border-[#222634]/70 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0D0F15] p-3 rounded-lg border border-[#222634]">
                                 <div class="flex items-center gap-2 text-xs text-[#94A3B8] font-mono text-center sm:text-left">
                                     <div class="i-lucide-shield-question text-base text-[#00E5FF] shrink-0"></div>
-                                    <span>Kendala pembayaran atau ingin konfirmasi manual?</span>
+                                    <span data-i18n="order_pay.help_prompt">Kendala pembayaran atau ingin konfirmasi manual?</span>
                                 </div>
                                 <button
                                     type="button"
@@ -683,9 +686,9 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
 
                         <div class="flex items-center justify-between text-xs text-[#64748B] px-1 font-mono">
                             <a href="/cart" class="hover:text-red-400 transition-colors flex items-center gap-1">
-                                <div class="i-lucide-arrow-left text-xs"></div> Batal & Ubah Pesanan
+                                <div class="i-lucide-arrow-left text-xs"></div> <span data-i18n="order_pay.cancel_order">Batal & Ubah Pesanan</span>
                             </a>
-                            <span>ID Referensi: #{merchantOrderId || order.id}</span>
+                            <span><span data-i18n="order_pay.ref_id">ID Referensi:</span> #{merchantOrderId || order.id}</span>
                         </div>
                     </div>
                 </div>
@@ -710,6 +713,13 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
         let isChecking = false;
         let checkInterval = null;
 
+        const t = (key, fallback) => {
+            if (typeof window !== "undefined" && typeof window.t === "function") {
+                return window.t(key, fallback);
+            }
+            return fallback !== undefined ? fallback : key;
+        };
+
         // Auto-register order to recent orders for contextual chat
         try {
             if (orderId) {
@@ -731,11 +741,11 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
             const textToCopy = vaEl.innerText.trim();
 
             navigator.clipboard.writeText(textToCopy).then(() => {
-                if (textEl) textEl.innerText = "TERSALIN!";
+                if (textEl) textEl.innerText = t("order_pay.copied", "TERSALIN!");
                 btnEl?.classList.remove("bg-cyan-400");
                 btnEl?.classList.add("bg-green-400");
                 setTimeout(() => {
-                    if (textEl) textEl.innerText = "Salin";
+                    if (textEl) textEl.innerText = t("order_pay.copy_va", "Salin Nomor VA");
                     btnEl?.classList.add("bg-cyan-400");
                     btnEl?.classList.remove("bg-green-400");
                 }, 2500);
@@ -749,11 +759,11 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
             if (!textToCopy) return;
 
             navigator.clipboard.writeText(textToCopy).then(() => {
-                if (labelEl) labelEl.innerText = "TERSALIN!";
+                if (labelEl) labelEl.innerText = t("order_pay.copied", "TERSALIN!");
                 btnEl?.classList.remove("yg-btn-primary");
                 btnEl?.classList.add("bg-emerald-500", "text-black");
                 setTimeout(() => {
-                    if (labelEl) labelEl.innerText = "Salin Nominal";
+                    if (labelEl) labelEl.innerText = t("order_pay.copy_amount", "Salin Nominal");
                     btnEl?.classList.remove("bg-emerald-500", "text-black");
                     btnEl?.classList.add("yg-btn-primary");
                 }, 2500);
@@ -767,11 +777,11 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
             if (!textToCopy) return;
 
             navigator.clipboard.writeText(textToCopy).then(() => {
-                if (labelEl) labelEl.innerText = "TERSALIN!";
+                if (labelEl) labelEl.innerText = t("order_pay.copied", "TERSALIN!");
                 btnEl?.classList.remove("yg-btn-secondary");
                 btnEl?.classList.add("bg-emerald-500", "text-black");
                 setTimeout(() => {
-                    if (labelEl) labelEl.innerText = "Salin Alamat";
+                    if (labelEl) labelEl.innerText = t("order_pay.copy_wallet", "Salin Alamat");
                     btnEl?.classList.remove("bg-emerald-500", "text-black");
                     btnEl?.classList.add("yg-btn-secondary");
                 }, 2500);
@@ -791,7 +801,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
             if (!txHash) {
                 if (feedbackEl) {
                     feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-rose-950/80 border-rose-500/50 text-rose-300 block";
-                    feedbackEl.innerText = "⚠️ Harap masukkan Transaction Hash (TxID / TxHash) Anda terlebih dahulu.";
+                    feedbackEl.innerText = t("order_pay.verify_msg_empty", "⚠️ Harap masukkan Transaction Hash (TxID / TxHash) Anda terlebih dahulu.");
                 }
                 txInput.focus();
                 return;
@@ -799,10 +809,10 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
 
             if (verifyBtn) verifyBtn.setAttribute("disabled", "true");
             if (spinner) spinner.className = "i-lucide-loader-2 text-sm animate-spin";
-            if (btnLabel) btnLabel.innerText = "Memverifikasi di Blockchain...";
+            if (btnLabel) btnLabel.innerText = t("order_pay.verify_btn_loading", "Memverifikasi di Blockchain...");
             if (feedbackEl) {
                 feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-cyan-950/80 border-[#00E5FF]/40 text-[#00E5FF] block";
-                feedbackEl.innerText = "⏳ Sedang menghubungi node blockchain & memvalidasi bukti transfer...";
+                feedbackEl.innerText = t("order_pay.verify_msg_connecting", "⏳ Sedang menghubungi node blockchain & memvalidasi bukti transfer...");
             }
 
             try {
@@ -820,7 +830,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                 if (data.success) {
                     if (feedbackEl) {
                         feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-emerald-950/80 border-emerald-500/50 text-emerald-300 block";
-                        feedbackEl.innerText = `✅ SUKSES! ${data.message || "Pembayaran on-chain berhasil diverifikasi!"}. Mengalihkan...`;
+                        feedbackEl.innerText = t("order_pay.verify_msg_success", "✅ SUKSES! Pembayaran on-chain berhasil diverifikasi! Mengalihkan...");
                     }
                     try { localStorage.removeItem("yasui_cart"); } catch (e) {}
                     setTimeout(() => {
@@ -829,21 +839,21 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                 } else {
                     if (feedbackEl) {
                         feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-rose-950/80 border-rose-500/50 text-rose-300 block";
-                        feedbackEl.innerText = `❌ Verifikasi Gagal: ${data.error || "Transaksi tidak valid atau belum terkonfirmasi."}`;
+                        feedbackEl.innerText = (t("order_pay.verify_msg_fail", "❌ Verifikasi Gagal: ")) + (data.error || "Transaksi tidak valid atau belum terkonfirmasi.");
                     }
                     if (verifyBtn) verifyBtn.removeAttribute("disabled");
                     if (spinner) spinner.className = "i-lucide-zap text-sm";
-                    if (btnLabel) btnLabel.innerText = "⚡ Verifikasi Pembayaran On-Chain";
+                    if (btnLabel) btnLabel.innerText = t("order_pay.verify_btn_idle", "⚡ Verifikasi Pembayaran On-Chain");
                 }
             } catch (err) {
                 console.error("Crypto verification error:", err);
                 if (feedbackEl) {
                     feedbackEl.className = "text-xs font-mono p-3 rounded-lg border bg-rose-950/80 border-rose-500/50 text-rose-300 block";
-                    feedbackEl.innerText = "❌ Terjadi gangguan jaringan saat memverifikasi on-chain. Silakan coba lagi.";
+                    feedbackEl.innerText = t("order_pay.verify_msg_net_err", "❌ Terjadi gangguan jaringan saat memverifikasi on-chain. Silakan coba lagi.");
                 }
                 if (verifyBtn) verifyBtn.removeAttribute("disabled");
                 if (spinner) spinner.className = "i-lucide-zap text-sm";
-                if (btnLabel) btnLabel.innerText = "⚡ Verifikasi Pembayaran On-Chain";
+                if (btnLabel) btnLabel.innerText = t("order_pay.verify_btn_idle", "⚡ Verifikasi Pembayaran On-Chain");
             }
         }
 
@@ -893,12 +903,12 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
 
             if (headerBadge) {
                 headerBadge.className = "text-[10px] px-2 py-0.5 font-bold uppercase tracking-widest bg-red-950/80 text-red-400 border border-red-800/80";
-                headerBadge.innerText = "GATEWAY KADALUARSA";
+                headerBadge.innerText = t("order_pay.gateway_expired", "GATEWAY KADALUARSA");
             }
 
             if (timerText) {
                 timerText.className = "text-red-500";
-                timerText.innerText = "KADALUARSA";
+                timerText.innerText = t("order_pay.expired_status", "KADALUARSA");
             }
 
             fetch(`/api/payment/check-status?id=${orderId}&key=${encodeURIComponent(orderKey)}`).catch(() => {});
@@ -945,7 +955,9 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
 
             if (checkIcon) checkIcon.classList.add("animate-spin");
             if (isManual && pollingLabel) {
-                pollingLabel.innerText = isCrypto ? "Memeriksa status mutasi on-chain..." : "Memeriksa status ke Duitku...";
+                pollingLabel.innerText = isCrypto 
+                    ? t("order_pay.polling_checking_crypto", "Memeriksa status mutasi on-chain...") 
+                    : t("order_pay.polling_checking_duitku", "Memeriksa status ke Duitku...");
             }
 
             try {
@@ -953,7 +965,7 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                 const data = await res.json();
 
                 if (data.success && data.status === "paid") {
-                    if (pollingLabel) pollingLabel.innerText = "Pembayaran Dikonfirmasi! Mengalihkan...";
+                    if (pollingLabel) pollingLabel.innerText = t("order_pay.polling_confirmed", "Pembayaran Dikonfirmasi! Mengalihkan...");
                     localStorage.removeItem("yasui_cart");
 
                     setTimeout(() => {
@@ -965,9 +977,9 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
                     return;
                 } else {
                     if (isManual && pollingLabel) {
-                        pollingLabel.innerText = "Pembayaran belum terdeteksi. Silakan coba sesaat lagi.";
+                        pollingLabel.innerText = t("order_pay.polling_not_detected", "Pembayaran belum terdeteksi. Silakan coba sesaat lagi.");
                         setTimeout(() => {
-                            pollingLabel.innerText = "Mendeteksi transaksi masuk secara otomatis...";
+                            pollingLabel.innerText = t("order_pay.polling_detecting", "Mendeteksi transaksi masuk secara otomatis...");
                         }, 3000);
                     }
                 }
@@ -991,6 +1003,12 @@ const pageTitle = isExpired ? `[KADALUARSA] Pesanan #${orderId} - Yasui Game` : 
         });
         document.getElementById("btn-reorder")?.addEventListener("click", reorderThisOrder);
         document.getElementById("btn-manual-check")?.addEventListener("click", () => checkPaymentStatus(true));
+
+        document.addEventListener("yasui-lang-change", () => {
+            if (typeof window.applyTranslations === "function") {
+                window.applyTranslations(document);
+            }
+        });
 
         if (!isExpired) {
             initCountdown();

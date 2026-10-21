@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <rect width="64" height="64" rx="14" fill="#090A0F"/>
+  <rect x="1" y="1" width="62" height="62" rx="13" stroke="#222634" stroke-width="2"/>
+  <!-- Tactical corner accents -->
+  <path d="M6 16V8C6 6.89543 6.89543 6 8 6H16" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M48 6H56C57.1046 6 58 6.89543 58 8V16" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M58 48V56C58 57.1046 57.1046 58 56 58H48" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M16 58H8C6.89543 58 6 57.1046 6 56V48" stroke="#00E5FF" stroke-width="2" stroke-linecap="round"/>
+  <!-- Gamepad icon in surgical cyan -->
+  <path d="M18 24H46C49.3137 24 52 26.6863 52 30V38C52 42.4183 48.4183 46 44 46C41.2 46 38.8 44.4 37.5 42L35 38H29L26.5 42C25.2 44.4 22.8 46 20 46C15.5817 46 12 42.4183 12 38V30C12 26.6863 14.6863 24 18 24Z" stroke="#00E5FF" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- D-Pad -->
+  <line x1="20" y1="33" x2="26" y2="33" stroke="#F8FAFC" stroke-width="2" stroke-linecap="round"/>
+  <line x1="23" y1="30" x2="23" y2="36" stroke="#F8FAFC" stroke-width="2" stroke-linecap="round"/>
+  <!-- Action buttons -->
+  <circle cx="43" cy="31" r="1.75" fill="#00E5FF"/>
+  <circle cx="39" cy="35" r="1.75" fill="#F8FAFC"/>
+</svg>

@@ -31,7 +31,7 @@ const lineItems = order?.line_items || [];
 const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil - Yasui Game";
 ---
 
-<Layout title={pageTitle} showFooter={false}>
+<Layout title={pageTitle} showFooter={false} noindex={true}>
     <main class="min-h-[85vh] flex items-center justify-center p-4 py-12">
         <div class="max-w-md w-full">
             <div class="bg-[#11131A] border border-[#222634] rounded-lg p-6 sm:p-8">
@@ -40,10 +40,10 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                         <div class="w-14 h-14 bg-red-950/40 border border-red-500/40 rounded-lg flex items-center justify-center mx-auto mb-4 text-red-400">
                             <div class="i-lucide-shield-alert text-2xl"></div>
                         </div>
-                        <h1 class="text-lg font-bold text-white uppercase tracking-wider mb-2 font-mono">
+                        <h1 class="text-lg font-bold text-white uppercase tracking-wider mb-2 font-mono" data-i18n="order_success.access_denied_title">
                             Akses Pesanan Dibatasi
                         </h1>
-                        <p class="text-xs text-[#94A3B8] mb-6 font-mono leading-relaxed">
+                        <p class="text-xs text-[#94A3B8] mb-6 font-mono leading-relaxed" data-i18n="order_success.access_denied_desc">
                             Parameter otorisasi pesanan (key) tidak valid atau sesi Anda telah kedaluwarsa.
                             Untuk alasan keamanan, detail faktur dan kredensial akun dilindungi.
                         </p>
@@ -51,12 +51,14 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                             <a
                                 href="/orders"
                                 class="yg-btn-primary block w-full text-center"
+                                data-i18n="order_success.btn_dashboard"
                             >
                                 Buka Dashboard Pesanan Saya
                             </a>
                             <a
                                 href="/"
                                 class="yg-btn-secondary block w-full text-center"
+                                data-i18n="order_success.btn_home"
                             >
                                 Kembali ke Beranda
                             </a>
@@ -139,6 +141,7 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                                         id="success-new-pwd"
                                         minlength="6"
                                         placeholder="Buat kata sandi baru (min. 6 karakter)"
+                                        data-i18n-placeholder="order_success.pwd_placeholder"
                                         class="yg-input"
                                     />
                                     <button
@@ -178,6 +181,13 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                         </div>
 
                         <script is:inline define:vars={{ orderId: order?.id, orderKey: order?.order_key, orderEmail: order?.billing?.email }}>
+                            const t = (key, fallback) => {
+                                if (typeof window !== "undefined" && typeof window.t === "function") {
+                                    return window.t(key, fallback);
+                                }
+                                return fallback !== undefined ? fallback : key;
+                            };
+
                             // Auto-register order to recent orders for contextual chat
                             try {
                                 if (orderId) {
@@ -197,16 +207,16 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                                 const msg = document.getElementById("pwd-card-msg");
 
                                 if (!email) {
-                                    alert("Email pemesanan tidak ditemukan.");
+                                    alert(t("order_success.email_not_found_alert", "Email pemesanan tidak ditemukan."));
                                     return;
                                 }
                                 if (!pwd || pwd.length < 6) {
-                                    alert("Kata sandi minimal 6 karakter.");
+                                    alert(t("order_success.pwd_min_alert", "Kata sandi minimal 6 karakter."));
                                     return;
                                 }
 
                                 btn.disabled = true;
-                                btn.innerText = "MENYIMPAN...";
+                                btn.innerText = t("order_success.saving", "MENYIMPAN...");
 
                                 try {
                                     const res = await fetch("/api/auth/set-password", {
@@ -234,13 +244,19 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                                     }
 
                                     msg.className = "text-[11px] font-mono mt-2 p-2.5 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-emerald-400 block";
-                                    msg.innerText = "✓ Kata sandi berhasil dibuat! Akun Anda kini aktif & aman.";
+                                    msg.innerText = t("order_success.pwd_saved", "✓ Kata sandi berhasil dibuat! Akun Anda kini aktif & aman.");
                                     document.getElementById("pwd-card-form")?.classList.add("hidden");
                                 } catch (err) {
                                     msg.className = "text-[11px] font-mono mt-2 p-2.5 rounded-lg bg-red-950/40 border border-red-500/40 text-red-400 block";
                                     msg.innerText = err.message || "Gagal menyimpan kata sandi";
                                     btn.disabled = false;
-                                    btn.innerText = "KUNCI & SIMPAN KATA SANDI";
+                                    btn.innerText = t("order_success.btn_save_pwd", "KUNCI & SIMPAN KATA SANDI");
+                                }
+                            });
+
+                            document.addEventListener("yasui-lang-change", () => {
+                                if (typeof window.applyTranslations === "function") {
+                                    window.applyTranslations(document);
                                 }
                             });
                         </script>
@@ -250,7 +266,7 @@ const pageTitle = accessDenied ? "Akses Dibatasi - Yasui Game" : "Order Berhasil
                 <div class="mt-6 pt-4 border-t border-[#222634] text-center">
                     <p class="text-[10px] text-[#64748B] font-mono flex items-center justify-center gap-1.5 uppercase">
                         <span class="i-lucide-lock text-xs text-[#00E5FF]"></span>
-                        <span>Transaksi Terenkripsi & Terverifikasi</span>
+                        <span data-i18n="order_success.encrypted_badge">Transaksi Terenkripsi & Terverifikasi</span>
                     </p>
                 </div>
             </div>

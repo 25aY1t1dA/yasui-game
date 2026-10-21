@@ -93,11 +93,31 @@ const nonRobloxList = rawWcCategories
     });
 
 const totalCount = robloxSpotlight.length + nonRobloxList.length;
+
+const categoriesJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+        {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://yasuigame.com"
+        },
+        {
+            "@type": "ListItem",
+            position: 2,
+            name: "Catalog",
+            item: "https://yasuigame.com/categories"
+        }
+    ]
+};
 ---
 
 <Layout
     title="Katalog Game & Semesta RMT - Yasui Game"
     description="Jelajahi seluruh kategori game Roblox, Mobile & PC, dan Voucher digital terverifikasi dengan navigasi sub-kategori instan di Yasui Game."
+    jsonLd={categoriesJsonLd}
 >
     <main class="yg-shell pt-4 md:pt-6 pb-20">
         <!-- Breadcrumb Navigation -->

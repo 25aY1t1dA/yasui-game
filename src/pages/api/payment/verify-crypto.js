@@ -7,6 +7,8 @@ import {
     recordVerifiedCryptoPayment,
     sendTelegramCryptoAlert
 } from "../../../lib/crypto-payment.server";
+import { sendOrderAlertToTelegram } from "../../../lib/telegram.server";
+import { approveReferralConversion } from "../../../lib/referral-promo.server";
 
 export const POST = async ({ request, url }) => {
     try {
@@ -174,12 +176,26 @@ export const POST = async ({ request, url }) => {
             blockNumber: verificationResult.blockNumber
         });
 
-        // 9. Kirim Notifikasi Konfirmasi ke Grup Telegram Admin
-        await sendTelegramCryptoAlert({
-            order,
-            verificationResult,
-            channelConfig
-        });
+        // 8b. Setujui Komisi Referral jika Pesanan Menggunakan Kode Afiliasi
+        try {
+            await approveReferralConversion(order.id);
+        } catch (refErr) {
+            console.warn("[Verify Crypto] Failed to approve referral conversion:", refErr.message);
+        }
+
+        // 9. Kirim Notifikasi Konfirmasi Pesanan Lunas ke Grup Telegram Admin
+        try {
+            await sendOrderAlertToTelegram(order, {
+                method: `Crypto ${verificationResult.token} (${channelConfig.name})`,
+                txHash: verificationResult.txHash,
+                explorerLink: `${channelConfig.explorerBase}${verificationResult.txHash}`,
+                actualAmount: verificationResult.actualAmount,
+                token: verificationResult.token,
+                network: verificationResult.network
+            });
+        } catch (alertErr) {
+            console.warn("[Verify Crypto] Failed to send Telegram order alert:", alertErr.message);
+        }
 
         return new Response(JSON.stringify({
             success: true,

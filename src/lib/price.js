@@ -1,4 +1,5 @@
-export const USD_RATE = 16000;
+export const IDR_TO_USD_RATE = 16000;
+export const USD_RATE = IDR_TO_USD_RATE;
 
 export function parsePrice(priceStr) {
     if (!priceStr) return 0;

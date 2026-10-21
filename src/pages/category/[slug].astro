@@ -179,9 +179,80 @@ const getBadges = (product: any) => {
 
     return badges;
 };
+
+const categoryDesc = category.description
+    ? category.description.replace(/<[^>]+>/g, "").trim()
+    : `Beli akun, item, top up & gamepass ${category.name} bergaransi 100% anti-recall di Yasui Game. Transaksi aman, legal, pengiriman instan.`;
+
+const categoryJsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://yasuigame.com"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Catalog",
+                item: "https://yasuigame.com/categories"
+            },
+            ...ancestors.map((anc: any, idx: number) => ({
+                "@type": "ListItem",
+                position: 3 + idx,
+                name: anc.name,
+                item: `https://yasuigame.com/category/${anc.slug}`
+            })),
+            {
+                "@type": "ListItem",
+                position: 3 + ancestors.length,
+                name: category.name,
+                item: `https://yasuigame.com/category/${slug}`
+            }
+        ]
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+            {
+                "@type": "Question",
+                name: `Bagaimana cara pembelian ${category.name} di Yasui Game?`,
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: `Pilih produk akun, item, atau top up ${category.name} yang diinginkan, lengkapi data pemesanan (UID/Username/Hive ID), lakukan pembayaran instan via QRIS, Virtual Account, E-Wallet, atau Crypto, dan pesanan akan segera diproses otomatis.`
+                }
+            },
+            {
+                "@type": "Question",
+                name: "Berapa lama estimasi pengiriman pesanan?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Pengiriman Akun bersifat Instan (Auto-Dispatch 1–5 menit ke email dan dashboard pesanan). Pengiriman Item, Gamepass, dan Top Up membutuhkan waktu 5–15 menit melalui direct in-game trade, private server, atau transfer gift."
+                }
+            },
+            {
+                "@type": "Question",
+                name: "Apakah transaksi di Yasui Game bergaransi dan aman dari recall?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Semua produk dilindungi oleh Garansi 100% Anti-Recall & Anti-Hackback. Setiap akun telah melewati inspeksi keamanan zero-risk dan didukung oleh layanan bantuan live chat 24/7."
+                }
+            }
+        ]
+    }
+];
 ---
 
-<Layout title={`${category.name} - Yasui Game`} description={category.description}>
+<Layout
+    title={`${category.name} - Yasui Game`}
+    description={categoryDesc}
+    jsonLd={categoryJsonLd}
+>
     <main class="yg-shell pt-4 md:pt-6 pb-16">
         <nav
             class="flex py-3 text-[#64748B] text-[10px] font-mono uppercase tracking-wider overflow-x-auto"
@@ -524,6 +595,100 @@ const getBadges = (product: any) => {
                 )}
             </nav>
         )}
+
+        <!-- Tactical SEO Information & FAQ Suite -->
+        <section class="mt-14 pt-10 border-t border-[#222634] space-y-8" aria-labelledby="category-seo-info">
+            <div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[#00E5FF] text-[10px] font-mono tracking-wider uppercase mb-2.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span>
+                    <span data-i18n="category.seo_badge">PROTOKOL RMT TERPERCAYA</span>
+                </div>
+                <h2 id="category-seo-info" class="text-base sm:text-lg font-bold text-[#F8FAFC] tracking-tight font-sans flex items-center gap-2">
+                    <span data-i18n="category.seo_title">Keamanan Transaksi & Panduan Pengiriman</span>
+                    <span class="text-[#00E5FF] text-xs font-mono">[{category.name}]</span>
+                </h2>
+            </div>
+
+            <!-- 3 Tactical Bento Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="yg-card p-4 sm:p-5 flex flex-col justify-between space-y-3">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <div class="w-8 h-8 rounded-md bg-[#161922] border border-[#222634] flex items-center justify-center text-[#00E5FF]">
+                                <div class="i-lucide-zap text-base"></div>
+                            </div>
+                            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/20" data-i18n="category.seo_card1_badge">1–5 MENIT AKUN • 5–15 MENIT ITEM</span>
+                        </div>
+                        <h3 class="text-xs sm:text-sm font-semibold text-[#F8FAFC] font-sans" data-i18n="category.seo_card1_title">Metode Pengiriman Cepat</h3>
+                        <p class="text-xs text-[#94A3B8] leading-relaxed" data-i18n="category.seo_card1_desc">Pengiriman Akun bersifat Instan (Auto-Dispatch 1–5 menit ke email & dashboard). Untuk Item, Gamepass, dan Top Up, proses berlangsung 5–15 menit via In-Game Trade atau Private Server.</p>
+                    </div>
+                </div>
+
+                <div class="yg-card p-4 sm:p-5 flex flex-col justify-between space-y-3">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <div class="w-8 h-8 rounded-md bg-[#161922] border border-[#222634] flex items-center justify-center text-emerald-400">
+                                <div class="i-lucide-shield-check text-base"></div>
+                            </div>
+                            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" data-i18n="category.seo_card2_badge">100% PERLINDUNGAN & GARANSI</span>
+                        </div>
+                        <h3 class="text-xs sm:text-sm font-semibold text-[#F8FAFC] font-sans" data-i18n="category.seo_card2_title">Garansi 100% Anti-Recall</h3>
+                        <p class="text-xs text-[#94A3B8] leading-relaxed" data-i18n="category.seo_card2_desc">Seluruh akun dan aset game melewati uji kurasi ketat, zero-risk flag, serta garansi penuh pergantian unit atau saldo bila terjadi kendala kepemilikan.</p>
+                    </div>
+                </div>
+
+                <div class="yg-card p-4 sm:p-5 flex flex-col justify-between space-y-3">
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <div class="w-8 h-8 rounded-md bg-[#161922] border border-[#222634] flex items-center justify-center text-sky-400">
+                                <div class="i-lucide-lock text-base"></div>
+                            </div>
+                            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20" data-i18n="category.seo_card3_badge">DUITKU HEADLESS & DIRECT ON-CHAIN</span>
+                        </div>
+                        <h3 class="text-xs sm:text-sm font-semibold text-[#F8FAFC] font-sans" data-i18n="category.seo_card3_title">Gateway Pembayaran Terenkripsi</h3>
+                        <p class="text-xs text-[#94A3B8] leading-relaxed" data-i18n="category.seo_card3_desc">Didukung Dynamic QRIS (Biaya Rp 0), Virtual Account Bank (BCA, Mandiri, BRI, BNI), E-Wallet, serta On-Chain Crypto USDT/USDC (BEP-20, Polygon, TRC-20).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion FAQ -->
+            <div class="space-y-3 pt-2">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="i-lucide-help-circle text-sm text-[#00E5FF]"></div>
+                    <h3 class="text-xs sm:text-sm font-bold text-[#F8FAFC] uppercase tracking-wider font-mono" data-i18n="category.faq_title">Pertanyaan Sering Diajukan (FAQ)</h3>
+                </div>
+
+                <details class="group yg-card transition-colors">
+                    <summary class="flex items-center justify-between p-3.5 sm:p-4 cursor-pointer select-none text-xs sm:text-sm font-medium text-[#F8FAFC] hover:text-[#00E5FF]">
+                        <span data-i18n="category.faq_q1">Bagaimana cara melakukan pembelian di Yasui Game?</span>
+                        <div class="i-lucide-chevron-down text-sm text-[#64748B] group-open:rotate-180 transition-transform shrink-0 ml-2"></div>
+                    </summary>
+                    <div class="px-3.5 sm:px-4 pb-4 text-xs text-[#94A3B8] leading-relaxed border-t border-[#222634] pt-3" data-i18n="category.faq_a1">
+                        Pilih produk akun, item, atau top up yang diinginkan, lengkapi data pemesanan (UID/Username/Hive ID), lakukan pembayaran instan via QRIS, Virtual Account, E-Wallet, atau Crypto, dan pesanan akan segera diproses otomatis.
+                    </div>
+                </details>
+
+                <details class="group yg-card transition-colors">
+                    <summary class="flex items-center justify-between p-3.5 sm:p-4 cursor-pointer select-none text-xs sm:text-sm font-medium text-[#F8FAFC] hover:text-[#00E5FF]">
+                        <span data-i18n="category.faq_q2">Berapa lama estimasi pengiriman pesanan?</span>
+                        <div class="i-lucide-chevron-down text-sm text-[#64748B] group-open:rotate-180 transition-transform shrink-0 ml-2"></div>
+                    </summary>
+                    <div class="px-3.5 sm:px-4 pb-4 text-xs text-[#94A3B8] leading-relaxed border-t border-[#222634] pt-3" data-i18n="category.faq_a2">
+                        Pengiriman Akun bersifat Instan (Auto-Dispatch 1–5 menit ke email dan dashboard pesanan). Pengiriman Item, Gamepass, dan Top Up membutuhkan waktu 5–15 menit melalui direct in-game trade, private server, atau transfer gift.
+                    </div>
+                </details>
+
+                <details class="group yg-card transition-colors">
+                    <summary class="flex items-center justify-between p-3.5 sm:p-4 cursor-pointer select-none text-xs sm:text-sm font-medium text-[#F8FAFC] hover:text-[#00E5FF]">
+                        <span data-i18n="category.faq_q3">Apakah transaksi di Yasui Game bergaransi dan aman dari recall?</span>
+                        <div class="i-lucide-chevron-down text-sm text-[#64748B] group-open:rotate-180 transition-transform shrink-0 ml-2"></div>
+                    </summary>
+                    <div class="px-3.5 sm:px-4 pb-4 text-xs text-[#94A3B8] leading-relaxed border-t border-[#222634] pt-3" data-i18n="category.faq_a3">
+                        Semua produk dilindungi oleh Garansi 100% Anti-Recall & Anti-Hackback. Setiap akun telah melewati inspeksi keamanan zero-risk dan didukung oleh layanan bantuan live chat 24/7.
+                    </div>
+                </details>
+            </div>
+        </section>
     </main>
 </Layout>
 

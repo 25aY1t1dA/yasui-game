@@ -1,13 +1,15 @@
 import { createOrder, updateOrder, findOrCreateCustomer, generateSessionToken, getProductById } from '../../lib/wc';
 import { createDuitkuInquiry, PAYMENT_CHANNELS } from '../../lib/duitku';
 import { isCryptoChannel, getCryptoChannelConfig, calculateCryptoAmount } from '../../lib/crypto-payment.server';
+import { validatePromoOrReferralCode, recordPendingReferralConversion } from '../../lib/referral-promo.server';
 import { isValidEmail, sanitizeText } from '../../lib/sanitize';
 import QRCode from 'qrcode';
 
 export const POST = async ({ request }) => {
     try {
         const body = await request.json();
-        const { cartItems, customerInfo, paymentCategory } = body || {};
+        const { cartItems, customerInfo, paymentCategory, promoCode: rawPromoCode, appliedPromo } = body || {};
+        const promoCode = sanitizeText(rawPromoCode || appliedPromo?.code || "", 40);
 
         // 1. Validasi Input Keranjang & Email
         if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0 || cartItems.length > 50) {
@@ -33,6 +35,7 @@ export const POST = async ({ request }) => {
         const lineItems = [];
         const orderTargetSummaries = [];
         const structuredOrderTargets = [];
+        let calculatedBaseTotalIdr = 0;
 
         for (const item of cartItems) {
             const productId = parseInt(item.id, 10);
@@ -60,6 +63,8 @@ export const POST = async ({ request }) => {
                     error: `Produk "${product.name || productId}" saat ini sedang habis.`
                 }), { status: 400 });
             }
+
+            calculatedBaseTotalIdr += Math.round(Number(product.price || 0) * quantity);
 
             // Ekstraksi Metadata Target Pemesanan
             const meta = item.orderMeta || {};
@@ -119,6 +124,25 @@ export const POST = async ({ request }) => {
             });
         }
 
+        // Validasi Ulang Server-Side Kode Promo / Referral (Anti-Cheat & Anti-Self-Referral)
+        let promoValidation = null;
+        if (promoCode) {
+            promoValidation = await validatePromoOrReferralCode({
+                code: promoCode,
+                cartTotalIdr: calculatedBaseTotalIdr,
+                buyerEmail: cleanEmail,
+                orderTargetDetails: structuredOrderTargets,
+                buyerWa: cleanWa
+            });
+
+            if (!promoValidation.valid) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    error: promoValidation.message || "Kode promo atau referral tidak valid."
+                }), { status: 400 });
+            }
+        }
+
         // 3. Auto-Create / Hubungkan Customer WooCommerce
         let customerId = 0;
         try {
@@ -160,8 +184,24 @@ export const POST = async ({ request }) => {
         const customerNote = [
             `Kontak: WA: ${cleanWa || '-'} | Email: ${cleanEmail} | Discord: ${cleanDiscord || '-'}`,
             `Metode Bayar: ${methodName} (${methodCode})`,
+            promoValidation ? `Promo/Referral: ${promoValidation.code} (Diskon: Rp ${promoValidation.discountAmount.toLocaleString("id-ID")})` : null,
             `Target Pengiriman:\n${orderTargetSummaries.join("\n")}`
-        ].join("\n");
+        ].filter(Boolean).join("\n");
+
+        const orderMetaData = [
+            { key: "_order_target_details", value: JSON.stringify(structuredOrderTargets) },
+            { key: "_buyer_wa", value: cleanWa },
+            { key: "_buyer_discord", value: cleanDiscord }
+        ];
+
+        if (promoValidation) {
+            orderMetaData.push(
+                { key: "_promo_code", value: promoValidation.code },
+                { key: "_promo_type", value: promoValidation.type },
+                { key: "_promo_discount_amount", value: String(promoValidation.discountAmount) },
+                { key: "_promo_referrer_email", value: promoValidation.referrerEmail || "" }
+            );
+        }
 
         const orderPayload = {
             payment_method: paymentMethodId,
@@ -180,15 +220,49 @@ export const POST = async ({ request }) => {
             },
             line_items: lineItems,
             customer_note: customerNote,
-            meta_data: [
-                { key: "_order_target_details", value: JSON.stringify(structuredOrderTargets) },
-                { key: "_buyer_wa", value: cleanWa },
-                { key: "_buyer_discord", value: cleanDiscord }
-            ]
+            meta_data: orderMetaData
         };
 
+        if (promoValidation) {
+            if (promoValidation.type === "wc_coupon") {
+                orderPayload.coupon_lines = [{ code: promoValidation.code }];
+            } else {
+                orderPayload.fee_lines = [
+                    {
+                        name: `Discount (${promoValidation.code})`,
+                        total: `-${promoValidation.discountAmount}`
+                    }
+                ];
+            }
+        }
+
         const order = await createOrder(orderPayload);
-        const orderTotal = Math.round(Number(order.total) || 0);
+        let orderTotal = Math.round(Number(order.total) || 0);
+
+        // Koreksi total jika fee_lines negatif tidak terhitung di total WooCommerce
+        if (promoValidation && promoValidation.discountAmount > 0) {
+            const expectedDiscounted = Math.max(0, calculatedBaseTotalIdr - promoValidation.discountAmount);
+            if (orderTotal > expectedDiscounted && (orderTotal - expectedDiscounted >= promoValidation.discountAmount - 100)) {
+                orderTotal = expectedDiscounted;
+            }
+        }
+
+        // Catat konversi referral ke status pending
+        if (promoValidation && promoValidation.type === "referral") {
+            try {
+                await recordPendingReferralConversion({
+                    referralCode: promoValidation.code,
+                    referrerEmail: promoValidation.referrerEmail,
+                    buyerEmail: cleanEmail,
+                    orderId: String(order.id),
+                    orderTotalIdr: orderTotal,
+                    discountAmountIdr: promoValidation.discountAmount,
+                    commissionAmountIdr: promoValidation.commissionAmount
+                });
+            } catch (refErr) {
+                console.warn("[Referral Pending Error]", refErr.message);
+            }
+        }
 
         // 5. Inisialisasi Gateway (Crypto On-Chain Terminal vs Duitku Inquiry)
         let merchantOrderId = null;

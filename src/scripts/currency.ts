@@ -1,5 +1,22 @@
 import { translations } from "../lib/translations";
-import { parsePrice, formatRupiah, formatUSD, USD_RATE } from "../lib/price";
+import { parsePrice, formatRupiah, formatUSD, USD_RATE, IDR_TO_USD_RATE } from "../lib/price";
+
+export function translateKey(key: string, fallback?: string): string {
+    const currentLang = (typeof localStorage !== "undefined" ? localStorage.getItem("yasui_lang") : null) || 
+        (typeof document !== "undefined" ? document.documentElement.lang : "id") || "id";
+    const dict = (translations as Record<string, Record<string, string>>)[currentLang] || (translations as any)["id"];
+    if (dict && typeof dict[key] === "string") {
+        return dict[key];
+    }
+    return fallback !== undefined ? fallback : key;
+}
+
+// Attach early to window in case any script runs before initCurrencyAndLang
+if (typeof window !== "undefined") {
+    (window as any).t = translateKey;
+    (window as any).IDR_TO_USD_RATE = IDR_TO_USD_RATE;
+    (window as any).USD_RATE = IDR_TO_USD_RATE;
+}
 
 export function initCurrencyAndLang(serverDefaultCurr = "IDR", serverDefaultLang = "id"): void {
     let storedLang = typeof localStorage !== "undefined" ? localStorage.getItem("yasui_lang") : null;
@@ -57,12 +74,15 @@ export function initCurrencyAndLang(serverDefaultCurr = "IDR", serverDefaultLang
         if (menu) menu.classList.toggle("hidden");
     };
 
-    function updateUI() {
+    function updateUI(rootElement?: HTMLElement | Document | null) {
+        const scope = rootElement || document;
         const currentCurr = curr || "IDR";
         const currentLang = lang || "id";
 
-        // Update <html> lang attribute
-        document.documentElement.lang = currentLang;
+        // Update <html> lang attribute if full document
+        if (scope === document && document.documentElement) {
+            document.documentElement.lang = currentLang;
+        }
 
         // Navbar currency label
         const headerCurrLabel = document.getElementById("header-curr-label");
@@ -109,8 +129,8 @@ export function initCurrencyAndLang(serverDefaultCurr = "IDR", serverDefaultLang
         const langTxt = document.getElementById("lang-text");
         if (langTxt) langTxt.innerText = currentLang.toUpperCase();
 
-        // Convert ALL prices with [data-price-idr] or .price-tag or .yg-price
-        document.querySelectorAll<HTMLElement>(".price-tag, .yg-price, [data-price-idr]").forEach((tag) => {
+        // Convert ALL prices with [data-price-idr] or .price-tag or .yg-price inside scope
+        scope.querySelectorAll<HTMLElement>(".price-tag, .yg-price, [data-price-idr]").forEach((tag) => {
             let raw = tag.getAttribute("data-price-idr");
             if (!raw) {
                 raw = tag.innerText;
@@ -132,10 +152,10 @@ export function initCurrencyAndLang(serverDefaultCurr = "IDR", serverDefaultLang
                 : formatRupiah(numericRaw);
         });
 
-        // Translate ALL [data-i18n], [data-i18n-placeholder], [data-i18n-title]
+        // Translate ALL [data-i18n], [data-i18n-placeholder], [data-i18n-title] inside scope
         const dict = (translations as Record<string, Record<string, string>>)[currentLang] || (translations as any)["id"];
         if (dict) {
-            document.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
+            scope.querySelectorAll<HTMLElement>("[data-i18n]").forEach((el) => {
                 const key = el.getAttribute("data-i18n");
                 if (key && dict[key]) {
                     const icon = el.querySelector("[class*='i-lucide-'], svg");
@@ -148,14 +168,14 @@ export function initCurrencyAndLang(serverDefaultCurr = "IDR", serverDefaultLang
                 }
             });
 
-            document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-i18n-placeholder]").forEach((el) => {
+            scope.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("[data-i18n-placeholder]").forEach((el) => {
                 const key = el.getAttribute("data-i18n-placeholder");
                 if (key && dict[key]) {
                     el.placeholder = dict[key];
                 }
             });
 
-            document.querySelectorAll<HTMLElement>("[data-i18n-title]").forEach((el) => {
+            scope.querySelectorAll<HTMLElement>("[data-i18n-title]").forEach((el) => {
                 const key = el.getAttribute("data-i18n-title");
                 if (key && dict[key]) {
                     el.setAttribute("title", dict[key]);
@@ -165,13 +185,16 @@ export function initCurrencyAndLang(serverDefaultCurr = "IDR", serverDefaultLang
     }
 
     // Attach to window for global access
+    (window as any).t = translateKey;
     (window as any).selectCurrency = selectCurrency;
     (window as any).selectLanguage = selectLanguage;
     (window as any).toggleRegionalMenu = toggleRegionalMenu;
     (window as any).updateGlobalUI = updateUI;
-    (window as any).applyTranslations = updateUI;
+    (window as any).applyTranslations = (root?: HTMLElement | Document) => updateUI(root);
     (window as any).getCurrentCurrency = () => curr;
     (window as any).getCurrentLanguage = () => lang;
+    (window as any).IDR_TO_USD_RATE = IDR_TO_USD_RATE;
+    (window as any).USD_RATE = IDR_TO_USD_RATE;
     (window as any).formatMoney = (amountIdr: number | string) => {
         const num = parsePrice(amountIdr);
         return curr === "USD" ? formatUSD(num / USD_RATE) : formatRupiah(num);

@@ -1,5 +1,7 @@
 import { updateOrder, getOrder } from "../../../lib/wc";
 import { verifyCallbackSignature, DUITKU_MERCHANT_CODE } from "../../../lib/duitku";
+import { sendOrderAlertToTelegram } from "../../../lib/telegram.server";
+import { approveReferralConversion } from "../../../lib/referral-promo.server";
 
 export const POST = async ({ request }) => {
     try {
@@ -66,6 +68,25 @@ export const POST = async ({ request }) => {
                     { key: "_duitku_paid_at", value: new Date().toISOString() }
                 ]
             });
+
+            // Approve komisi referral jika pesanan ini menggunakan referral
+            try {
+                await approveReferralConversion(wcOrderId);
+            } catch (refErr) {
+                console.warn("[Duitku Webhook] Failed to approve referral conversion:", refErr.message);
+            }
+
+            // Kirim Notifikasi Instan Pesanan Lunas ke Grup Telegram Admin
+            try {
+                const paidOrder = await getOrder(wcOrderId, { bypassCache: true });
+                if (paidOrder) {
+                    const payMethodTitle = paidOrder.payment_method_title || (reference ? `Duitku (${reference})` : "Duitku Payment Gateway");
+                    await sendOrderAlertToTelegram(paidOrder, payMethodTitle);
+                }
+            } catch (alertErr) {
+                console.warn("[Duitku Webhook] Failed to send Telegram order alert:", alertErr.message);
+            }
+
             return new Response("SUCCESS", { status: 200 });
         } else {
             console.warn(`[Duitku Webhook Failed] Order #${wcOrderId} pembayaran gagal/dibatalkan (Code: ${resultCode})`);

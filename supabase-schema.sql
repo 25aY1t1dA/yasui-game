@@ -162,3 +162,136 @@ BEGIN
     END IF;
 END $$;
 
+-- ==============================================================================
+-- 6. TABEL PROFIL AFILIASI & REFERRAL (affiliate_profiles)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.affiliate_profiles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_email TEXT NOT NULL UNIQUE,
+    referral_code TEXT NOT NULL UNIQUE,
+    tier TEXT NOT NULL DEFAULT 'member' CHECK (tier IN ('member', 'creator')),
+    discount_percent NUMERIC(5, 2) NOT NULL DEFAULT 3.00,
+    commission_percent NUMERIC(5, 2) NOT NULL DEFAULT 5.00,
+    total_clicks INTEGER NOT NULL DEFAULT 0,
+    pending_balance_idr NUMERIC(14, 2) NOT NULL DEFAULT 0.00,
+    available_balance_idr NUMERIC(14, 2) NOT NULL DEFAULT 0.00,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_affiliate_profiles_referral_code ON public.affiliate_profiles(UPPER(referral_code));
+CREATE INDEX IF NOT EXISTS idx_affiliate_profiles_user_email ON public.affiliate_profiles(user_email);
+
+ALTER TABLE public.affiliate_profiles ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'affiliate_profiles' AND policyname = 'Allow service_role full affiliate_profiles'
+    ) THEN
+        CREATE POLICY "Allow service_role full affiliate_profiles"
+        ON public.affiliate_profiles FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'affiliate_profiles' AND policyname = 'Allow public select affiliate_profiles'
+    ) THEN
+        CREATE POLICY "Allow public select affiliate_profiles"
+        ON public.affiliate_profiles FOR SELECT
+        TO anon, authenticated
+        USING (true);
+    END IF;
+END $$;
+
+-- ==============================================================================
+-- 7. TABEL LOG KONVERSI REFERRAL (referral_conversions)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.referral_conversions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    referral_code TEXT NOT NULL,
+    referrer_email TEXT NOT NULL,
+    buyer_email TEXT NOT NULL,
+    order_id TEXT NOT NULL UNIQUE,
+    order_total_idr NUMERIC(14, 2) NOT NULL DEFAULT 0.00,
+    discount_amount_idr NUMERIC(14, 2) NOT NULL DEFAULT 0.00,
+    commission_amount_idr NUMERIC(14, 2) NOT NULL DEFAULT 0.00,
+    status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_referral_conversions_order_id ON public.referral_conversions(order_id);
+CREATE INDEX IF NOT EXISTS idx_referral_conversions_referrer_email ON public.referral_conversions(referrer_email);
+CREATE INDEX IF NOT EXISTS idx_referral_conversions_referral_code ON public.referral_conversions(referral_code);
+CREATE INDEX IF NOT EXISTS idx_referral_conversions_status ON public.referral_conversions(status);
+
+ALTER TABLE public.referral_conversions ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'referral_conversions' AND policyname = 'Allow service_role full referral_conversions'
+    ) THEN
+        CREATE POLICY "Allow service_role full referral_conversions"
+        ON public.referral_conversions FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'referral_conversions' AND policyname = 'Allow public select referral_conversions'
+    ) THEN
+        CREATE POLICY "Allow public select referral_conversions"
+        ON public.referral_conversions FOR SELECT
+        TO anon, authenticated
+        USING (true);
+    END IF;
+END $$;
+
+-- ==============================================================================
+-- 8. TABEL VOUCHER PROMO & REDEEM POIN (promo_vouchers)
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.promo_vouchers (
+    code TEXT PRIMARY KEY,
+    discount_type TEXT NOT NULL DEFAULT 'fixed_idr' CHECK (discount_type IN ('percent', 'fixed_idr')),
+    discount_value NUMERIC(14, 2) NOT NULL,
+    min_order_idr NUMERIC(14, 2) NOT NULL DEFAULT 0.00,
+    max_uses INTEGER NOT NULL DEFAULT 1,
+    used_count INTEGER NOT NULL DEFAULT 0,
+    owner_email TEXT,
+    expires_at TIMESTAMPTZ,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
+);
+
+CREATE INDEX IF NOT EXISTS idx_promo_vouchers_owner_email ON public.promo_vouchers(owner_email);
+CREATE INDEX IF NOT EXISTS idx_promo_vouchers_is_active ON public.promo_vouchers(is_active);
+
+ALTER TABLE public.promo_vouchers ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'promo_vouchers' AND policyname = 'Allow service_role full promo_vouchers'
+    ) THEN
+        CREATE POLICY "Allow service_role full promo_vouchers"
+        ON public.promo_vouchers FOR ALL
+        TO service_role
+        USING (true)
+        WITH CHECK (true);
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'promo_vouchers' AND policyname = 'Allow public select promo_vouchers'
+    ) THEN
+        CREATE POLICY "Allow public select promo_vouchers"
+        ON public.promo_vouchers FOR SELECT
+        TO anon, authenticated
+        USING (true);
+    END IF;
+END $$;
+

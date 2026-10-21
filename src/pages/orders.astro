@@ -5,6 +5,7 @@ import Layout from "../layouts/Layout.astro";
 <Layout
     title="Pesanan Saya & Dashboard Akun - Yasui Game"
     description="Lacak riwayat transaksi, status pembayaran, dan detail akun game yang telah Anda beli di Yasui Game."
+    noindex={true}
 >
     <main class="max-w-5xl mx-auto px-4 pt-4 md:pt-6 pb-32">
         <header class="mb-8">
@@ -119,36 +120,384 @@ import Layout from "../layouts/Layout.astro";
         </div>
 
         <section id="dashboard-content" class="hidden">
-            <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-[#222634]">
-                <button onclick="filterStatus('all')" id="tab-all" class="filter-tab active-filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1.5 whitespace-nowrap font-mono">
-                    <span data-i18n="orders.tab_all">Semua Pesanan</span>
-                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-all">0</span>
+            <!-- 2 MAIN TABS -->
+            <div class="flex items-center gap-2 border-b border-[#222634] pb-4 mb-6">
+                <button
+                    type="button"
+                    onclick="switchMainDashboardTab('orders')"
+                    id="main-tab-orders"
+                    class="main-nav-tab active-main-tab px-4 py-2.5 rounded-lg text-xs md:text-sm font-bold uppercase transition flex items-center gap-2 font-mono cursor-pointer"
+                >
+                    <div class="i-lucide-package text-sm"></div>
+                    <span data-i18n="orders.main_tab_orders">📦 Riwayat Pesanan & Akun</span>
                 </button>
-                <button onclick="filterStatus('pending')" id="tab-pending" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono">
-                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                    <span data-i18n="orders.tab_pending">Menunggu Bayar</span>
-                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-pending">0</span>
-                </button>
-                <button onclick="filterStatus('processing')" id="tab-processing" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono">
-                    <span class="w-2 h-2 rounded-full bg-[#00E5FF]"></span>
-                    <span data-i18n="orders.tab_processing">Diproses</span>
-                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-processing">0</span>
-                </button>
-                <button onclick="filterStatus('completed')" id="tab-completed" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span data-i18n="orders.tab_completed">Selesai</span>
-                    <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-completed">0</span>
+                <button
+                    type="button"
+                    onclick="switchMainDashboardTab('referral')"
+                    id="main-tab-referral"
+                    class="main-nav-tab px-4 py-2.5 rounded-lg text-xs md:text-sm font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-2 font-mono cursor-pointer"
+                >
+                    <div class="i-lucide-gem text-sm text-[#00E5FF]"></div>
+                    <span data-i18n="orders.main_tab_referral">💎 Dashboard Referral & Afiliasi</span>
                 </button>
             </div>
 
-            <div id="orders-list" class="space-y-4"></div>
+            <!-- VIEW 1: ORDERS & CREDENTIALS -->
+            <div id="view-orders-tab" class="space-y-6">
+                <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none border-b border-[#222634]">
+                    <button onclick="filterStatus('all')" id="tab-all" class="filter-tab active-filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1.5 whitespace-nowrap font-mono cursor-pointer">
+                        <span data-i18n="orders.tab_all">Semua Pesanan</span>
+                        <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-all">0</span>
+                    </button>
+                    <button onclick="filterStatus('pending')" id="tab-pending" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                        <span data-i18n="orders.tab_pending">Menunggu Bayar</span>
+                        <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-pending">0</span>
+                    </button>
+                    <button onclick="filterStatus('processing')" id="tab-processing" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-[#00E5FF]"></span>
+                        <span data-i18n="orders.tab_processing">Diproses</span>
+                        <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-processing">0</span>
+                    </button>
+                    <button onclick="filterStatus('completed')" id="tab-completed" class="filter-tab px-3.5 py-2 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap font-mono cursor-pointer">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span data-i18n="orders.tab_completed">Selesai</span>
+                        <span class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded" id="count-completed">0</span>
+                    </button>
+                </div>
 
-            <div id="orders-empty-state" class="hidden text-center py-16 bg-[#11131A] border border-[#222634] rounded-lg">
-                <div class="i-lucide-inbox text-4xl text-[#64748B] mx-auto mb-3"></div>
-                <h3 class="text-sm font-bold text-[#F8FAFC] uppercase font-mono" data-i18n="orders.empty_title">Tidak Ada Pesanan</h3>
-                <p class="text-xs text-[#94A3B8] mt-1 max-w-sm mx-auto" data-i18n="orders.empty_desc">
-                    Tidak ada pesanan yang sesuai dengan filter ini.
-                </p>
+                <div id="orders-list" class="space-y-4"></div>
+
+                <div id="orders-empty-state" class="hidden text-center py-16 bg-[#11131A] border border-[#222634] rounded-lg">
+                    <div class="i-lucide-inbox text-4xl text-[#64748B] mx-auto mb-3"></div>
+                    <h3 class="text-sm font-bold text-[#F8FAFC] uppercase font-mono" data-i18n="orders.empty_title">Tidak Ada Pesanan</h3>
+                    <p class="text-xs text-[#94A3B8] mt-1 max-w-sm mx-auto" data-i18n="orders.empty_desc">
+                        Tidak ada pesanan yang sesuai dengan filter ini.
+                    </p>
+                </div>
+            </div>
+
+            <!-- VIEW 2: REFERRAL, PROMO & PARTNER HUB -->
+            <div id="view-referral-tab" class="hidden space-y-6">
+                <!-- 1. KARTU KODE REFERRAL & LINK PRIBADI -->
+                <div class="bg-[#11131A] border border-[#222634] rounded-lg p-5 md:p-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#222634] pb-5 mb-5">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span id="ref-tier-badge" class="px-2 py-0.5 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 text-[10px] font-mono font-bold uppercase">
+                                    MEMBER AFILIASI
+                                </span>
+                                <span class="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> AKTIF
+                                </span>
+                            </div>
+                            <h2 class="text-lg md:text-xl font-bold text-white uppercase tracking-wider font-mono">
+                                <span data-i18n="orders.ref_your_code">Kode Referral Anda</span>
+                            </h2>
+                            <p class="text-xs text-[#94A3B8]">
+                                Bagikan kode atau link referral Anda kepada teman untuk mendapatkan komisi dari setiap transaksi yang selesai.
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <div class="px-3 py-1.5 rounded-lg bg-[#0D0F15] border border-[#222634] text-xs font-mono">
+                                <span class="text-[#94A3B8]" data-i18n="orders.ref_friends_discount">Diskon Teman:</span>
+                                <span id="ref-discount-pct" class="text-emerald-400 font-bold ml-1">3%</span>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-lg bg-[#0D0F15] border border-[#222634] text-xs font-mono">
+                                <span class="text-[#94A3B8]" data-i18n="orders.ref_your_commission">Komisi Anda:</span>
+                                <span id="ref-commission-pct" class="text-[#00E5FF] font-bold ml-1">5%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Box Kode Unik -->
+                        <div class="bg-[#0D0F15] border border-[#222634] rounded-lg p-4 flex flex-col justify-between">
+                            <div class="text-[11px] font-bold text-[#94A3B8] uppercase font-mono mb-2" data-i18n="orders.ref_your_code">
+                                Kode Referral
+                            </div>
+                            <div class="flex items-center justify-between gap-3 bg-[#11131A] border border-[#222634] px-4 py-3 rounded-lg">
+                                <span id="ref-display-code" class="text-lg md:text-xl font-bold text-[#00E5FF] font-mono tracking-widest tabular-nums">
+                                    MEMUAT...
+                                </span>
+                                <button
+                                    type="button"
+                                    id="btn-copy-code"
+                                    onclick="copyReferralCode()"
+                                    class="px-3 py-1.5 rounded bg-[#00E5FF]/10 text-[#00E5FF] hover:bg-[#00E5FF]/20 border border-[#00E5FF]/30 text-xs font-mono font-bold uppercase transition flex items-center gap-1.5 cursor-pointer"
+                                >
+                                    <div class="i-lucide-copy text-xs"></div>
+                                    <span data-i18n="orders.ref_copy_code">Salin Kode</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Box Link Afiliasi -->
+                        <div class="bg-[#0D0F15] border border-[#222634] rounded-lg p-4 flex flex-col justify-between">
+                            <div class="text-[11px] font-bold text-[#94A3B8] uppercase font-mono mb-2">
+                                Link Afiliasi Langsung
+                            </div>
+                            <div class="flex items-center justify-between gap-3 bg-[#11131A] border border-[#222634] px-3.5 py-3 rounded-lg">
+                                <span id="ref-display-link" class="text-xs text-[#F8FAFC] font-mono truncate max-w-[200px] md:max-w-[260px]">
+                                    https://...
+                                </span>
+                                <button
+                                    type="button"
+                                    id="btn-copy-link"
+                                    onclick="copyReferralLink()"
+                                    class="px-3 py-1.5 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30 text-xs font-mono font-bold uppercase transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                                >
+                                    <div class="i-lucide-share-2 text-xs"></div>
+                                    <span data-i18n="orders.ref_copy_link">Salin Link</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 4 KARTU METRIK -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                    <!-- Metric 1: Total Klik -->
+                    <div class="bg-[#11131A] border border-[#222634] rounded-lg p-4 font-mono">
+                        <div class="flex items-center justify-between text-[#94A3B8] text-xs mb-2">
+                            <span data-i18n="orders.ref_metric_clicks">Total Klik</span>
+                            <div class="i-lucide-mouse-pointer-click text-sm text-[#00E5FF]"></div>
+                        </div>
+                        <div id="metric-total-clicks" class="text-xl md:text-2xl font-bold text-white tabular-nums">0</div>
+                        <div class="text-[10px] text-[#64748B] mt-1">Kunjungan link referral</div>
+                    </div>
+
+                    <!-- Metric 2: Pesanan Sukses -->
+                    <div class="bg-[#11131A] border border-[#222634] rounded-lg p-4 font-mono">
+                        <div class="flex items-center justify-between text-[#94A3B8] text-xs mb-2">
+                            <span data-i18n="orders.ref_metric_orders">Pesanan Sukses</span>
+                            <div class="i-lucide-shopping-bag text-sm text-emerald-400"></div>
+                        </div>
+                        <div id="metric-successful-orders" class="text-xl md:text-2xl font-bold text-emerald-400 tabular-nums">0</div>
+                        <div class="text-[10px] text-[#64748B] mt-1">Transaksi terverifikasi</div>
+                    </div>
+
+                    <!-- Metric 3: Komisi Tertunda -->
+                    <div class="bg-[#11131A] border border-[#222634] rounded-lg p-4 font-mono">
+                        <div class="flex items-center justify-between text-[#94A3B8] text-xs mb-2">
+                            <span data-i18n="orders.ref_metric_pending">Komisi Tertunda</span>
+                            <div class="i-lucide-clock text-sm text-amber-400"></div>
+                        </div>
+                        <div id="metric-pending-commission" class="text-base md:text-lg font-bold text-amber-400 tabular-nums">Rp 0</div>
+                        <div class="text-[10px] text-[#64748B] mt-1">Menunggu bayar / kliring</div>
+                    </div>
+
+                    <!-- Metric 4: Saldo Tersedia -->
+                    <div class="bg-[#11131A] border border-[#00E5FF]/30 rounded-lg p-4 font-mono bg-[#00E5FF]/5">
+                        <div class="flex items-center justify-between text-[#00E5FF] text-xs mb-2">
+                            <span data-i18n="orders.ref_metric_available">Saldo Tersedia</span>
+                            <div class="i-lucide-wallet text-sm text-[#00E5FF]"></div>
+                        </div>
+                        <div id="metric-available-balance" class="text-base md:text-lg font-bold text-[#00E5FF] tabular-nums">Rp 0</div>
+                        <div class="text-[10px] text-emerald-400 mt-1">Siap dicairkan / ditukar</div>
+                    </div>
+                </div>
+
+                <!-- 3. DUA BENTO AKSI: CONVERT TO VOUCHER & REQUEST PAYOUT -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Bento A: Convert to Voucher -->
+                    <div class="bg-[#11131A] border border-[#222634] rounded-lg p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <div class="w-7 h-7 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-sm">
+                                    <div class="i-lucide-ticket"></div>
+                                </div>
+                                <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono" data-i18n="orders.ref_convert_title">
+                                    Tukar Saldo Jadi Voucher
+                                </h3>
+                            </div>
+                            <p class="text-xs text-[#94A3B8] mb-4" data-i18n="orders.ref_convert_desc">
+                                Tukar saldo komisi menjadi voucher belanja toko instan (Min Rp 5.000).
+                            </p>
+
+                            <div id="convert-voucher-result" class="hidden mb-4 p-3 rounded-lg text-xs font-mono border"></div>
+
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-[#94A3B8] uppercase font-mono mb-1" data-i18n="orders.ref_convert_amount">
+                                        Nominal Tukar (IDR)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="convert-voucher-amount"
+                                        min="5000"
+                                        step="1000"
+                                        placeholder="5000"
+                                        class="yg-input font-mono tabular-nums"
+                                    />
+                                </div>
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <button type="button" onclick="setConvertAmount(5000)" class="px-2 py-1 rounded bg-[#0D0F15] border border-[#222634] text-[10px] font-mono text-[#94A3B8] hover:text-[#00E5FF] hover:border-[#00E5FF]/40 transition cursor-pointer">Rp 5.000</button>
+                                    <button type="button" onclick="setConvertAmount(10000)" class="px-2 py-1 rounded bg-[#0D0F15] border border-[#222634] text-[10px] font-mono text-[#94A3B8] hover:text-[#00E5FF] hover:border-[#00E5FF]/40 transition cursor-pointer">Rp 10.000</button>
+                                    <button type="button" onclick="setConvertAmount(25000)" class="px-2 py-1 rounded bg-[#0D0F15] border border-[#222634] text-[10px] font-mono text-[#94A3B8] hover:text-[#00E5FF] hover:border-[#00E5FF]/40 transition cursor-pointer">Rp 25.000</button>
+                                    <button type="button" onclick="setConvertAmount(50000)" class="px-2 py-1 rounded bg-[#0D0F15] border border-[#222634] text-[10px] font-mono text-[#94A3B8] hover:text-[#00E5FF] hover:border-[#00E5FF]/40 transition cursor-pointer">Rp 50.000</button>
+                                    <button type="button" onclick="setConvertAmountMax()" class="px-2 py-1 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 text-[10px] font-mono text-[#00E5FF] hover:bg-[#00E5FF]/20 transition cursor-pointer">Semua Saldo</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="btn-convert-voucher"
+                            onclick="handleConvertVoucher()"
+                            class="yg-btn-primary w-full py-2.5 mt-4 text-xs font-mono flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                            <div class="i-lucide-zap text-xs"></div>
+                            <span data-i18n="orders.ref_convert_btn">Tukar Jadi Voucher</span>
+                        </button>
+                    </div>
+
+                    <!-- Bento B: Request Payout -->
+                    <div class="bg-[#11131A] border border-[#222634] rounded-lg p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <div class="w-7 h-7 rounded bg-[#00E5FF]/10 border border-[#00E5FF]/30 flex items-center justify-center text-[#00E5FF] text-sm">
+                                    <div class="i-lucide-arrow-up-right"></div>
+                                </div>
+                                <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono" data-i18n="orders.ref_payout_title">
+                                    Pencairan Saldo (Payout)
+                                </h3>
+                            </div>
+                            <p class="text-xs text-[#94A3B8] mb-4" data-i18n="orders.ref_payout_desc">
+                                Tarik saldo ke USDT (Crypto) atau E-Wallet / Bank (Min Rp 50.000).
+                            </p>
+
+                            <div id="payout-result" class="hidden mb-4 p-3 rounded-lg text-xs font-mono border"></div>
+
+                            <form id="payout-form" onsubmit="handleRequestPayout(event)" class="space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#94A3B8] uppercase font-mono mb-1" data-i18n="orders.ref_payout_channel">
+                                            Metode Pencairan
+                                        </label>
+                                        <select id="payout-method" class="yg-input text-xs font-mono">
+                                            <option value="USDT">USDT (BEP-20 / TRC-20)</option>
+                                            <option value="DANA">DANA (E-Wallet)</option>
+                                            <option value="GOPAY">GoPay (E-Wallet)</option>
+                                            <option value="OVO">OVO (E-Wallet)</option>
+                                            <option value="BANK_TRANSFER">Transfer Bank (BCA/Mandiri/BRI)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#94A3B8] uppercase font-mono mb-1" data-i18n="orders.ref_payout_amount">
+                                            Nominal (IDR)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id="payout-amount"
+                                            min="50000"
+                                            step="5000"
+                                            placeholder="50000"
+                                            required
+                                            class="yg-input font-mono tabular-nums text-xs"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#94A3B8] uppercase font-mono mb-1" data-i18n="orders.ref_payout_account">
+                                            No. Rek / Address
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="payout-account"
+                                            placeholder="08123... / 0x..."
+                                            required
+                                            class="yg-input font-mono text-xs"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-[#94A3B8] uppercase font-mono mb-1" data-i18n="orders.ref_payout_holder">
+                                            Nama Pemilik Rekening
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="payout-holder"
+                                            placeholder="Nama Lengkap"
+                                            required
+                                            class="yg-input text-xs"
+                                        />
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    id="btn-submit-payout"
+                                    class="yg-btn-secondary w-full py-2.5 mt-2 text-xs font-mono flex items-center justify-center gap-1.5 cursor-pointer"
+                                >
+                                    <div class="i-lucide-send text-xs"></div>
+                                    <span data-i18n="orders.ref_payout_btn">Ajukan Pencairan</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. SUB-TABS: RIWAYAT VOUCHER & RIWAYAT REFERRAL -->
+                <div class="bg-[#11131A] border border-[#222634] rounded-lg p-5">
+                    <div class="flex items-center gap-2 border-b border-[#222634] pb-3 mb-5 overflow-x-auto scrollbar-none font-mono">
+                        <button
+                            type="button"
+                            id="subtab-btn-vouchers"
+                            onclick="switchReferralSubTab('vouchers')"
+                            class="px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase transition flex items-center gap-1.5 whitespace-nowrap active-sub-tab cursor-pointer"
+                        >
+                            <span data-i18n="orders.ref_vouchers_title">Voucher Belanja Aktif</span>
+                            <span id="count-vouchers" class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded">0</span>
+                        </button>
+                        <button
+                            type="button"
+                            id="subtab-btn-conversions"
+                            onclick="switchReferralSubTab('conversions')"
+                            class="px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase text-[#94A3B8] hover:text-white transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+                        >
+                            <span data-i18n="orders.ref_conversions_title">Riwayat Referral</span>
+                            <span id="count-conversions" class="bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] px-1.5 py-0.5 rounded">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Panel Vouchers -->
+                    <div id="panel-vouchers-list" class="space-y-3">
+                        <div id="vouchers-empty-state" class="text-center py-10 bg-[#0D0F15] border border-[#222634] rounded-lg">
+                            <div class="i-lucide-ticket text-3xl text-[#64748B] mx-auto mb-2"></div>
+                            <p class="text-xs text-[#94A3B8] max-w-sm mx-auto" data-i18n="orders.ref_vouchers_empty">
+                                Belum ada voucher aktif. Tukarkan saldo komisi Anda di atas!
+                            </p>
+                        </div>
+                        <div id="vouchers-items-container" class="space-y-2.5"></div>
+                    </div>
+
+                    <!-- Panel Conversions -->
+                    <div id="panel-conversions-list" class="hidden space-y-3">
+                        <div id="conversions-empty-state" class="text-center py-10 bg-[#0D0F15] border border-[#222634] rounded-lg">
+                            <div class="i-lucide-users text-3xl text-[#64748B] mx-auto mb-2"></div>
+                            <p class="text-xs text-[#94A3B8] max-w-sm mx-auto" data-i18n="orders.ref_conversions_empty">
+                                Belum ada riwayat referral. Bagikan kode atau link Anda ke teman!
+                            </p>
+                        </div>
+                        <div id="conversions-table-container" class="hidden overflow-x-auto">
+                            <table class="w-full text-left text-xs font-mono">
+                                <thead>
+                                    <tr class="text-[10px] text-[#64748B] uppercase border-b border-[#222634]">
+                                        <th class="py-2.5 px-3" data-i18n="orders.ref_table_date">Tanggal</th>
+                                        <th class="py-2.5 px-3" data-i18n="orders.ref_table_order">ID Pesanan</th>
+                                        <th class="py-2.5 px-3" data-i18n="orders.ref_table_buyer">Pembeli</th>
+                                        <th class="py-2.5 px-3" data-i18n="orders.ref_table_total">Total Belanja</th>
+                                        <th class="py-2.5 px-3" data-i18n="orders.ref_table_commission">Komisi</th>
+                                        <th class="py-2.5 px-3" data-i18n="orders.ref_table_status">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="conversions-tbody" class="divide-y divide-[#222634]"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -160,7 +509,7 @@ import Layout from "../layouts/Layout.astro";
 
     <div id="toast" class="fixed bottom-24 md:bottom-8 right-6 z-[100] bg-[#11131A] border border-[#00E5FF]/40 text-white text-xs px-4 py-3 rounded-lg shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none font-mono">
         <div class="i-lucide-check-circle text-[#00E5FF] text-base"></div>
-        <span id="toast-msg">Kredensial berhasil disalin!</span>
+        <span id="toast-msg" data-i18n="orders.copied">Kredensial berhasil disalin!</span>
     </div>
 
     <style>
@@ -169,12 +518,32 @@ import Layout from "../layouts/Layout.astro";
             color: #00E5FF;
             border: 1px solid rgba(0, 229, 255, 0.4);
         }
+        .active-main-tab {
+            background-color: rgba(0, 229, 255, 0.12);
+            color: #00E5FF;
+            border: 1px solid rgba(0, 229, 255, 0.4);
+        }
+        .active-sub-tab {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: #00E5FF;
+            border-bottom: 2px solid #00E5FF;
+        }
     </style>
 
     <script is:inline>
         let allOrdersData = [];
         window.allOrdersData = allOrdersData; // expose utk SW polling
         let currentFilter = "all";
+        let referralDashboardData = null;
+        let currentMainTab = "orders";
+        let currentReferralSubTab = "vouchers";
+
+        const t = (key, fallback) => {
+            if (typeof window !== "undefined" && typeof window.t === "function") {
+                return window.t(key, fallback);
+            }
+            return fallback !== undefined ? fallback : key;
+        };
 
         function showToast(text) {
             const toast = document.getElementById("toast");
@@ -190,7 +559,7 @@ import Layout from "../layouts/Layout.astro";
 
         window.copyText = (text, label) => {
             navigator.clipboard.writeText(text).then(() => {
-                showToast(`${label || 'Teks'} berhasil disalin!`);
+                showToast(t("orders.copied", `${label || 'Teks'} berhasil disalin!`));
             });
         };
 
@@ -207,8 +576,9 @@ import Layout from "../layouts/Layout.astro";
             if (typeof window.formatCurrency === "function") {
                 return window.formatCurrency(num, curr);
             }
+            const usdRate = window.IDR_TO_USD_RATE || 16000;
             if (curr === "USD") {
-                return "$" + (Number(num || 0) / 16000).toFixed(2);
+                return "$" + (Number(num || 0) / usdRate).toFixed(2);
             }
             return "Rp " + Number(num || 0).toLocaleString("id-ID");
         }
@@ -249,29 +619,28 @@ import Layout from "../layouts/Layout.astro";
         }
 
         function getStatusBadge(status, isExpired = false) {
-            const isEn = getLang() === "en";
             if (isExpired || status === "cancelled") {
                 return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/40 text-red-400 border border-red-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">
-                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> ${isEn ? 'EXPIRED' : 'KADALUARSA'}
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> ${t('orders.status_expired', 'KADALUARSA')}
                 </span>`;
             }
             switch(status) {
                 case "completed":
                     return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${isEn ? 'COMPLETED' : 'SELESAI'}
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${t('orders.status_completed', 'SELESAI')}
                     </span>`;
                 case "processing":
                     return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/40 text-[10px] font-mono font-bold uppercase tracking-wider">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span> ${isEn ? 'PROCESSING' : 'DIPROSES'}
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-pulse"></span> ${t('orders.status_processing', 'DIPROSES')}
                     </span>`;
                 case "pending":
                 case "on-hold":
                     return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-950/40 text-amber-400 border border-amber-500/40 text-[10px] font-mono font-bold uppercase tracking-wider animate-pulse">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> ${isEn ? 'AWAITING PAYMENT' : 'MENUNGGU BAYAR'}
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> ${t('orders.status_pending', 'MENUNGGU BAYAR')}
                     </span>`;
                 case "failed":
                     return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-red-950/40 text-red-400 border border-red-500/40 text-[10px] font-mono font-bold uppercase tracking-wider">
-                        ${isEn ? 'FAILED' : 'GAGAL'}
+                        ${t('orders.status_failed', 'GAGAL')}
                     </span>`;
                 default:
                     return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#0D0F15] border border-[#222634] text-[#94A3B8] text-[10px] font-mono font-bold uppercase">
@@ -318,9 +687,9 @@ import Layout from "../layouts/Layout.astro";
                             if (typeof window.updateNavbarAuthUI === "function") window.updateNavbarAuthUI();
                             window.dispatchEvent(new CustomEvent('yasui:auth-changed', { detail: { user: null } }));
                         }
-                        throw new Error(data.error || "Sesi telah berakhir. Silakan masuk kembali dengan kata sandi.");
+                        throw new Error(data.error || t("orders.session_expired", "Sesi telah berakhir. Silakan masuk kembali dengan kata sandi."));
                     }
-                    throw new Error(data.error || "Gagal memuat pesanan");
+                    throw new Error(data.error || t("orders.load_failed", "Gagal memuat pesanan"));
                 }
 
                 allOrdersData = data.orders || [];
@@ -344,7 +713,7 @@ import Layout from "../layouts/Layout.astro";
                 profileBadge.classList.remove("hidden");
                 profileBadge.classList.add("flex");
                 document.getElementById("user-display-email").innerText = email;
-                document.getElementById("user-orders-count").innerText = `${allOrdersData.length} Pesanan Tercatat`;
+                document.getElementById("user-orders-count").innerText = `${allOrdersData.length} ${t("orders.logged_orders_count", "Pesanan Tercatat")}`;
                 document.getElementById("user-avatar").innerText = email.charAt(0).toUpperCase();
 
                 // Sembunyikan form login jika sudah berhasil login
@@ -355,6 +724,9 @@ import Layout from "../layouts/Layout.astro";
 
                 // Render pesanan
                 renderOrders();
+
+                // Muat data referral & afiliasi user
+                loadReferralDashboardData();
 
                 dashboardContent.classList.remove("hidden");
 
@@ -419,7 +791,6 @@ import Layout from "../layouts/Layout.astro";
             emptyState.classList.add("hidden");
 
             container.innerHTML = filtered.map(order => {
-                const isEn = getLang() === "en";
                 const isPending = order.status === "pending" || order.status === "on-hold";
                 const isCompleted = order.status === "completed";
                 const isProcessing = order.status === "processing";
@@ -461,7 +832,7 @@ import Layout from "../layouts/Layout.astro";
                         </div>
 
                         <div class="flex items-center justify-between bg-[#0D0F15] border border-[#222634] rounded-lg p-3 mb-4 text-xs font-mono">
-                            <span class="text-[#94A3B8]">${isEn ? 'Total Bill' : 'Total Tagihan'} (${order.paymentMethodTitle || 'Gateway'})</span>
+                            <span class="text-[#94A3B8]">${t('orders.bill_total', 'Total Tagihan')} (${order.paymentMethodTitle || 'Gateway'})</span>
                             <span class="text-sm font-bold text-[#00E5FF] tabular-nums yg-price" data-price-idr="${order.total}">${formatMoney(order.total)}</span>
                         </div>
 
@@ -469,9 +840,9 @@ import Layout from "../layouts/Layout.astro";
                             <div class="bg-[#0D0F15] border-l-2 border-[#00E5FF] border-y border-r border-[#222634] rounded-r-lg p-3.5 mb-4 font-mono text-xs">
                                 <div class="flex items-center justify-between mb-2">
                                     <span class="text-[#00E5FF] font-bold text-[11px] uppercase flex items-center gap-1.5">
-                                        <div class="i-lucide-key text-xs"></div> ${isEn ? 'DELIVERY CREDENTIALS / NOTES' : 'INFORMASI PENGIRIMAN / CATATAN'}
+                                        <div class="i-lucide-key text-xs"></div> ${t('orders.info_notes', 'INFORMASI PENGIRIMAN / CATATAN')}
                                     </span>
-                                    <button onclick="copyText('${order.customerNote.replace(/'/g, "\\'")}', '${isEn ? 'Account Info' : 'Informasi Akun'}')" class="text-[10px] text-[#94A3B8] hover:text-[#00E5FF] underline cursor-pointer">${isEn ? 'Copy' : 'Salin'}</button>
+                                    <button onclick="copyText('${order.customerNote.replace(/'/g, "\\'")}', '${t('orders.account_info_copied', 'Informasi Akun')}')" class="text-[10px] text-[#94A3B8] hover:text-[#00E5FF] underline cursor-pointer">${t('orders.copy_btn', 'Salin')}</button>
                                 </div>
                                 <div class="text-[#F8FAFC] break-words whitespace-pre-wrap bg-[#11131A] p-2.5 rounded border border-[#222634]">${order.customerNote}</div>
                             </div>
@@ -481,22 +852,22 @@ import Layout from "../layouts/Layout.astro";
                             ${isPending && !order.isExpired ? `
                                 <a href="${order.paymentUrl}" class="yg-btn-primary text-xs py-2 px-3.5 flex items-center gap-1.5">
                                     <div class="i-lucide-credit-card text-xs"></div>
-                                    <span>${isEn ? 'PAY NOW' : 'BAYAR SEKARANG'}</span>
-                                    ${order.remainingSeconds > 0 ? `<span class="text-[10px] bg-black/30 text-black px-1.5 py-0.5 rounded font-mono font-bold">${isEn ? 'Expires in' : 'Sisa'} ${Math.ceil(order.remainingSeconds / 60)}m</span>` : ''}
+                                    <span>${t('orders.pay_now', 'BAYAR SEKARANG')}</span>
+                                    ${order.remainingSeconds > 0 ? `<span class="text-[10px] bg-black/30 text-black px-1.5 py-0.5 rounded font-mono font-bold">${t('orders.expires_in', 'Sisa')} ${Math.ceil(order.remainingSeconds / 60)}m</span>` : ''}
                                 </a>
                             ` : ''}
 
                             ${(order.isExpired || order.status === "cancelled" || order.status === "failed") && order.items && order.items.length > 0 ? `
                                 <button onclick="reorderItems(${JSON.stringify(order.items).replace(/"/g, '&quot;')})" class="bg-red-950/30 hover:bg-red-900/50 text-red-400 border border-red-500/40 font-mono font-bold uppercase text-xs px-3.5 py-2 rounded-lg transition flex items-center gap-1.5">
                                     <div class="i-lucide-refresh-cw text-xs"></div>
-                                    <span>${isEn ? 'REORDER' : 'PESAN ULANG'}</span>
+                                    <span>${t('orders.reorder', 'PESAN ULANG')}</span>
                                 </button>
                             ` : ''}
 
                             ${isCompleted && order.items?.[0]?.productId ? `
                                 <a href="/review?id=${order.items[0].productId}" class="bg-amber-950/30 hover:bg-amber-900/50 text-amber-400 border border-amber-400/30 font-mono font-bold text-xs px-3.5 py-2 rounded-lg transition flex items-center gap-1.5">
                                     <div class="i-lucide-star text-xs fill-current"></div>
-                                    <span>${isEn ? 'Write Review' : 'Tulis Ulasan'}</span>
+                                    <span>${t('orders.review', 'Tulis Ulasan')}</span>
                                 </a>
                             ` : ''}
 
@@ -507,24 +878,28 @@ import Layout from "../layouts/Layout.astro";
                                 </button>
                             ` : ''}
 
-                            <button onclick="window.openLiveChatModal && window.openLiveChatModal('Pesanan #${order.id}', '${order.id}')" class="yg-btn-secondary text-xs py-2 px-3 flex items-center gap-1.5 cursor-pointer border-[#00E5FF]/30 hover:border-[#00E5FF] text-[#F8FAFC] hover:text-[#00E5FF]" title="${isEn ? 'Chat Admin regarding Order #' + order.id : 'Chat Admin terkait Order #' + order.id}">
+                            <button onclick="window.openLiveChatModal && window.openLiveChatModal('Pesanan #${order.id}', '${order.id}')" class="yg-btn-secondary text-xs py-2 px-3 flex items-center gap-1.5 cursor-pointer border-[#00E5FF]/30 hover:border-[#00E5FF] text-[#F8FAFC] hover:text-[#00E5FF]" title="${t('orders.order_chat_prefix', 'Chat Admin #')}${order.id}">
                                 <div class="i-lucide-headset text-xs text-[#00E5FF]"></div>
-                                <span>${isEn ? 'Order Chat #' + order.id : 'Chat Admin #' + order.id}</span>
+                                <span>${t('orders.order_chat_prefix', 'Chat Admin #')}${order.id}</span>
                             </button>
 
                             <a href="${waSupportUrl}" target="_blank" rel="noopener noreferrer" class="yg-btn-secondary text-xs py-2 px-3 flex items-center gap-1.5">
                                 <div class="i-lucide-message-circle text-xs text-emerald-400"></div>
-                                <span>${isEn ? 'WA Support' : 'Bantuan WA'}</span>
+                                <span>${t('orders.wa_support', 'Bantuan WA')}</span>
                             </a>
 
-                            <button onclick="copyText('#${order.number}', '${isEn ? 'Order Number' : 'Nomor Order'}')" class="border border-[#222634] hover:border-[#33394D] text-[#94A3B8] hover:text-white text-xs px-3 py-2 rounded-lg font-mono transition flex items-center gap-1">
+                            <button onclick="copyText('#${order.number}', '${t('orders.copy_num', 'Nomor Order')}')" class="border border-[#222634] hover:border-[#33394D] text-[#94A3B8] hover:text-white text-xs px-3 py-2 rounded-lg font-mono transition flex items-center gap-1">
                                 <div class="i-lucide-copy text-xs"></div>
-                                <span>${isEn ? 'Copy No.' : 'Salin No.'}</span>
+                                <span>${t('orders.copy_no_prefix', 'Salin No.')}</span>
                             </button>
                         </div>
                     </div>
                 `;
             }).join("");
+
+            if (typeof window.applyTranslations === "function") {
+                window.applyTranslations(container);
+            }
         }
 
         window.reorderItems = function(items) {
@@ -579,7 +954,7 @@ import Layout from "../layouts/Layout.astro";
             if (!email || !password) return;
 
             btn.disabled = true;
-            btn.innerText = "MEMERIKSA KREDENSIAL...";
+            btn.innerText = t("orders.checking_credentials", "MEMERIKSA KREDENSIAL...");
             alert.classList.add("hidden");
 
             try {
@@ -612,9 +987,9 @@ import Layout from "../layouts/Layout.astro";
 
             } catch (err) {
                 alert.className = "mb-4 p-3 rounded-lg text-xs font-mono bg-red-950/40 border border-red-500/40 text-red-400 block text-left";
-                alert.innerText = err.message || "Gagal masuk. Silakan periksa kembali email & sandi Anda.";
+                alert.innerText = err.message || t("orders.login_failed_alert", "Gagal masuk. Silakan periksa kembali email & sandi Anda.");
                 btn.disabled = false;
-                btn.innerHTML = '<span>MASUK SEKARANG</span><div class="i-lucide-arrow-right text-xs"></div>';
+                btn.innerHTML = `<span>${t("orders.login_btn", "MASUK SEKARANG")}</span><div class="i-lucide-arrow-right text-xs"></div>`;
             }
         };
 
@@ -629,6 +1004,7 @@ import Layout from "../layouts/Layout.astro";
                 document.dispatchEvent(new Event("yasui-auth-changed"));
             }
             allOrdersData = [];
+            referralDashboardData = null;
             const dash = document.getElementById("dashboard-content");
             if (dash) dash.classList.add("hidden");
             const badge = document.getElementById("user-profile-badge");
@@ -640,6 +1016,413 @@ import Layout from "../layouts/Layout.astro";
             if (authBox) authBox.classList.remove("hidden");
         };
         window.yasuiLogout = window.logoutUser;
+
+        /* ====== REFERRAL & AFFILIATE DASHBOARD HANDLERS ====== */
+        window.switchMainDashboardTab = (tab) => {
+            currentMainTab = tab;
+            const ordersBtn = document.getElementById("main-tab-orders");
+            const refBtn = document.getElementById("main-tab-referral");
+            const ordersView = document.getElementById("view-orders-tab");
+            const refView = document.getElementById("view-referral-tab");
+
+            if (tab === "orders") {
+                ordersBtn?.classList.add("active-main-tab");
+                ordersBtn?.classList.remove("text-[#94A3B8]");
+                refBtn?.classList.remove("active-main-tab");
+                refBtn?.classList.add("text-[#94A3B8]");
+                ordersView?.classList.remove("hidden");
+                refView?.classList.add("hidden");
+            } else {
+                refBtn?.classList.add("active-main-tab");
+                refBtn?.classList.remove("text-[#94A3B8]");
+                ordersBtn?.classList.remove("active-main-tab");
+                ordersBtn?.classList.add("text-[#94A3B8]");
+                ordersView?.classList.add("hidden");
+                refView?.classList.remove("hidden");
+
+                if (!referralDashboardData) {
+                    loadReferralDashboardData();
+                }
+            }
+        };
+
+        window.switchReferralSubTab = (sub) => {
+            currentReferralSubTab = sub;
+            const vBtn = document.getElementById("subtab-btn-vouchers");
+            const cBtn = document.getElementById("subtab-btn-conversions");
+            const vPanel = document.getElementById("panel-vouchers-list");
+            const cPanel = document.getElementById("panel-conversions-list");
+
+            if (sub === "vouchers") {
+                vBtn?.classList.add("active-sub-tab");
+                vBtn?.classList.remove("text-[#94A3B8]");
+                cBtn?.classList.remove("active-sub-tab");
+                cBtn?.classList.add("text-[#94A3B8]");
+                vPanel?.classList.remove("hidden");
+                cPanel?.classList.add("hidden");
+            } else {
+                cBtn?.classList.add("active-sub-tab");
+                cBtn?.classList.remove("text-[#94A3B8]");
+                vBtn?.classList.remove("active-sub-tab");
+                vBtn?.classList.add("text-[#94A3B8]");
+                cPanel?.classList.remove("hidden");
+                vPanel?.classList.add("hidden");
+            }
+        };
+
+        async function loadReferralDashboardData(force = false) {
+            let session = null;
+            try {
+                session = typeof window.getSession === "function" ? window.getSession() : JSON.parse(localStorage.getItem("yasui_session") || "null");
+            } catch (e) {}
+
+            if (!session?.email || !session?.token) return;
+
+            try {
+                const res = await fetch(`/api/user/referral?action=get_dashboard&email=${encodeURIComponent(session.email)}`, {
+                    headers: {
+                        "Authorization": `Bearer ${session.token}`
+                    }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    referralDashboardData = data;
+                    renderReferralUI(data);
+                }
+            } catch (err) {
+                console.warn("[Referral Dashboard] Error loading referral data:", err);
+            }
+        }
+
+        function renderReferralUI(data) {
+            if (!data) return;
+            const profile = data.profile || {};
+            const stats = data.stats || {};
+            const vouchers = data.vouchers || [];
+            const conversions = data.conversions || [];
+
+            // 1. Kartu Referral & Link
+            const codeEl = document.getElementById("ref-display-code");
+            if (codeEl) codeEl.innerText = profile.referralCode || "YASUI";
+
+            const linkEl = document.getElementById("ref-display-link");
+            const fullLink = `${window.location.origin}/categories?ref=${profile.referralCode || ''}`;
+            if (linkEl) linkEl.innerText = fullLink;
+
+            const tierEl = document.getElementById("ref-tier-badge");
+            if (tierEl) {
+                tierEl.innerText = profile.tier === "creator"
+                    ? t("orders.ref_tier_creator", "CREATOR PARTNER")
+                    : t("orders.ref_tier_member", "MEMBER AFILIASI");
+            }
+
+            const discPctEl = document.getElementById("ref-discount-pct");
+            if (discPctEl) discPctEl.innerText = `${profile.discountPercent || 3}%`;
+
+            const commPctEl = document.getElementById("ref-commission-pct");
+            if (commPctEl) commPctEl.innerText = `${profile.commissionPercent || 5}%`;
+
+            // 2. 4 Kartu Metrik
+            const clicksEl = document.getElementById("metric-total-clicks");
+            if (clicksEl) clicksEl.innerText = Number(stats.totalClicks || 0).toLocaleString();
+
+            const ordersEl = document.getElementById("metric-successful-orders");
+            if (ordersEl) ordersEl.innerText = Number(stats.successfulOrders || 0).toLocaleString();
+
+            const pendingEl = document.getElementById("metric-pending-commission");
+            if (pendingEl) pendingEl.innerText = formatMoney(stats.pendingBalanceIdr || 0);
+
+            const availEl = document.getElementById("metric-available-balance");
+            if (availEl) availEl.innerText = formatMoney(stats.availableBalanceIdr || 0);
+
+            // 3. Vouchers
+            const countVouchersEl = document.getElementById("count-vouchers");
+            if (countVouchersEl) countVouchersEl.innerText = vouchers.length;
+
+            const vEmptyState = document.getElementById("vouchers-empty-state");
+            const vContainer = document.getElementById("vouchers-items-container");
+
+            if (vContainer) {
+                if (vouchers.length === 0) {
+                    vContainer.innerHTML = "";
+                    vEmptyState?.classList.remove("hidden");
+                } else {
+                    vEmptyState?.classList.add("hidden");
+                    vContainer.innerHTML = vouchers.map(v => {
+                        const isExpired = v.expiresAt && new Date(v.expiresAt).getTime() < Date.now();
+                        const isExhausted = v.usedCount >= v.maxUses;
+                        const canUse = v.isActive && !isExpired && !isExhausted;
+                        const discFormatted = v.discountType === "percent"
+                            ? `${v.discountValue}%`
+                            : formatMoney(v.discountValue);
+
+                        return `
+                            <div class="flex flex-wrap items-center justify-between gap-3 bg-[#0D0F15] border border-[#222634] p-3.5 rounded-lg text-xs font-mono">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                        <div class="i-lucide-ticket text-sm"></div>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm font-bold text-white tracking-wider">${v.code}</span>
+                                            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${canUse ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-500/40' : 'bg-[#11131A] text-[#64748B] border border-[#222634]'}">
+                                                ${canUse ? 'AKTIF' : (isExpired ? 'KADALUARSA' : 'TERPAKAI')}
+                                            </span>
+                                        </div>
+                                        <div class="text-[11px] text-[#94A3B8] mt-0.5">
+                                            Diskon <span class="text-emerald-400 font-bold">${discFormatted}</span> · Terpakai: ${v.usedCount}/${v.maxUses}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onclick="copyText('${v.code}', 'Kode Voucher')"
+                                        class="px-2.5 py-1.5 rounded bg-[#11131A] hover:bg-[#1A1E29] border border-[#222634] text-[#00E5FF] hover:border-[#00E5FF]/40 text-xs transition flex items-center gap-1.5 cursor-pointer"
+                                    >
+                                        <div class="i-lucide-copy text-xs"></div>
+                                        <span>Salin Voucher</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join("");
+                }
+            }
+
+            // 4. Conversions
+            const countConvEl = document.getElementById("count-conversions");
+            if (countConvEl) countConvEl.innerText = conversions.length;
+
+            const cEmptyState = document.getElementById("conversions-empty-state");
+            const cTable = document.getElementById("conversions-table-container");
+            const cTbody = document.getElementById("conversions-tbody");
+
+            if (cTbody) {
+                if (conversions.length === 0) {
+                    cTbody.innerHTML = "";
+                    cTable?.classList.add("hidden");
+                    cEmptyState?.classList.remove("hidden");
+                } else {
+                    cEmptyState?.classList.add("hidden");
+                    cTable?.classList.remove("hidden");
+                    cTbody.innerHTML = conversions.map(c => {
+                        let statusBadge = '';
+                        if (c.status === "approved") {
+                            statusBadge = `<span class="px-2 py-0.5 rounded bg-emerald-950/40 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold">SELESAI</span>`;
+                        } else if (c.status === "rejected") {
+                            statusBadge = `<span class="px-2 py-0.5 rounded bg-red-950/40 text-red-400 border border-red-500/40 text-[10px] font-bold">DITOLAK</span>`;
+                        } else {
+                            statusBadge = `<span class="px-2 py-0.5 rounded bg-amber-950/40 text-amber-400 border border-amber-500/40 text-[10px] font-bold">TERTUNDA</span>`;
+                        }
+
+                        return `
+                            <tr class="hover:bg-[#0D0F15]/60 transition">
+                                <td class="py-2.5 px-3 text-[#94A3B8] whitespace-nowrap">${formatDate(c.createdAt)}</td>
+                                <td class="py-2.5 px-3 text-[#00E5FF] font-bold whitespace-nowrap">#${c.orderId}</td>
+                                <td class="py-2.5 px-3 text-white truncate max-w-[120px]">${c.buyerMasked || 'Buyer'}</td>
+                                <td class="py-2.5 px-3 text-white whitespace-nowrap">${formatMoney(c.orderTotalIdr)}</td>
+                                <td class="py-2.5 px-3 text-emerald-400 font-bold whitespace-nowrap">+${formatMoney(c.commissionAmountIdr)}</td>
+                                <td class="py-2.5 px-3 whitespace-nowrap">${statusBadge}</td>
+                            </tr>
+                        `;
+                    }).join("");
+                }
+            }
+        }
+
+        window.copyReferralCode = () => {
+            const code = referralDashboardData?.profile?.referralCode;
+            if (!code) {
+                showToast("Kode referral belum siap.");
+                return;
+            }
+            window.copyText(code, "Kode referral");
+        };
+
+        window.copyReferralLink = () => {
+            const code = referralDashboardData?.profile?.referralCode;
+            if (!code) {
+                showToast("Link referral belum siap.");
+                return;
+            }
+            const fullLink = `${window.location.origin}/categories?ref=${code}`;
+            window.copyText(fullLink, "Link afiliasi");
+        };
+
+        window.setConvertAmount = (amount) => {
+            const input = document.getElementById("convert-voucher-amount");
+            if (input) input.value = amount;
+        };
+
+        window.setConvertAmountMax = () => {
+            const input = document.getElementById("convert-voucher-amount");
+            const avail = referralDashboardData?.profile?.availableBalanceIdr || 0;
+            if (input) input.value = avail;
+        };
+
+        window.handleConvertVoucher = async () => {
+            const input = document.getElementById("convert-voucher-amount");
+            const btn = document.getElementById("btn-convert-voucher");
+            const resultBox = document.getElementById("convert-voucher-result");
+            const amount = Number(input?.value) || 0;
+
+            if (amount < 5000) {
+                if (resultBox) {
+                    resultBox.className = "mb-4 p-3 rounded-lg text-xs font-mono border bg-amber-950/40 border-amber-500/40 text-amber-400 block";
+                    resultBox.innerText = "Nominal konversi minimal adalah Rp 5.000.";
+                }
+                return;
+            }
+
+            let session = null;
+            try {
+                session = typeof window.getSession === "function" ? window.getSession() : JSON.parse(localStorage.getItem("yasui_session") || "null");
+            } catch (e) {}
+
+            if (!session?.email || !session?.token) {
+                showToast("Sesi tidak ditemukan. Silakan login kembali.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="i-lucide-loader-2 text-xs animate-spin"></div> <span>Memproses...</span>`;
+
+            try {
+                const res = await fetch("/api/user/referral", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${session.token}`
+                    },
+                    body: JSON.stringify({
+                        action: "convert_to_voucher",
+                        email: session.email,
+                        token: session.token,
+                        amount: amount
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || "Gagal mengonversi saldo menjadi voucher.");
+                }
+
+                if (resultBox) {
+                    resultBox.className = "mb-4 p-3.5 rounded-lg text-xs font-mono border bg-emerald-950/40 border-emerald-500/40 text-emerald-300 block space-y-2";
+                    resultBox.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold flex items-center gap-1.5 text-emerald-400">
+                                <div class="i-lucide-check-circle text-sm"></div> ${t("orders.ref_convert_success", "Voucher berhasil diterbitkan!")}
+                            </span>
+                            <button
+                                type="button"
+                                onclick="copyText('${data.voucher.code}', 'Kode Voucher')"
+                                class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-[10px] font-bold cursor-pointer"
+                            >
+                                Salin
+                            </button>
+                        </div>
+                        <div class="text-sm font-bold text-white tracking-wider bg-[#0D0F15] p-2 rounded border border-[#222634] text-center">
+                            ${data.voucher.code}
+                        </div>
+                        <div class="text-[11px] text-[#94A3B8]">
+                            Potongan <b class="text-emerald-400">${formatMoney(data.voucher.discount_value || amount)}</b> · Gunakan kode ini langsung di halaman checkout!
+                        </div>
+                    `;
+                }
+
+                input.value = "";
+                await loadReferralDashboardData(true);
+            } catch (err) {
+                if (resultBox) {
+                    resultBox.className = "mb-4 p-3 rounded-lg text-xs font-mono border bg-red-950/40 border-red-500/40 text-red-400 block";
+                    resultBox.innerText = err.message;
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<div class="i-lucide-zap text-xs"></div> <span>${t("orders.ref_convert_btn", "Tukar Jadi Voucher")}</span>`;
+            }
+        };
+
+        window.handleRequestPayout = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("btn-submit-payout");
+            const resultBox = document.getElementById("payout-result");
+            const method = document.getElementById("payout-method")?.value || "USDT";
+            const amount = Number(document.getElementById("payout-amount")?.value) || 0;
+            const account = document.getElementById("payout-account")?.value?.trim() || "";
+            const holder = document.getElementById("payout-holder")?.value?.trim() || "";
+
+            if (amount < 50000) {
+                if (resultBox) {
+                    resultBox.className = "mb-4 p-3 rounded-lg text-xs font-mono border bg-amber-950/40 border-amber-500/40 text-amber-400 block";
+                    resultBox.innerText = "Minimal penarikan saldo adalah Rp 50.000.";
+                }
+                return;
+            }
+
+            let session = null;
+            try {
+                session = typeof window.getSession === "function" ? window.getSession() : JSON.parse(localStorage.getItem("yasui_session") || "null");
+            } catch (e) {}
+
+            if (!session?.email || !session?.token) {
+                showToast("Sesi tidak ditemukan. Silakan login kembali.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="i-lucide-loader-2 text-xs animate-spin"></div> <span>Mengajukan...</span>`;
+
+            try {
+                const res = await fetch("/api/user/referral", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${session.token}`
+                    },
+                    body: JSON.stringify({
+                        action: "request_payout",
+                        email: session.email,
+                        token: session.token,
+                        amount: amount,
+                        payoutMethod: method,
+                        destinationAccount: account,
+                        accountName: holder
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    throw new Error(data.error || "Gagal mengajukan permohonan penarikan saldo.");
+                }
+
+                if (resultBox) {
+                    resultBox.className = "mb-4 p-3 rounded-lg text-xs font-mono border bg-emerald-950/40 border-emerald-500/40 text-emerald-300 block";
+                    resultBox.innerHTML = `
+                        <div class="flex items-center gap-1.5 font-bold mb-1">
+                            <div class="i-lucide-check-circle text-sm text-emerald-400"></div>
+                            <span>${t("orders.ref_payout_success", "Permintaan pencairan berhasil diajukan!")}</span>
+                        </div>
+                        <div class="text-[11px] text-[#94A3B8]">
+                            ID Tiket: #${data.payout?.id || 'PO-REQ'} · Admin Finance kami akan mentransfer dana dalam 1x24 jam kerja.
+                        </div>
+                    `;
+                }
+
+                document.getElementById("payout-form")?.reset();
+                await loadReferralDashboardData(true);
+            } catch (err) {
+                if (resultBox) {
+                    resultBox.className = "mb-4 p-3 rounded-lg text-xs font-mono border bg-red-950/40 border-red-500/40 text-red-400 block";
+                    resultBox.innerText = err.message;
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<div class="i-lucide-send text-xs"></div> <span>${t("orders.ref_payout_btn", "Ajukan Pencairan")}</span>`;
+            }
+        };
 
         function checkAndLoadAuth() {
             let session = null;
@@ -683,9 +1466,14 @@ import Layout from "../layouts/Layout.astro";
         document.addEventListener("yasui-auth-changed", checkAndLoadAuth);
         window.addEventListener("yasui-currency-change", () => {
             if (allOrdersData && allOrdersData.length > 0) renderOrders();
+            if (referralDashboardData) renderReferralUI(referralDashboardData);
         });
         window.addEventListener("yasui-lang-change", () => {
+            if (typeof window.applyTranslations === "function") {
+                window.applyTranslations(document);
+            }
             if (allOrdersData && allOrdersData.length > 0) renderOrders();
+            if (referralDashboardData) renderReferralUI(referralDashboardData);
         });
     </script>
 
@@ -698,7 +1486,7 @@ import Layout from "../layouts/Layout.astro";
                             <div class="i-lucide-user-cog text-sm"></div>
                         </div>
                         <div>
-                            <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono">Set Account Hive ID</h3>
+                            <h3 class="text-sm font-bold text-white uppercase tracking-wider font-mono" data-i18n="sw.modal_title">Set Account Hive ID</h3>
                             <p class="text-[10px] text-[#64748B] font-mono">Order <span id="sw-order-number" class="text-[#00E5FF]">#-</span> · Summoners War</p>
                         </div>
                     </div>
@@ -712,12 +1500,12 @@ import Layout from "../layouts/Layout.astro";
 
                     <p class="text-[11px] text-[#94A3B8] leading-relaxed bg-[#0D0F15] border border-[#222634] rounded-lg p-3">
                         <span class="i-lucide-info inline-block align-[-2px] mr-1 text-[#00E5FF]"></span>
-                        Masukkan <b class="text-[#F8FAFC]">3 opsi username</b> Hive (Opsi 1 wajib; opsi berikutnya dicoba otomatis jika ditolak) dan 1 password. Akun Anda <b class="text-[#00E5FF]">sudah diamankan</b> — tidak perlu terburu-buru.
+                        <span data-i18n="sw.info_notice">Masukkan 3 opsi username Hive (Opsi 1 wajib; opsi berikutnya dicoba otomatis jika ditolak) dan 1 password. Akun Anda sudah diamankan — tidak perlu terburu-buru.</span>
                     </p>
 
                     <div>
                         <label class="block text-[10px] font-bold text-[#F8FAFC] uppercase tracking-wider mb-1.5 font-mono">
-                            Username Hive — Opsi 1 <span class="text-red-400">*</span>
+                            <span data-i18n="sw.u1_label">Username Hive — Opsi 1</span> <span class="text-red-400">*</span>
                         </label>
                         <input type="text" id="sw-u1" required autocomplete="off" placeholder="mis. yasuiplayer01"
                             class="sw-u-input yg-input" />
@@ -726,14 +1514,14 @@ import Layout from "../layouts/Layout.astro";
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono">Opsi 2 (cadangan)</label>
-                            <input type="text" id="sw-u2" autocomplete="off" placeholder="opsional"
+                            <label class="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono" data-i18n="sw.u2_label">Opsi 2 (cadangan)</label>
+                            <input type="text" id="sw-u2" autocomplete="off" placeholder="opsional" data-i18n-placeholder="sw.optional"
                                 class="sw-u-input yg-input" />
                             <p class="sw-hint text-[10px] mt-1 text-[#64748B] font-mono hidden"></p>
                         </div>
                         <div>
-                            <label class="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono">Opsi 3 (cadangan)</label>
-                            <input type="text" id="sw-u3" autocomplete="off" placeholder="opsional"
+                            <label class="block text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider mb-1.5 font-mono" data-i18n="sw.u3_label">Opsi 3 (cadangan)</label>
+                            <input type="text" id="sw-u3" autocomplete="off" placeholder="opsional" data-i18n-placeholder="sw.optional"
                                 class="sw-u-input yg-input" />
                             <p class="sw-hint text-[10px] mt-1 text-[#64748B] font-mono hidden"></p>
                         </div>
@@ -741,10 +1529,10 @@ import Layout from "../layouts/Layout.astro";
 
                     <div>
                         <label class="block text-[10px] font-bold text-[#F8FAFC] uppercase tracking-wider mb-1.5 font-mono">
-                            Password Hive <span class="text-red-400">*</span>
+                            <span data-i18n="sw.pass_label">Password Hive</span> <span class="text-red-400">*</span>
                         </label>
                         <div class="relative">
-                            <input type="password" id="sw-pass" required autocomplete="new-password" placeholder="min 9 karakter, ada angka & simbol"
+                            <input type="password" id="sw-pass" required autocomplete="new-password" placeholder="min 9 karakter, ada angka & simbol" data-i18n-placeholder="sw.pass_placeholder"
                                 class="yg-input pr-10" />
                             <button type="button" id="sw-pass-toggle" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-[#00E5FF] transition" aria-label="Tampilkan password">
                                 <div class="i-lucide-eye text-sm"></div>
@@ -753,14 +1541,14 @@ import Layout from "../layouts/Layout.astro";
                         <p id="sw-pass-hint" class="text-[10px] mt-1 text-[#64748B] font-mono hidden"></p>
                     </div>
 
-                    <div class="text-[10px] text-[#64748B] leading-relaxed border-t border-[#222634] pt-3">
+                    <div class="text-[10px] text-[#64748B] leading-relaxed border-t border-[#222634] pt-3" data-i18n="sw.check_hint">
                         <b class="text-[#94A3B8]">Cek ketersediaan username:</b> gunakan fitur <i>Forgot Password</i> di dalam game — jika muncul "ID tidak ditemukan", berarti username bisa dipakai.
                     </div>
 
                     <button type="submit" id="sw-submit" disabled
                         class="yg-btn-primary w-full text-xs py-3 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                         <div class="i-lucide-send text-xs"></div>
-                        <span>Kirim & Mulai Set Akun</span>
+                        <span data-i18n="sw.submit_btn">Kirim & Mulai Set Akun</span>
                     </button>
                 </form>
             </div>

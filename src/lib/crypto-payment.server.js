@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { supabaseAdmin, isSupabaseConfigured } from "./supabase.server.js";
 import { sendTelegramMessage } from "./telegram.server.js";
+import { IDR_TO_USD_RATE } from "./price.js";
 
 // Guard: Modul ini hanya boleh dijalankan di server-side context (Node.js / SSR Astro)
 if (import.meta.env && import.meta.env.SSR === false) {
@@ -55,7 +56,7 @@ export const POLYGON_RPC_URLS = [
 ];
 
 export const TRONGRID_API_URL = getEnv("TRONGRID_API_URL", "https://api.trongrid.io").replace(/\/+$/, "");
-export const CRYPTO_USD_RATE = Number(getEnv("CRYPTO_USD_RATE", "16000")) || 16000;
+export const CRYPTO_USD_RATE = Number(getEnv("CRYPTO_USD_RATE", String(IDR_TO_USD_RATE))) || IDR_TO_USD_RATE;
 
 // Topic 0 Event ERC-20 Transfer(address,address,uint256)
 const ERC20_TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";

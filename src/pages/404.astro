@@ -1,0 +1,122 @@
+---
+// src/pages/404.astro
+import Layout from "../layouts/Layout.astro";
+
+export const prerender = false;
+---
+
+<Layout
+    title="404 - Target Not Found | Yasui Game"
+    description="Sektor atau halaman yang Anda tuju tidak ditemukan pada database server Yasui Game."
+    noindex={true}
+>
+    <main class="yg-shell min-h-[75vh] flex items-center justify-center py-12 md:py-20">
+        <div class="max-w-2xl w-full mx-auto text-center space-y-8">
+            <!-- Tactical Status Header -->
+            <div class="space-y-4">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-mono tracking-widest uppercase">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                    <span data-i18n="error404.badge">ERROR CODE // 404</span>
+                </div>
+
+                <div class="space-y-1">
+                    <h1 class="text-6xl sm:text-8xl font-black font-mono tracking-tighter text-[#F8FAFC] select-none tabular-nums">
+                        4<span class="text-[#00E5FF]">0</span>4
+                    </h1>
+                    <p class="text-sm sm:text-base font-bold font-mono tracking-widest text-[#00E5FF] uppercase" data-i18n="error404.title">
+                        TARGET NOT FOUND
+                    </p>
+                </div>
+
+                <p class="max-w-lg mx-auto text-xs sm:text-sm text-[#94A3B8] leading-relaxed" data-i18n="error404.desc">
+                    Sektor atau halaman yang Anda tuju tidak ditemukan, telah dipindahkan, atau mengalami perpindahan frekuensi transmisi.
+                </p>
+            </div>
+
+            <!-- Quick Search Bar -->
+            <div class="max-w-md mx-auto">
+                <form action="/search" method="GET" class="relative flex items-center">
+                    <div class="absolute left-3.5 text-[#64748B] pointer-events-none">
+                        <div class="i-lucide-search text-base"></div>
+                    </div>
+                    <input
+                        type="text"
+                        name="q"
+                        class="yg-input w-full pl-10 pr-24 py-3 text-xs sm:text-sm placeholder-[#64748B]"
+                        placeholder="Cari game, monster SW, fruit, atau produk..."
+                        data-i18n-placeholder="error404.search_placeholder"
+                        autocomplete="off"
+                        required
+                    />
+                    <button
+                        type="submit"
+                        class="yg-btn-primary absolute right-1.5 top-1.5 bottom-1.5 px-4 text-xs font-mono font-bold tracking-wider uppercase flex items-center gap-1.5"
+                    >
+                        <span data-i18n="error404.search_btn">Cari</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Tactical Shortcuts Navigation -->
+            <div class="pt-4 space-y-3">
+                <p class="text-[11px] font-mono text-[#64748B] uppercase tracking-wider" data-i18n="error404.shortcuts_title">
+                    Rute Pintas Taktis:
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 max-w-2xl mx-auto">
+                    <a
+                        href="/categories#roblox"
+                        class="yg-card yg-card-interactive p-3.5 text-left flex items-center sm:flex-col sm:items-start gap-3 group transition-colors"
+                    >
+                        <div class="w-8 h-8 rounded bg-[#161922] border border-[#222634] flex items-center justify-center text-[#00E5FF] group-hover:border-[#00E5FF]/40 shrink-0">
+                            <div class="i-lucide-box text-base"></div>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors" data-i18n="error404.btn_roblox">Roblox Games Area</span>
+                            <span class="block text-[10px] text-[#64748B] font-mono">Blox Fruits & Gamepass</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="/category/summoners-war-sky-arena"
+                        class="yg-card yg-card-interactive p-3.5 text-left flex items-center sm:flex-col sm:items-start gap-3 group transition-colors"
+                    >
+                        <div class="w-8 h-8 rounded bg-[#161922] border border-[#222634] flex items-center justify-center text-amber-400 group-hover:border-amber-400/40 shrink-0">
+                            <div class="i-lucide-swords text-base"></div>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-[#F8FAFC] group-hover:text-amber-400 transition-colors" data-i18n="error404.btn_sw">Summoners War</span>
+                            <span class="block text-[10px] text-[#64748B] font-mono">Starter LD5 & Blessing</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="/categories"
+                        class="yg-card yg-card-interactive p-3.5 text-left flex items-center sm:flex-col sm:items-start gap-3 group transition-colors"
+                    >
+                        <div class="w-8 h-8 rounded bg-[#161922] border border-[#222634] flex items-center justify-center text-emerald-400 group-hover:border-emerald-400/40 shrink-0">
+                            <div class="i-lucide-grid text-base"></div>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-[#F8FAFC] group-hover:text-emerald-400 transition-colors" data-i18n="error404.btn_catalog">Semua Katalog</span>
+                            <span class="block text-[10px] text-[#64748B] font-mono">Seluruh Semesta Game</span>
+                        </div>
+                    </a>
+
+                    <a
+                        href="/"
+                        class="yg-card yg-card-interactive p-3.5 text-left flex items-center sm:flex-col sm:items-start gap-3 group transition-colors"
+                    >
+                        <div class="w-8 h-8 rounded bg-[#161922] border border-[#222634] flex items-center justify-center text-[#F8FAFC] group-hover:border-[#00E5FF]/40 shrink-0">
+                            <div class="i-lucide-home text-base"></div>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-[#F8FAFC] group-hover:text-[#00E5FF] transition-colors" data-i18n="error404.btn_home">Kembali ke Beranda</span>
+                            <span class="block text-[10px] text-[#64748B] font-mono">Pusat Operasi Yasui</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>

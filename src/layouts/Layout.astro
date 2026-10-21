@@ -6,12 +6,22 @@ import "../styles/global.css";
 interface Props {
 	title: string;
 	description?: string;
+	ogImage?: string;
+	ogType?: "website" | "product";
+	canonicalUrl?: string;
+	noindex?: boolean;
+	jsonLd?: Record<string, any> | Array<Record<string, any>> | null;
 	showFooter?: boolean;
 }
 
 const {
 	title,
 	description = "Yasui Game - Marketplace Game RMT Premium, Pengiriman Instan, Aman, dan Bergaransi 100%.",
+	ogImage,
+	ogType = "website",
+	canonicalUrl,
+	noindex = false,
+	jsonLd = null,
 	showFooter = true,
 } = Astro.props;
 
@@ -39,6 +49,22 @@ const shouldShowFooter = showFooter && !isCart && !isCheckout;
 
 const publicSupabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
 const publicSupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
+
+// SEO Calculations & OpenGraph Image Resolution
+const SITE_URL = "https://yasuigame.com";
+const resolvedCanonical = canonicalUrl || new URL(pathname, SITE_URL).href;
+const DEFAULT_OG_IMAGE = "https://admin.yasuigame.com/wp-content/uploads/2026/01/Gaming-Global-Market-scaled.png";
+
+let resolvedOgImage = DEFAULT_OG_IMAGE;
+if (ogImage) {
+	if (ogImage.startsWith("http://") || ogImage.startsWith("https://")) {
+		resolvedOgImage = ogImage;
+	} else if (ogImage.startsWith("/")) {
+		resolvedOgImage = `${SITE_URL}${ogImage}`;
+	} else {
+		resolvedOgImage = `${SITE_URL}/${ogImage}`;
+	}
+}
 ---
 
 <!doctype html>
@@ -49,7 +75,40 @@ const publicSupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<link rel="canonical" href={resolvedCanonical} />
 		<meta name="theme-color" content="#090A0F" />
+
+		<!-- Crawler Directives -->
+		{noindex ? (
+			<meta name="robots" content="noindex, nofollow" />
+			<meta name="googlebot" content="noindex, nofollow" />
+		) : (
+			<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+			<meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+		)}
+
+		<!-- OpenGraph / Social Embed Cards -->
+		<meta property="og:site_name" content="Yasui Game" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={resolvedCanonical} />
+		<meta property="og:type" content={ogType} />
+		<meta property="og:image" content={resolvedOgImage} />
+		<meta property="og:image:alt" content={title} />
+		<meta property="og:locale" content={serverDefaultLang === "id" ? "id_ID" : "en_US"} />
+		<meta property="og:locale:alternate" content={serverDefaultLang === "id" ? "en_US" : "id_ID"} />
+
+		<!-- Twitter Summary Cards -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={resolvedOgImage} />
+
+		<!-- JSON-LD Structured Data -->
+		{jsonLd && (
+			<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+		)}
+
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -80,6 +139,32 @@ const publicSupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 					document.documentElement.lang = storedLang;
 					window.__YASUI_INITIAL_LANG__ = storedLang;
 					window.__YASUI_INITIAL_CURR__ = storedCurr;
+
+					// Pelacakan Kode Referral (?ref=KODE) - Simpan selama 30 Hari
+					var urlParams = new URLSearchParams(window.location.search);
+					var refParam = urlParams.get("ref");
+					if (refParam && typeof refParam === "string") {
+						var cleanRef = refParam.trim().toUpperCase().replace(/^#+/, "");
+						if (cleanRef.length >= 3 && cleanRef.length <= 32) {
+							localStorage.setItem("yasui_ref_code", cleanRef);
+							localStorage.setItem("yasui_ref_time", String(Date.now()));
+							// Kirim beacon pencatatan klik (fire and forget)
+							try {
+								fetch("/api/user/referral", {
+									method: "POST",
+									headers: { "Content-Type": "application/json" },
+									body: JSON.stringify({ action: "track_click", referralCode: cleanRef })
+								}).catch(function () {});
+							} catch (e) {}
+						}
+					} else {
+						// Periksa kadaluarsa referral code (30 hari = 2592000000 ms)
+						var refTime = parseInt(localStorage.getItem("yasui_ref_time") || "0", 10);
+						if (refTime && (Date.now() - refTime > 30 * 24 * 60 * 60 * 1000)) {
+							localStorage.removeItem("yasui_ref_code");
+							localStorage.removeItem("yasui_ref_time");
+						}
+					}
 				} catch (e) {}
 			})();
 		</script>
@@ -925,7 +1010,9 @@ const publicSupabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 				supabaseAnonKey: publicSupabaseAnonKey
 			};
 
-			// Immediate zero-delay fallbacks to guarantee navbar buttons respond instantly without waiting for async bundles
+			// Immediate zero-delay fallbacks to guarantee navbar buttons & helpers respond instantly
+			window.t = window.t || function (k, fb) { return fb !== undefined ? fb : k; };
+			window.applyTranslations = window.applyTranslations || function () {};
 			window.openLiveChatModal = window.openLiveChatModal || function () {
 				var modal = document.getElementById("global-livechat-modal");
 				if (modal) { modal.classList.remove("hidden"); modal.classList.add("flex"); modal.setAttribute("aria-hidden", "false"); }

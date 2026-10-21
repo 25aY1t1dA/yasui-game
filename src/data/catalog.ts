@@ -103,7 +103,7 @@ export const ROBLOX_SPOTLIGHT_GAMES: CatalogGameItem[] = [
         slug: "adopt-me",
         ecosystem: "roblox",
         badge: "POPULAR",
-        image: "https://tr.rbxcdn.com/180DAY-09559c55b6efc687e83e580eecff353d/512/512/Image/Png/noFilter",
+        image: "https://tr.rbxcdn.com/180DAY-fd05afa91e29a7895178342064489a36/512/512/Image/Png/noFilter",
         subCategories: [
             { name: "Pet", slug: "adopt-me-pet", isHot: true },
             { name: "Item", slug: "adopt-me-item" },
@@ -131,7 +131,7 @@ export const ROBLOX_SPOTLIGHT_GAMES: CatalogGameItem[] = [
         slug: "99-nights-in-the-forest",
         ecosystem: "roblox",
         badge: "POPULAR",
-        image: "https://tr.rbxcdn.com/180DAY-4d1a5113db1b74a3f4b46c65d64c12bb/512/512/Image/Png/noFilter",
+        image: "https://tr.rbxcdn.com/180DAY-384fc6072a05d56c9885b3a612f8e981/512/512/Image/Png/noFilter",
         subCategories: [
             { name: "Akun", slug: "99-nights-in-the-forest-akun", isHot: true },
             { name: "Joki", slug: "99-nights-in-the-forest-joki" }
@@ -143,7 +143,7 @@ export const ROBLOX_SPOTLIGHT_GAMES: CatalogGameItem[] = [
         slug: "fisch",
         ecosystem: "roblox",
         badge: "TOP HIT",
-        image: "https://tr.rbxcdn.com/180DAY-ea86aa8fefc5861491cf2366b553c07e/512/512/Image/Png/noFilter",
+        image: "https://tr.rbxcdn.com/180DAY-1874915760d886df6bbc35fa96639c7e/512/512/Image/Png/noFilter",
         subCategories: [
             { name: "Fish", slug: "fisch-fish", isHot: true },
             { name: "Gamepass", slug: "fisch-gamepass" },
@@ -158,7 +158,7 @@ export const ROBLOX_SPOTLIGHT_GAMES: CatalogGameItem[] = [
         slug: "anime-defenders",
         ecosystem: "roblox",
         badge: "POPULAR",
-        image: "https://tr.rbxcdn.com/180DAY-511bb587e22137ecb580321586a1170a/512/512/Image/Png/noFilter",
+        image: "https://tr.rbxcdn.com/180DAY-2ef69e4e4d0be01a2b12ecb16536d54f/512/512/Image/Png/noFilter",
         subCategories: [
             { name: "Unit", slug: "anime-defenders-unit", isHot: true },
             { name: "Trait Crystal", slug: "anime-defenders-item" },

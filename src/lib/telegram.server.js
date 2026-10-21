@@ -329,3 +329,141 @@ ${statusBadge}
         message_thread_id: topicId || null
     });
 }
+
+/**
+ * Mengirim notifikasi instan pesanan lunas ke Grup Telegram Admin
+ * @param {object} orderData - Data pesanan WooCommerce lengkap
+ * @param {string|object} paymentMethod - Deskripsi metode pembayaran atau objek detail crypto
+ */
+export async function sendOrderAlertToTelegram(orderData, paymentMethod) {
+    if (!orderData || !orderData.id) return { ok: false, reason: "invalid_order" };
+    if (!isTelegramConfigured()) {
+        console.info("[Telegram Server] Telegram order alert skipped (not configured)");
+        return { ok: false, reason: "not_configured" };
+    }
+
+    const adminChatId = getTelegramAdminChatId();
+    if (!adminChatId) return { ok: false, reason: "admin_chat_id_not_configured" };
+
+    const orderId = orderData.id;
+    const meta = orderData.meta_data || [];
+    const findMeta = (k) => meta.find(m => m.key === k)?.value;
+
+    // Kontak Pembeli
+    const buyerName = `${orderData.billing?.first_name || ""} ${orderData.billing?.last_name || ""}`.trim() || orderData.billing?.first_name || "Buyer";
+    const buyerEmail = orderData.billing?.email || "-";
+    const buyerWa = findMeta("_buyer_wa") || orderData.billing?.phone || "-";
+    const buyerDiscord = findMeta("_buyer_discord") || "-";
+
+    // Format Metode Pembayaran & TxHash
+    let paymentTitle = "";
+    let txHashBlock = "";
+    if (typeof paymentMethod === "object" && paymentMethod !== null) {
+        paymentTitle = paymentMethod.method || "Crypto Payment";
+        if (paymentMethod.txHash) {
+            const explorer = paymentMethod.explorerLink ? `\n👉 <a href="${paymentMethod.explorerLink}">Lihat di Blockchain Explorer</a>` : "";
+            txHashBlock = `\n🔗 <b>TxHash (Blockchain):</b>\n<code>${escapeTgHtml(paymentMethod.txHash)}</code>${explorer}`;
+        }
+        if (paymentMethod.actualAmount && paymentMethod.token) {
+            paymentTitle += ` (<code>${paymentMethod.actualAmount} ${paymentMethod.token}</code>)`;
+        }
+    } else {
+        paymentTitle = String(paymentMethod || orderData.payment_method_title || "Direct Payment");
+    }
+
+    // Format Line Items & Sub Kategori
+    const lineItems = orderData.line_items || [];
+    const itemLines = [];
+    lineItems.forEach(item => {
+        const itemMeta = item.meta_data || [];
+        const findItemMeta = (k) => itemMeta.find(m => m.key === k)?.value;
+        const subCat = findItemMeta("Sub Kategori") || findItemMeta("mode") || "";
+        const variant = findItemMeta("Varian") || "";
+        const extraTags = [];
+        if (subCat) extraTags.push(subCat);
+        if (variant) extraTags.push(variant);
+        const tagStr = extraTags.length > 0 ? ` [${extraTags.join(" / ")}]` : "";
+        itemLines.push(`• <b>${escapeTgHtml(item.name)}</b> (${item.quantity}x)${escapeTgHtml(tagStr)}`);
+    });
+    const itemsSummary = itemLines.length > 0 ? itemLines.join("\n") : "• Digital Item (1x)";
+
+    // Format Data Target Pengiriman
+    const targetDetailsRaw = findMeta("_order_target_details");
+    let targetDetails = [];
+    if (targetDetailsRaw) {
+        try {
+            targetDetails = typeof targetDetailsRaw === "string" ? JSON.parse(targetDetailsRaw) : targetDetailsRaw;
+        } catch (e) {}
+    }
+
+    const targetLines = [];
+    if (Array.isArray(targetDetails) && targetDetails.length > 0) {
+        targetDetails.forEach(t => {
+            const parts = [];
+            if (t.robloxUsername) parts.push(`@<b>${escapeTgHtml(t.robloxUsername)}</b> (Roblox)`);
+            if (t.deliveryMethod) parts.push(`Metode: ${escapeTgHtml(t.deliveryMethod)}`);
+            if (t.gameUid) parts.push(`UID: <code>${escapeTgHtml(t.gameUid)}</code>${t.gameZone ? ` (${escapeTgHtml(t.gameZone)})` : ""}`);
+            if (t.inGameNickname) parts.push(`Nick: ${escapeTgHtml(t.inGameNickname)}`);
+            if (t.gamepassTaxCalc?.requiredGamepassPrice) parts.push(`Set Price: ${t.gamepassTaxCalc.requiredGamepassPrice} Robux`);
+            if (parts.length > 0) {
+                targetLines.push(`• <b>${escapeTgHtml(t.productName || "Item")}:</b> ${parts.join(" • ")}`);
+            }
+        });
+    }
+
+    // Fallback target lines jika array kosong: cek item meta atau customer_note
+    if (targetLines.length === 0) {
+        lineItems.forEach(item => {
+            const itemMeta = item.meta_data || [];
+            const findItemMeta = (k) => itemMeta.find(m => m.key === k)?.value;
+            const robloxUser = findItemMeta("Roblox Username");
+            const delMethod = findItemMeta("Metode Pengiriman");
+            const uid = findItemMeta("UID Game");
+            const zone = findItemMeta("Zone / Server ID");
+            const nick = findItemMeta("In-Game Nickname");
+            const parts = [];
+            if (robloxUser) parts.push(`@<b>${escapeTgHtml(robloxUser)}</b>`);
+            if (delMethod) parts.push(`Metode: ${escapeTgHtml(delMethod)}`);
+            if (uid) parts.push(`UID: <code>${escapeTgHtml(uid)}</code>${zone ? ` (${escapeTgHtml(zone)})` : ""}`);
+            if (nick) parts.push(`Nick: ${escapeTgHtml(nick)}`);
+            if (parts.length > 0) {
+                targetLines.push(`• <b>${escapeTgHtml(item.name)}:</b> ${parts.join(" • ")}`);
+            }
+        });
+    }
+
+    let targetSection = "";
+    if (targetLines.length > 0) {
+        targetSection = targetLines.join("\n");
+    } else if (orderData.customer_note) {
+        targetSection = `<code>${escapeTgHtml(orderData.customer_note)}</code>`;
+    } else {
+        targetSection = `• Serah Terima Akun Otomatis via Email: <code>${escapeTgHtml(buyerEmail)}</code>`;
+    }
+
+    const formattedTotal = `Rp ${Number(orderData.total || 0).toLocaleString("id-ID")}`;
+
+    const messageBody = `
+💰 <b>PESANAN LUNAS #ORDER_${orderId}</b>
+━━━━━━━━━━━━━━━━━━━━━
+🧾 <b>Invoice:</b> <code>#${orderId}</code>
+💳 <b>Metode Bayar:</b> ${paymentTitle}${txHashBlock}
+💵 <b>Total Tagihan:</b> <code>${formattedTotal}</code>
+
+📦 <b>Daftar Item & Kategori:</b>
+${itemsSummary}
+
+🎯 <b>Data Target Pengiriman:</b>
+${targetSection}
+
+👤 <b>Kontak Pembeli:</b>
+• <b>Nama:</b> ${escapeTgHtml(buyerName)}
+• <b>WhatsApp:</b> <code>${escapeTgHtml(buyerWa)}</code>
+• <b>Discord:</b> <code>${escapeTgHtml(buyerDiscord)}</code>
+• <b>Email:</b> <code>${escapeTgHtml(buyerEmail)}</code>
+━━━━━━━━━━━━━━━━━━━━━
+⚡ <i>Pembayaran diverifikasi lunas! Segera lakukan pengiriman pesanan ke pembeli.</i>
+`.trim();
+
+    return sendTelegramMessage(adminChatId, messageBody, { parse_mode: "HTML" });
+}

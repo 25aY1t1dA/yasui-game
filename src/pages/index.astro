@@ -13,12 +13,13 @@ const fixImgUrl = (url: string | null) => {
 
 let products: any[] = [];
 let categories: any[] = [];
+let filterCategories: any[] = [];
 let flashSaleProducts: any[] = [];
 let banners: any[] = [];
 let connectionSuccess = false;
 
 try {
-    const rawProducts = await getProducts({ per_page: 30 });
+    const rawProducts = await getProducts({ per_page: 16 });
     products = (rawProducts || []).map(normalizeProduct);
 
     banners = await getBanners();
@@ -34,6 +35,38 @@ try {
             count: c.count,
             image: c.image?.src ? { sourceUrl: c.image.src } : null,
         }));
+
+    const catCountMap = new Map<string, { name: string; slug: string; count: number }>();
+    products.forEach((item) => {
+        (item.categories || []).forEach((c: any) => {
+            const s = (c.slug || "").toLowerCase();
+            if (
+                s &&
+                !s.includes("top-up") &&
+                !s.includes("joki") &&
+                !s.includes("gamepass") &&
+                !s.includes("item") &&
+                !s.includes("currency") &&
+                !s.includes("gems") &&
+                !s.includes("potion") &&
+                !s.includes("lock") &&
+                !s.includes("pet") &&
+                s !== "flash-sale" &&
+                s !== "uncategorized"
+            ) {
+                const cur = catCountMap.get(c.slug);
+                if (cur) {
+                    cur.count++;
+                } else {
+                    catCountMap.set(c.slug, { name: c.name, slug: c.slug, count: 1 });
+                }
+            }
+        });
+    });
+
+    filterCategories = Array.from(catCountMap.values())
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
 
     try {
         const flashSaleCat = await getCategoryBySlug("flash-sale");
@@ -90,9 +123,47 @@ const getBadges = (product: any) => {
 
     return badges;
 };
+
+const homeJsonLd = [
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Yasui Game",
+        alternateName: "YasuiGame RMT Store",
+        url: "https://yasuigame.com",
+        description: "Marketplace Game RMT Premium, Pengiriman Instan, Aman, dan Bergaransi 100%.",
+        potentialAction: {
+            "@type": "SearchAction",
+            target: {
+                "@type": "EntryPoint",
+                urlTemplate: "https://yasuigame.com/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "Yasui Game",
+        url: "https://yasuigame.com",
+        logo: "https://yasuigame.com/favicon.svg",
+        sameAs: [
+            "https://discord.gg/yasuigame"
+        ],
+        contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "Customer Support",
+            availableLanguage: ["Indonesian", "English"]
+        }
+    }
+];
 ---
 
-<Layout title="Yasui Game - High-Trust RMT Marketplace">
+<Layout
+    title="Yasui Game - High-Trust RMT Marketplace"
+    description="Marketplace Game RMT Premium untuk Summoners War: Sky Arena, Roblox Universe, Mobile Legends, dan Akun Game Terverifikasi. Pengiriman Instan & Garansi 100% Anti-Recall."
+    jsonLd={homeJsonLd}
+>
     <main class="yg-shell pt-4 md:pt-6 pb-12">
         <section aria-labelledby="featured-games-title" class="mb-8">
             <div class="flex items-center justify-between mb-3.5">
@@ -349,6 +420,7 @@ const getBadges = (product: any) => {
                                         alt={game.name}
                                         loading="lazy"
                                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                        onerror="this.onerror=null;this.src='/favicon.svg';"
                                     />
                                     <div class="absolute top-1 left-1">
                                         <span class="yg-badge-overlay-online text-[8px] px-1 py-0.1">
@@ -432,21 +504,23 @@ const getBadges = (product: any) => {
                     class="admin-rec-filter active-filter-tab px-3 py-1.5 rounded-md border border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] text-xs transition-colors cursor-pointer shrink-0 font-semibold"
                     data-category="all"
                     data-i18n="home.filter_all"
+                    onclick="window.handleRecCategoryFilter && window.handleRecCategoryFilter('all', this)"
                 >
-                    SEMUA
+                    SEMUA ({products.length})
                 </button>
-                {categories.map((cat) => (
+                {filterCategories.map((cat) => (
                     <button
                         type="button"
                         class="admin-rec-filter px-3 py-1.5 rounded-md border border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#2E3446] text-xs transition-colors cursor-pointer shrink-0"
                         data-category={cat.slug}
+                        onclick={`window.handleRecCategoryFilter && window.handleRecCategoryFilter('${cat.slug}', this)`}
                     >
-                        {cat.name}
+                        {cat.name} ({cat.count})
                     </button>
                 ))}
             </div>
 
-            <div id="admin-rec-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+            <div id="admin-rec-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                 {products.map((item, index) => {
                     const priceVal = parsePrice(item.price);
                     const regularVal = parsePrice(item.regularPrice);
@@ -461,7 +535,7 @@ const getBadges = (product: any) => {
                     return (
                         <a
                             href={`/product/${item.slug}`}
-                            class={`admin-rec-card yg-product-card group flex flex-col justify-between ${index >= 10 ? "hidden" : ""}`}
+                            class={`admin-rec-card yg-product-card group flex flex-col justify-between ${index >= 8 ? "hidden" : ""}`}
                             data-category={itemCatSlugs}
                         >
                             <div>
@@ -553,7 +627,8 @@ const getBadges = (product: any) => {
                 <button
                     id="btn-load-more"
                     type="button"
-                    class="w-full sm:w-auto yg-btn-primary px-5 py-2.5 text-xs"
+                    class="w-full sm:w-auto yg-btn-primary px-5 py-2.5 text-xs flex items-center justify-center gap-2 cursor-pointer"
+                    onclick="window.handleLoadMoreRecProducts && window.handleLoadMoreRecProducts()"
                 >
                     <span class="i-lucide-chevron-down text-sm" aria-hidden="true"></span>
                     <span data-i18n="home.load_more">Muat Lebih Banyak</span>
@@ -561,8 +636,8 @@ const getBadges = (product: any) => {
                 </button>
 
                 <a
-                    href="/search"
-                    class="w-full sm:w-auto yg-btn-secondary px-5 py-2.5 text-xs"
+                    href="/categories"
+                    class="w-full sm:w-auto yg-btn-secondary px-5 py-2.5 text-xs flex items-center justify-center gap-2"
                 >
                     <span data-i18n="home.explore_all">Jelajahi Semua Produk</span>
                     <span class="i-lucide-arrow-right text-xs" aria-hidden="true"></span>
@@ -630,7 +705,7 @@ const getBadges = (product: any) => {
 
                 if (!cards.length) return;
 
-                const BATCH_SIZE = 10;
+                const BATCH_SIZE = 8;
                 let currentCategory = "all";
                 let visibleCount = BATCH_SIZE;
 
@@ -657,29 +732,43 @@ const getBadges = (product: any) => {
                     const remaining = Math.max(0, matchingCards.length - visibleCount);
                     if (loadMoreBtn) {
                         if (remaining > 0) {
+                            loadMoreBtn.style.display = "";
                             loadMoreBtn.classList.remove("hidden");
                             if (counterSpan) counterSpan.innerText = `+${Math.min(remaining, BATCH_SIZE)}`;
                         } else {
+                            loadMoreBtn.style.display = "none";
                             loadMoreBtn.classList.add("hidden");
                         }
                     }
                 }
 
-                loadMoreBtn?.addEventListener("click", () => {
+                (window as any).handleLoadMoreRecProducts = () => {
                     visibleCount += BATCH_SIZE;
                     updateDisplay();
+                };
+
+                (window as any).handleRecCategoryFilter = (catSlug: string, btnEl?: HTMLElement) => {
+                    currentCategory = catSlug || "all";
+                    visibleCount = BATCH_SIZE;
+
+                    filterButtons.forEach(b => {
+                        b.className = "admin-rec-filter px-3 py-1.5 rounded-md border border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#2E3446] text-xs transition-colors cursor-pointer shrink-0";
+                    });
+                    if (btnEl) {
+                        btnEl.className = "admin-rec-filter active-filter-tab px-3 py-1.5 rounded-md border border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] text-xs transition-colors cursor-pointer shrink-0 font-semibold";
+                    }
+                    updateDisplay();
+                };
+
+                loadMoreBtn?.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    (window as any).handleLoadMoreRecProducts();
                 });
 
                 filterButtons.forEach(btn => {
                     btn.addEventListener("click", () => {
-                        filterButtons.forEach(b => {
-                            b.className = "admin-rec-filter px-3 py-1.5 rounded-md border border-[#222634] bg-[#11131A] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#2E3446] text-xs transition-colors cursor-pointer shrink-0";
-                        });
-                        btn.className = "admin-rec-filter active-filter-tab px-3 py-1.5 rounded-md border border-[#00E5FF] bg-[#00E5FF]/10 text-[#00E5FF] text-xs transition-colors cursor-pointer shrink-0 font-semibold";
-
-                        currentCategory = btn.getAttribute("data-category") || "all";
-                        visibleCount = BATCH_SIZE;
-                        updateDisplay();
+                        const cat = btn.getAttribute("data-category") || "all";
+                        (window as any).handleRecCategoryFilter(cat, btn);
                     });
                 });
 
